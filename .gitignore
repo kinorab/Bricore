@@ -176,7 +176,6 @@ BundleArtifacts/
 !*.[Cc]ache/
 
 # Others
-ClientBin/
 ~$*
 *~
 *.dbmdl
@@ -234,3 +233,5 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# OTHER
