@@ -11,7 +11,9 @@ using namespace std;
 const int PI = 3.14159265;
 
 void setItemVertice(VertexArray &array, const Vector2f &initial, float length) {
+
 	try {
+
 		if (length > 0) {
 
 			const float outsideAngle = 360.0f / array.getVertexCount();
