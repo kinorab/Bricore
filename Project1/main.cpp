@@ -8,7 +8,7 @@
 using namespace sf;
 using namespace std;
 
-const int PI = 3.14159265;
+const int PI = 3.14159;
 
 void setItemVertice(VertexArray &array, const Vector2f &initial, float length) {
 	try {
