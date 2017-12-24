@@ -24,6 +24,9 @@
     <ClInclude Include="ParticleSystem.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
@@ -38,6 +41,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

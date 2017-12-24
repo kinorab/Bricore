@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+
 #define PI 3.141592654f
 
 using namespace sf;

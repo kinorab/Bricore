@@ -6,16 +6,17 @@
 #include <stdexcept>
 #include "Ellipse.h"
 #include "ParticleSystem.h"
+//#include "Block.h"
 
 using namespace sf;
 using namespace std;
 
 void setItemVertice(VertexArray &, const Vector2f &, float);
-void setBlockVertice(VertexArray &, const Vector2f &, float, const int);// set Blocks
-void setItemColor(VertexArray &, const Color &);
+void setBlockVertice(VertexArray &, const Vector2f &, float, const int);// set obstacle
+void setItemColor(VertexArray &, const Color &);// only fill with one color
 void playerMove(Shape &, Window *window, float);
 
-void renderThread(RenderWindow *window) {
+void renderThread(RenderWindow *window) {// sub thread to run graphics here
 
 	window->setActive(true);
 
@@ -26,11 +27,15 @@ void renderThread(RenderWindow *window) {
 	settings.majorVersion = 4;
 	settings.minorVersion = 1;// settings graphics
 
-	VertexArray block1(Quads, 4);
+	
 	float blockLength = 50;
-	const int incre1 = 5;
+	int incre1 = 5;
+	VertexArray block1(Quads, 4);
 	setBlockVertice(block1, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength, incre1);
 	setItemColor(block1, Color::Yellow);
+
+	/*Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength, incre1);
+	setItemColor(block1, Color::Yellow);*/					// Block.h hasn't finish yet
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(200, 10));
@@ -52,7 +57,7 @@ void renderThread(RenderWindow *window) {
 		Time elapsed = clock.restart();
 		mouseLight.update(elapsed);
 
-		playerMove(mainPlayer, window, .35f);
+		playerMove(mainPlayer, window, 5.0f);
 
 		window->draw(mouseLight);
 		window->draw(block1);
@@ -76,8 +81,38 @@ int main() {
 	subthread.launch();
 
 	Vector2f GlobalPosition;
+	Sound sound1;
+	Music bgmusic;
+	SoundBuffer buffer1;
 
-	while (window.isOpen())	{
+	try {
+
+		if (!buffer1.loadFromFile("1.wav")) {								// need file, not support mp3
+																			// if memory violation happen, reset the lib connector of project (-d have something bug)
+			throw out_of_range("Cannot get the sound file.");
+		}// end if
+		else if (!bgmusic.openFromFile("1.wav")) {							// need file, not support mp3
+
+			throw out_of_range("Cannot get the music file.");
+		}// end if
+		else {
+			sound1.setBuffer(buffer1);
+			sound1.setVolume(50.0f);
+			bgmusic.play();
+			bgmusic.setLoop(true);
+		}// end else
+	}// end try
+	catch (out_of_range &ex) {
+
+		cout << "Exception: " << ex.what() << endl;
+	}// end catch
+
+	static float bufferVolume1 = 0.0f;
+	if (sound1.getBuffer() != NULL) {
+		bufferVolume1 = sound1.getVolume();
+	}
+
+	while (window.isOpen())	{// main thread to run event control, logical behavior
 
 		Event event;
 
@@ -85,9 +120,60 @@ int main() {
 
 			GlobalPosition = Vector2f(Mouse::getPosition(window));
 
+			if (event.type == Event::TextEntered) {
+
+				if (event.text.unicode < 128) {
+
+					cout << "ASCII charactor typed: " << static_cast<char>(event.text.unicode)
+						<< ", unicode is: " << event.text.unicode << endl;
+				}// end inner if
+			}// end outer if
+
+			if (event.type == Event::KeyPressed) {// can place some option control
+
+				switch (event.key.code) {
+
+				case (Keyboard::Add):// incre volume
+					if (sound1.getBuffer() != NULL) {
+						if (bufferVolume1 < 95.0f) {
+							sound1.setVolume(bufferVolume1 += 5.f);
+						}// end if
+						else {
+							sound1.setVolume(100.0f);
+						}// end else
+						cout << "Now the volume is : " << sound1.getVolume() << endl;
+					}// end if
+					else {
+						cout << "Somethings bug ,cannot change the sound volume." << endl;
+					}// end else
+					break;
+
+				case (Keyboard::Subtract):// decre volume
+					if (sound1.getBuffer() != NULL) {
+						if (bufferVolume1 > 5.0f) {
+							sound1.setVolume(bufferVolume1 -= 5.f);
+						}// end if
+						else {
+							sound1.setVolume(0.0f);
+						}// end else
+						cout << "Now the volume is : " << sound1.getVolume() << endl;
+					}// end if
+					else {
+						cout << "Somethings bug ,cannot change the sound volume." << endl;
+					}// end else
+					break;
+
+				default:
+					break;
+				}
+			}
+
 			if (event.type == Event::Closed) {
 
 				subthread.terminate();
+				bgmusic.stop();
+				sound1.stop();
+				sound1.~Sound();
 				window.close();
 			}
 			else if (event.type == Event::Resized) {
@@ -213,7 +299,7 @@ void setBlockVertice(VertexArray &array, const Vector2f &initial, float length, 
 
 		cout << "Exception: " << ex.what() << endl;
 	}// end catch
-}// end function setItemVertice
+}
 
 
 void setItemColor(VertexArray &array, const Color &color) {
@@ -225,7 +311,7 @@ void setItemColor(VertexArray &array, const Color &color) {
 }
 
 
-void playerMove(Shape &player, Window *window, float speed) {// speed set 0 ~ .1f
+void playerMove(Shape &player, Window *window, float speed/*,Mouse mouse*/) {
 
 	if (player.getGlobalBounds().contains(Vector2f( window->getSize().x, player.getPosition().y))) {
 
