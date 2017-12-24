@@ -21,6 +21,9 @@
     <ClInclude Include="Ellipse.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
@@ -29,6 +32,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellipse.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

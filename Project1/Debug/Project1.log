@@ -1,1 +1,6 @@
-﻿  Project1.vcxproj -> C:\Users\thoma\source\repos\pigject\Debug\Project1.exe
+﻿  main.cpp
+c:\users\asus\source\repos\pigject\sfml\sfml-2.4.2x86\include\sfml\window\windowhandle.hpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+c:\users\asus\source\repos\pigject\project1\main.cpp(39): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+c:\users\asus\source\repos\pigject\project1\main.cpp(95): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+c:\users\asus\source\repos\pigject\project1\main.cpp(230): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+  Project1.vcxproj -> C:\Users\ASUS\source\repos\pigject\Debug\Project1.exe
