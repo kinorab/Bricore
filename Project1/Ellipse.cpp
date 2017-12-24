@@ -1,6 +1,6 @@
+#include "ellipse.h"
 #include <iostream>
 #include <stdexcept>
-#include "Ellipse.h"
 
 using namespace std;
 using namespace sf;
