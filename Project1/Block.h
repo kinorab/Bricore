@@ -6,40 +6,18 @@ using namespace std;
 using namespace sf;
 
 class Block : public VertexArray {
-
 public:
-
-	Block(PrimitiveType, const int, const Vector2f &, float, int);
-
-	Block(PrimitiveType, const int, const Vector2f &, float);
-
-	void setIncreRate(const int);
-
-	void setLength(float);
-
+	Block(const PrimitiveType, const int, const Vector2f &, float, float);
+	void setWidth(const float);
+	void setHeight(const float);
 	void MovePosition(const Vector2f &);
-
-	const int getVertexCount() const;
-
-	const Vector2f & getPosition();
-
-	const float getLength();
-
-	const int getIncreRate();
-
-	const enum PrimitiveType getPrimitiveType();
-
+	const Vector2f & getPosition() const;
+	float getWidth() const;
+	float getHeight() const;
 	//void getStatus();
-
 private:
-
-	void setBlockVertice(VertexArray &, const Vector2f &, float, const int);
-
-	const int vertexCount;
-	enum PrimitiveType type;
+	void setBlockVertice(const Vector2f &, const float, const float);
 	Vector2f position;
-	float length;
-	int increRate = 1;
-	VertexArray array;
-
+	float width;
+	float height;
 };

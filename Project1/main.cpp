@@ -1,18 +1,17 @@
+#include "ellipse.h"
+#include "particle_system.h"
+#include "Block.h"
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <cstdlib>
 #include <stdexcept>
-#include "Ellipse.h"
-#include "ParticleSystem.h"
-#include "Block.h"
 
 using namespace sf;
 using namespace std;
 
-void setItemVertice(VertexArray &, const Vector2f &, float);
-void setBlockVertice(VertexArray &, const Vector2f &, float, const int);// set obstacle
+void setCircleVertices(VertexArray &, const Vector2f &, float);
 void setItemColor(VertexArray &, const Color &);// only fill with one color
 void playerMove(Shape &, Window *window, float);
 
@@ -27,19 +26,9 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 	settings.majorVersion = 4;
 	settings.minorVersion = 1;// settings graphics
 
-	
 	float blockLength = 50;
 	int incre1 = 5;
-	/*VertexArray block1(Quads, 4);
-	setBlockVertice(block1, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength, incre1);
-	setItemColor(block1, Color::Yellow);*/
-
-	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength);
-	cout << block1.getVertexCount() << endl; // 4
-	cout << block1.getLength() << endl; // 50
-	cout << block1.getIncreRate() << endl; // 1
-	cout << block1.getPrimitiveType() << endl; // 6
-	cout << "(" << block1.getPosition().x << ", " << block1.getPosition().y << ")" << endl; // (375, 375)
+	Block block1(PrimitiveType::Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
 	setItemColor(block1, Color::Yellow);
 
 	RectangleShape mainPlayer;
@@ -71,7 +60,6 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 		window->display();
 	}
 }
-
 
 int main() {
 
@@ -196,42 +184,31 @@ int main() {
 	system("pause");
 }
 
-
-
-
-void setItemVertice(VertexArray &array, const Vector2f &initial, float length) {
+void setCircleVertices(VertexArray &array, const Vector2f &initial, float length) {
 
 	try {
-
 		if (length > 0) {
-
 			const float outsideAngle = 360.0f / array.getVertexCount();
-
-
 			for (size_t i = 0; i < array.getVertexCount(); ++i) {
-
 				array[i].position = initial;
-			}// end for
+			}
+
 			cout << "(" << array[0].position.x << ", " << array[0].position.y << ")" << endl;// print array vertice position
-
 			for (size_t i = 1; i < array.getVertexCount(); ++i) {
-
 				float countAngle = outsideAngle * i;
 				float angle = PI - countAngle / 180 * PI;// place array in clockwise
-
 				float lengthX = sin(angle) * length;
 				if (countAngle == 0.0f || countAngle == 180.0f) {
 					lengthX = 0.0f;
-				}// end if
+				}
 
 				float lengthY = cos(angle) * length;
 				if (countAngle == 90.0f || countAngle == 270.0f) {
 					lengthY = 0.0f;
-				}// end if
+				}
 
 				array[i].position += Vector2f(lengthX, lengthY);
 				cout << "(" << array[i].position.x << ", " << array[i].position.y << ")" << endl;
-
 				for (size_t j = i + 1; j < array.getVertexCount(); ++j) {
 
 					array[j].position = array[i].position;
@@ -239,79 +216,16 @@ void setItemVertice(VertexArray &array, const Vector2f &initial, float length) {
 			}// end outer for
 		}// end if
 		else {
-
 			throw out_of_range("Invalid initial side-length for item.");
 		}// end else
-	}// end try
-	catch (out_of_range &ex) {
 
+	}// end try
+
+	catch (out_of_range &ex) {
 		cout << "Exception: " << ex.what() << endl;
 	}// end catch
+
 }// end function setItemVertice
-
-
-void setBlockVertice(VertexArray &array, const Vector2f &initial, float length, const int increRate) {
-
-	try {
-
-		if (length > 0) {
-
-			const float outsideAngle = 360.0f / array.getVertexCount();
-
-
-			for (size_t i = 0; i < array.getVertexCount(); ++i) {
-
-				array[i].position = initial;
-			}// end for
-			cout << "(" << array[0].position.x << ", " << array[0].position.y << ")" << endl;// print array vertice position
-
-			for (size_t i = 1; i < array.getVertexCount(); ++i) {
-
-				float countAngle = outsideAngle * i;
-				float angle = PI - countAngle / 180 * PI;// place array in clockwise
-
-				float lengthX;
-				if (countAngle == 0.0f || countAngle == 180.0f) {
-					lengthX = 0.0f;
-				}// end if
-				else {
-					lengthX = sin(angle) * length;
-				}
-
-				float lengthY;
-				if (countAngle == 90.0f || countAngle == 270.0f) {
-					lengthY = 0.0f;
-				}// end if
-				else {
-					lengthY = cos(angle) * length;
-				}
-
-				if (!(i == 1 || i == 3)) {
-					array[i].position += Vector2f(lengthX, lengthY);
-					cout << "(" << array[i].position.x << ", " << array[i].position.y << ")" << endl;
-				}
-				else {
-					array[i].position += Vector2f(lengthX * increRate, lengthY);
-					cout << "(" << array[i].position.x << ", " << array[i].position.y << ")" << endl;
-				}
-
-				for (size_t j = i + 1; j < array.getVertexCount(); ++j) {
-
-					array[j].position = array[i].position;
-				}// end inner for
-			}// end outer for
-		}// end if
-		else {
-
-			throw out_of_range("Invalid initial side-length for item.");
-		}// end else
-	}// end try
-	catch (out_of_range &ex) {
-
-		cout << "Exception: " << ex.what() << endl;
-	}// end catch
-}
-
 
 void setItemColor(VertexArray &array, const Color &color) {
 
@@ -320,7 +234,6 @@ void setItemColor(VertexArray &array, const Color &color) {
 		array[i].color = color;
 	}
 }
-
 
 void playerMove(Shape &player, Window *window, float speed/*,Mouse mouse*/) {
 

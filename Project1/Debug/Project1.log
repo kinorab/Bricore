@@ -1,4 +1,13 @@
-﻿  Block.cpp
-c:\users\asus\source\repos\pigject\sfml\sfml-2.4.2x86\include\sfml\window\windowhandle.hpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-c:\users\asus\source\repos\pigject\project1\block.cpp(99): warning C4018: '<': signed/unsigned 不相符
-  Project1.vcxproj -> C:\Users\ASUS\source\repos\pigject\Debug\Project1.exe
+﻿  particle_system.cpp
+c:\users\thoma\source\repos\pigject\sfml\sfml-2.4.2x86\include\sfml\window\windowhandle.hpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+  main.cpp
+c:\users\thoma\source\repos\pigject\sfml\sfml-2.4.2x86\include\sfml\window\windowhandle.hpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+c:\users\thoma\source\repos\pigject\project1\main.cpp(38): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+c:\users\thoma\source\repos\pigject\project1\main.cpp(174): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+c:\users\thoma\source\repos\pigject\project1\main.cpp(240): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+  ellipse.cpp
+c:\users\thoma\source\repos\pigject\sfml\sfml-2.4.2x86\include\sfml\window\windowhandle.hpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+  block.cpp
+c:\users\thoma\source\repos\pigject\sfml\sfml-2.4.2x86\include\sfml\window\windowhandle.hpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+  正在產生程式碼...
+  Project1.vcxproj -> C:\Users\thoma\source\repos\pigject\Debug\Project1.exe
