@@ -1,5 +1,5 @@
-#include "common.h"
-#include "particle_system.h"
+#include "define.h"
+#include "particleSystem.h"
 #include <cstdlib>
 #include <cmath>
 

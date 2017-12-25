@@ -1,4 +1,5 @@
 #include "ellipse.h"
+#include "define.h"
 #include <iostream>
 #include <stdexcept>
 
