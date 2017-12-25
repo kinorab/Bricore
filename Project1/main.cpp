@@ -1,23 +1,30 @@
 #include "ellipse.h"
-#include "particle_system.h"
-#include "Block.h"
+#include "particleSystem.h"
+#include "block.h"
+#include "define.h"
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <cstdlib>
 #include <stdexcept>
+#include <cstdlib>
+#include <ctime>
 
 using namespace sf;
 using namespace std;
 
-void setCircleVertices(VertexArray &, const Vector2f &, float);
-void setItemColor(VertexArray &, const Color &);// only fill with one color
-void playerMove(Shape &, Window *window, float);
+static bool start;
+
+//void setCircleVertices(VertexArray &, const Vector2f &, float);
+bool playerStart(Shape &, Window *, float, Shape &);
+void controlBallMove(CircleShape &, Window *, const Vector2f &, Shape &);
 
 void renderThread(RenderWindow *window) {// sub thread to run graphics here
 
 	window->setActive(true);
+	srand(time(NULL));
+	
 
 	ContextSettings settings;
 	settings.depthBits = 24;
@@ -27,16 +34,24 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 	settings.minorVersion = 1;// settings graphics
 
 	float blockLength = 50;
-	int incre1 = 5;
-	Block block1(PrimitiveType::Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
-	setItemColor(block1, Color::Yellow);
+	float incre1 = 5;
+	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
+	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(200, 10));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
 	mainPlayer.setPosition(Vector2f(window->getSize().x / 2, window->getSize().y - mainPlayer.getSize().y));
-	//cout << "player's local bounds: ("<< mainPlayer.getLocalBounds().height << ", " << mainPlayer.getLocalBounds().width << ", " << mainPlayer.getLocalBounds().top << ", " << mainPlayer.getLocalBounds().width << ")" << endl; 
+	cout << "Player global bound: (" << mainPlayer.getGlobalBounds().height << ", " << mainPlayer.getGlobalBounds().left << ", " << mainPlayer.getGlobalBounds().top << ", " << mainPlayer.getGlobalBounds().width << ")" << endl;
+	// 10 400 785 200
+	CircleShape ball;
+	ball.setFillColor(Color::White);
+	ball.setOutlineColor(Color::Black);
+	ball.setRadius(2.f);
+	ball.setOutlineThickness(2.f);
+	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
+	ball.setPosition(Vector2f(window->getSize().x / 2, mainPlayer.getPosition().y - mainPlayer.getSize().y));
 
 	ParticleSystem mouseLight(5000);
 	Vector2i localPosition;
@@ -51,11 +66,20 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 		Time elapsed = clock.restart();
 		mouseLight.update(elapsed);
 
-		playerMove(mainPlayer, window, 5.0f);
 
+		static float directX = rand() % 2 == 0 ? rand() % 9 + 1 : rand() % 9 * -1 - 1;// directX from -10 ~ 10, except for 0
+		if (playerStart(mainPlayer, window, 5.f, ball)) {
+			controlBallMove(ball, window, Vector2f(directX, -2), mainPlayer);
+		}
+		else {
+			directX = rand() % 2 == 0 ? rand() % 9 + 1 : rand() % 9 * -1 - 1;// directX from -10 ~ 10, except for 0
+			controlBallMove(ball, window, Vector2f(directX, -2), mainPlayer);
+		}
+	
 		window->draw(mouseLight);
 		window->draw(block1);
 		window->draw(mainPlayer);
+		window->draw(ball);
 
 		window->display();
 	}
@@ -161,6 +185,16 @@ int main() {
 				}
 			}
 
+			if (event.type == Event::MouseButtonPressed) {
+
+				if (event.mouseButton.button == Mouse::Left) {
+					start = true;// ball start
+				}
+				else if (event.mouseButton.button == Mouse::Right) {
+					start = false;// ball reset
+				}
+			}
+
 			if (event.type == Event::Closed) {
 
 				subthread.terminate();
@@ -174,9 +208,9 @@ int main() {
 				FloatRect viewResized(0, 0, event.size.width, event.size.height);
 				float bufferViewX = window.getView().getSize().x;
 				float bufferViewY = window.getView().getSize().y;
-				//window.setView(View(viewResized));
-				float rateX = window.getView().getSize().x / bufferViewX;
-				float rateY = window.getView().getSize().y / bufferViewY;
+				window.setView(View(viewResized));// need some window control, all item need to maintain initial proportion
+				float rateX = window.getView().getSize().x / bufferViewX;// item scale increment rateX
+				float rateY = window.getView().getSize().y / bufferViewY;// item scale increment rateY
 			}
 		}
 	}
@@ -184,7 +218,8 @@ int main() {
 	system("pause");
 }
 
-void setCircleVertices(VertexArray &array, const Vector2f &initial, float length) {
+
+/*void setCircleVertices(VertexArray &array, const Vector2f &initial, float length) {
 
 	try {
 		if (length > 0) {
@@ -225,33 +260,43 @@ void setCircleVertices(VertexArray &array, const Vector2f &initial, float length
 		cout << "Exception: " << ex.what() << endl;
 	}// end catch
 
-}// end function setItemVertice
+}// end function setItemVertice*/
 
-void setItemColor(VertexArray &array, const Color &color) {
+bool playerStart(Shape &p1, Window *win, float sp, Shape &b1) {
 
-	for (size_t i = 0; i < array.getVertexCount(); ++i) {
+	void playerMove(Shape &player, Window *window, float speed);
+	bool ballEnableMove(Shape &ball);
 
-		array[i].color = color;
+	if (!start) {
+
+		playerMove(p1, win, sp);
+		b1.setPosition(p1.getPosition().x, p1.getPosition().y - p1.getLocalBounds().height);
+		return false;
+	}
+	else {
+
+		playerMove(p1, win, sp);
+		ballEnableMove(b1);
 	}
 }
 
-void playerMove(Shape &player, Window *window, float speed/*,Mouse mouse*/) {
+void playerMove(Shape &player, Window *window, float speed) {
 
-	if (player.getGlobalBounds().contains(Vector2f( window->getSize().x, player.getPosition().y))) {
+	if (player.getGlobalBounds().contains(Vector2f(window->getSize().x, player.getPosition().y))) {
 
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
 
 			player.move(Vector2f(speed * -1, 0));
 		}
 	}
-	else if (player.getGlobalBounds().contains(Vector2f( 0, player.getPosition().y))) {
+	else if (player.getGlobalBounds().contains(Vector2f(0, player.getPosition().y))) {
 
 		if (Keyboard::isKeyPressed(Keyboard::Right)) {
 
 			player.move(Vector2f(speed, 0));
 		}
 	}
-	else{
+	else {
 
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
 
@@ -260,6 +305,70 @@ void playerMove(Shape &player, Window *window, float speed/*,Mouse mouse*/) {
 		if (Keyboard::isKeyPressed(Keyboard::Right)) {
 
 			player.move(Vector2f(speed, 0));
+		}
+	}
+
+}
+
+bool ballEnableMove(Shape &ball) {// can add extra affect
+
+	return true;
+}
+
+void controlBallMove(CircleShape &ball, Window *window, const Vector2f &move, Shape &player) {// impact obstacle or bound and change direct(except for bottom bound)
+
+	static int changeX = 1;
+	static int changeY = 1;
+
+	if (!start) {// reinitialize the ball
+		changeX = 1;
+		changeY = 1;
+	}
+	else {
+
+		FloatRect playerPos = player.getGlobalBounds();
+
+		if (ball.getPosition().x >= window->getSize().x - ball.getRadius()) {// window's right bound
+			changeX *= -1;
+			ball.move(move.x * changeX, move.y * changeY);
+		}
+		else if (ball.getPosition().x <= 0 + ball.getRadius()) {// window's left bound
+			changeX *= -1;
+			ball.move(move.x * changeX, move.y * changeY);
+		}
+		else if (ball.getPosition().y <= 0 + ball.getRadius()) {// window's top bound
+			changeY *= -1;
+			ball.move(move.x * changeX, move.y * changeY);
+		}
+		else if (ball.getGlobalBounds().intersects(playerPos)) {// the collision between ball and player
+
+			if (move.x * changeX < 0) {// ball collide from right side
+
+				if (ball.getPosition().x > player.getPosition().x) {
+					changeX *= -1;
+					changeY *= -1;
+					ball.move(move.x * changeX, move.y * changeY);
+				}
+				else if (ball.getPosition().x < player.getPosition().x) {
+					changeY *= -1;
+					ball.move(move.x * changeX, move.y * changeY);
+				}
+			}
+			else {						// ball collide from left side
+
+				if (ball.getPosition().x > player.getPosition().x) {
+					changeY *= -1;
+					ball.move(move.x * changeX, move.y * changeY);
+				}
+				else if (ball.getPosition().x < player.getPosition().x) {
+					changeX *= -1;
+					changeY *= -1;
+					ball.move(move.x * changeX, move.y * changeY);
+				}
+			}
+		}
+		else {
+			ball.move(move.x * changeX, move.y * changeY);
 		}
 	}
 

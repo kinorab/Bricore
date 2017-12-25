@@ -18,16 +18,16 @@
     <ClInclude Include="resource.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_system.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="ellipse.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="block.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="particleSystem.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
@@ -40,14 +40,14 @@
     <ClCompile Include="main.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="ellipse.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="block.cpp">
-      <Filter>來源檔案</Filter>
+      <Filter>資源檔</Filter>
     </ClCompile>
-    <ClCompile Include="particle_system.cpp">
-      <Filter>來源檔案</Filter>
+    <ClCompile Include="ellipse.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
+    <ClCompile Include="particleSystem.cpp">
+      <Filter>資源檔</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
