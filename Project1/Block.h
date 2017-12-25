@@ -9,7 +9,9 @@ class Block : public VertexArray {
 
 public:
 
-	Block(enum PrimitiveType, const int, const Vector2f &, float, int);
+	Block(PrimitiveType, const int, const Vector2f &, float, int);
+
+	Block(PrimitiveType, const int, const Vector2f &, float);
 
 	void setIncreRate(const int);
 
@@ -17,14 +19,7 @@ public:
 
 	void MovePosition(const Vector2f &);
 
-	//void getStatus();
-
-
-private:
-
-	void setBlockVertice(VertexArray &, const int, const Vector2f &, float, const int);
-
-	const int getvertexCount();
+	const int getVertexCount() const;
 
 	const Vector2f & getPosition();
 
@@ -32,10 +27,19 @@ private:
 
 	const int getIncreRate();
 
-	VertexArray array;
+	const enum PrimitiveType getPrimitiveType();
+
+	//void getStatus();
+
+private:
+
+	void setBlockVertice(VertexArray &, const Vector2f &, float, const int);
+
 	const int vertexCount;
+	enum PrimitiveType type;
 	Vector2f position;
 	float length;
 	int increRate = 1;
+	VertexArray array;
 
 };

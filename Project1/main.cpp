@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "Ellipse.h"
 #include "ParticleSystem.h"
-//#include "Block.h"
+#include "Block.h"
 
 using namespace sf;
 using namespace std;
@@ -30,12 +30,17 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 	
 	float blockLength = 50;
 	int incre1 = 5;
-	VertexArray block1(Quads, 4);
+	/*VertexArray block1(Quads, 4);
 	setBlockVertice(block1, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength, incre1);
-	setItemColor(block1, Color::Yellow);
+	setItemColor(block1, Color::Yellow);*/
 
-	/*Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength, incre1);
-	setItemColor(block1, Color::Yellow);*/					// Block.h hasn't finish yet
+	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength);
+	cout << block1.getVertexCount() << endl; // 4
+	cout << block1.getLength() << endl; // 50
+	cout << block1.getIncreRate() << endl; // 1
+	cout << block1.getPrimitiveType() << endl; // 6
+	cout << "(" << block1.getPosition().x << ", " << block1.getPosition().y << ")" << endl; // (375, 375)
+	setItemColor(block1, Color::Yellow);
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(200, 10));
@@ -265,15 +270,21 @@ void setBlockVertice(VertexArray &array, const Vector2f &initial, float length, 
 				float countAngle = outsideAngle * i;
 				float angle = PI - countAngle / 180 * PI;// place array in clockwise
 
-				float lengthX = sin(angle) * length;
+				float lengthX;
 				if (countAngle == 0.0f || countAngle == 180.0f) {
 					lengthX = 0.0f;
 				}// end if
+				else {
+					lengthX = sin(angle) * length;
+				}
 
-				float lengthY = cos(angle) * length;
+				float lengthY;
 				if (countAngle == 90.0f || countAngle == 270.0f) {
 					lengthY = 0.0f;
 				}// end if
+				else {
+					lengthY = cos(angle) * length;
+				}
 
 				if (!(i == 1 || i == 3)) {
 					array[i].position += Vector2f(lengthX, lengthY);
