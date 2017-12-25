@@ -6,30 +6,28 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
-#include <cstdlib>
 #include <stdexcept>
-#include <cstdlib>
 #include <ctime>
 
 using namespace sf;
 using namespace std;
 
 static bool start;
-static int changeX = 1;
-static int changeY = 1;
+static int speedX;
+static int speedY;
 
 //void setCircleVertices(VertexArray &, const Vector2f &, float);
-bool playerStart(Shape &, Window *, float, Shape &);
-void BallMove(CircleShape &, Window *, const Vector2f &, Shape &);
+void renderThread(RenderWindow *window);
+void BallMove(CircleShape &ball, Window *window, Shape &player);
 void controlBallMove(CircleShape &, Block &);
 void initializeBall();
+void playerMove(Shape &player, Window *window, float speed);
+void ballEnableMove(Shape &ball);
 
 void renderThread(RenderWindow *window) {// sub thread to run graphics here
 
 	window->setActive(true);
 	srand(time(NULL));
-	
-
 	ContextSettings settings;
 	settings.depthBits = 24;
 	settings.stencilBits = 8;
@@ -76,22 +74,17 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 		mouseLight.setEmitter(window->mapPixelToCoords(localPosition));
 		Time elapsed = clock.restart();
 		mouseLight.update(elapsed);
-
-
-		static float speedX = rand() % 2 == 0 ? rand() % 9 + 1 : rand() % 9 * -1 - 1;// directX from -10 ~ 10, except for 0
-		if (!playerStart(mainPlayer, window, 5.f, ball)) {
-
-			speedX = rand() % 2 == 0 ? rand() % 9 + 1 : rand() % 9 * -1 - 1;// directX from -10 ~ 10, except for 0
-			initializeBall();
+		playerMove(mainPlayer, window, 5.0f);
+		if (!start) {
+			ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getPosition().y - mainPlayer.getLocalBounds().height);
 		}
 		else {
-
 			controlBallMove(ball, block1);
 			controlBallMove(ball, block2);
 			controlBallMove(ball, block3);
-			BallMove(ball, window, Vector2f(speedX, -2), mainPlayer);
+			BallMove(ball, window, mainPlayer);
 		}
-	
+
 		window->draw(mouseLight);
 		window->draw(block1);
 		window->draw(block2);
@@ -105,8 +98,8 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 
 int main() {
 
-
 	RenderWindow window(VideoMode(1000, 800), "Pigject");
+	srand(time(NULL));
 
 	Mouse::setPosition(Vector2i(window.getSize().x / 2, window.getSize().y / 2), window);
 	View defualtView = window.getDefaultView();
@@ -147,7 +140,7 @@ int main() {
 		bufferVolume1 = sound1.getVolume();
 	}
 
-	while (window.isOpen())	{// main thread to run event control, logical behavior
+	while (window.isOpen()) {// main thread to run event control, logical behavior
 
 		Event event;
 
@@ -207,6 +200,7 @@ int main() {
 
 				if (event.mouseButton.button == Mouse::Left) {
 					start = true;// ball start
+					initializeBall();
 				}
 				else if (event.mouseButton.button == Mouse::Right) {
 					start = false;// ball reset
@@ -280,24 +274,6 @@ int main() {
 
 }// end function setItemVertice*/
 
-bool playerStart(Shape &p1, Window *win, float sp, Shape &b1) {
-
-	void playerMove(Shape &player, Window *window, float speed);
-	bool ballEnableMove(Shape &ball);
-
-	if (!start) {
-
-		playerMove(p1, win, sp);
-		b1.setPosition(p1.getPosition().x, p1.getPosition().y - p1.getLocalBounds().height);
-		return false;
-	}
-	else {
-
-		playerMove(p1, win, sp);
-		ballEnableMove(b1);
-	}
-}
-
 void playerMove(Shape &player, Window *window, float speed) {
 
 	if (player.getGlobalBounds().contains(Vector2f(window->getSize().x, player.getPosition().y))) {
@@ -308,7 +284,6 @@ void playerMove(Shape &player, Window *window, float speed) {
 		}
 	}
 	else if (player.getGlobalBounds().contains(Vector2f(0, player.getPosition().y))) {
-
 		if (Keyboard::isKeyPressed(Keyboard::Right)) {
 
 			player.move(Vector2f(speed, 0));
@@ -328,80 +303,83 @@ void playerMove(Shape &player, Window *window, float speed) {
 
 }
 
-bool ballEnableMove(Shape &ball) {// can add extra affect
+void ballEnableMove(Shape &ball) {// can add extra affect
 
-	return true;
 }
 
 void initializeBall() {
-
-	changeX = 1;
-	changeY = 1;
+	// speedX from -10 ~ 10, except for 0
+	speedX = rand() % 20 - 10;
+	if (speedX >= 0.0f) {
+		speedX += 1;
+	}
+	speedY = -2;
 }
 
-void BallMove(CircleShape &ball, Window *window, const Vector2f &move, Shape &player) {// impact obstacle or bound and change direct(except for bottom bound)
-
+// impact obstacle or bound and change direct(except for bottom bound)
+void BallMove(CircleShape &ball, Window *window, Shape &player) {
 	FloatRect playerPos = player.getGlobalBounds();
-	if (ball.getPosition().y >= window->getSize().y + ball.getRadius()) {// out of bottom bound, reset the ball
-
+	// out of bottom bound, reset the ball
+	if (ball.getPosition().y - ball.getRadius() >= window->getSize().y) {
 		start = false;
+		initializeBall();
+		return;
 	}
-	else {
 
-		if (ball.getPosition().x >= window->getSize().x - ball.getRadius()) {// window's right bound
-			changeX *= -1;
-		}
-		else if (ball.getPosition().x <= 0 + ball.getRadius()) {// window's left bound
-			changeX *= -1;
-		}
-		else if (ball.getPosition().y <= 0 + ball.getRadius()) {// window's top bound
-			changeY *= -1;
-		}
-		else if (ball.getGlobalBounds().intersects(playerPos)) {// the collision between ball and player
-
-			if (move.x * changeX < 0) {	// ball collide from right side
-
-				if (ball.getPosition().x > player.getPosition().x) {
-					changeX *= -1;
-					changeY *= -1;
-				}
-				else {					// include hitting on center
-					changeY *= -1;
-				}
-			}
-			else {						// ball collide from left side
-
-				if (ball.getPosition().x > player.getPosition().x) {
-					changeY *= -1;
-				}
-				else {					// include hitting on center
-					changeX *= -1;
-					changeY *= -1;
-				}
-			}
-		}
-
-		ball.move(move.x * changeX, move.y * changeY);
+	// window's right bound
+	if (ball.getPosition().x + ball.getRadius() >= window->getSize().x) {
+		speedX *= -1;
 	}
+	// window's left bound
+	else if (ball.getPosition().x <= 0 + ball.getRadius()) {
+		speedX *= -1;
+	}
+	// window's top bound
+	else if (ball.getPosition().y <= 0 + ball.getRadius()) {
+		speedY *= -1;
+	}
+	// the collision between ball and player
+	else if (ball.getGlobalBounds().intersects(playerPos)) {
+		speedY *= -1;
+		// not include hitting on center
+		if (ball.getPosition().x > player.getPosition().x) {
+			speedX = abs(speedX);
+		}
+
+		if (ball.getPosition().x < player.getPosition().x) {
+			speedX = -abs(speedX);
+		}
+
+	}
+
+	ball.move(speedX, speedY);
 }
 
-void controlBallMove(CircleShape &ball, Block &block) {// still have something need to fix, when speedX too fast, 
+// still have something need to fix, when speedX too fast, 
+void controlBallMove(CircleShape &ball, Block &block) {
+	FloatRect blockBounds = block.getBounds();
+	FloatRect ballBounds = ball.getGlobalBounds();
+	if (ballBounds.intersects(blockBounds)) {
+		// obstacle left bound
+		if (ballBounds.left <= blockBounds.left) {
+			speedX *= -1;
+		}
 
-	FloatRect obstacle = block.getBounds();
+		// obstacle right bound
+		if (ballBounds.left + ballBounds.width >= blockBounds.left + blockBounds.width) {
+			speedX *= -1;
+		}
 
-	if (ball.getGlobalBounds().intersects(obstacle)) {
+		// obstacle top bound
+		if (ballBounds.top <= blockBounds.top) {
+			speedY *= -1;
+		}
 
-		if (ball.getGlobalBounds().left <= obstacle.left) {													// obstacle left bound
-			changeX *= -1;
+		// obstacle bottom bound
+		if (ballBounds.top + ballBounds.height >= blockBounds.top + blockBounds.height) {
+			speedY *= -1;
 		}
-		if (ball.getGlobalBounds().left + ball.getGlobalBounds().width >= obstacle.left + obstacle.width) {	// obstacle right bound
-			changeX *= -1;
-		}
-		if (ball.getGlobalBounds().top <= obstacle.top) {													// obstacle top bound
-			changeY *= -1;
-		}
-		if (ball.getGlobalBounds().top + ball.getGlobalBounds().height >= obstacle.top + obstacle.height) {	// obstacle bottom bound
-			changeY *= -1;
-		}
+
 	}
+
 }
