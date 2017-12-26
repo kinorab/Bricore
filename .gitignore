@@ -61,9 +61,11 @@ artifacts/
 *.tmp
 *.tmp_proj
 *.log
+*.tlog
 *.vspscc
 *.vssscc
 .builds
+*.idb
 *.pidb
 *.svclog
 *.scc
