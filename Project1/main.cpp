@@ -289,12 +289,7 @@ void ballEnableMove(Shape &ball) {// can add extra affect
 }
 
 void initializeBall() {
-	// speedX from -10 ~ 10, except for 0
-	speedX = rand() % 20 - 10;
-	if (speedX >= 0.0f) {
-		speedX += 1;
-	}
-
+	speedX = rand() % 21 - 10;
 	speedY = -2;
 }
 
