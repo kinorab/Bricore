@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <ctime>
 #include <queue>
+#include <mutex>
 
 using namespace sf;
 using namespace std;
@@ -19,6 +20,7 @@ static bool start;
 static int speedX;
 static int speedY;
 static queue<Event> gameEventQueue;
+static mutex gameEventQueueMutex;
 
 //void setCircleVertices(VertexArray &, const Vector2f &, float);
 void renderThread(RenderWindow * window, atomic<bool> * done);
@@ -32,13 +34,6 @@ void ballEnableMove(Shape &ball);
 void renderThread(RenderWindow * window, atomic<bool> * done) {
 	window->setActive(true);
 	srand(time(NULL));
-	// settings graphics
-	ContextSettings settings;
-	settings.depthBits = 24;
-	settings.stencilBits = 8;
-	settings.antialiasingLevel = 8;
-	settings.majorVersion = 4;
-	settings.minorVersion = 1;
 	float blockLength = 100;
 	float incre1 = 3;
 	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
@@ -99,9 +94,11 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 
 	while (!(*done)) {
 		Event event;
+		gameEventQueueMutex.lock();
 		while (!gameEventQueue.empty()) {
 			event = gameEventQueue.front();
 			gameEventQueue.pop();
+			gameEventQueueMutex.unlock();
 			Vector2f GlobalPosition = Vector2f(Mouse::getPosition(*window));
 			if (event.type == Event::TextEntered) {
 				if (event.text.unicode < 128) {
@@ -176,8 +173,10 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 				float rateY = window->getView().getSize().y / bufferViewY;// item scale increment rateY
 			}
 
+			gameEventQueueMutex.try_lock();
 		}
 
+		gameEventQueueMutex.unlock();
 		window->clear(Color::White);
 		localPosition = Mouse::getPosition(*window);
 		mouseLight.setEmitter(window->mapPixelToCoords(localPosition));
@@ -202,7 +201,6 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		window->draw(ball);
 		window->display();
 	}
-
 	// finalize...
 }
 
@@ -214,7 +212,9 @@ int main() {
 	// main thread wait for event and push to queue
 	Event event;
 	while (!done && window.waitEvent(event)) {
+		gameEventQueueMutex.lock();
 		gameEventQueue.push(event);
+		gameEventQueueMutex.unlock();
 	}
 
 	// finalize...
