@@ -296,7 +296,7 @@ void initializeBall() {
 // impact obstacle or bound and change direct(except for bottom bound)
 void BallMove(CircleShape &ball, Window *window, Shape &player) {
 	auto playerBounds = player.getGlobalBounds();
-	auto ballBounds = player.getGlobalBounds();
+	auto ballBounds = ball.getGlobalBounds();
 	// out of bottom bound, reset the ball
 	if (ballBounds.top >= window->getSize().y) {
 		start = false;

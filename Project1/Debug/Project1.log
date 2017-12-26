@@ -5,5 +5,5 @@ c:\users\thoma\source\repos\pigject\project1\main.cpp(49): warning C4244: '引�
 c:\users\thoma\source\repos\pigject\project1\main.cpp(58): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
 c:\users\thoma\source\repos\pigject\project1\main.cpp(168): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
 c:\users\thoma\source\repos\pigject\project1\main.cpp(262): warning C4244: '引數': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\users\thoma\source\repos\pigject\project1\main.cpp(337): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+c:\users\thoma\source\repos\pigject\project1\main.cpp(331): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
   Project1.vcxproj -> C:\Users\thoma\source\repos\pigject\Debug\Project1.exe
