@@ -295,35 +295,34 @@ void initializeBall() {
 
 // impact obstacle or bound and change direct(except for bottom bound)
 void BallMove(CircleShape &ball, Window *window, Shape &player) {
-	FloatRect playerPos = player.getGlobalBounds();
+	auto playerBounds = player.getGlobalBounds();
+	auto ballBounds = player.getGlobalBounds();
 	// out of bottom bound, reset the ball
-	if (ball.getPosition().y - ball.getRadius() >= window->getSize().y) {
+	if (ballBounds.top >= window->getSize().y) {
 		start = false;
 		initializeBall();
 		return;
 	}
-
 	// window's right bound
-	if (ball.getPosition().x + ball.getRadius() >= window->getSize().x) {
+	else if (ballBounds.left + ballBounds.width >= window->getSize().x) {
 		speedX *= -1;
 	}
 	// window's left bound
-	else if (ball.getPosition().x <= 0 + ball.getRadius()) {
+	else if (ballBounds.left <= 0) {
 		speedX *= -1;
 	}
 	// window's top bound
-	else if (ball.getPosition().y <= 0 + ball.getRadius()) {
+	else if (ballBounds.top <= 0) {
 		speedY *= -1;
 	}
 	// the collision between ball and player
-	else if (ball.getGlobalBounds().intersects(playerPos)) {
+	else if (ballBounds.intersects(playerBounds)) {
 		speedY *= -1;
 		// not include hitting on center
-		if (ball.getPosition().x > player.getPosition().x) {
+		if (ballBounds.left + ballBounds.width / 2 > playerBounds.left + playerBounds.width / 2) {
 			speedX = abs(speedX);
 		}
-
-		if (ball.getPosition().x < player.getPosition().x) {
+		else if (ballBounds.left + ballBounds.width / 2 < playerBounds.left + playerBounds.width / 2) {
 			speedX = -abs(speedX);
 		}
 
@@ -334,26 +333,23 @@ void BallMove(CircleShape &ball, Window *window, Shape &player) {
 
 // still have something need to fix, when speedX too fast, 
 void controlBallMove(CircleShape &ball, Block &block) {
-	FloatRect blockBounds = block.getBounds();
-	FloatRect ballBounds = ball.getGlobalBounds();
+	auto blockBounds = block.getBounds();
+	auto ballBounds = ball.getGlobalBounds();
 	if (ballBounds.intersects(blockBounds)) {
 		// obstacle left bound
 		if (ballBounds.left <= blockBounds.left) {
 			speedX *= -1;
 		}
-
 		// obstacle right bound
-		if (ballBounds.left + ballBounds.width >= blockBounds.left + blockBounds.width) {
+		else if (ballBounds.left + ballBounds.width >= blockBounds.left + blockBounds.width) {
 			speedX *= -1;
 		}
-
 		// obstacle top bound
-		if (ballBounds.top <= blockBounds.top) {
+		else if (ballBounds.top <= blockBounds.top) {
 			speedY *= -1;
 		}
-
 		// obstacle bottom bound
-		if (ballBounds.top + ballBounds.height >= blockBounds.top + blockBounds.height) {
+		else if (ballBounds.top + ballBounds.height >= blockBounds.top + blockBounds.height) {
 			speedY *= -1;
 		}
 
