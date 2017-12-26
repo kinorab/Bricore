@@ -5,9 +5,12 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
+#include <thread>
+#include <atomic>
 #include <iostream>
 #include <stdexcept>
 #include <ctime>
+#include <queue>
 
 using namespace sf;
 using namespace std;
@@ -15,37 +18,35 @@ using namespace std;
 static bool start;
 static int speedX;
 static int speedY;
+static queue<Event> gameEventQueue;
 
 //void setCircleVertices(VertexArray &, const Vector2f &, float);
-void renderThread(RenderWindow *window);
-void BallMove(CircleShape &ball, Window *window, Shape &player);
+void renderThread(RenderWindow * window, atomic<bool> * done);
+void BallMove(CircleShape & ball, Window * window, Shape & player);
 void controlBallMove(CircleShape &, Block &);
 void initializeBall();
-void playerMove(Shape &player, Window *window, float speed);
+void playerMove(Shape & player, Window * window, float speed);
 void ballEnableMove(Shape &ball);
 
-void renderThread(RenderWindow *window) {// sub thread to run graphics here
-
+// sub thread to run graphics here
+void renderThread(RenderWindow * window, atomic<bool> * done) {
 	window->setActive(true);
 	srand(time(NULL));
+	// settings graphics
 	ContextSettings settings;
 	settings.depthBits = 24;
 	settings.stencilBits = 8;
 	settings.antialiasingLevel = 8;
 	settings.majorVersion = 4;
-	settings.minorVersion = 1;// settings graphics
-
+	settings.minorVersion = 1;
 	float blockLength = 100;
 	float incre1 = 3;
 	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
 	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
-
 	Block block2(Quads, 4, Vector2f(blockLength, blockLength), blockLength, blockLength * 2);
 	block2.setVerticeColor(Color::Green, Color::Red, Color::Cyan, Color::Yellow);
-
 	Block block3(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, blockLength), blockLength, blockLength * 2);
 	block3.setVerticeColor(Color::Black);
-
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(200, 10));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
@@ -61,15 +62,123 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
 	ball.setPosition(Vector2f(window->getSize().x / 2, mainPlayer.getPosition().y - mainPlayer.getSize().y));
 	cout << ball.getGlobalBounds().left + ball.getGlobalBounds().width << endl;
-
 	ParticleSystem mouseLight(5000);
 	Vector2i localPosition;
 	Clock clock;
+	Mouse::setPosition(Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
+	View defualtView = window->getDefaultView();
+	Sound sound1;
+	Music bgmusic;
+	SoundBuffer buffer1;
+	try {
+		// need file, not support mp3
+		// if memory violation happen, reset the lib connector of project (-d have something bug)
+		if (!buffer1.loadFromFile("1.wav")) {
+			throw out_of_range("Cannot get the sound file.");
+		}
+		// need file, not support mp3
+		else if (!bgmusic.openFromFile("1.wav")) {
+			throw out_of_range("Cannot get the music file.");
+		}
+		else {
+			sound1.setBuffer(buffer1);
+			sound1.setVolume(50.0f);
+			bgmusic.play();
+			bgmusic.setLoop(true);
+		}
 
-	while (window->isOpen()) {
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+
+	static float bufferVolume1 = 0.0f;
+	if (sound1.getBuffer() != NULL) {
+		bufferVolume1 = sound1.getVolume();
+	}
+
+	while (!(*done)) {
+		Event event;
+		while (!gameEventQueue.empty()) {
+			event = gameEventQueue.front();
+			gameEventQueue.pop();
+			Vector2f GlobalPosition = Vector2f(Mouse::getPosition(*window));
+			if (event.type == Event::TextEntered) {
+				if (event.text.unicode < 128) {
+					cout << "ASCII charactor typed: " << static_cast<char>(event.text.unicode)
+						<< ", unicode is: " << event.text.unicode << endl;
+				}
+
+			}
+			// can place some option control
+			else if (event.type == Event::KeyPressed) {
+				switch (event.key.code) {
+					// volume up
+				case (Keyboard::Add):
+					if (sound1.getBuffer() != NULL) {
+						if (bufferVolume1 < 95.0f) {
+							sound1.setVolume(bufferVolume1 += 5.f);
+						}
+						else {
+							sound1.setVolume(100.0f);
+						}
+
+						cout << "Now the volume is : " << sound1.getVolume() << endl;
+					}
+					else {
+						cout << "Somethings bug ,cannot change the sound volume." << endl;
+					}
+
+					break;
+					// volume down
+				case (Keyboard::Subtract):
+					if (sound1.getBuffer() != NULL) {
+						if (bufferVolume1 > 5.0f) {
+							sound1.setVolume(bufferVolume1 -= 5.f);
+						}
+						else {
+							sound1.setVolume(0.0f);
+						}
+
+						cout << "Now the volume is : " << sound1.getVolume() << endl;
+					}
+					else {
+						cout << "Somethings bug ,cannot change the sound volume." << endl;
+					}
+
+					break;
+				default:
+					break;
+				}
+
+			}
+			else if (event.type == Event::MouseButtonPressed) {
+				if (event.mouseButton.button == Mouse::Left && !start) {
+					start = true;
+					initializeBall();
+				}
+				else if (event.mouseButton.button == Mouse::Right && start) {
+					start = false;
+				}
+
+			}
+			else if (event.type == Event::Closed) {
+				bgmusic.stop();
+				sound1.stop();
+				*done = true;
+			}
+			else if (event.type == Event::Resized) {
+				FloatRect viewResized(0, 0, event.size.width, event.size.height);
+				float bufferViewX = window->getView().getSize().x;
+				float bufferViewY = window->getView().getSize().y;
+				window->setView(View(viewResized));// need some window control, all item need to maintain initial proportion
+				float rateX = window->getView().getSize().x / bufferViewX;// item scale increment rateX
+				float rateY = window->getView().getSize().y / bufferViewY;// item scale increment rateY
+			}
+
+		}
 
 		window->clear(Color::White);
-
 		localPosition = Mouse::getPosition(*window);
 		mouseLight.setEmitter(window->mapPixelToCoords(localPosition));
 		Time elapsed = clock.restart();
@@ -91,147 +200,30 @@ void renderThread(RenderWindow *window) {// sub thread to run graphics here
 		window->draw(block3);
 		window->draw(mainPlayer);
 		window->draw(ball);
-
 		window->display();
 	}
+
+	// finalize...
 }
 
 int main() {
-
 	RenderWindow window(VideoMode(1000, 800), "Pigject");
-	srand(time(NULL));
-
-	Mouse::setPosition(Vector2i(window.getSize().x / 2, window.getSize().y / 2), window);
-	View defualtView = window.getDefaultView();
 	window.setActive(false);
-
-	Thread subthread(&renderThread, &window);
-	subthread.launch();
-
-	Vector2f GlobalPosition;
-	Sound sound1;
-	Music bgmusic;
-	SoundBuffer buffer1;
-
-	try {
-
-		if (!buffer1.loadFromFile("1.wav")) {								// need file, not support mp3
-																			// if memory violation happen, reset the lib connector of project (-d have something bug)
-			throw out_of_range("Cannot get the sound file.");
-		}// end if
-		else if (!bgmusic.openFromFile("1.wav")) {							// need file, not support mp3
-
-			throw out_of_range("Cannot get the music file.");
-		}// end if
-		else {
-			sound1.setBuffer(buffer1);
-			sound1.setVolume(50.0f);
-			bgmusic.play();
-			bgmusic.setLoop(true);
-		}// end else
-	}// end try
-	catch (out_of_range &ex) {
-
-		cout << "Exception: " << ex.what() << endl;
-	}// end catch
-
-	static float bufferVolume1 = 0.0f;
-	if (sound1.getBuffer() != NULL) {
-		bufferVolume1 = sound1.getVolume();
+	atomic<bool> done(false);
+	thread subthread(renderThread, &window, &done);
+	// main thread wait for event and push to queue
+	Event event;
+	while (!done && window.waitEvent(event)) {
+		gameEventQueue.push(event);
 	}
 
-	while (window.isOpen()) {// main thread to run event control, logical behavior
-
-		Event event;
-
-		while (window.pollEvent(event)) {// when pollEvent run all the content, will turn to false
-
-			GlobalPosition = Vector2f(Mouse::getPosition(window));
-
-			if (event.type == Event::TextEntered) {
-
-				if (event.text.unicode < 128) {
-
-					cout << "ASCII charactor typed: " << static_cast<char>(event.text.unicode)
-						<< ", unicode is: " << event.text.unicode << endl;
-				}// end inner if
-			}// end outer if
-
-			if (event.type == Event::KeyPressed) {// can place some option control
-
-				switch (event.key.code) {
-
-				case (Keyboard::Add):// incre volume
-					if (sound1.getBuffer() != NULL) {
-						if (bufferVolume1 < 95.0f) {
-							sound1.setVolume(bufferVolume1 += 5.f);
-						}// end if
-						else {
-							sound1.setVolume(100.0f);
-						}// end else
-						cout << "Now the volume is : " << sound1.getVolume() << endl;
-					}// end if
-					else {
-						cout << "Somethings bug ,cannot change the sound volume." << endl;
-					}// end else
-					break;
-
-				case (Keyboard::Subtract):// decre volume
-					if (sound1.getBuffer() != NULL) {
-						if (bufferVolume1 > 5.0f) {
-							sound1.setVolume(bufferVolume1 -= 5.f);
-						}// end if
-						else {
-							sound1.setVolume(0.0f);
-						}// end else
-						cout << "Now the volume is : " << sound1.getVolume() << endl;
-					}// end if
-					else {
-						cout << "Somethings bug ,cannot change the sound volume." << endl;
-					}// end else
-					break;
-
-				default:
-					break;
-				}
-			}
-
-			if (event.type == Event::MouseButtonPressed) {
-
-				if (event.mouseButton.button == Mouse::Left) {
-					start = true;// ball start
-					initializeBall();
-				}
-				else if (event.mouseButton.button == Mouse::Right) {
-					start = false;// ball reset
-				}
-			}
-
-			if (event.type == Event::Closed) {
-
-				subthread.terminate();
-				bgmusic.stop();
-				sound1.stop();
-				sound1.~Sound();
-				window.close();
-			}
-			else if (event.type == Event::Resized) {
-
-				FloatRect viewResized(0, 0, event.size.width, event.size.height);
-				float bufferViewX = window.getView().getSize().x;
-				float bufferViewY = window.getView().getSize().y;
-				window.setView(View(viewResized));// need some window control, all item need to maintain initial proportion
-				float rateX = window.getView().getSize().x / bufferViewX;// item scale increment rateX
-				float rateY = window.getView().getSize().y / bufferViewY;// item scale increment rateY
-			}
-		}
-	}
-
+	// finalize...
+	window.close();
 	system("pause");
 }
 
-
-/*void setCircleVertices(VertexArray &array, const Vector2f &initial, float length) {
+/*
+void setCircleVertices(VertexArray &array, const Vector2f &initial, float length) {
 
 	try {
 		if (length > 0) {
@@ -245,60 +237,49 @@ int main() {
 				float countAngle = outsideAngle * i;
 				float angle = PI - countAngle / 180 * PI;// place array in clockwise
 				float lengthX = sin(angle) * length;
-				if (countAngle == 0.0f || countAngle == 180.0f) {
-					lengthX = 0.0f;
-				}
-
-				float lengthY = cos(angle) * length;
-				if (countAngle == 90.0f || countAngle == 270.0f) {
-					lengthY = 0.0f;
-				}
-
 				array[i].position += Vector2f(lengthX, lengthY);
 				cout << "(" << array[i].position.x << ", " << array[i].position.y << ")" << endl;
 				for (size_t j = i + 1; j < array.getVertexCount(); ++j) {
 
 					array[j].position = array[i].position;
-				}// end inner for
-			}// end outer for
-		}// end if
+				}
+			}
+		}
 		else {
 			throw out_of_range("Invalid initial side-length for item.");
-		}// end else
+		}
 
-	}// end try
+	}
 
 	catch (out_of_range &ex) {
 		cout << "Exception: " << ex.what() << endl;
-	}// end catch
+	}
 
-}// end function setItemVertice*/
+}
+*/
 
 void playerMove(Shape &player, Window *window, float speed) {
-
 	if (player.getGlobalBounds().contains(Vector2f(window->getSize().x, player.getPosition().y))) {
-
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
-
 			player.move(Vector2f(speed * -1, 0));
 		}
+
 	}
 	else if (player.getGlobalBounds().contains(Vector2f(0, player.getPosition().y))) {
 		if (Keyboard::isKeyPressed(Keyboard::Right)) {
-
 			player.move(Vector2f(speed, 0));
 		}
+
 	}
 	else {
-
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
-
 			player.move(Vector2f(speed * -1, 0));
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Right)) {
 
+		if (Keyboard::isKeyPressed(Keyboard::Right)) {
 			player.move(Vector2f(speed, 0));
 		}
+
 	}
 
 }
@@ -313,6 +294,7 @@ void initializeBall() {
 	if (speedX >= 0.0f) {
 		speedX += 1;
 	}
+
 	speedY = -2;
 }
 
