@@ -23,7 +23,6 @@ static mutex gameEventQueueMutex;
 
 //void setItemVertices(VertexArray &, const Vector2f &, float);
 void ballMove(CircleShape &, Window *, Shape &);
-void controlBallMove(CircleShape &, Block &);
 void initializeBall();
 void playerMove(Shape &, Window *, float);
 void ballEnableMove(Shape &);
@@ -63,31 +62,25 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	Sound sound1;
 	Music bgmusic;
 	SoundBuffer buffer1;
+	static float bufferVolume1 = 50.0f;
 
 	try {
 		// if memory violation happen, reset the lib connector of project (-d have something bug)
 		// need file, not support mp3
 		if (!buffer1.loadFromFile("1.wav")) {
-			throw out_of_range("Cannot get the sound file.");
+			throw runtime_error("Cannot get the sound file.");
 		}
 		// need file, not support mp3
 		else if (!bgmusic.openFromFile("1.wav")) {
-			throw out_of_range("Cannot get the music file.");
+			throw runtime_error("Cannot get the music file.");
 		}
-		else {
-			sound1.setBuffer(buffer1);
-			sound1.setVolume(50.0f);
-			bgmusic.play();
-			bgmusic.setLoop(true);
-		}
+		sound1.setBuffer(buffer1);
+		sound1.setVolume(bufferVolume1);
+		bgmusic.play();
+		bgmusic.setLoop(true);
 	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-
-	static float bufferVolume1 = 0.0f;
-	if (sound1.getBuffer() != NULL) {
-		bufferVolume1 = sound1.getVolume();
+	catch (runtime_error  &ex) {
+		cout << "Runtime_error: " << ex.what() << endl;
 	}
 
 	while (!(*done)) {
@@ -120,11 +113,13 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 						else {
 							sound1.setVolume(100.0f);
 						}
+
 						cout << "Now the volume is : " << sound1.getVolume() << endl;
 					}
 					else {
 						cout << "Somethings bug ,cannot change the sound volume." << endl;
 					}
+
 					break;
 
 				case (Keyboard::Subtract):// volume down
@@ -135,11 +130,13 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 						else {
 							sound1.setVolume(0.0f);
 						}
+
 						cout << "Now the volume is : " << sound1.getVolume() << endl;
 					}
 					else {
 						cout << "Somethings bug ,cannot change the sound volume." << endl;
 					}
+
 					break;
 
 				default:
@@ -154,6 +151,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 				else if (getEvent.mouseButton.button == Mouse::Right && start) {
 					start = false;
 				}
+
 			}
 			else if (getEvent.type == Event::Closed) {
 				bgmusic.stop();
@@ -173,24 +171,22 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 			}
 		}
 
-		window->clear(Color::White);
-
-		localPosition = Mouse::getPosition(*window);
-		mouseLight.setEmitter(window->mapPixelToCoords(localPosition));
-		Time elapsed = clock.restart();
-		mouseLight.update(elapsed);
-
 		playerMove(mainPlayer, window, 5.0f);
 		if (!start) {
 			ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 		}
 		else {
-			controlBallMove(ball, block1);
-			controlBallMove(ball, block2);
-			controlBallMove(ball, block3);
 			ballMove(ball, window, mainPlayer);
 		}
 
+		mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
+		Time elapsed = clock.restart();
+		mouseLight.update(elapsed);
+		block1.update(ball, speedX, speedY);
+		block2.update(ball, speedX, speedY);
+		block3.update(ball, speedX, speedY);
+
+		window->clear(Color::White);
 		window->draw(mouseLight);
 		window->draw(block1);
 		window->draw(block2);
@@ -260,23 +256,12 @@ void setItemVertices(VertexArray &array, const Vector2f &initial, float length) 
 
 void playerMove(Shape &player, Window *window, float speed) {
 
-	if (player.getGlobalBounds().contains(Vector2f(window->getSize().x, player.getPosition().y))) {
-		if (Keyboard::isKeyPressed(Keyboard::Left)) {
-			player.move(Vector2f(speed * -1, 0));
-		}
+	FloatRect playerBound = player.getGlobalBounds();
+	if (playerBound.left > 0 && Keyboard::isKeyPressed(Keyboard::Left)) {
+		player.move(Vector2f(speed * -1, 0));
 	}
-	else if (player.getGlobalBounds().contains(Vector2f(0, player.getPosition().y))) {
-		if (Keyboard::isKeyPressed(Keyboard::Right)) {
-			player.move(Vector2f(speed, 0));
-		}
-	}
-	else {
-		if (Keyboard::isKeyPressed(Keyboard::Left)) {
-			player.move(Vector2f(speed * -1, 0));
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Right)) {
-			player.move(Vector2f(speed, 0));
-		}
+	else if (playerBound.left + playerBound.width < window->getSize().x && Keyboard::isKeyPressed(Keyboard::Right)) {
+		player.move(Vector2f(speed, 0));
 	}
 }
 
@@ -290,7 +275,7 @@ void initializeBall() {
 	speedY = -(rand() % 2 + 2);
 }
 
-// all change direct by using abs() to prevent too fast speed to out of window
+// all change direct by using abs() to prevent too fast speed to stuck outside the window
 void ballMove(CircleShape &ball, Window *window, Shape &player) {
 
 	FloatRect playerBounds = player.getGlobalBounds();
@@ -391,51 +376,4 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 		speedY = originY * 10;
 	}
 	ball.move(speedX, speedY);
-}
-
-// equal above
-void controlBallMove(CircleShape &ball, Block &block) {
-
-	FloatRect blockBounds = block.getBounds();
-	FloatRect ballBounds = ball.getGlobalBounds();
-	FloatRect leftBlock = FloatRect(Vector2f(block[0].position.x, block[0].position.y + ball.getRadius()), Vector2f(1, blockBounds.height - ball.getRadius()));
-	FloatRect rightBlock = FloatRect(Vector2f(block[1].position.x, block[1].position.y + ball.getRadius()), Vector2f(-1, blockBounds.height - ball.getRadius()));
-	FloatRect topBlock = FloatRect(Vector2f(block[0].position.x + ball.getRadius(), block[0].position.y), Vector2f(blockBounds.width - ball.getRadius(), 1));
-	FloatRect bottomBlock = FloatRect(Vector2f(block[3].position.x + ball.getRadius(), block[3].position.y), Vector2f(blockBounds.width - ball.getRadius(), -1));
-
-	if (ballBounds.intersects(leftBlock)) {
-		speedX = -abs(speedX);
-	}
-	else if (ballBounds.intersects(rightBlock)) {
-		speedX = abs(speedX);
-	}
-	if (ballBounds.intersects(topBlock)) {
-		speedY = -abs(speedY);
-	}
-	else if (ballBounds.intersects(bottomBlock)) {
-		speedY = abs(speedY);
-	}
-	/*static FloatRect bufferBounds = ballBounds;
-
-	if (ballBounds.intersects(blockBounds)) {
-
-		// obstacle left bound
-		if (bufferBounds.left- blockBounds.left <= 0)  {
-			speedX = -abs(speedX);
-		}
-		// obstacle right bound
-		else if ((bufferBounds.left + bufferBounds.width) - (blockBounds.left + blockBounds.width) >= 0){
-			speedX = abs(speedX);
-		}
-		// obstacle top bound
-		else if ((bufferBounds.top + bufferBounds.height) - (blockBounds.top + bufferBounds.height) <= 0) {
-			speedY = -abs(speedY);
-		}
-		// obstacle bottom bound
-		else if ((bufferBounds.top + bufferBounds.height) - (blockBounds.top + blockBounds.height) >= 0) {
-			speedY = abs(speedY);
-		}
-	}
-
-	bufferBounds = ballBounds;*/
 }
