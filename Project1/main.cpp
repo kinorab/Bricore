@@ -16,8 +16,8 @@ using namespace sf;
 using namespace std;
 
 static bool start;
-static int speedX;
-static int speedY;
+static float speedX;
+static float speedY;
 static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 
@@ -286,7 +286,7 @@ void ballEnableMove(Shape &ball) {// can add extra affect
 
 void initializeBall() {
 
-	rand() % 2 == 0 ? speedX = rand() % 3 + 3 : speedX = -(rand() % 3 + 3);
+	speedX = (rand() % 3 + 3) * (rand() % 2 == 0 ? 1 : -1);
 	speedY = -(rand() % 2 + 2);
 }
 
@@ -321,9 +321,10 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	// the collision between ball and player
 	else if (ballBounds.intersects(playerBounds)) {
 
-		if (speedX == 0) {
+		if (speedX == 0.0f) {
 			speedX = originX;
 		}
+
 		speedY = -abs(speedY);
 		if (ball.getPosition().y <= player.getPosition().y) {
 			
@@ -364,12 +365,12 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 			}
 			// center position
 			else if (ball.getPosition().x == playerBounds.left + playerBounds.width / 2) {
-				speedX = 0;
+				speedX = 0.0f;
 				speedY = originY;
 			}
 		}
 		// the collision under the half of player body, if player hit the ball with edge-side,
-		// it will boost 2.5X originX to speedX(rewrite speedX whether how fast current speedX are) and plus 1.25X to speedY
+		// it will set speedX to 2.5X originX (rewrite speedX whether how fast current speedX are) and plus 0.25X to speedY
 		else {
 
 			if (ballBounds.left + ballBounds.width / 2 > playerBounds.left + playerBounds.width / 2) {
