@@ -27,7 +27,7 @@ void Block::setBlockVertice(const Vector2f & position, const float width, const 
 		}
 	}
 	catch (domain_error & ex) {
-		cout << "Domain Error: " << ex.what() << endl;
+		cout << "Domain_error: " << ex.what() << endl;
 	}
 }
 
