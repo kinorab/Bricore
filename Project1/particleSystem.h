@@ -13,22 +13,21 @@ public:
 
 	void setEmitter(Vector2f);
 
-	void update(Time elapsed);
+	void update(float timeSpan);
 
 private:
 
 	virtual void draw(RenderTarget & target, RenderStates states) const;
 
 	struct Particle{
-
 		Vector2f velocity;
-		Time lifetime;
+		float lifetime;
 	};
 
 	void resetParticle(size_t);
 
 	vector<Particle>m_particles;
 	VertexArray m_vertices;
-	Time m_lifetime;
+	float m_lifetime;
 	Vector2f m_emitter;
 };

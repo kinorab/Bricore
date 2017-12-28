@@ -7,9 +7,7 @@
 #include <SFML/Audio.hpp>
 #include <atomic>
 #include <iostream>
-#include <cstdlib>
 #include <stdexcept>
-#include <ctime>
 #include <queue>
 #include <mutex>
 
@@ -31,12 +29,9 @@ void playerMove(Shape &, Shape &, Window *, float);
 bool ballEnableMove(Shape &);
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
-
 	window->setActive(true);
-	srand(time(NULL));
 	float blockLength = 100;
 	float incre1 = 3;
-
 	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
 	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
 	Block block2(Quads, 4, Vector2f(blockLength, blockLength), blockLength, blockLength * incre1);
@@ -65,7 +60,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
-	
+
 	ParticleSystem mouseLight(5000);
 	Vector2i localPosition;
 	Clock clock;
@@ -92,8 +87,10 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		bgmusic.setLoop(true);
 	}
 	catch (runtime_error  &ex) {
-		cout << "Runtime_error: " << ex.what() << endl;
+		cout << "Runtime error: " << ex.what() << endl;
 	}
+
+	Time elapsed = milliseconds(0);
 
 	while (!(*done)) {
 
@@ -183,23 +180,34 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 			}
 		}
 
-		playerMove(mainPlayer, redRange, window, 5.0f);
-		yellowRange.setPosition(mainPlayer.getPosition());
-		if (!ballEnableMove(ball)) {
-			ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
+		// update
+		elapsed += clock.restart();
+		if (elapsed.asSeconds() > 0.05f) {
+			elapsed = seconds(0.05f);
 		}
-		else {
-			ballMove(ball, window, mainPlayer);
+		
+		// updateSpan: milliseconds
+		const float updateSpan = 10.0f;
+		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
+			playerMove(mainPlayer, redRange, window, 5.0f);
+			yellowRange.setPosition(mainPlayer.getPosition());
+			if (!ballEnableMove(ball)) {
+				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
+			}
+			else {
+				ballMove(ball, window, mainPlayer);
+			}
+
+			flashRange(ball, mainPlayer, redRange);
+			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
+			mouseLight.update(updateSpan);
+			block1.enable(ball, speedX, speedY);
+			block2.enable(ball, speedX, speedY);
+			block3.enable(ball, speedX, speedY);
+			elapsed -= seconds(updateSpan / 1000.0f);
 		}
-		flashRange(ball, mainPlayer, redRange);
 
-		mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
-		Time elapsed = clock.restart();
-		mouseLight.update(elapsed);
-		block1.enable(ball, speedX, speedY);
-		block2.enable(ball, speedX, speedY);
-		block3.enable(ball, speedX, speedY);
-
+		// render
 		window->clear(Color::White);
 		window->draw(block1);
 		window->draw(block2);
@@ -289,23 +297,23 @@ bool ballEnableMove(Shape &ball) {// can add extra affect
 	if (!start) {
 
 		return false;
-	 }
+	}
 	else {
-		
+
 		return true;
 	}
 }
 
 void initializeBall() {
 
-	speedX = (rand() % 3 + 3) * (rand() % 2 == 0 ? 1 : -1);
+	speedX = (rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1);
 	speedY = 2.f;
 }
 
 void resetBall() {
 
-	speedX = (rand() % 3 + 3) * (rand() % 2 == 0 ? 1 : -1);
-	speedY = 2.f * (rand() % 2 == 0 ? 1 : -1);
+	speedX = (rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1);
+	speedY = 2.f * (rng() % 2 == 0 ? 1 : -1);
 }
 
 // all change direct by using abs() to prevent too fast speed to stuck outside the window
@@ -321,7 +329,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 		originY = speedY;
 		countTime.restart();
 	}
-	else if (countTime.getElapsedTime().asSeconds() > 20.f) {
+	else if (countTime.getElapsedTime().asSeconds() > 20.0f) {
 		resetBall();
 		originX = speedX;
 		originY = speedY;
@@ -354,7 +362,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 
 		speedY = -abs(speedY);
 		if (ball.getPosition().y <= player.getPosition().y) {
-			
+
 			// hit center range(0.45f ~ 0.55f) will reset all speed
 			// right side of player position
 			if (ball.getPosition().x >= playerBounds.left + playerBounds.width) {

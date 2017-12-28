@@ -1,10 +1,9 @@
 #include "define.h"
 #include "particleSystem.h"
-#include <cstdlib>
 #include <cmath>
 
 ParticleSystem::ParticleSystem(unsigned int count)
-	:m_particles(count), m_vertices(Points, count), m_lifetime(seconds(2)), m_emitter(0, 0) {
+	:m_particles(count), m_vertices(Points, count), m_lifetime(1800), m_emitter(0, 0) {
 
 }
 
@@ -12,17 +11,21 @@ void ParticleSystem::setEmitter(Vector2f position) {
 	m_emitter = position;
 }
 
-void ParticleSystem::update(Time elapsed) {
-
+void ParticleSystem::update(float timeSpan) {
 	for (size_t i = 0; i < m_particles.size(); ++i) {
-		m_particles[i].lifetime -= elapsed;
-		if (m_particles[i].lifetime <= Time::Zero) {
+		m_particles[i].lifetime -= timeSpan;
+		if (m_particles[i].lifetime <= 0) {
 			resetParticle(i);
 		}
 
-		m_vertices[i].position += m_particles[i].velocity * elapsed.asSeconds();
-		float ratio = m_particles[i].lifetime.asSeconds() / m_lifetime.asSeconds();
-		m_vertices[i].color = Color(static_cast<Uint8>(rand() * 255), static_cast<Uint8>(rand() % 255), static_cast<Uint8>(rand() % 255), static_cast<Uint8>(ratio * 255));
+		m_vertices[i].position += m_particles[i].velocity * timeSpan;
+		float ratio = m_particles[i].lifetime / m_lifetime;
+		m_vertices[i].color = Color(
+			static_cast<Uint8>(rng() % 256),
+			static_cast<Uint8>(rng() % 256),
+			static_cast<Uint8>(rng() % 256),
+			static_cast<Uint8>(ratio * 255)
+		);
 	}
 }
 
@@ -35,9 +38,9 @@ void ParticleSystem::draw(RenderTarget &target, RenderStates states) const {
 
 void ParticleSystem::resetParticle(size_t index) {
 
-	float angle = (rand() % 360) * PI / 180.0f;
-	float speed = (rand() % 50) + 50.0f;
+	float angle = (rng() % 360) * PI / 180.0f;
+	float speed = (rng() % 50) / 1000.0f + 0.05f;
 	m_particles[index].velocity = Vector2f(cos(angle) * speed, sin(angle) * speed);
-	m_particles[index].lifetime = milliseconds(rand() % 2000);
+	m_particles[index].lifetime = static_cast<float>(rand() % static_cast<int>(m_lifetime));
 	m_vertices[index].position = m_emitter;
 }

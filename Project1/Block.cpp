@@ -23,11 +23,11 @@ void Block::setBlockVertice(const Vector2f & position, const float width, const 
 			(*this)[3].position += Vector2f(0.0f, height);
 		}
 		else {
-			throw out_of_range("Invalid initial side-length for block.");
+			throw domain_error("Invalid initial side-length for block.");
 		}
 	}
-	catch (out_of_range & ex) {
-		cout << "Exception: " << ex.what() << endl;
+	catch (domain_error & ex) {
+		cout << "Domain Error: " << ex.what() << endl;
 	}
 }
 
