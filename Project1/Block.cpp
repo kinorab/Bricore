@@ -66,7 +66,7 @@ void Block::MovePosition(const Vector2f & pos) {
 }
 
 // all change direct by using abs() to prevent stuck inside the block
-void Block::update(CircleShape & ball, float & speedX, float & speedY) {
+void Block::enable(CircleShape & ball, float &speedX, float &speedY) {
 
 	FloatRect blockBounds = getBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
@@ -88,24 +88,6 @@ void Block::update(CircleShape & ball, float & speedX, float & speedY) {
 	else if (ballBounds.intersects(bottomBlock)) {
 		speedY = abs(speedY);
 	}
-	/*static FloatRect bufferBounds = ballBounds;
-
-	if (ballBounds.intersects(blockBounds)) {
-	if (bufferBounds.left- blockBounds.left <= 0)  {
-	speedX = -abs(speedX);
-	}
-	else if ((bufferBounds.left + bufferBounds.width) - (blockBounds.left + blockBounds.width) >= 0){
-	speedX = abs(speedX);
-	}
-	else if ((bufferBounds.top + bufferBounds.height) - (blockBounds.top + bufferBounds.height) <= 0) {
-	speedY = -abs(speedY);
-	}
-	else if ((bufferBounds.top + bufferBounds.height) - (blockBounds.top + blockBounds.height) >= 0) {
-	speedY = abs(speedY);
-	}
-	}
-
-	bufferBounds = ballBounds;*/
 }
 
 const Vector2f & Block::getPosition() const {

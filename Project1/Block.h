@@ -14,7 +14,7 @@ public:
 	void setWidth(const float width);
 	void setHeight(const float height);
 	void MovePosition(const Vector2f &pos);
-	void update(CircleShape & ball, float & speedX, float & speedY);
+	void enable(CircleShape &ball, float &speedX, float &speedY);
 	const Vector2f & getPosition() const;
 	const float getWidth() const;
 	const float getHeight() const;

@@ -7,6 +7,7 @@
 #include <SFML/Audio.hpp>
 #include <atomic>
 #include <iostream>
+#include <cstdlib>
 #include <stdexcept>
 #include <ctime>
 #include <queue>
@@ -25,7 +26,7 @@ static mutex gameEventQueueMutex;
 void ballMove(CircleShape &, Window *, Shape &);
 void initializeBall();
 void playerMove(Shape &, Window *, float);
-void ballEnableMove(Shape &);
+bool ballEnableMove(Shape &);
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
 
@@ -35,7 +36,6 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	float incre1 = 3;
 	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
 	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
-	cout << block1.getBounds().left + block1.getBounds().width;
 	Block block2(Quads, 4, Vector2f(blockLength, blockLength), blockLength, blockLength * 2);
 	block2.setVerticeColor(Color::Green, Color::Red, Color::Cyan, Color::Yellow);
 	Block block3(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, blockLength), blockLength, blockLength * 2);
@@ -172,7 +172,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		}
 
 		playerMove(mainPlayer, window, 5.0f);
-		if (!start) {
+		if (!ballEnableMove(ball)) {
 			ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 		}
 		else {
@@ -182,9 +182,9 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 		Time elapsed = clock.restart();
 		mouseLight.update(elapsed);
-		block1.update(ball, speedX, speedY);
-		block2.update(ball, speedX, speedY);
-		block3.update(ball, speedX, speedY);
+		block1.enable(ball, speedX, speedY);
+		block2.enable(ball, speedX, speedY);
+		block3.enable(ball, speedX, speedY);
 
 		window->clear(Color::White);
 		window->draw(mouseLight);
@@ -265,14 +265,22 @@ void playerMove(Shape &player, Window *window, float speed) {
 	}
 }
 
-void ballEnableMove(Shape &ball) {// can add extra affect
+bool ballEnableMove(Shape &ball) {// can add extra affect
 
+	if (!start) {
+
+		return false;
+	 }
+	else {
+
+		return true;
+	}
 }
 
 void initializeBall() {
 
 	speedX = (rand() % 3 + 3) * (rand() % 2 == 0 ? 1 : -1);
-	speedY = -(rand() % 2 + 2);
+	speedY = 2.f * (rand() % 2 == 0 ? 1 : -1);
 }
 
 // all change direct by using abs() to prevent too fast speed to stuck outside the window
@@ -282,9 +290,18 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	FloatRect ballBounds = ball.getGlobalBounds();
 	static float originX = speedX;
 	static float originY = speedY;
+	static Clock countTime;
 	if (!start) {
 		originX = speedX;
 		originY = speedY;
+		countTime.restart();
+	}
+	else if (countTime.getElapsedTime().asSeconds() > 20.f) {
+
+		initializeBall();
+		originX = speedX;
+		originY = speedY;
+		countTime.restart();
 	}
 
 	// out of bottom bound, reset the ball
@@ -306,6 +323,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	// the collision between ball and player
 	else if (ballBounds.intersects(playerBounds)) {
 
+		countTime.restart();
 		if (speedX == 0.0f) {
 			speedX = originX;
 		}
@@ -313,67 +331,89 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 		speedY = -abs(speedY);
 		if (ball.getPosition().y <= player.getPosition().y) {
 			
-			// hit center range(0.485f ~ 0.515f) will reset all speed
+			// hit center range(0.45f ~ 0.55f) will reset all speed
 			// right side of player position
 			if (ball.getPosition().x >= playerBounds.left + playerBounds.width) {
-				speedX = abs(speedX) * 1.3f;
-			}
-			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .9f) {
 				speedX = abs(speedX) * 1.2f;
 			}
-			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .75f) {
+			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .9f) {
 				speedX = abs(speedX) * 1.15f;
 			}
-			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .515f) {
+			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .75f) {
 				speedX = abs(speedX) * 1.1f;
+			}
+			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .55f) {
+				speedX = abs(speedX) * 1.05f;
 			}
 			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .5f) {
 				speedX = abs(originX);
-				speedY = originY;
+				speedY = -abs(originY);
 			}
 			// left side of player position
 			else if (ball.getPosition().x <= playerBounds.left) {
-				speedX = -abs(speedX) * 1.3f;
-			}
-			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .1f) {
 				speedX = -abs(speedX) * 1.2f;
 			}
-			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .25f) {
+			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .1f) {
 				speedX = -abs(speedX) * 1.15f;
 			}
-			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .485f) {
+			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .25f) {
 				speedX = -abs(speedX) * 1.1f;
+			}
+			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .45f) {
+				speedX = -abs(speedX) * 1.05f;
 			}
 			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .5f) {
 				speedX = -abs(originX);
-				speedY = originY;
+				speedY = -abs(originY);
 			}
 			// center position
 			else if (ball.getPosition().x == playerBounds.left + playerBounds.width / 2) {
 				speedX = 0.0f;
-				speedY = originY;
+				speedY = -abs(originY);
 			}
 		}
 		// the collision under the half of player body, if player hit the ball with edge-side,
-		// it will set speedX to 2.5X originX (rewrite speedX whether how fast current speedX are) and plus 0.25X to speedY
+		// it will set speedX to 1.5X originX (rewrite speedX whether how fast current speedX are) and plus 0.1X to speedY
 		else {
 
 			if (ballBounds.left + ballBounds.width / 2 > playerBounds.left + playerBounds.width / 2) {
-				speedX = abs(originX) * 2.5f;
-				speedY = -abs(speedY) * 1.25f;
+				speedX = abs(originX) * 1.5f;
+				speedY = -abs(speedY) * 1.1f;
 			}
 			else if (ballBounds.left + ballBounds.width / 2 < playerBounds.left + playerBounds.width / 2) {
-				speedX = -abs(originX) * 2.5f;
-				speedY = -abs(speedY) * 1.25f;
+				speedX = -abs(originX) * 1.5f;
+				speedY = -abs(speedY) * 1.1f;
 			}
 		}
 	}
 	// prevent speed too fast
-	if (abs(speedX) >= abs(originX) * 10) {
-		speedX = originX * 10;
+	if (ball.getPosition().x < playerBounds.left + playerBounds.width / 2) {
+
+		if (abs(speedX) >= abs(originX) * 8) {
+			speedX = -abs(originX) * 8;
+		}
+		else if (abs(speedY) >= abs(originY) * 8) {
+			speedY = -abs(originY) * 8;
+		}
 	}
-	else if (abs(speedY) >= abs(originY) * 10) {
-		speedY = originY * 10;
+	else if (ball.getPosition().x > playerBounds.left + playerBounds.width / 2) {
+
+		if (abs(speedX) >= abs(originX) * 8) {
+			speedX = abs(originX) * 8;
+		}
+		else if (abs(speedY) >= abs(originY) * 8) {
+			speedY = -abs(originY) * 8;
+		}
 	}
+	else {
+
+		if (abs(speedX) >= abs(originX) * 8) {
+			speedX < 0 ? speedX = abs(originX) * 8 : speedX = -abs(originX) * 8;
+		}
+		else if (abs(speedY) >= abs(originY) * 8) {
+			speedY = -abs(originY) * 8;
+		}
+	}
+
 	ball.move(speedX, speedY);
 }
