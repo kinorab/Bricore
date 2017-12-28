@@ -24,8 +24,10 @@ static mutex gameEventQueueMutex;
 
 //void setItemVertices(VertexArray &, const Vector2f &, float);
 void ballMove(CircleShape &, Window *, Shape &);
+void flashRange(CircleShape &, Shape &, Shape &);
 void initializeBall();
-void playerMove(Shape &, Window *, float);
+void resetBall();
+void playerMove(Shape &, Shape &, Window *, float);
 bool ballEnableMove(Shape &);
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
@@ -34,11 +36,12 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	srand(time(NULL));
 	float blockLength = 100;
 	float incre1 = 3;
+
 	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
 	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
-	Block block2(Quads, 4, Vector2f(blockLength, blockLength), blockLength, blockLength * 2);
+	Block block2(Quads, 4, Vector2f(blockLength, blockLength), blockLength, blockLength * incre1);
 	block2.setVerticeColor(Color::Green, Color::Red, Color::Cyan, Color::Yellow);
-	Block block3(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, blockLength), blockLength, blockLength * 2);
+	Block block3(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, blockLength), blockLength, blockLength * incre1);
 	block3.setVerticeColor(Color::Black);
 
 	RectangleShape mainPlayer;
@@ -46,13 +49,22 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
 	mainPlayer.setPosition(Vector2f(window->getSize().x / 2, window->getSize().y - mainPlayer.getSize().y));
+	RectangleShape yellowRange;
+	yellowRange.setSize(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
+	yellowRange.setOrigin(Vector2f(yellowRange.getSize().x / 2, yellowRange.getSize().y / 2));
+	yellowRange.setFillColor(Color::Yellow);
 
 	CircleShape ball;
 	ball.setFillColor(Color::White);
 	ball.setOutlineColor(Color::Black);
-	ball.setRadius(10.f);
+	ball.setRadius(5.f);
 	ball.setOutlineThickness(2.f);
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
+	RectangleShape redRange;
+	redRange.setSize(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
+	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
+	redRange.setPosition(mainPlayer.getPosition());
+	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 	
 	ParticleSystem mouseLight(5000);
 	Vector2i localPosition;
@@ -171,13 +183,15 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 			}
 		}
 
-		playerMove(mainPlayer, window, 5.0f);
+		playerMove(mainPlayer, redRange, window, 5.0f);
+		yellowRange.setPosition(mainPlayer.getPosition());
 		if (!ballEnableMove(ball)) {
 			ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 		}
 		else {
 			ballMove(ball, window, mainPlayer);
 		}
+		flashRange(ball, mainPlayer, redRange);
 
 		mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 		Time elapsed = clock.restart();
@@ -187,12 +201,14 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		block3.enable(ball, speedX, speedY);
 
 		window->clear(Color::White);
-		window->draw(mouseLight);
 		window->draw(block1);
 		window->draw(block2);
 		window->draw(block3);
 		window->draw(mainPlayer);
+		window->draw(yellowRange);
+		window->draw(redRange);
 		window->draw(ball);
+		window->draw(mouseLight);
 		window->display();
 	}
 	// finalize...
@@ -254,14 +270,17 @@ void setItemVertices(VertexArray &array, const Vector2f &initial, float length) 
 }
 */
 
-void playerMove(Shape &player, Window *window, float speed) {
+void playerMove(Shape &player, Shape &flash, Window *window, float speed) {
 
 	FloatRect playerBound = player.getGlobalBounds();
 	if (playerBound.left > 0 && Keyboard::isKeyPressed(Keyboard::Left)) {
-		player.move(Vector2f(speed * -1, 0));
+		player.move(Vector2f(-abs(speed), 0));
+		flash.move(Vector2f(-abs(speed), 0));
 	}
-	else if (playerBound.left + playerBound.width < window->getSize().x && Keyboard::isKeyPressed(Keyboard::Right)) {
-		player.move(Vector2f(speed, 0));
+
+	if (playerBound.left + playerBound.width < window->getSize().x && Keyboard::isKeyPressed(Keyboard::Right)) {
+		player.move(Vector2f(abs(speed), 0));
+		flash.move(Vector2f(abs(speed), 0));
 	}
 }
 
@@ -272,12 +291,18 @@ bool ballEnableMove(Shape &ball) {// can add extra affect
 		return false;
 	 }
 	else {
-
+		
 		return true;
 	}
 }
 
 void initializeBall() {
+
+	speedX = (rand() % 3 + 3) * (rand() % 2 == 0 ? 1 : -1);
+	speedY = 2.f;
+}
+
+void resetBall() {
 
 	speedX = (rand() % 3 + 3) * (rand() % 2 == 0 ? 1 : -1);
 	speedY = 2.f * (rand() % 2 == 0 ? 1 : -1);
@@ -297,8 +322,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 		countTime.restart();
 	}
 	else if (countTime.getElapsedTime().asSeconds() > 20.f) {
-
-		initializeBall();
+		resetBall();
 		originX = speedX;
 		originY = speedY;
 		countTime.restart();
@@ -389,31 +413,65 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	// prevent speed too fast
 	if (ball.getPosition().x < playerBounds.left + playerBounds.width / 2) {
 
-		if (abs(speedX) >= abs(originX) * 8) {
-			speedX = -abs(originX) * 8;
+		if (abs(speedX) >= abs(originX) * 5) {
+			speedX = -abs(originX) * 5;
 		}
-		else if (abs(speedY) >= abs(originY) * 8) {
-			speedY = -abs(originY) * 8;
+		else if (abs(speedY) >= abs(originY) * 5) {
+			speedY = -abs(originY) * 5;
 		}
 	}
 	else if (ball.getPosition().x > playerBounds.left + playerBounds.width / 2) {
 
-		if (abs(speedX) >= abs(originX) * 8) {
-			speedX = abs(originX) * 8;
+		if (abs(speedX) >= abs(originX) * 5) {
+			speedX = abs(originX) * 5;
 		}
-		else if (abs(speedY) >= abs(originY) * 8) {
-			speedY = -abs(originY) * 8;
+		else if (abs(speedY) >= abs(originY) * 5) {
+			speedY = -abs(originY) * 5;
 		}
 	}
 	else {
 
-		if (abs(speedX) >= abs(originX) * 8) {
-			speedX < 0 ? speedX = abs(originX) * 8 : speedX = -abs(originX) * 8;
+		if (abs(speedX) >= abs(originX) * 5) {
+			speedX < 0 ? speedX = abs(originX) * 5 : speedX = -abs(originX) * 5;
 		}
-		else if (abs(speedY) >= abs(originY) * 8) {
-			speedY = -abs(originY) * 8;
+		else if (abs(speedY) >= abs(originY) * 5) {
+			speedY = -abs(originY) * 5;
 		}
 	}
 
 	ball.move(speedX, speedY);
+}
+
+void flashRange(CircleShape &ball, Shape &player, Shape &range) {
+
+	static Clock elapsed;
+	static bool flash = false;
+	FloatRect playerBounds = player.getGlobalBounds();
+	FloatRect ballBounds = ball.getGlobalBounds();
+	FloatRect rangeBounds = range.getGlobalBounds();
+
+	if (ballBounds.intersects(playerBounds) && start) {
+		elapsed.restart();
+		if (ballBounds.left <= playerBounds.left) {
+			range.setPosition(playerBounds.left + rangeBounds.width / 2, player.getPosition().y);
+		}
+		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
+			range.setPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getPosition().y);
+		}
+		else {
+			range.setPosition(ball.getPosition().x, player.getPosition().y);
+		}
+		flash = true;
+	}
+
+	if (flash) {
+		float time = elapsed.getElapsedTime().asMilliseconds();
+		if (time <= 1500.f) {
+			float rate = (1.f - time / 1500.f);
+			range.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
+		}
+	}
+	else {
+		flash = false;
+	}
 }
