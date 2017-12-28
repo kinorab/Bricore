@@ -87,7 +87,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		bgmusic.setLoop(true);
 	}
 	catch (runtime_error  &ex) {
-		cout << "Runtime error: " << ex.what() << endl;
+		cout << "Runtime_error: " << ex.what() << endl;
 	}
 
 	Time elapsed = milliseconds(0);
