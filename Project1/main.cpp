@@ -185,13 +185,13 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 
 		playerMove(mainPlayer, redRange, window, 5.0f);
 		yellowRange.setPosition(mainPlayer.getPosition());
+		flashRange(ball, mainPlayer, redRange);
 		if (!ballEnableMove(ball)) {
 			ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 		}
 		else {
 			ballMove(ball, window, mainPlayer);
 		}
-		flashRange(ball, mainPlayer, redRange);
 
 		mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 		Time elapsed = clock.restart();
