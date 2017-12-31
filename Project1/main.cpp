@@ -26,7 +26,7 @@ void flashRange(CircleShape &, Shape &, Shape &);
 void initializeBall();
 void resetBall();
 void playerMove(Shape &, Shape &, Window *, float);
-bool ballEnableMove(Shape &);
+bool ballEnableMove(Shape &, Shape &, Sound &);
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
 	window->setActive(true);
@@ -69,16 +69,16 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	Sound sound1;
 	Music bgmusic;
 	SoundBuffer buffer1;
+
+	static float bufferBgVolume = 100.0f;
 	static float bufferVolume1 = 50.0f;
 
 	try {
 		// if memory violation happen, reset the lib connector of project (-d have something bug)
-		// need file, not support mp3
-		if (!buffer1.loadFromFile("1.wav")) {
+		if (!buffer1.loadFromFile("s1.wav")) {
 			throw runtime_error("Cannot get the sound file.");
 		}
-		// need file, not support mp3
-		else if (!bgmusic.openFromFile("1.wav")) {
+		else if (!bgmusic.openFromFile("bg.wav")) {
 			throw runtime_error("Cannot get the music file.");
 		}
 		sound1.setBuffer(buffer1);
@@ -103,6 +103,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 			gameEventQueue.pop();
 			gameEventQueueMutex.unlock();
 
+			static Keyboard::Key choice;
 			Vector2f GlobalPosition = Vector2f(Mouse::getPosition(*window));
 			if (getEvent.type == Event::TextEntered) {
 				if (getEvent.text.unicode < 128) {
@@ -110,51 +111,107 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 						<< ", unicode is: " << getEvent.text.unicode << endl;
 				}
 			}
-			// can place some option control
-			else if (getEvent.type == Event::KeyPressed) {
+			if (getEvent.type == Event::KeyPressed) {
+
 				switch (getEvent.key.code) {
 
-				case (Keyboard::Add):// volume up
-					if (sound1.getBuffer() != NULL) {
-						if (bufferVolume1 < 95.0f) {
-							sound1.setVolume(bufferVolume1 += 5.f);
-						}
-						else {
-							sound1.setVolume(100.0f);
-						}
-
-						cout << "Now the volume is : " << sound1.getVolume() << endl;
-					}
-					else {
-						cout << "Somethings bug ,cannot change the sound volume." << endl;
-					}
-
+				case (Keyboard::Num0):
+					cout << "Choice bgm volume." << endl;
+					choice = Keyboard::Num0;
 					break;
-
-				case (Keyboard::Subtract):// volume down
-					if (sound1.getBuffer() != NULL) {
-						if (bufferVolume1 > 5.0f) {
-							sound1.setVolume(bufferVolume1 -= 5.f);
-						}
-						else {
-							sound1.setVolume(0.0f);
-						}
-
-						cout << "Now the volume is : " << sound1.getVolume() << endl;
-					}
-					else {
-						cout << "Somethings bug ,cannot change the sound volume." << endl;
-					}
-
+				case(Keyboard::Numpad0):
+					cout << "Choice bgm volume." << endl;
+					choice = Keyboard::Numpad0;
 					break;
-
+				case (Keyboard::Num1):
+					cout << "Choice sound1 volume." << endl;
+					choice = Keyboard::Num1;
+					break;
+				case(Keyboard::Numpad1):
+					cout << "Choice sound1 volume." << endl;
+					choice = Keyboard::Numpad1;
+					break;
 				default:
 					break;
 				}
+
+				// bgm volume
+				if(choice == Keyboard::Num0 || choice == Keyboard::Numpad0) {
+					switch (getEvent.key.code) {
+					case (Keyboard::Add):// volume up
+							if (bufferBgVolume < 95.0f) {
+								bgmusic.setVolume(bufferBgVolume += 5.f);
+							}
+							else if (bufferBgVolume >= 95.0f) {
+								bgmusic.setVolume(100.0f);
+							}
+							else {
+								cout << "Somethings bug ,cannot change the sound volume." << endl;
+							}
+							cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
+						break;
+
+					case (Keyboard::Subtract):// volume down
+							if (bufferBgVolume > 5.0f) {
+								bgmusic.setVolume(bufferBgVolume -= 5.f);
+							}
+							else if(bufferBgVolume <= 5.0f){
+								bgmusic.setVolume(0.0f);
+							}
+							else {
+								cout << "Somethings bug ,cannot change the sound volume." << endl;
+							}
+							cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
+						break;
+
+					default:
+						break;
+					}
+				}
+				// sound1 volume
+				else if (choice == Keyboard::Num1 || choice == Keyboard::Numpad1) {
+					switch (getEvent.key.code) {
+					case (Keyboard::Add):// volume up
+						if (sound1.getBuffer() != NULL) {
+							if (bufferVolume1 < 95.0f) {
+								sound1.setVolume(bufferVolume1 += 5.f);
+							}
+							else {
+								sound1.setVolume(100.0f);
+							}
+							cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
+						}
+						else {
+							cout << "Somethings bug ,cannot change the sound volume." << endl;
+						}
+						break;
+
+					case (Keyboard::Subtract):// volume down
+						if (sound1.getBuffer() != NULL) {
+							if (bufferVolume1 > 5.0f) {
+								sound1.setVolume(bufferVolume1 -= 5.f);
+							}
+							else {
+								sound1.setVolume(0.0f);
+							}
+							cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
+						}
+						else {
+							cout << "Somethings bug ,cannot change the sound volume." << endl;
+						}
+						break;
+
+					default:
+						break;
+					}
+				}
 			}
-			else if (getEvent.type == Event::MouseButtonPressed) {
+
+
+			if (getEvent.type == Event::MouseButtonPressed) {
 				if (getEvent.mouseButton.button == Mouse::Left && !start) {
 					initializeBall();
+					sound1.play();
 					start = true;
 				}
 				else if (getEvent.mouseButton.button == Mouse::Right && start) {
@@ -162,7 +219,8 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 				}
 
 			}
-			else if (getEvent.type == Event::Closed) {
+
+			if (getEvent.type == Event::Closed) {
 				bgmusic.stop();
 				sound1.stop();
 				*done = true;
@@ -191,13 +249,12 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			playerMove(mainPlayer, redRange, window, 5.0f);
 			yellowRange.setPosition(mainPlayer.getPosition());
-			if (!ballEnableMove(ball)) {
+			if (!ballEnableMove(ball, mainPlayer, sound1)) {
 				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 			}
 			else {
 				ballMove(ball, window, mainPlayer);
 			}
-
 			flashRange(ball, mainPlayer, redRange);
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 			mouseLight.update(updateSpan);
@@ -292,7 +349,7 @@ void playerMove(Shape &player, Shape &flash, Window *window, float speed) {
 	}
 }
 
-bool ballEnableMove(Shape &ball) {// can add extra affect
+bool ballEnableMove(Shape &ball, Shape &player, Sound &sound) {// can add extra affect
 
 	if (!start) {
 
@@ -300,6 +357,9 @@ bool ballEnableMove(Shape &ball) {// can add extra affect
 	}
 	else {
 
+		if (ball.getGlobalBounds().intersects(player.getGlobalBounds())) {
+			sound.play();
+		}
 		return true;
 	}
 }
@@ -453,6 +513,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 void flashRange(CircleShape &ball, Shape &player, Shape &range) {
 
 	static Clock elapsed;
+	static float time;
 	static bool flash = false;
 	FloatRect playerBounds = player.getGlobalBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
@@ -473,13 +534,14 @@ void flashRange(CircleShape &ball, Shape &player, Shape &range) {
 	}
 
 	if (flash) {
-		float time = elapsed.getElapsedTime().asMilliseconds();
+		time = elapsed.getElapsedTime().asMilliseconds();
 		if (time <= 1500.f) {
 			float rate = (1.f - time / 1500.f);
 			range.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
 		}
+		else {
+			flash = false;
+		}
 	}
-	else {
-		flash = false;
-	}
+
 }
