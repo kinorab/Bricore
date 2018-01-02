@@ -29,9 +29,11 @@ void playerMove(Shape &, Shape &, Window *, float);
 bool ballEnableMove(Shape &, Shape &, Sound &);
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
+
 	window->setActive(true);
-	float blockLength = 100;
-	float incre1 = 3;
+	static float blockLength = 100;
+	static float incre1 = 3;
+
 	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
 	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
 	Block block2(Quads, 4, Vector2f(blockLength, blockLength), blockLength, blockLength * incre1);
@@ -245,17 +247,18 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		}
 		
 		// updateSpan: milliseconds
-		const float updateSpan = 10.0f;
+		static constexpr float updateSpan = 10.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			playerMove(mainPlayer, redRange, window, 5.0f);
 			yellowRange.setPosition(mainPlayer.getPosition());
+			// if the ball move first, when ball departure from player's board, the judgment(flash) will fail
+			flashRange(ball, mainPlayer, redRange);
 			if (!ballEnableMove(ball, mainPlayer, sound1)) {
 				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 			}
 			else {
 				ballMove(ball, window, mainPlayer);
 			}
-			flashRange(ball, mainPlayer, redRange);
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 			mouseLight.update(updateSpan);
 			block1.enable(ball, speedX, speedY);

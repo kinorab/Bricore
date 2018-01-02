@@ -3,13 +3,14 @@
 #include <iostream>
 #include <stdexcept>
 
-Block::Block(const enum PrimitiveType type, const int vertexCount, const Vector2f & position, float width, float height)
+Block::Block(const enum PrimitiveType type, const size_t vertexCount, const Vector2f & position, float width, float height)
 	: VertexArray(type, vertexCount), position(position), width(width), height(height) {
 
 	setBlockVertice(position, width, height);
 }
 
 void Block::setBlockVertice(const Vector2f & position, const float width, const float height) {
+
 	try {
 		
 		if (width > 0 && height > 0) {
@@ -23,7 +24,7 @@ void Block::setBlockVertice(const Vector2f & position, const float width, const 
 			(*this)[3].position += Vector2f(0.0f, height);
 		}
 		else {
-			throw domain_error("Invalid initial side-length for block.");
+			throw domain_error("Invalid side-length for block.");
 		}
 	}
 	catch (domain_error & ex) {
@@ -48,20 +49,29 @@ void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3
 }
 
 void Block::setWidth(const float width) {
-	this->width = width;
-	setBlockVertice(getPosition(), getWidth(), getHeight());
+	if (width > 0) {
+		this->width = width;
+		setBlockVertice(getPosition(), getWidth(), getHeight());
+	}
+	else {
+		cout << "Invalid width setting." << endl;
+	}
 }
 
 void Block::setHeight(const float height) {
-	this->height = height;
-	setBlockVertice(getPosition(), getWidth(), getHeight());
+	if (height > 0) {
+		this->height = height;
+		setBlockVertice(getPosition(), getWidth(), getHeight());
+	}
+	else {
+		cout << "Invalid height setting." << endl;
+	}
 }
 
 void Block::MovePosition(const Vector2f & pos) {
 	for (size_t i = 0; i < getVertexCount(); ++i) {
 		(*this)[i].position += pos;
 	}
-
 	position = (*this)[0].position;// mark new position in [0]
 }
 
@@ -94,10 +104,10 @@ const Vector2f & Block::getPosition() const {
 	return position;
 }
 
-const float Block::getWidth() const {
+constexpr float Block::getWidth() const {
 	return width;
 }
 
-const float Block::getHeight() const {
+constexpr float Block::getHeight() const {
 	return height;
 }
