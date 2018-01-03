@@ -16,8 +16,8 @@ public:
 	void MovePosition(const Vector2f &pos);
 	void enable(CircleShape &ball, float &speedX, float &speedY);
 	const Vector2f & getPosition() const;
-	constexpr float getWidth() const;
-	constexpr float getHeight() const;
+	const float getWidth() const;
+	const float getHeight() const;
 	//void getStatus();
 
 private:

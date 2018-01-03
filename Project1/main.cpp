@@ -2,6 +2,7 @@
 #include "particleSystem.h"
 #include "block.h"
 #include "define.h"
+#include "brick.h"
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
@@ -62,6 +63,9 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
+
+	Brick bricks(3, 50.f, 20.f, window, Vector2f(2.f, 2.f));
+	bricks.fillEntityColor(Color::Blue);
 
 	ParticleSystem mouseLight(5000);
 	Vector2i localPosition;
@@ -272,6 +276,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		window->draw(block1);
 		window->draw(block2);
 		window->draw(block3);
+		//window->draw(bricks);
 		window->draw(mainPlayer);
 		window->draw(yellowRange);
 		window->draw(redRange);

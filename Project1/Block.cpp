@@ -104,10 +104,10 @@ const Vector2f & Block::getPosition() const {
 	return position;
 }
 
-constexpr float Block::getWidth() const {
+const float Block::getWidth() const {
 	return width;
 }
 
-constexpr float Block::getHeight() const {
+const float Block::getHeight() const {
 	return height;
 }
