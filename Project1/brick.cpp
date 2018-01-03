@@ -21,7 +21,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 			this->interval = interval;
 
 			if (getAreaSize() == row * amount) {
-				settlePlace(getArea(), window, getInterval());
+				settlePlace(window);
 			}
 			else {
 				throw out_of_range("The subscripts are out of range.");
@@ -46,11 +46,11 @@ Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * 
 		else {
 			sideLength = Vector2f(wid, hei);
 			this->interval = interval;
-			amount = static_cast<size_t>(window->getSize().x / (getInterval().x + sideLength.x));
+			amount = static_cast<size_t>((window->getSize().x - getInterval().x) / (getInterval().x + getSideLength().x));
 			area.resize(rowAmount * amount);
 
 			if (getAreaSize() == rowAmount * amount) {
-				settlePlace(getArea(), window, getInterval());
+				settlePlace(window);
 			}
 			else {
 				throw out_of_range("The subscripts are out of range.");
@@ -82,7 +82,7 @@ void Brick::setRowAmount(const size_t row, Window *window) {
 	if (row > 0) {
 		area.resize(row * amount);
 		changeEntity = true;
-		settlePlace(getArea(), window, getInterval());
+		settlePlace(window);
 	}
 	else {
 		cout << "Invalid area setting." << endl;
@@ -93,7 +93,7 @@ void Brick::setInterval(const Vector2f &interval, Window *window) {
 
 	if (interval.x >= 0.0f && interval.y >= 0.0f) {
 		this->interval = interval;
-		settlePlace(getArea(), window, getInterval());
+		settlePlace(window);
 	}
 	else {
 		cout << "Invalid interval setting." << endl;
@@ -104,7 +104,7 @@ void Brick::setInterval(const float x, const float y, Window *window) {
 
 	if (x >= 0.0f && y >= 0.0f) {
 		interval = Vector2f(x, y);
-		settlePlace(getArea(), window, getInterval());
+		settlePlace(window);
 	}
 	else {
 		cout << "Invalid interval setting." << endl;
@@ -116,7 +116,7 @@ void Brick::setSideLength(const Vector2f & sideLength, Window * window){
 	if (sideLength.x > 0 && sideLength.y > 0) {
 		this->sideLength = sideLength;
 		changeEntity = true;
-		settlePlace(getArea(), window, getInterval());
+		settlePlace(window);
 	}
 	else {
 		cout << "Invalid side-length setting." << endl;
@@ -128,7 +128,7 @@ void Brick::setSideLength(const float wid, const float hei, Window *window){
 	if (wid > 0 && hei > 0) {
 		sideLength = Vector2f(wid, hei);
 		changeEntity = true;
-		settlePlace(getArea(), window, getInterval());
+		settlePlace(window);
 	}
 	else {
 		cout << "Invalid side-length setting." << endl;
@@ -147,7 +147,13 @@ const Vector2f & Brick::getInterval() const{
 	return interval;
 }
 
-void Brick::settlePlace(vector<RectangleShape> area, Window *window, const Vector2f &interval){
+void Brick::settlePlace(Window *window){
+
+	static float whiteSpace = (window->getSize().x - ((interval.x + sideLength.x) * amount + interval.x)) / 2;
+	// if window's size().x cannot be filled with full screen, remain the white space of bound
+	static Vector2f initialPos(whiteSpace + interval.x + sideLength.x / 2, interval.y + sideLength.y / 2);
+	static Vector2f tempPos = Vector2f(initialPos.x, initialPos.y);
+	static size_t tempCount = 1;
 
 	try {
 		if (changeEntity == true) {
@@ -156,29 +162,27 @@ void Brick::settlePlace(vector<RectangleShape> area, Window *window, const Vecto
 				// center origin position in every brick
 				area.at(i).setOrigin(Vector2f(area.at(i).getSize().x / 2, area.at(i).getSize().y / 2));
 			}
+			// cover all attributes again
+			whiteSpace = (window->getSize().x - ((interval.x + sideLength.x) * amount + interval.x)) / 2;
+			initialPos = Vector2f(whiteSpace + interval.x + sideLength.x / 2, interval.y + sideLength.y / 2);
+			tempPos = Vector2f(initialPos.x, initialPos.y);
 			changeEntity = false;
 		}
 
-		// ensure that total which plus the intervals should not out of screen
-		static const float whiteSpace = (window->getSize().x - ((interval.x + sideLength.x) * amount + interval.x)) / 2;
+		// ensure that total with the intervals should not be out of screen
 		if (whiteSpace >= 0.0f) {
 			// start placing area array
 			for (size_t i = 0; i < area.size(); ++i) {
 
-				// if window's size().x cannot be filled with full screen, remain the white space of bound
-				static const Vector2f initialPos(whiteSpace + interval.x + sideLength.x / 2, interval.y + sideLength.y / 2);
-				static Vector2f tempPos = Vector2f(initialPos.x, initialPos.y);
-				static size_t tempCount = 0;
-
+				area.at(i).setPosition(tempPos);
 				if (tempCount < amount) {
 					tempPos += Vector2f(sideLength.x + interval.x, 0);
 					++tempCount;
 				}
 				else {
-					tempPos = Vector2f(initialPos.x, tempPos.y + initialPos.y);
-					tempCount = 0;
+					tempPos = Vector2f(initialPos.x, tempPos.y + sideLength.y + interval.x);
+					tempCount = 1;
 				}
-				area.at(i).setPosition(tempPos);
 			}
 		}
 		else {
@@ -192,4 +196,12 @@ void Brick::settlePlace(vector<RectangleShape> area, Window *window, const Vecto
 
 const vector<RectangleShape> Brick::getArea() const{
 	return area;
+}
+
+void Brick::draw(RenderTarget &target, RenderStates states) const{
+
+	for (size_t i = 0; i < getAreaSize(); ++i) {
+		states.texture = area.at(i).getTexture();
+		target.draw(area.at(i), states);
+	}
 }

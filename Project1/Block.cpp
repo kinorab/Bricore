@@ -6,30 +6,7 @@
 Block::Block(const enum PrimitiveType type, const size_t vertexCount, const Vector2f & position, float width, float height)
 	: VertexArray(type, vertexCount), position(position), width(width), height(height) {
 
-	setBlockVertice(position, width, height);
-}
-
-void Block::setBlockVertice(const Vector2f & position, const float width, const float height) {
-
-	try {
-		
-		if (width > 0 && height > 0) {
-
-			for (size_t i = 0; i < getVertexCount(); ++i) {
-				(*this)[i].position = position;
-			}
-
-			(*this)[1].position += Vector2f(width, 0.0f);
-			(*this)[2].position += Vector2f(width, height);
-			(*this)[3].position += Vector2f(0.0f, height);
-		}
-		else {
-			throw domain_error("Invalid side-length for block.");
-		}
-	}
-	catch (domain_error & ex) {
-		cout << "Domain_error: " << ex.what() << endl;
-	}
+	setBlockVertice(getPosition(), getWidth(), getHeight());
 }
 
 void Block::setVerticeColor(const Color & color) {
@@ -68,7 +45,7 @@ void Block::setHeight(const float height) {
 	}
 }
 
-void Block::MovePosition(const Vector2f & pos) {
+void Block::movePosition(const Vector2f & pos) {
 	for (size_t i = 0; i < getVertexCount(); ++i) {
 		(*this)[i].position += pos;
 	}
@@ -110,4 +87,27 @@ const float Block::getWidth() const {
 
 const float Block::getHeight() const {
 	return height;
+}
+
+void Block::setBlockVertice(const Vector2f & position, const float width, const float height) {
+
+	try {
+
+		if (width > 0 && height > 0) {
+
+			for (size_t i = 0; i < getVertexCount(); ++i) {
+				(*this)[i].position = position;
+			}
+
+			(*this)[1].position += Vector2f(width, 0.0f);
+			(*this)[2].position += Vector2f(width, height);
+			(*this)[3].position += Vector2f(0.0f, height);
+		}
+		else {
+			throw domain_error("Invalid side-length for block.");
+		}
+	}
+	catch (domain_error & ex) {
+		cout << "Domain_error: " << ex.what() << endl;
+	}
 }

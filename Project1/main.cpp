@@ -36,10 +36,13 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	static float incre1 = 3;
 
 	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
+	block1.movePosition(Vector2f(0, block1.getHeight()));
 	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
-	Block block2(Quads, 4, Vector2f(blockLength, blockLength), blockLength, blockLength * incre1);
+	Block block2(Quads, 4, Vector2f(blockLength, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
+	block2.movePosition(Vector2f(0, -block2.getHeight()));
 	block2.setVerticeColor(Color::Green, Color::Red, Color::Cyan, Color::Yellow);
-	Block block3(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, blockLength), blockLength, blockLength * incre1);
+	Block block3(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
+	block3.movePosition(Vector2f(0, -block3.getHeight()));
 	block3.setVerticeColor(Color::Black);
 
 	RectangleShape mainPlayer;
@@ -64,7 +67,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 
-	Brick bricks(3, 50.f, 20.f, window, Vector2f(2.f, 2.f));
+	Brick bricks(5, 180.f, 30.f, window, Vector2f(5.f, 5.f));
 	bricks.fillEntityColor(Color::Blue);
 
 	ParticleSystem mouseLight(5000);
@@ -276,11 +279,11 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		window->draw(block1);
 		window->draw(block2);
 		window->draw(block3);
-		//window->draw(bricks);
 		window->draw(mainPlayer);
 		window->draw(yellowRange);
 		window->draw(redRange);
 		window->draw(ball);
+		window->draw(bricks);
 		window->draw(mouseLight);
 		window->display();
 	}
