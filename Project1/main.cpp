@@ -69,8 +69,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 
-	Brick bricks(5, 180.f, 30.f, window, Vector2f(5.f, 5.f));
-	bricks.fillEntityColor(Color::Blue);
+	Brick bricks(7, 180.f, 30.f, window, Vector2f(5.f, 5.f));
+	bricks.fillEntityColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
 	ParticleSystem mouseLight(2500);
 	Vector2i localPosition;
@@ -379,7 +379,7 @@ void initializeBall() {
 void resetBall() {
 
 	speedX = (rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1);
-	speedY = 2.f * (rng() % 2 == 0 ? 1 : -1);
+	speedY = 2.f * (rng() % 100 < 50 ? 1 : -1);
 }
 
 // all change direct by using abs() to prevent too fast speed to stuck outside the window
@@ -397,10 +397,15 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 		countTime.restart();
 		active = false;
 	}
-	else if (countTime.getElapsedTime().asSeconds() > 20.0f && start) {
+	else if (countTime.getElapsedTime().asSeconds() > 10.0f && start) {
+		// preserve last speed then add 60% extra origin speed to new speed
+		float tempX = speedX;
+		float tempY = speedY;
 		resetBall();
 		originX = speedX;
 		originY = speedY;
+		speedX >= 0 ? speedX += (abs(tempX) - speedX) * .6f : speedX += -(abs(tempX) + speedX) * .6f;
+		speedY >= 0 ? speedY += (abs(tempY) - speedY) * .6f : speedY += -(abs(tempY) + speedY) * .6f;
 		countTime.restart();
 	}
 
@@ -464,7 +469,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 				speedY = -abs(originY);
 			}
 			else {
-				speedX < 0 ? speedX = abs(originX): speedX = -abs(originX);
+				speedX < 0 ? speedX = -abs(originX): speedX = abs(originX);
 				speedY = -abs(originY);
 			}
 		}
