@@ -3,7 +3,7 @@
 #include <cmath>
 
 ParticleSystem::ParticleSystem(unsigned int count)
-	:m_particles(count), m_vertices(Points, count), m_lifetime(1800), m_emitter(0, 0) {
+	:m_particles(count), m_vertices(Points, count), m_lifetime(LIFETIME), m_emitter(0, 0) {
 
 }
 

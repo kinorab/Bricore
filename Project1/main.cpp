@@ -16,20 +16,22 @@ using namespace sf;
 using namespace std;
 
 static bool start;
+static bool active;
 static float speedX;
 static float speedY;
 static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 
 //void setItemVertices(VertexArray &, const Vector2f &, float);
-void ballMove(CircleShape &, Window *, Shape &);
-void flashRange(CircleShape &, Shape &, Shape &);
+void playerMove(Shape &, Shape &, Window *, float);
 void initializeBall();
 void resetBall();
-void playerMove(Shape &, Shape &, Window *, float);
-bool ballEnableMove(Shape &, Shape &, Sound &);
+void ballMove(CircleShape &, Window *, Shape &);
+inline bool ballEnableMove(CircleShape &, Shape &, Shape &, Sound &);
+void flashRange(CircleShape &, Shape &, Shape &, Sound &, Clock &, float &, bool &);
+inline void flashElapsed(Shape &, Clock &, float &, bool &);
 
-void renderThread(RenderWindow * window, atomic<bool> * done) {
+void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 	window->setActive(true);
 	static float blockLength = 100;
@@ -70,7 +72,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	Brick bricks(5, 180.f, 30.f, window, Vector2f(5.f, 5.f));
 	bricks.fillEntityColor(Color::Blue);
 
-	ParticleSystem mouseLight(5000);
+	ParticleSystem mouseLight(2500);
 	Vector2i localPosition;
 	Clock clock;
 	Mouse::setPosition(Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
@@ -220,7 +222,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 			if (getEvent.type == Event::MouseButtonPressed) {
 				if (getEvent.mouseButton.button == Mouse::Left && !start) {
 					initializeBall();
-					sound1.play();
+					active = true;
 					start = true;
 				}
 				else if (getEvent.mouseButton.button == Mouse::Right && start) {
@@ -234,7 +236,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 				sound1.stop();
 				*done = true;
 			}
-			else if (getEvent.type == Event::Resized) {
+		/*	else if (getEvent.type == Event::Resized) {
 				FloatRect viewResized(0, 0, getEvent.size.width, getEvent.size.height);
 				float bufferViewX = window->getView().getSize().x;
 				float bufferViewY = window->getView().getSize().y;
@@ -244,10 +246,10 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 				float rateX = window->getView().getSize().x / bufferViewX;
 				// item scale increment rateY
 				float rateY = window->getView().getSize().y / bufferViewY;
-			}
+			}*/
 		}
 
-		// update
+		// update fixed 5 frames
 		elapsed += clock.restart();
 		if (elapsed.asSeconds() > 0.05f) {
 			elapsed = seconds(0.05f);
@@ -256,11 +258,9 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 10.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			playerMove(mainPlayer, redRange, window, 5.0f);
+			playerMove(mainPlayer, redRange, window, PLAYERSPEED);
 			yellowRange.setPosition(mainPlayer.getPosition());
-			// if the ball move first, when ball departure from player's board, the judgment(flash) will fail
-			flashRange(ball, mainPlayer, redRange);
-			if (!ballEnableMove(ball, mainPlayer, sound1)) {
+			if (!ballEnableMove(ball, mainPlayer, redRange, sound1)) {
 				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 			}
 			else {
@@ -292,7 +292,17 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 
 int main() {
 
-	RenderWindow window(VideoMode(1000, 800), "Pigject");
+	ContextSettings settings;
+	settings.depthBits = 24;
+	settings.stencilBits = 8;
+	settings.antialiasingLevel = 6;
+	settings.majorVersion = 4;
+	settings.minorVersion = 1;
+
+	RenderWindow window(VideoMode(1200, 900), "Pigject", Style::Titlebar|Style::Close, settings);
+	window.setMouseCursorVisible(false);
+	window.setPosition(Vector2i(window.getPosition().x, 20));
+	window.setVerticalSyncEnabled(true);
 	window.setActive(false);
 	atomic<bool> done(false);
 	thread subthread(renderThread, &window, &done);
@@ -360,21 +370,6 @@ void playerMove(Shape &player, Shape &flash, Window *window, float speed) {
 	}
 }
 
-bool ballEnableMove(Shape &ball, Shape &player, Sound &sound) {// can add extra affect
-
-	if (!start) {
-
-		return false;
-	}
-	else {
-
-		if (ball.getGlobalBounds().intersects(player.getGlobalBounds())) {
-			sound.play();
-		}
-		return true;
-	}
-}
-
 void initializeBall() {
 
 	speedX = (rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1);
@@ -395,12 +390,14 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	static float originX = speedX;
 	static float originY = speedY;
 	static Clock countTime;
-	if (!start) {
+	// when left mouse click will only set initial speed once
+	if (active) {
 		originX = speedX;
 		originY = speedY;
 		countTime.restart();
+		active = false;
 	}
-	else if (countTime.getElapsedTime().asSeconds() > 20.0f) {
+	else if (countTime.getElapsedTime().asSeconds() > 20.0f && start) {
 		resetBall();
 		originX = speedX;
 		originY = speedY;
@@ -448,10 +445,6 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .55f) {
 				speedX = abs(speedX) * 1.05f;
 			}
-			else if (ball.getPosition().x > playerBounds.left + playerBounds.width * .5f) {
-				speedX = abs(originX);
-				speedY = -abs(originY);
-			}
 			// left side of player position
 			else if (ball.getPosition().x <= playerBounds.left) {
 				speedX = -abs(speedX) * 1.2f;
@@ -465,13 +458,13 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .45f) {
 				speedX = -abs(speedX) * 1.05f;
 			}
-			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .5f) {
-				speedX = -abs(originX);
-				speedY = -abs(originY);
-			}
 			// center position
 			else if (ball.getPosition().x == playerBounds.left + playerBounds.width / 2) {
 				speedX = 0.0f;
+				speedY = -abs(originY);
+			}
+			else {
+				speedX < 0 ? speedX = abs(originX): speedX = -abs(originX);
 				speedY = -abs(originY);
 			}
 		}
@@ -488,30 +481,18 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 				speedY = -abs(speedY) * 1.1f;
 			}
 		}
-	}
-	// prevent speed too fast
-	if (ball.getPosition().x < playerBounds.left + playerBounds.width / 2) {
 
+		// prevent speed too fast
 		if (abs(speedX) >= abs(originX) * 5) {
-			speedX = -abs(originX) * 5;
-		}
-		else if (abs(speedY) >= abs(originY) * 5) {
-			speedY = -abs(originY) * 5;
-		}
-	}
-	else if (ball.getPosition().x > playerBounds.left + playerBounds.width / 2) {
-
-		if (abs(speedX) >= abs(originX) * 5) {
-			speedX = abs(originX) * 5;
-		}
-		else if (abs(speedY) >= abs(originY) * 5) {
-			speedY = -abs(originY) * 5;
-		}
-	}
-	else {
-
-		if (abs(speedX) >= abs(originX) * 5) {
-			speedX < 0 ? speedX = abs(originX) * 5 : speedX = -abs(originX) * 5;
+			if (ball.getPosition().x > player.getPosition().x) {
+				speedX = abs(originX) * 5;
+			}
+			else if (ball.getPosition().x < player.getPosition().x) {
+				speedX = -abs(originX) * 5;
+			}
+			else {
+				speedX < 0 ? speedX = abs(originX) * 5 : speedX = -abs(originX) * 5;
+			}
 		}
 		else if (abs(speedY) >= abs(originY) * 5) {
 			speedY = -abs(originY) * 5;
@@ -521,17 +502,31 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	ball.move(speedX, speedY);
 }
 
-void flashRange(CircleShape &ball, Shape &player, Shape &range) {
+inline bool ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound &sound) {// can add extra affect
 
 	static Clock elapsed;
 	static float time;
 	static bool flash = false;
+
+	if (!start) {
+		flashElapsed(range, elapsed, time, flash);
+		return false;
+	}
+	else {
+		flashRange(ball, player, range, sound, elapsed, time, flash);
+		return true;
+	}
+}
+
+void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, float &time, bool &flash) {
+
 	FloatRect playerBounds = player.getGlobalBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
 	FloatRect rangeBounds = range.getGlobalBounds();
 
 	if (ballBounds.intersects(playerBounds) && start) {
 		elapsed.restart();
+		sound.play();
 		if (ballBounds.left <= playerBounds.left) {
 			range.setPosition(playerBounds.left + rangeBounds.width / 2, player.getPosition().y);
 		}
@@ -544,6 +539,11 @@ void flashRange(CircleShape &ball, Shape &player, Shape &range) {
 		flash = true;
 	}
 
+	flashElapsed(range, elapsed, time, flash);
+}
+
+inline void flashElapsed(Shape &range, Clock &elapsed, float &time, bool &flash) {
+
 	if (flash) {
 		time = elapsed.getElapsedTime().asMilliseconds();
 		if (time <= 1500.f) {
@@ -554,5 +554,4 @@ void flashRange(CircleShape &ball, Shape &player, Shape &range) {
 			flash = false;
 		}
 	}
-
 }
