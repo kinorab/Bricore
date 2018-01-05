@@ -11,7 +11,7 @@ public:
 
 	explicit ParticleSystem(unsigned int);
 	void setEmitter(Vector2f);
-	void update(float timeSpan);
+	void update(const float &timeSpan, const bool &light);
 
 private:
 

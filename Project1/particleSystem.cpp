@@ -11,15 +11,25 @@ void ParticleSystem::setEmitter(Vector2f position) {
 	m_emitter = position;
 }
 
-void ParticleSystem::update(float timeSpan) {
+void ParticleSystem::update(const float &timeSpan, const bool &light) {
+	
 	for (size_t i = 0; i < m_particles.size(); ++i) {
-		m_particles[i].lifetime -= timeSpan;
-		if (m_particles[i].lifetime <= 0) {
-			resetParticle(i);
+
+		if (m_particles[i].lifetime > 0.0f) {
+			m_particles[i].lifetime -= timeSpan;
+		}
+		else {
+			if (light) {
+				resetParticle(i);
+			}
+			else {
+				m_particles[i].lifetime = 0.0f;
+			}
 		}
 
 		m_vertices[i].position += m_particles[i].velocity * timeSpan;
 		float ratio = m_particles[i].lifetime / m_lifetime;
+
 		m_vertices[i].color = Color(
 			static_cast<Uint8>(rng() % 256),
 			static_cast<Uint8>(rng() % 256),

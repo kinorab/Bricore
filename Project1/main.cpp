@@ -17,6 +17,7 @@ using namespace std;
 
 static bool start;
 static bool active;
+static bool light;
 static float speedX;
 static float speedY;
 static queue<Event> gameEventQueue;
@@ -116,6 +117,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 			static Keyboard::Key choice;
 			Vector2f GlobalPosition = Vector2f(Mouse::getPosition(*window));
+
 			if (getEvent.type == Event::TextEntered) {
 				if (getEvent.text.unicode < 128) {
 					cout << "ASCII charactor typed: " << static_cast<char>(getEvent.text.unicode)
@@ -230,6 +232,12 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				}
 
 			}
+			else if (getEvent.type == Event::MouseLeft) {
+				light = false;
+			}
+			else if (getEvent.type == Event::MouseEntered) {
+				light = true;
+			}
 
 			if (getEvent.type == Event::Closed) {
 				bgmusic.stop();
@@ -267,7 +275,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				ballMove(ball, window, mainPlayer);
 			}
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
-			mouseLight.update(updateSpan);
+			mouseLight.update(updateSpan, light);
 			block1.enable(ball, speedX, speedY);
 			block2.enable(ball, speedX, speedY);
 			block3.enable(ball, speedX, speedY);
@@ -397,7 +405,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 		countTime.restart();
 		active = false;
 	}
-	else if (countTime.getElapsedTime().asSeconds() > 10.0f && start) {
+	else if (countTime.getElapsedTime().asSeconds() > RESETTIME && start) {
 		// preserve last speed then add 60% extra origin speed to new speed
 		float tempX = speedX;
 		float tempY = speedY;
