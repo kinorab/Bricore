@@ -4,20 +4,23 @@
 #include <iostream>
 
 // user set the brick array manually
-Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, Window *window, const Vector2f &interval){
+Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, Window *window, const Vector2f &interval, const float frameSize){
 
 	try {
-		if (row <= 0 || col <= 0 || wid <= 0 || hei <= 0 || interval.x < 0.0f || interval.y < 0.0f) {
+		if (row <= 0 || col <= 0 || wid <= 0.0f || hei <= 0.0f
+			|| interval.x < 0.0f || interval.y < 0.0f
+			|| frameSize < 0.0f) {
 			throw domain_error("Invaild brick initialization.");
 		}
-		else if (col * wid + interval.x * (col + 1) > window->getSize().x
-			  || row * hei + interval.y * (row + 1) > window->getSize().y) {
+		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > window->getSize().x
+			  || row * (hei + frameSize * 2) + interval.y * (row + 1) > window->getSize().y) {
 			throw domain_error("Invaild brick initialization.");
 		}
 		else {
 			area.resize(row * col);
 			amount = col;
 			sideLength = Vector2f(wid, hei);
+			frame = frameSize;
 			this->interval = interval;
 
 			if (getAreaSize() == row * amount) {
@@ -37,14 +40,17 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 }
 
 // auto full up the window
-Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * window, const Vector2f &interval){
+Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * window, const Vector2f &interval, const float frameSize){
 
 	try {
-		if (rowAmount <= 0 || wid <= 0 || hei <= 0 || interval.x < 0.0f || interval.y < 0.0f) {
+		if (rowAmount <= 0 || wid <= 0.0f || hei <= 0.0f
+			|| interval.x < 0.0f || interval.y < 0.0f
+			|| frameSize < 0.0f) {
 			throw domain_error("Invaild brick initialization.");
 		}
 		else {
 			sideLength = Vector2f(wid, hei);
+			frame = frameSize;
 			this->interval = interval;
 			amount = static_cast<size_t>((window->getSize().x - getInterval().x) / (getInterval().x + getSideLength().x));
 			area.resize(rowAmount * amount);
@@ -71,9 +77,20 @@ void Brick::loadImage(Texture *image){
 	}
 }
 
-void Brick::fillEntityColor(const Color &color){
+void Brick::setBrickColor(const Color &color){
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 		area.at(i).setFillColor(color);
+	}
+}
+
+void Brick::setFrameColor(const Color &color){
+	if (frame > 0.0f) {
+		for (size_t i = 0; i < getAreaSize(); ++i) {
+			area.at(i).setOutlineColor(color);
+		}
+	}
+	else {
+		cout << "Brick frames do not exist." << endl;
 	}
 }
 
@@ -86,28 +103,6 @@ void Brick::setRowAmount(const size_t row, Window *window) {
 	}
 	else {
 		cout << "Invalid area setting." << endl;
-	}
-}
-
-void Brick::setInterval(const Vector2f &interval, Window *window) {
-
-	if (interval.x >= 0.0f && interval.y >= 0.0f) {
-		this->interval = interval;
-		settlePlace(window);
-	}
-	else {
-		cout << "Invalid interval setting." << endl;
-	}
-}
-
-void Brick::setInterval(const float x, const float y, Window *window) {
-
-	if (x >= 0.0f && y >= 0.0f) {
-		interval = Vector2f(x, y);
-		settlePlace(window);
-	}
-	else {
-		cout << "Invalid interval setting." << endl;
 	}
 }
 
@@ -135,6 +130,71 @@ void Brick::setSideLength(const float wid, const float hei, Window *window){
 	}
 }
 
+void Brick::setInterval(const Vector2f &interval, Window *window) {
+
+	if (interval.x >= 0.0f && interval.y >= 0.0f) {
+		this->interval = interval;
+		settlePlace(window);
+	}
+	else {
+		cout << "Invalid interval setting." << endl;
+	}
+}
+
+void Brick::setInterval(const float x, const float y, Window *window) {
+
+	if (x >= 0.0f && y >= 0.0f) {
+		interval = Vector2f(x, y);
+		settlePlace(window);
+	}
+	else {
+		cout << "Invalid interval setting." << endl;
+	}
+}
+
+void Brick::setFrameSize(const float frameSize, Window *window) {
+
+	if (frameSize >= 0.0f) {
+		frame = frameSize;
+		changeEntity = true;
+		settlePlace(window);
+	}
+	else {
+		cout << "Invalid frame size setting." << endl;
+	}
+}
+
+void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY){
+
+	for (size_t i = 0; i < this->getAreaSize(); ++i) {
+
+		FloatRect brickBounds = this->area.at(i).getGlobalBounds();
+		FloatRect ballBounds = ball.getGlobalBounds();
+		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
+		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 1, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
+		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
+		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 1), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
+
+		// temporary setting
+		if (ballBounds.intersects(bottomBlock)) {
+			speedY = abs(speedY);
+			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+		}
+		else if (ballBounds.intersects(leftBlock)) {
+			speedX = -abs(speedX);
+			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+		}
+		else if (ballBounds.intersects(rightBlock)) {
+			speedX = abs(speedX);
+			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+		}
+		else if (ballBounds.intersects(topBlock)) {
+			speedY = -abs(speedY);
+			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+		}
+	}
+}
+
 const size_t Brick::getAreaSize() const {
 	return getArea().size();
 }
@@ -147,11 +207,15 @@ const Vector2f & Brick::getInterval() const{
 	return interval;
 }
 
+const float Brick::getFrameSize() const{
+	return frame;
+}
+
 void Brick::settlePlace(Window *window){
 
-	static float whiteSpace = (window->getSize().x - ((interval.x + sideLength.x) * amount + interval.x)) / 2;
+	static float whiteSpace = (window->getSize().x - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
 	// if window's size().x cannot be filled with full screen, remain the white space of bound
-	static Vector2f initialPos(whiteSpace + interval.x + sideLength.x / 2, interval.y + sideLength.y / 2);
+	static Vector2f initialPos(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
 	static Vector2f tempPos = Vector2f(initialPos.x, initialPos.y);
 	static size_t tempCount = 1;
 
@@ -159,12 +223,17 @@ void Brick::settlePlace(Window *window){
 		if (changeEntity == true) {
 			for (size_t i = 0; i < area.size(); ++i) {
 				area.at(i).setSize(Vector2f(sideLength.x, sideLength.y));
+				if (frame > 0.0f) {
+					area.at(i).setOutlineThickness(frame);
+					// if frames exist, the default color is set black
+					area.at(i).setOutlineColor(Color::Black);
+				}
 				// center origin position in every brick
 				area.at(i).setOrigin(Vector2f(area.at(i).getSize().x / 2, area.at(i).getSize().y / 2));
 			}
 			// cover all attributes again
-			whiteSpace = (window->getSize().x - ((interval.x + sideLength.x) * amount + interval.x)) / 2;
-			initialPos = Vector2f(whiteSpace + interval.x + sideLength.x / 2, interval.y + sideLength.y / 2);
+			whiteSpace = (window->getSize().x - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
+			initialPos = Vector2f(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
 			tempPos = Vector2f(initialPos.x, initialPos.y);
 			changeEntity = false;
 		}
@@ -176,11 +245,11 @@ void Brick::settlePlace(Window *window){
 
 				area.at(i).setPosition(tempPos);
 				if (tempCount < amount) {
-					tempPos += Vector2f(sideLength.x + interval.x, 0);
+					tempPos += Vector2f(interval.x + area.at(i).getGlobalBounds().width, 0);
 					++tempCount;
 				}
 				else {
-					tempPos = Vector2f(initialPos.x, tempPos.y + sideLength.y + interval.x);
+					tempPos = Vector2f(initialPos.x, tempPos.y + interval.y + area.at(i).getGlobalBounds().height);
 					tempCount = 1;
 				}
 			}
@@ -194,7 +263,7 @@ void Brick::settlePlace(Window *window){
 	}
 }
 
-const vector<RectangleShape> Brick::getArea() const{
+const vector<RectangleShape> & Brick::getArea() const{
 	return area;
 }
 

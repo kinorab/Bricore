@@ -11,8 +11,9 @@ public:
 
 	explicit EllipseShape(const Vector2f &);
 	void setRadius(const Vector2f &);
-	const Vector2f &getRadius() const;
 	void setPointCount(size_t);
+
+	const Vector2f &getRadius() const;
 	virtual unsigned int getPointCount() const;
 	virtual Vector2f getPoint(unsigned int) const;
 

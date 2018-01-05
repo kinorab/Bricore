@@ -73,11 +73,13 @@
     <IncludePath>$(SolutionDir)SFML\SFML-2.4.2x86\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)SFML\SFML-2.4.2x86\lib;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
+    <TargetName>breakout game</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)SFML\SFML-2.4.2x86\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)SFML\SFML-2.4.2x86\lib;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
+    <TargetName>breakout game</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -135,12 +137,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="block.cpp" />
+    <ClCompile Include="brick.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="particleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h" />
+    <ClInclude Include="brick.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="particleSystem.h" />

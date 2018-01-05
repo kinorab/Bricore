@@ -30,6 +30,9 @@
     <ClInclude Include="particleSystem.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="brick.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
@@ -47,6 +50,9 @@
       <Filter>資源檔</Filter>
     </ClCompile>
     <ClCompile Include="particleSystem.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
+    <ClCompile Include="brick.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
   </ItemGroup>

@@ -43,15 +43,15 @@ void EllipseShape::setRadius(const Vector2f &radius) {
 	}
 }// end function setRadius
 
-const Vector2f & EllipseShape::getRadius() const {
-
-	return m_radius;
-}// end function getRadius
-
 void EllipseShape::setPointCount(size_t count) {
 
 	pointCount = count;
 }// end function setPointCount
+
+const Vector2f & EllipseShape::getRadius() const {
+
+	return m_radius;
+}// end function getRadius
 
 unsigned int EllipseShape::getPointCount() const {
 

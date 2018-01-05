@@ -38,15 +38,12 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	static float blockLength = 100;
 	static float incre1 = 3;
 
-	Block block1(Quads, 4, Vector2f((window->getSize().x - blockLength * incre1) / 2, (window->getSize().y - blockLength) / 2), blockLength * incre1, blockLength);
-	block1.movePosition(Vector2f(0, block1.getHeight()));
-	block1.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
-	Block block2(Quads, 4, Vector2f(blockLength, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
-	block2.movePosition(Vector2f(0, -block2.getHeight()));
-	block2.setVerticeColor(Color::Green, Color::Red, Color::Cyan, Color::Yellow);
-	Block block3(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
-	block3.movePosition(Vector2f(0, -block3.getHeight()));
-	block3.setVerticeColor(Color::Black);
+	Block block1(Quads, 4, Vector2f(blockLength, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
+	block1.movePosition(Vector2f(0, -block1.getHeight() * .75f));
+	block1.setVerticeColor(Color::Green, Color::Black, Color::Cyan, Color::Black);
+	Block block2(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
+	block2.movePosition(Vector2f(0, -block2.getHeight() * .75f));
+	block2.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(200, 10));
@@ -70,8 +67,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 
-	Brick bricks(7, 180.f, 30.f, window, Vector2f(5.f, 5.f));
-	bricks.fillEntityColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
+	Brick bricks(6, 180.f, 30.f, window, Vector2f(5.f, 5.f), 3.f);
+	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
 	ParticleSystem mouseLight(2500);
 	Vector2i localPosition;
@@ -274,11 +271,11 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			else {
 				ballMove(ball, window, mainPlayer);
 			}
+			bricks.collisionBroke(ball, speedX, speedY);
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 			mouseLight.update(updateSpan, light);
 			block1.enable(ball, speedX, speedY);
 			block2.enable(ball, speedX, speedY);
-			block3.enable(ball, speedX, speedY);
 			elapsed -= seconds(updateSpan / 1000.0f);
 		}
 
@@ -286,7 +283,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		window->clear(Color::White);
 		window->draw(block1);
 		window->draw(block2);
-		window->draw(block3);
 		window->draw(mainPlayer);
 		window->draw(yellowRange);
 		window->draw(redRange);
@@ -444,7 +440,6 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 		speedY = -abs(speedY);
 		if (ball.getPosition().y <= player.getPosition().y) {
 
-			// hit center range(0.45f ~ 0.55f) will reset all speed
 			// right side of player position
 			if (ball.getPosition().x >= playerBounds.left + playerBounds.width) {
 				speedX = abs(speedX) * 1.2f;
@@ -471,6 +466,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 			else if (ball.getPosition().x < playerBounds.left + playerBounds.width * .45f) {
 				speedX = -abs(speedX) * 1.05f;
 			}
+			// hit center range(0.45f ~ 0.55f) will reset all speed, speedX will not change direct
 			// center position
 			else if (ball.getPosition().x == playerBounds.left + playerBounds.width / 2) {
 				speedX = 0.0f;
@@ -481,18 +477,28 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 				speedY = -abs(originY);
 			}
 		}
-		// the collision under the half of player body, if player hit the ball with edge-side,
-		// it will set speedX to 1.5X originX (rewrite speedX whether how fast current speedX are) and plus 0.1X to speedY
+		// the collision under the half of player body
 		else {
 
-			if (ballBounds.left + ballBounds.width / 2 > playerBounds.left + playerBounds.width / 2) {
-				speedX = abs(originX) * 1.5f;
-				speedY = -abs(speedY) * 1.1f;
+			// first hit
+			if (abs(speedX) < BOOST) {
+				if (ball.getPosition().x > playerBounds.left + playerBounds.width / 2) {
+					speedX = BOOST;
+				}
+				else if (ball.getPosition().x < playerBounds.left + playerBounds.width / 2) {
+					speedX = -BOOST;
+				}
 			}
-			else if (ballBounds.left + ballBounds.width / 2 < playerBounds.left + playerBounds.width / 2) {
-				speedX = -abs(originX) * 1.5f;
-				speedY = -abs(speedY) * 1.1f;
+			// after first hit
+			else {
+				if (ball.getPosition().x > playerBounds.left + playerBounds.width / 2) {
+					speedX = abs(speedX) * .6f * BOOST;
+				}
+				else if (ball.getPosition().x < playerBounds.left + playerBounds.width / 2) {
+					speedX = -abs(speedX) * .6f * BOOST;
+				}
 			}
+			speedY = -abs(speedY) * 1.1f;
 		}
 
 		// prevent speed too fast
