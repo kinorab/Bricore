@@ -207,7 +207,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 							cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
 						}
 						else {
-							cout << "Somethings bug ,cannot change the sound volume." << endl;
+							cout << "sound1.getBuffer() failed ,cannot change the sound volume." << endl;
 						}
 						break;
 
