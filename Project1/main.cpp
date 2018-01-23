@@ -9,7 +9,7 @@
 #include <atomic>
 #include <iostream>
 #include <stdexcept>
-#include <queue>
+#include <queue>гн
 #include <mutex>
 
 using namespace sf;
@@ -146,32 +146,32 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				}
 
 				// bgm volume
-				if(choice == Keyboard::Num0 || choice == Keyboard::Numpad0) {
+				if (choice == Keyboard::Num0 || choice == Keyboard::Numpad0) {
 					switch (getEvent.key.code) {
 					case (Keyboard::Add):// volume up
-							if (bufferBgVolume < 95.0f) {
-								bgmusic.setVolume(bufferBgVolume += 5.f);
-							}
-							else if (bufferBgVolume >= 95.0f) {
-								bgmusic.setVolume(100.0f);
-							}
-							else {
-								cout << "Somethings bug ,cannot change the sound volume." << endl;
-							}
-							cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
+						if (bufferBgVolume < 95.0f) {
+							bgmusic.setVolume(bufferBgVolume += 5.f);
+						}
+						else if (bufferBgVolume >= 95.0f) {
+							bgmusic.setVolume(100.0f);
+						}
+						else {
+							cout << "Somethings bug ,cannot change the sound volume." << endl;
+						}
+						cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
 						break;
 
 					case (Keyboard::Subtract):// volume down
-							if (bufferBgVolume > 5.0f) {
-								bgmusic.setVolume(bufferBgVolume -= 5.f);
-							}
-							else if(bufferBgVolume <= 5.0f){
-								bgmusic.setVolume(0.0f);
-							}
-							else {
-								cout << "Somethings bug ,cannot change the sound volume." << endl;
-							}
-							cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
+						if (bufferBgVolume > 5.0f) {
+							bgmusic.setVolume(bufferBgVolume -= 5.f);
+						}
+						else if (bufferBgVolume <= 5.0f) {
+							bgmusic.setVolume(0.0f);
+						}
+						else {
+							cout << "Somethings bug ,cannot change the sound volume." << endl;
+						}
+						cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
 						break;
 
 					default:
@@ -192,7 +192,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 							cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
 						}
 						else {
-							cout << "Somethings bug ,cannot change the sound volume." << endl;
+							cout << "sound1.getBuffer() failed ,cannot change the sound volume." << endl;
 						}
 						break;
 
@@ -241,17 +241,17 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				sound1.stop();
 				*done = true;
 			}
-		/*	else if (getEvent.type == Event::Resized) {
-				FloatRect viewResized(0, 0, getEvent.size.width, getEvent.size.height);
-				float bufferViewX = window->getView().getSize().x;
-				float bufferViewY = window->getView().getSize().y;
-				// need some window control, all item need to maintain initial proportion
-				window->setView(View(viewResized));
-				// item scale increment rateX
-				float rateX = window->getView().getSize().x / bufferViewX;
-				// item scale increment rateY
-				float rateY = window->getView().getSize().y / bufferViewY;
-			}*/
+			/*	else if (getEvent.type == Event::Resized) {
+					FloatRect viewResized(0, 0, getEvent.size.width, getEvent.size.height);
+					float bufferViewX = window->getView().getSize().x;
+					float bufferViewY = window->getView().getSize().y;
+					// need some window control, all item need to maintain initial proportion
+					window->setView(View(viewResized));
+					// item scale increment rateX
+					float rateX = window->getView().getSize().x / bufferViewX;
+					// item scale increment rateY
+					float rateY = window->getView().getSize().y / bufferViewY;
+				}*/
 		}
 
 		// update fixed 5 frames
@@ -259,7 +259,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		if (elapsed.asSeconds() > 0.05f) {
 			elapsed = seconds(0.05f);
 		}
-		
+
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 10.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
@@ -303,7 +303,7 @@ int main() {
 	settings.majorVersion = 4;
 	settings.minorVersion = 1;
 
-	RenderWindow window(VideoMode(1200, 900), "Pigject", Style::Titlebar|Style::Close, settings);
+	RenderWindow window(VideoMode(1200, 900), "Pigject", Style::Titlebar | Style::Close, settings);
 	window.setMouseCursorVisible(false);
 	window.setPosition(Vector2i(window.getPosition().x, 20));
 	window.setVerticalSyncEnabled(true);
@@ -363,12 +363,18 @@ void setItemVertices(VertexArray &array, const Vector2f &initial, float length) 
 void playerMove(Shape &player, Shape &flash, Window *window, float speed) {
 
 	FloatRect playerBound = player.getGlobalBounds();
-	if (playerBound.left > 0 && Keyboard::isKeyPressed(Keyboard::Left)) {
+	if (
+		playerBound.left > 0
+		&& (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
+		) {
 		player.move(Vector2f(-abs(speed), 0));
 		flash.move(Vector2f(-abs(speed), 0));
 	}
 
-	if (playerBound.left + playerBound.width < window->getSize().x && Keyboard::isKeyPressed(Keyboard::Right)) {
+	if (
+		playerBound.left + playerBound.width < window->getSize().x
+		&& (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
+		) {
 		player.move(Vector2f(abs(speed), 0));
 		flash.move(Vector2f(abs(speed), 0));
 	}
@@ -473,7 +479,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 				speedY = -abs(originY);
 			}
 			else {
-				speedX < 0 ? speedX = -abs(originX): speedX = abs(originX);
+				speedX < 0 ? speedX = -abs(originX) : speedX = abs(originX);
 				speedY = -abs(originY);
 			}
 		}
