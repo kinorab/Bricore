@@ -24,13 +24,14 @@ static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 
 //void setItemVertices(VertexArray &, const Vector2f &, float);
-void playerMove(Shape &, Shape &, Window *, float);
+void renderThread(RenderWindow *window, atomic<bool> *done);
+void playerMove(Shape &player, Shape &flash, Window *window, float speed);
 void initializeBall();
 void resetBall();
-void ballMove(CircleShape &, Window *, Shape &);
-inline void ballEnableMove(CircleShape &, Shape &, Shape &, Sound &);
-void flashRange(CircleShape &, Shape &, Shape &, Sound &, Clock &, float &, bool &);
-inline void flashElapsed(Shape &, Clock &, float &, bool &);
+void ballMove(CircleShape &ball, Window *window, Shape &player);
+inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound &sound);
+void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, bool &flash);
+inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash);
 
 void renderThread(RenderWindow *window, atomic<bool> *done) {
 
@@ -534,22 +535,20 @@ inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound
 	static Clock elapsed;
 	static float time;
 	static bool flash = false;
+	if (start) {
+		flashRange(ball, player, range, sound, elapsed, flash);
+	}
 
-	if (!start) {
-		flashElapsed(range, elapsed, time, flash);
-	}
-	else {
-		flashRange(ball, player, range, sound, elapsed, time, flash);
-	}
+	flashElapsed(range, elapsed, time, flash);
 }
 
-void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, float &time, bool &flash) {
+void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, bool &flash) {
 
 	FloatRect playerBounds = player.getGlobalBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
 	FloatRect rangeBounds = range.getGlobalBounds();
 
-	if (ballBounds.intersects(playerBounds) && start) {
+	if (ballBounds.intersects(playerBounds)) {
 		elapsed.restart();
 		sound.play();
 		if (ballBounds.left <= playerBounds.left) {
@@ -564,13 +563,12 @@ void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Cl
 		flash = true;
 	}
 
-	flashElapsed(range, elapsed, time, flash);
 }
 
-inline void flashElapsed(Shape &range, Clock &elapsed, float &time, bool &flash) {
+inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash) {
 
 	if (flash) {
-		time = elapsed.getElapsedTime().asMilliseconds();
+		float time = elapsed.getElapsedTime().asMilliseconds();
 		if (time <= 1500.f) {
 			float rate = (1.f - time / 1500.f);
 			range.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
