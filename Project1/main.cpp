@@ -539,7 +539,7 @@ inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound
 		flashRange(ball, player, range, sound, elapsed, flash);
 	}
 
-	flashElapsed(range, elapsed, time, flash);
+	flashElapsed(range, elapsed, flash);
 }
 
 void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, bool &flash) {
