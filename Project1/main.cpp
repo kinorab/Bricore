@@ -539,7 +539,9 @@ inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound
 		flashRange(ball, player, range, sound, elapsed, flash);
 	}
 
-	flashElapsed(range, elapsed, flash);
+	if (flash) {
+		flashElapsed(range, elapsed, flash);
+	}
 }
 
 void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, bool &flash) {
@@ -567,14 +569,12 @@ void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Cl
 
 inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash) {
 
-	if (flash) {
-		float time = elapsed.getElapsedTime().asMilliseconds();
-		if (time <= 1500.f) {
-			float rate = (1.f - time / 1500.f);
-			range.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
-		}
-		else {
-			flash = false;
-		}
+	float time = elapsed.getElapsedTime().asMilliseconds();
+	if (time <= 1500.f) {
+		float rate = (1.f - time / 1500.f);
+		range.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
+	}
+	else {
+		flash = false;
 	}
 }
