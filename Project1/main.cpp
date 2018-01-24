@@ -9,7 +9,7 @@
 #include <atomic>
 #include <iostream>
 #include <stdexcept>
-#include <queue>гн
+#include <queue>
 #include <mutex>
 
 using namespace sf;
@@ -28,7 +28,7 @@ void playerMove(Shape &, Shape &, Window *, float);
 void initializeBall();
 void resetBall();
 void ballMove(CircleShape &, Window *, Shape &);
-inline bool ballEnableMove(CircleShape &, Shape &, Shape &, Sound &);
+inline void ballEnableMove(CircleShape &, Shape &, Shape &, Sound &);
 void flashRange(CircleShape &, Shape &, Shape &, Sound &, Clock &, float &, bool &);
 inline void flashElapsed(Shape &, Clock &, float &, bool &);
 
@@ -265,12 +265,14 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			playerMove(mainPlayer, redRange, window, PLAYERSPEED);
 			yellowRange.setPosition(mainPlayer.getPosition());
-			if (!ballEnableMove(ball, mainPlayer, redRange, sound1)) {
+			ballEnableMove(ball, mainPlayer, redRange, sound1);
+			if (!start) {
 				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 			}
 			else {
 				ballMove(ball, window, mainPlayer);
 			}
+
 			bricks.collisionBroke(ball, speedX, speedY);
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 			mouseLight.update(updateSpan, light);
@@ -527,7 +529,7 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	ball.move(speedX, speedY);
 }
 
-inline bool ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound &sound) {// can add extra affect
+inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound &sound) {// can add extra affect
 
 	static Clock elapsed;
 	static float time;
@@ -535,11 +537,9 @@ inline bool ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound
 
 	if (!start) {
 		flashElapsed(range, elapsed, time, flash);
-		return false;
 	}
 	else {
 		flashRange(ball, player, range, sound, elapsed, time, flash);
-		return true;
 	}
 }
 

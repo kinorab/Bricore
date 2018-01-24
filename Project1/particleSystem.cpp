@@ -12,7 +12,7 @@ void ParticleSystem::setEmitter(Vector2f position) {
 }
 
 void ParticleSystem::update(const float &timeSpan, const bool &light) {
-	
+
 	for (size_t i = 0; i < m_particles.size(); ++i) {
 
 		if (m_particles[i].lifetime > 0.0f) {
