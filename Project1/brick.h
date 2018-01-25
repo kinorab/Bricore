@@ -38,7 +38,7 @@ private:
 	virtual void draw(RenderTarget& , RenderStates) const;
 
 	vector<RectangleShape> area;
-	// brick quantities on every row
+	// bricks on every row
 	size_t amount;
 	Vector2f interval;
 	Vector2f sideLength;

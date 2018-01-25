@@ -7,7 +7,7 @@
 Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, Window *window, const Vector2f &interval, const float frameSize){
 
 	try {
-		if (row <= 0 || col <= 0 || wid <= 0.0f || hei <= 0.0f
+		if (wid <= 0.0f || hei <= 0.0f
 			|| interval.x < 0.0f || interval.y < 0.0f
 			|| frameSize < 0.0f) {
 			throw domain_error("Invaild brick initialization.");
@@ -178,20 +178,22 @@ void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY){
 		// temporary setting
 		if (ballBounds.intersects(bottomBlock)) {
 			speedY = abs(speedY);
-			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+			this->area.erase(area.begin() + i);
 		}
 		else if (ballBounds.intersects(leftBlock)) {
 			speedX = -abs(speedX);
-			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+			this->area.erase(area.begin() + i);
 		}
 		else if (ballBounds.intersects(rightBlock)) {
 			speedX = abs(speedX);
-			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+			this->area.erase(area.begin() + i);
 		}
 		else if (ballBounds.intersects(topBlock)) {
 			speedY = -abs(speedY);
-			this->area.at(i).setPosition(-area.at(i).getGlobalBounds().width, -area.at(i).getGlobalBounds().height);
+			this->area.erase(area.begin() + i);
 		}
+
+
 	}
 }
 
