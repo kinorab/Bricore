@@ -35,7 +35,6 @@ public:
 private:
 
 	void settlePlace(Window *);
-	const vector<RectangleShape> & getArea() const;
 	virtual void draw(RenderTarget& , RenderStates) const;
 
 	vector<RectangleShape> area;

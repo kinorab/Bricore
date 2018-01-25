@@ -196,7 +196,7 @@ void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY){
 }
 
 const size_t Brick::getAreaSize() const {
-	return getArea().size();
+	return area.size();
 }
 
 const Vector2f & Brick::getSideLength() const{
@@ -261,10 +261,6 @@ void Brick::settlePlace(Window *window){
 	catch (out_of_range &ex) {
 		cout << "Exception: " << ex.what() << endl;
 	}
-}
-
-const vector<RectangleShape> & Brick::getArea() const{
-	return area;
 }
 
 void Brick::draw(RenderTarget &target, RenderStates states) const{
