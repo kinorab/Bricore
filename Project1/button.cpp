@@ -6,7 +6,7 @@ using namespace std;
 using namespace sf;
 
 Button::Button(Texture * up, Texture * over, Texture * down, FloatRect hitArea, string caption, Vector2f location)
-	:hitArea(hitArea), currentState(ButtonState::UP) {
+	:hitArea(hitArea), currentState(UP) {
 
 	spriteUp.setTexture(*up);
 	spriteOver.setTexture(*over);
