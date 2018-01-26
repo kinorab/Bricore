@@ -18,7 +18,7 @@ public:
 	void loadImage(Texture *);
 	void setBrickColor(const Color &);
 	void setFrameColor(const Color &);
-	void setRowAmount(const size_t row, Window *window);
+	void setRowAmount(const int row, Window *window);
 	void setSideLength(const Vector2f &sideLength, Window *window);
 	void setSideLength(const float width, const float height, Window *window);
 	void setInterval(const Vector2f &interval, Window *window);
