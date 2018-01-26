@@ -166,9 +166,9 @@ void Brick::setFrameSize(const float frameSize, Window *window) {
 
 void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY) {
 
-	for (size_t i = 0; i < this->getAreaSize(); ++i) {
+	for (size_t i = 0; i < getAreaSize(); ++i) {
 
-		FloatRect brickBounds = this->area.at(i).getGlobalBounds();
+		FloatRect brickBounds = area.at(i).getGlobalBounds();
 		FloatRect ballBounds = ball.getGlobalBounds();
 		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
 		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 1, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
@@ -178,19 +178,19 @@ void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY) {
 		// temporary setting
 		if (ballBounds.intersects(bottomBlock)) {
 			speedY = abs(speedY);
-			this->area.erase(area.begin() + i);
+			 area.erase(area.begin() + i);
 		}
 		else if (ballBounds.intersects(leftBlock)) {
 			speedX = -abs(speedX);
-			this->area.erase(area.begin() + i);
+			area.erase(area.begin() + i);
 		}
 		else if (ballBounds.intersects(rightBlock)) {
 			speedX = abs(speedX);
-			this->area.erase(area.begin() + i);
+			area.erase(area.begin() + i);
 		}
 		else if (ballBounds.intersects(topBlock)) {
 			speedY = -abs(speedY);
-			this->area.erase(area.begin() + i);
+			area.erase(area.begin() + i);
 		}
 
 	}
