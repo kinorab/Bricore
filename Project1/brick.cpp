@@ -12,8 +12,8 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 			|| frameSize < 0.0f) {
 			throw domain_error("Invaild brick initialization.");
 		}
-		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > window->getSize().x
-			  || row * (hei + frameSize * 2) + interval.y * (row + 1) > window->getSize().y) {
+		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > STAGE_WIDTH
+			  || row * (hei + frameSize * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
 			throw domain_error("Invaild brick initialization.");
 		}
 		else {
@@ -52,7 +52,7 @@ Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * 
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
 			this->interval = interval;
-			amount = static_cast<size_t>((window->getSize().x - getInterval().x) / (getInterval().x + getSideLength().x));
+			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x));
 			area.resize(rowAmount * amount);
 
 			if (getAreaSize() == rowAmount * amount) {
@@ -215,7 +215,7 @@ const float Brick::getFrameSize() const{
 
 void Brick::settlePlace(Window *window){
 
-	static float whiteSpace = (window->getSize().x - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
+	static float whiteSpace = (STAGE_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
 	// if window's size().x cannot be filled with full screen, remain the white space of bound
 	static Vector2f initialPos(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
 	static Vector2f tempPos = Vector2f(initialPos.x, initialPos.y);
@@ -234,7 +234,7 @@ void Brick::settlePlace(Window *window){
 				area.at(i).setOrigin(Vector2f(area.at(i).getSize().x / 2, area.at(i).getSize().y / 2));
 			}
 			// cover all attributes again
-			whiteSpace = (window->getSize().x - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
+			whiteSpace = (STAGE_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
 			initialPos = Vector2f(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
 			tempPos = Vector2f(initialPos.x, initialPos.y);
 			changeEntity = false;

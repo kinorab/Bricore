@@ -39,10 +39,10 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	static float blockLength = 100;
 	static float incre1 = 3;
 
-	Block block1(Quads, 4, Vector2f(blockLength, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
+	Block block1(Quads, 4, Vector2f(blockLength, STAGE_HEIGHT - blockLength * incre1), blockLength, blockLength * incre1);
 	block1.movePosition(Vector2f(0, -block1.getHeight() * .75f));
 	block1.setVerticeColor(Color::Green, Color::Black, Color::Cyan, Color::Black);
-	Block block2(Quads, 4, Vector2f(window->getSize().x - blockLength * 2, window->getSize().y - blockLength * incre1), blockLength, blockLength * incre1);
+	Block block2(Quads, 4, Vector2f(STAGE_WIDTH - blockLength * 2, STAGE_HEIGHT - blockLength * incre1), blockLength, blockLength * incre1);
 	block2.movePosition(Vector2f(0, -block2.getHeight() * .75f));
 	block2.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
 
@@ -50,7 +50,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	mainPlayer.setSize(Vector2f(200, 10));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
-	mainPlayer.setPosition(Vector2f(window->getSize().x / 2, window->getSize().y - mainPlayer.getSize().y));
+	mainPlayer.setPosition(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT - mainPlayer.getSize().y));
 	RectangleShape yellowRange;
 	yellowRange.setSize(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
 	yellowRange.setOrigin(Vector2f(yellowRange.getSize().x / 2, yellowRange.getSize().y / 2));
@@ -74,7 +74,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	ParticleSystem mouseLight(2500);
 	Vector2i localPosition;
 	Clock clock;
-	Mouse::setPosition(Vector2i(window->getSize().x / 2, window->getSize().y / 2), *window);
+	Mouse::setPosition(Vector2i(STAGE_WIDTH / 2, STAGE_HEIGHT / 2), *window);
 	View defualtView = window->getDefaultView();
 	Sound sound1;
 	Music bgmusic;
@@ -306,7 +306,7 @@ int main() {
 	settings.majorVersion = 4;
 	settings.minorVersion = 1;
 
-	RenderWindow window(VideoMode(1200, 900), "Pigject", Style::Titlebar | Style::Close, settings);
+	RenderWindow window(VideoMode(GAME_WIDTH, GAME_HEIGHT), "Pigject", Style::Titlebar | Style::Close, settings);
 	window.setMouseCursorVisible(false);
 	window.setPosition(Vector2i(window.getPosition().x, 20));
 	window.setVerticalSyncEnabled(true);
@@ -375,7 +375,7 @@ void playerMove(Shape &player, Shape &flash, Window *window, float speed) {
 	}
 
 	if (
-		playerBound.left + playerBound.width < window->getSize().x
+		playerBound.left + playerBound.width < STAGE_WIDTH
 		&& (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
 		) {
 		player.move(Vector2f(abs(speed), 0));
@@ -423,11 +423,11 @@ void ballMove(CircleShape &ball, Window *window, Shape &player) {
 	}
 
 	// out of bottom bound, reset the ball
-	if (ballBounds.top > window->getSize().y) {
+	if (ballBounds.top > STAGE_HEIGHT) {
 		start = false;
 	}
 	// window's right bound
-	else if (ballBounds.left + ballBounds.width >= window->getSize().x) {
+	else if (ballBounds.left + ballBounds.width >= STAGE_WIDTH) {
 		speedX = -abs(speedX);
 	}
 	// window's left bound
