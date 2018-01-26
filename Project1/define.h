@@ -3,12 +3,11 @@
 #include<chrono>
 #include<random>
 
-#define PI 3.141592654f
-#define LIFETIME 1500.f
-#define PLAYERSPEED 5.5f
-#define RESETTIME 20.f
-#define BOOST 2.5f
-
+static constexpr float PI = 3.141592654f;
+static constexpr float LIFETIME = 1500.f;
+static constexpr float PLAYERSPEED = 5.5f;
+static constexpr float RESETTIME = 20.f;
+static constexpr float BOOST = 2.5f;
 static constexpr int GAME_WIDTH = 1500;
 static constexpr int GAME_HEIGHT = 900;
 static constexpr int STAGE_WIDTH = 1200;
