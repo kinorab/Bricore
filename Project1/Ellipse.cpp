@@ -10,38 +10,34 @@ using namespace sf;
 EllipseShape::EllipseShape(const Vector2f &radius = Vector2f(0, 0)) {
 
 	try {
-		if (radius.x > 0 && radius.y > 0) {
-			m_radius = radius;
-			update();
-		}// end if
-		else {
+		if (radius.x < 0.0f && radius.y < 0.0f) {
+			throw domain_error("Radius of ellipse can't be negative.");
+		}
 
-			throw out_of_range("The Ellipse has a wrong initialization.");
-		}// end else
+		m_radius = radius;
+		update();
 	}
-	catch (out_of_range &ex) {
+	catch (domain_error &ex) {
 
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Domain Error: " << ex.what() << endl;
 	}
-}// end EllipseShape constructor
+}
 
 void EllipseShape::setRadius(const Vector2f &radius) {
 
 	try {
-		if (radius.x > 0 && radius.y > 0) {
-			m_radius = radius;
-			update();
-		}// end if
-		else {
+		if (radius.x < 0.0f && radius.y < 0.0f) {
+			throw domain_error("Radius of ellipse can't be negative.");
+		}
 
-			throw out_of_range("The Ellipse has a wrong initialization.");
-		}// end else
+		m_radius = radius;
+		update();
 	}
-	catch (out_of_range &ex) {
+	catch (domain_error &ex) {
 
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Domain Error: " << ex.what() << endl;
 	}
-}// end function setRadius
+}
 
 void EllipseShape::setPointCount(size_t count) {
 
