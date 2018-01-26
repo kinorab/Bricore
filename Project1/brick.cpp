@@ -4,7 +4,7 @@
 #include <iostream>
 
 // user set the brick array manually
-Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, Window *window, const Vector2f &interval, const float frameSize) {
+Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
 
 	try {
 		if (wid <= 0.0f || hei <= 0.0f
@@ -24,7 +24,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 			this->interval = interval;
 
 			if (getAreaSize() == row * amount) {
-				settlePlace(window);
+				settlePlace();
 			}
 			else {
 				throw out_of_range("The subscripts are out of range.");
@@ -40,7 +40,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 }
 
 // auto full up the window
-Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * window, const Vector2f &interval, const float frameSize) {
+Brick::Brick(const size_t rowAmount, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
 
 	try {
 		if (wid <= 0.0f || hei <= 0.0f
@@ -56,7 +56,7 @@ Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * 
 			area.resize(rowAmount * amount);
 
 			if (getAreaSize() == rowAmount * amount) {
-				settlePlace(window);
+				settlePlace();
 			}
 			else {
 				throw out_of_range("The subscripts are out of range.");
@@ -94,70 +94,70 @@ void Brick::setFrameColor(const Color &color) {
 	}
 }
 
-void Brick::setRowAmount(const int row, Window *window) {
+void Brick::setRowAmount(const int row) {
 
 	if (row > 0) {
 		area.resize(row * amount);
 		changeEntity = true;
-		settlePlace(window);
+		settlePlace();
 	}
 	else {
 		cout << "Invalid area setting." << endl;
 	}
 }
 
-void Brick::setSideLength(const Vector2f & sideLength, Window * window) {
+void Brick::setSideLength(const Vector2f & sideLength) {
 
 	if (sideLength.x > 0 && sideLength.y > 0) {
 		this->sideLength = sideLength;
 		changeEntity = true;
-		settlePlace(window);
+		settlePlace();
 	}
 	else {
 		cout << "Invalid side-length setting." << endl;
 	}
 }
 
-void Brick::setSideLength(const float wid, const float hei, Window *window) {
+void Brick::setSideLength(const float wid, const float hei) {
 
 	if (wid > 0 && hei > 0) {
 		sideLength = Vector2f(wid, hei);
 		changeEntity = true;
-		settlePlace(window);
+		settlePlace();
 	}
 	else {
 		cout << "Invalid side-length setting." << endl;
 	}
 }
 
-void Brick::setInterval(const Vector2f &interval, Window *window) {
+void Brick::setInterval(const Vector2f &interval) {
 
 	if (interval.x >= 0.0f && interval.y >= 0.0f) {
 		this->interval = interval;
-		settlePlace(window);
+		settlePlace();
 	}
 	else {
 		cout << "Invalid interval setting." << endl;
 	}
 }
 
-void Brick::setInterval(const float x, const float y, Window *window) {
+void Brick::setInterval(const float x, const float y) {
 
 	if (x >= 0.0f && y >= 0.0f) {
 		interval = Vector2f(x, y);
-		settlePlace(window);
+		settlePlace();
 	}
 	else {
 		cout << "Invalid interval setting." << endl;
 	}
 }
 
-void Brick::setFrameSize(const float frameSize, Window *window) {
+void Brick::setFrameSize(const float frameSize) {
 
 	if (frameSize >= 0.0f) {
 		frame = frameSize;
 		changeEntity = true;
-		settlePlace(window);
+		settlePlace();
 	}
 	else {
 		cout << "Invalid frame size setting." << endl;
@@ -212,7 +212,7 @@ const float Brick::getFrameSize() const {
 	return frame;
 }
 
-void Brick::settlePlace(Window *window) {
+void Brick::settlePlace() {
 
 	static float whiteSpace = (STAGE_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
 	// if window's size().x cannot be filled with full screen, remain the white space of bound

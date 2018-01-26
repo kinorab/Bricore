@@ -10,20 +10,20 @@ class Brick : public RectangleShape {
 
 public:
 
-	Brick(const size_t row, const size_t column, const float width, const float height, Window *window
+	Brick(const size_t row, const size_t column, const float width, const float height
 		, const Vector2f &interval = Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
-	Brick(const size_t rowCount, const float width, const float height, Window *window
+	Brick(const size_t rowCount, const float width, const float height
 		, const Vector2f &interval = Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
 
 	void loadImage(Texture *);
 	void setBrickColor(const Color &);
 	void setFrameColor(const Color &);
-	void setRowAmount(const int row, Window *window);
-	void setSideLength(const Vector2f &sideLength, Window *window);
-	void setSideLength(const float width, const float height, Window *window);
-	void setInterval(const Vector2f &interval, Window *window);
-	void setInterval(const float x, const float y, Window *window);
-	void setFrameSize(const float frame, Window *window);
+	void setRowAmount(const int row);
+	void setSideLength(const Vector2f &sideLength);
+	void setSideLength(const float width, const float height);
+	void setInterval(const Vector2f &interval);
+	void setInterval(const float x, const float y);
+	void setFrameSize(const float frame);
 	void collisionBroke(CircleShape &, float &speedX, float &speedY);
 
 	const size_t getAreaSize() const;
@@ -33,7 +33,7 @@ public:
 
 private:
 
-	void settlePlace(Window *);
+	void settlePlace();
 	virtual void draw(RenderTarget&, RenderStates) const;
 
 	vector<RectangleShape> area;

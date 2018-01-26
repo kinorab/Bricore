@@ -25,10 +25,10 @@ static mutex gameEventQueueMutex;
 
 //void setItemVertices(VertexArray &, const Vector2f &, float);
 void renderThread(RenderWindow *window, atomic<bool> *done);
-void playerMove(Shape &player, Shape &flash, Window *window, float speed);
+void playerMove(Shape &player, Shape &flash, float speed);
 void initializeBall();
 void resetBall();
-void ballMove(CircleShape &ball, Window *window, Shape &player);
+void ballMove(CircleShape &ball, Shape &player);
 inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound &sound);
 void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, bool &flash);
 inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash);
@@ -68,14 +68,13 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 
-	Brick bricks(6, 180.f, 30.f, window, Vector2f(5.f, 5.f), 3.f);
+	Brick bricks(6, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
 	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
 	ParticleSystem mouseLight(2500);
 	Vector2i localPosition;
 	Clock clock;
 	Mouse::setPosition(Vector2i(STAGE_WIDTH / 2, STAGE_HEIGHT / 2), *window);
-	View defualtView = window->getDefaultView();
 	Sound sound1;
 	Music bgmusic;
 	SoundBuffer buffer1;
@@ -264,14 +263,14 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 10.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			playerMove(mainPlayer, redRange, window, PLAYERSPEED);
+			playerMove(mainPlayer, redRange, PLAYERSPEED);
 			yellowRange.setPosition(mainPlayer.getPosition());
 			ballEnableMove(ball, mainPlayer, redRange, sound1);
 			if (!start) {
 				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 			}
 			else {
-				ballMove(ball, window, mainPlayer);
+				ballMove(ball, mainPlayer);
 			}
 
 			if (bricks.getAreaSize() != NULL) {
@@ -368,7 +367,7 @@ void setItemVertices(VertexArray &array, const Vector2f &initial, float length) 
 }
 */
 
-void playerMove(Shape &player, Shape &flash, Window *window, float speed) {
+void playerMove(Shape &player, Shape &flash, float speed) {
 
 	FloatRect playerBound = player.getGlobalBounds();
 	if (playerBound.left > 0
@@ -399,7 +398,7 @@ void resetBall() {
 }
 
 // all change direct by using abs() to prevent too fast speed to stuck outside the window
-void ballMove(CircleShape &ball, Window *window, Shape &player) {
+void ballMove(CircleShape &ball, Shape &player) {
 
 	FloatRect playerBounds = player.getGlobalBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();

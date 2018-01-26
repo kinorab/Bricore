@@ -1,5 +1,4 @@
 # Projec1 Coding Conventions
-
 This document is meant to serve as a guide to writing C++ in the Project1 codebase,
 covering when and how to use various language features as well as how code should be formatted.
 Our goal is to ensure a **consistently** high-quality codebase
@@ -73,4 +72,4 @@ Still, the example provided in the answer didn't get it all right, as mentioned 
 
 ## "this" Pointer
 
-Omit this when possible.
+Omit "this" pointer whenever possible.
