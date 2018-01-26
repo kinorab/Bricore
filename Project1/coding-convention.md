@@ -1,7 +1,8 @@
 # Projec1 Coding Conventions
 
 This document is meant to serve as a guide to writing C++ in the Project1 codebase,
-covering when and how to use various language features as well as how code should be formatted. Our goal is to ensure a consistently high-quality codebase
+covering when and how to use various language features as well as how code should be formatted.
+Our goal is to ensure a **consistently** high-quality codebase
 that is easy to read and contribute to, especially for newcomers.
 
 The Project1 codebase contains a wide variety of code from many different authors.
