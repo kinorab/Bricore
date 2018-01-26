@@ -1,4 +1,5 @@
 #include "button.h"
+#include "UIComponent.h"
 #include "define.h"
 
 using namespace std;

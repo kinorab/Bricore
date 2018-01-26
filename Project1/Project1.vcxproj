@@ -143,6 +143,7 @@
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="particleSystem.cpp" />
+    <ClCompile Include="UIComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="hud.h" />
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="UIComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc" />
