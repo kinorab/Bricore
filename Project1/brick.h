@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-class Brick : public RectangleShape, Window, Texture, Color {
+class Brick : public RectangleShape {
 
 public:
 
@@ -30,7 +30,6 @@ public:
 	const Vector2f & getSideLength() const;
 	const Vector2f & getInterval() const;
 	const float getFrameSize() const;
-
 
 private:
 
