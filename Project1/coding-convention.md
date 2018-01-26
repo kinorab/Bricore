@@ -69,3 +69,7 @@ Still, the example provided in the answer didn't get it all right, as mentioned 
 [GETTERS AND SETTERS ARE NOT EVIL](https://techblog.bozho.net/getters-and-setters-are-not-evil/)
 
 [Getters/Setters. Evil. Period.](https://www.yegor256.com/2014/09/16/getters-and-setters-are-evil.html)
+
+## "this" Pointer
+
+Omit this when possible.
