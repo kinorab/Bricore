@@ -24,26 +24,26 @@ void Button::checkClick(Vector2f mousePos) {
 	FloatRect mouseBox(mousePos, Vector2f(0.0f, 0.0f));
 	if (mouseBox.intersects(currentSprite->getGlobalBounds())) {
 		if (Mouse::isButtonPressed(Mouse::Left)) {
-			setCurrentState(DOWN);
+			setCurrentState(ButtonState::DOWN);
 		}
 		else {
-			setCurrentState(OVER);
+			setCurrentState(ButtonState::OVER);
 		}
 	}
 	else {
-		setCurrentState(UP);
+		setCurrentState(ButtonState::UP);
 	}
 }
 
 void Button::setCurrentState(ButtonState state) {
 	currentState = state;
-	if (currentState == UP) {
+	if (currentState == ButtonState::UP) {
 		currentSprite = &spriteUp;
 	}
-	else if (currentState == OVER) {
+	else if (currentState == ButtonState::OVER) {
 		currentSprite = &spriteOver;
 	}
-	else if (currentState == DOWN) {
+	else if (currentState == ButtonState::DOWN) {
 		currentSprite = &spriteDown;
 	}
 }

@@ -5,7 +5,7 @@
 using namespace sf;
 using namespace std;
 
-enum ButtonState {
+enum class ButtonState {
 	UP,
 	OVER,
 	DOWN

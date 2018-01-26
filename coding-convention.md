@@ -32,9 +32,13 @@ far more dangerous manipulations than any other constructs.
 
    [when-to-use-references-vs-pointers](https://stackoverflow.com/questions/7058339/when-to-use-references-vs-pointers)
 
-2. Prefer smart pointers to C style pointers.
+2. Prefer smart pointer to plain pointer.
 
    [what-is-a-smart-pointer-and-when-should-i-use-one](https://stackoverflow.com/questions/106508/what-is-a-smart-pointer-and-when-should-i-use-one)
+
+   But use plain pointer in function parameter if only pointer is needed
+
+   [Smart Pointer Parameters](https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/)
 
 ## Const Correctness
 
