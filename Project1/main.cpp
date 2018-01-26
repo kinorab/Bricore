@@ -274,7 +274,12 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				ballMove(ball, window, mainPlayer);
 			}
 
-			bricks.collisionBroke(ball, speedX, speedY);
+			if (bricks.getAreaSize() != NULL) {
+				bricks.collisionBroke(ball, speedX, speedY);
+			}
+			else {
+				//next stage
+			}
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 			mouseLight.update(updateSpan, light);
 			block1.enable(ball, speedX, speedY);

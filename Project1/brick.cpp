@@ -43,7 +43,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * window, const Vector2f &interval, const float frameSize){
 
 	try {
-		if (rowAmount <= 0 || wid <= 0.0f || hei <= 0.0f
+		if (wid <= 0.0f || hei <= 0.0f
 			|| interval.x < 0.0f || interval.y < 0.0f
 			|| frameSize < 0.0f) {
 			throw domain_error("Invaild brick initialization.");
@@ -94,7 +94,7 @@ void Brick::setFrameColor(const Color &color){
 	}
 }
 
-void Brick::setRowAmount(const size_t row, Window *window) {
+void Brick::setRowAmount(const int row, Window *window) {
 
 	if (row > 0) {
 		area.resize(row * amount);
@@ -168,31 +168,32 @@ void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY){
 
 	for (size_t i = 0; i < this->getAreaSize(); ++i) {
 
-		FloatRect brickBounds = this->area.at(i).getGlobalBounds();
-		FloatRect ballBounds = ball.getGlobalBounds();
-		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
-		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 1, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
-		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
-		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 1), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
+		if (this->area.at(i).getSize().x != NULL) {
+			FloatRect brickBounds = this->area.at(i).getGlobalBounds();
+			FloatRect ballBounds = ball.getGlobalBounds();
+			FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
+			FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 1, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
+			FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
+			FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 1), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
 
-		// temporary setting
-		if (ballBounds.intersects(bottomBlock)) {
-			speedY = abs(speedY);
-			this->area.erase(area.begin() + i);
+			// temporary setting
+			if (ballBounds.intersects(bottomBlock)) {
+				speedY = abs(speedY);
+				this->area.erase(area.begin() + i);
+			}
+			else if (ballBounds.intersects(leftBlock)) {
+				speedX = -abs(speedX);
+				this->area.erase(area.begin() + i);
+			}
+			else if (ballBounds.intersects(rightBlock)) {
+				speedX = abs(speedX);
+				this->area.erase(area.begin() + i);
+			}
+			else if (ballBounds.intersects(topBlock)) {
+				speedY = -abs(speedY);
+				this->area.erase(area.begin() + i);
+			}
 		}
-		else if (ballBounds.intersects(leftBlock)) {
-			speedX = -abs(speedX);
-			this->area.erase(area.begin() + i);
-		}
-		else if (ballBounds.intersects(rightBlock)) {
-			speedX = abs(speedX);
-			this->area.erase(area.begin() + i);
-		}
-		else if (ballBounds.intersects(topBlock)) {
-			speedY = -abs(speedY);
-			this->area.erase(area.begin() + i);
-		}
-
 
 	}
 }
