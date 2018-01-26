@@ -4,7 +4,7 @@
 #include <iostream>
 
 // user set the brick array manually
-Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, Window *window, const Vector2f &interval, const float frameSize){
+Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, Window *window, const Vector2f &interval, const float frameSize) {
 
 	try {
 		if (wid <= 0.0f || hei <= 0.0f
@@ -13,7 +13,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 			throw domain_error("Invaild brick initialization.");
 		}
 		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > STAGE_WIDTH
-			  || row * (hei + frameSize * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
+			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
 			throw domain_error("Invaild brick initialization.");
 		}
 		else {
@@ -40,7 +40,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 }
 
 // auto full up the window
-Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * window, const Vector2f &interval, const float frameSize){
+Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * window, const Vector2f &interval, const float frameSize) {
 
 	try {
 		if (wid <= 0.0f || hei <= 0.0f
@@ -71,19 +71,19 @@ Brick::Brick(const size_t rowAmount, const float wid, const float hei, Window * 
 	}
 }
 
-void Brick::loadImage(Texture *image){
+void Brick::loadImage(Texture *image) {
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 		area.at(i).setTexture(image);
 	}
 }
 
-void Brick::setBrickColor(const Color &color){
+void Brick::setBrickColor(const Color &color) {
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 		area.at(i).setFillColor(color);
 	}
 }
 
-void Brick::setFrameColor(const Color &color){
+void Brick::setFrameColor(const Color &color) {
 	if (frame > 0.0f) {
 		for (size_t i = 0; i < getAreaSize(); ++i) {
 			area.at(i).setOutlineColor(color);
@@ -106,7 +106,7 @@ void Brick::setRowAmount(const int row, Window *window) {
 	}
 }
 
-void Brick::setSideLength(const Vector2f & sideLength, Window * window){
+void Brick::setSideLength(const Vector2f & sideLength, Window * window) {
 
 	if (sideLength.x > 0 && sideLength.y > 0) {
 		this->sideLength = sideLength;
@@ -118,7 +118,7 @@ void Brick::setSideLength(const Vector2f & sideLength, Window * window){
 	}
 }
 
-void Brick::setSideLength(const float wid, const float hei, Window *window){
+void Brick::setSideLength(const float wid, const float hei, Window *window) {
 
 	if (wid > 0 && hei > 0) {
 		sideLength = Vector2f(wid, hei);
@@ -164,35 +164,33 @@ void Brick::setFrameSize(const float frameSize, Window *window) {
 	}
 }
 
-void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY){
+void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY) {
 
 	for (size_t i = 0; i < this->getAreaSize(); ++i) {
 
-		if (this->area.at(i).getSize().x != NULL) {
-			FloatRect brickBounds = this->area.at(i).getGlobalBounds();
-			FloatRect ballBounds = ball.getGlobalBounds();
-			FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
-			FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 1, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
-			FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
-			FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 1), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
+		FloatRect brickBounds = this->area.at(i).getGlobalBounds();
+		FloatRect ballBounds = ball.getGlobalBounds();
+		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
+		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 1, brickBounds.top + ball.getRadius()), Vector2f(1, brickBounds.height - ball.getRadius() * 2));
+		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
+		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 1), Vector2f(brickBounds.width - ball.getRadius() * 2, 1));
 
-			// temporary setting
-			if (ballBounds.intersects(bottomBlock)) {
-				speedY = abs(speedY);
-				this->area.erase(area.begin() + i);
-			}
-			else if (ballBounds.intersects(leftBlock)) {
-				speedX = -abs(speedX);
-				this->area.erase(area.begin() + i);
-			}
-			else if (ballBounds.intersects(rightBlock)) {
-				speedX = abs(speedX);
-				this->area.erase(area.begin() + i);
-			}
-			else if (ballBounds.intersects(topBlock)) {
-				speedY = -abs(speedY);
-				this->area.erase(area.begin() + i);
-			}
+		// temporary setting
+		if (ballBounds.intersects(bottomBlock)) {
+			speedY = abs(speedY);
+			this->area.erase(area.begin() + i);
+		}
+		else if (ballBounds.intersects(leftBlock)) {
+			speedX = -abs(speedX);
+			this->area.erase(area.begin() + i);
+		}
+		else if (ballBounds.intersects(rightBlock)) {
+			speedX = abs(speedX);
+			this->area.erase(area.begin() + i);
+		}
+		else if (ballBounds.intersects(topBlock)) {
+			speedY = -abs(speedY);
+			this->area.erase(area.begin() + i);
 		}
 
 	}
@@ -202,19 +200,19 @@ const size_t Brick::getAreaSize() const {
 	return area.size();
 }
 
-const Vector2f & Brick::getSideLength() const{
+const Vector2f & Brick::getSideLength() const {
 	return sideLength;
 }
 
-const Vector2f & Brick::getInterval() const{
+const Vector2f & Brick::getInterval() const {
 	return interval;
 }
 
-const float Brick::getFrameSize() const{
+const float Brick::getFrameSize() const {
 	return frame;
 }
 
-void Brick::settlePlace(Window *window){
+void Brick::settlePlace(Window *window) {
 
 	static float whiteSpace = (STAGE_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
 	// if window's size().x cannot be filled with full screen, remain the white space of bound
@@ -266,7 +264,7 @@ void Brick::settlePlace(Window *window){
 	}
 }
 
-void Brick::draw(RenderTarget &target, RenderStates states) const{
+void Brick::draw(RenderTarget &target, RenderStates states) const {
 
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 		states.texture = area.at(i).getTexture();

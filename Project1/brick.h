@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-class Brick : public RectangleShape, Window, Texture, Color{
+class Brick : public RectangleShape, Window, Texture, Color {
 
 public:
 
@@ -35,7 +35,7 @@ public:
 private:
 
 	void settlePlace(Window *);
-	virtual void draw(RenderTarget& , RenderStates) const;
+	virtual void draw(RenderTarget&, RenderStates) const;
 
 	vector<RectangleShape> area;
 	// bricks on every row

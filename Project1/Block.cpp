@@ -17,7 +17,7 @@ void Block::setVerticeColor(const Color & color) {
 	}
 }
 
-void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3, const Color & c4){
+void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3, const Color & c4) {
 
 	(*this)[0].color = c1;
 	(*this)[1].color = c2;

@@ -316,7 +316,7 @@ int main() {
 	window.setPosition(Vector2i(window.getPosition().x, 20));
 	window.setVerticalSyncEnabled(true);
 	window.setActive(false);
-	atomic<bool> done(false);
+	atomic <bool> done(false);
 	thread subthread(renderThread, &window, &done);
 	// main thread wait for event and push to queue
 	Event event;
@@ -371,17 +371,15 @@ void setItemVertices(VertexArray &array, const Vector2f &initial, float length) 
 void playerMove(Shape &player, Shape &flash, Window *window, float speed) {
 
 	FloatRect playerBound = player.getGlobalBounds();
-	if (
-		playerBound.left > 0
-		&& (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
+	if (playerBound.left > 0
+		&& (Keyboard::isKeyPressed(Keyboard::Left))
 		) {
 		player.move(Vector2f(-abs(speed), 0));
 		flash.move(Vector2f(-abs(speed), 0));
 	}
 
-	if (
-		playerBound.left + playerBound.width < STAGE_WIDTH
-		&& (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
+	if (playerBound.left + playerBound.width < STAGE_WIDTH
+		&& (Keyboard::isKeyPressed(Keyboard::Right))
 		) {
 		player.move(Vector2f(abs(speed), 0));
 		flash.move(Vector2f(abs(speed), 0));

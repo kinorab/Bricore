@@ -28,7 +28,7 @@ void Button::checkClick(Vector2f mousePos) {
 		else {
 			this->setCurrentState(ButtonState::OVER);
 		}
-	} 
+	}
 	else {
 		this->setCurrentState(ButtonState::UP);
 	}
