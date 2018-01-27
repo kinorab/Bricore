@@ -5,9 +5,16 @@
 using namespace sf;
 using namespace std;
 
+
+enum class ButtonState {
+	UP,
+	OVER,
+	DOWN
+};
+
 class Button {
 public:
-	Button(Texture up, Texture over, Texture down, FloatRect hitArea, string caption, Vector2f location);
+	Button(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location);
 	void checkClick(Vector2f mousePos);
 	void setCaption(string caption);
 	string getCaption();

@@ -5,13 +5,8 @@
 using namespace std;
 using namespace sf;
 
-enum class ButtonState {
-	UP,
-	OVER,
-	DOWN
-};
 
-Button::Button(Texture up, Texture over, Texture down, FloatRect hitArea, string caption, Vector2f location)
+Button::Button(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location)
 	:hitArea(hitArea), currentState(ButtonState::UP) {
 	spriteUp.setTexture(up);
 	spriteOver.setTexture(over);
@@ -40,6 +35,8 @@ void Button::checkClick(Vector2f mousePos) {
 		setCurrentState(ButtonState::UP);
 	}
 }
+
+class aa {};
 
 void Button::setCurrentState(ButtonState state) {
 	currentState = state;
