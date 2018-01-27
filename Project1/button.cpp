@@ -5,11 +5,11 @@
 using namespace std;
 using namespace sf;
 
-Button::Button(Texture * up, Texture * over, Texture * down, FloatRect hitArea, string caption, Vector2f location)
+Button::Button(Texture up, Texture over, Texture down, FloatRect hitArea, string caption, Vector2f location)
 	:hitArea(hitArea), currentState(ButtonState::UP) {
-	spriteUp.setTexture(*up);
-	spriteOver.setTexture(*over);
-	spriteDown.setTexture(*down);
+	spriteUp.setTexture(up);
+	spriteOver.setTexture(over);
+	spriteDown.setTexture(down);
 	currentSprite = &spriteUp;
 	spriteUp.setPosition(location);
 	spriteOver.setPosition(location);
