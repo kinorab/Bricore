@@ -86,3 +86,5 @@ Omit "this" pointer whenever possible.
 ## Hiding class implementation
 
 Prefer interface over PIMPL idiom.
+
+<img src="https://i.imgur.com/1epMgld.png" alt="interface example" style="width: 400px;"/>
