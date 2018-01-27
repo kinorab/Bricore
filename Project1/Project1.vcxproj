@@ -144,10 +144,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="UIComponent.cpp" />
+    <ClCompile Include="UIFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
+    <ClInclude Include="button.h" />
     <ClInclude Include="buttonInterface.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
@@ -155,6 +157,7 @@
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="UIComponent.h" />
+    <ClInclude Include="UIFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc" />
