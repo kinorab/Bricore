@@ -81,3 +81,7 @@ Still, the example provided in the answer didn't get it all right, as mentioned 
 ## "this" Pointer
 
 Omit "this" pointer whenever possible.
+
+## Hiding class implementation
+
+Prefer interface over PIMPL idiom.
