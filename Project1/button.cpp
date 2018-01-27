@@ -36,8 +36,6 @@ void Button::checkClick(Vector2f mousePos) {
 	}
 }
 
-class aa {};
-
 void Button::setCurrentState(ButtonState state) {
 	currentState = state;
 	if (currentState == ButtonState::UP) {
