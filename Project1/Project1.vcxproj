@@ -148,7 +148,6 @@
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
-    <ClInclude Include="button.h" />
     <ClInclude Include="buttonInterface.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />

@@ -1,9 +1,37 @@
-#include "button.h"
 #include "UIComponent.h"
-#include "define.h"
+#include "buttonInterface.h"
 
 using namespace std;
 using namespace sf;
+
+enum class ButtonState {
+	UP,
+	OVER,
+	DOWN
+};
+
+class Button : public ButtonInterface {
+public:
+	Button(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location);
+	void checkClick(Vector2f mousePos);
+	void setCaption(string caption);
+	string getCaption();
+
+private:
+	Sprite spriteUp;
+	Sprite spriteOver;
+	Sprite spriteDown;
+	FloatRect hitArea;
+	Sprite * currentSprite;
+	Text text;
+	ButtonState currentState;
+	void setCurrentState(ButtonState state);
+	ButtonState getCurrentState();
+};
+
+unique_ptr<ButtonInterface> ButtonInterface::create(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location) {
+	return unique_ptr<ButtonInterface>(new Button(up, over, down, hitArea, caption, location));
+}
 
 Button::Button(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location)
 	:hitArea(hitArea), currentState(ButtonState::UP) {
