@@ -1,5 +1,6 @@
 #pragma once
 
+#include "buttonInterface.h"
 #include <SFML/Graphics.hpp>
 
 enum class ButtonState {
@@ -8,7 +9,7 @@ enum class ButtonState {
 	DOWN
 };
 
-class Button {
+class Button : public ButtonInterface {
 public:
 	Button(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location);
 	void checkClick(sf::Vector2f mousePos);
@@ -26,3 +27,7 @@ private:
 	void setCurrentState(ButtonState state);
 	ButtonState getCurrentState();
 };
+
+ButtonInterface * ButtonInterface::create(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location) {
+	return new Button(up, over, down, hitArea, caption, location);
+}
