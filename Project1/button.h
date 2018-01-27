@@ -1,7 +1,6 @@
 #pragma once
 
 #include "buttonInterface.h"
-#include <SFML/Graphics.hpp>
 
 enum class ButtonState {
 	UP,
