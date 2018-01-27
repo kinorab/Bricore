@@ -1,12 +1,11 @@
-# Projec1 Coding Conventions
-This document is meant to serve as a guide to writing C++ in the Project1 codebase,
+# Breakout Brick(BB) Coding Conventions
+This document is meant to serve as a guide to writing C++ in the BB codebase,
 covering when and how to use various language features as well as how code should be formatted.
 Our goal is to ensure a **consistently** high-quality codebase
 that is easy to read and contribute to, especially for newcomers.
 
-The Project1 codebase contains a wide variety of code from many different authors.
-It's been through a few different major stages in its life, including stints in
-multiple different repositories. As a result, large (primarily older) parts of
+The BB codebase contains a wide variety of code from many different authors.
+It's been through a few different major stages in its life. As a result, large (primarily older) parts of
 the codebase do not fit this guide. When in doubt about how to write or format
 something, always prefer the advice here over existing conventions in the
 code. **If you're already touching some older code as part of your work, please
@@ -72,7 +71,7 @@ Still, the example provided in the answer didn't get it all right, as mentioned 
 
 [Why getter and setter methods are evil](https://www.javaworld.com/article/2073723/core-java/why-getter-and-setter-methods-are-evil.html)
 
-[Getter、Setter的用與不用](https://www.ithome.com.tw/voice/98804)
+[Getter、Setter use or not(chinese)](https://www.ithome.com.tw/voice/98804)
 
 [GETTERS AND SETTERS ARE NOT EVIL](https://techblog.bozho.net/getters-and-setters-are-not-evil/)
 
