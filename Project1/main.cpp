@@ -3,6 +3,7 @@
 #include "block.h"
 #include "define.h"
 #include "brick.h"
+#include "buttonInterface.h"
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
@@ -302,7 +303,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 }
 
 int main() {
-
 	ContextSettings settings;
 	settings.depthBits = 24;
 	settings.stencilBits = 8;
@@ -329,6 +329,7 @@ int main() {
 	// finalize...
 	window.close();
 	system("pause");
+	return 0;
 }
 
 /*

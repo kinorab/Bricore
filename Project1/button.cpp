@@ -5,7 +5,8 @@
 using namespace std;
 using namespace sf;
 
-Button::Button(Texture &up, Texture &over, Texture &down, FloatRect hitArea, string caption, Vector2f location)
+
+Button::Button(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location)
 	:hitArea(hitArea), currentState(ButtonState::UP) {
 	spriteUp.setTexture(up);
 	spriteOver.setTexture(over);
@@ -52,8 +53,8 @@ void Button::setCaption(string caption) {
 	text.setString(caption);
 }
 
-bool Button::getCurrentState() {
-	return currentSprite;
+ButtonState Button::getCurrentState() {
+	return currentState;
 }
 
 string Button::getCaption() {

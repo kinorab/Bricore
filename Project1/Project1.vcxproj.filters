@@ -42,6 +42,9 @@
     <ClInclude Include="UIComponent.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="buttonInterface.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
