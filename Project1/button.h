@@ -14,7 +14,7 @@ enum class ButtonState {
 class Button {
 
 public:
-	Button(Texture * up, Texture * over, Texture * down, FloatRect hitArea, string caption, Vector2f location);
+	Button(Texture &up, Texture &over, Texture &down, FloatRect hitArea, string caption, Vector2f location);
 	void checkClick(Vector2f mousePos);
 	void setCurrentState(ButtonState state);
 	void setCaption(string caption);
@@ -23,9 +23,9 @@ public:
 
 private:
 
-	Sprite spriteUp;
-	Sprite spriteOver;
-	Sprite spriteDown;
+	static Sprite spriteUp;
+	static Sprite spriteOver;
+	static Sprite spriteDown;
 	FloatRect hitArea;
 	Sprite * currentSprite;
 	Text text;
