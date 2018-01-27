@@ -1,7 +1,7 @@
 #pragma once
 
-#include<chrono>
-#include<random>
+#include <chrono>
+#include <random>
 
 static constexpr float PI = 3.141592654f;
 static constexpr float LIFETIME = 1500.f;

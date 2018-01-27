@@ -35,6 +35,8 @@ far more dangerous manipulations than any other constructs.
 
    [What is a smart pointer and when should I use one?](https://stackoverflow.com/questions/106508/what-is-a-smart-pointer-and-when-should-i-use-one)
 
+   [What is the best smart pointer return type for a factory function?
+](https://stackoverflow.com/questions/28294620/what-is-the-best-smart-pointer-return-type-for-a-factory-function)
 3. But use raw pointers for reference semantics.
 
    [Smart Pointer Parameters](https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/)

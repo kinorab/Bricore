@@ -27,6 +27,6 @@ private:
 	ButtonState getCurrentState();
 };
 
-ButtonInterface * ButtonInterface::create(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location) {
-	return new Button(up, over, down, hitArea, caption, location);
+std::unique_ptr<ButtonInterface> ButtonInterface::create(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location) {
+	return std::unique_ptr<ButtonInterface>(new Button(up, over, down, hitArea, caption, location));
 }
