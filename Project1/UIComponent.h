@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 class UIComponent {
+
 public:
 
 };

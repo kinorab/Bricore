@@ -3,7 +3,7 @@
 #include "block.h"
 #include "define.h"
 #include "brick.h"
-#include "buttonInterface.h"
+#include "UIFactory.h"
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
