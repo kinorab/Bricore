@@ -29,16 +29,20 @@ all callsites), it should probably be pulled out into its own diff.
 Avoid pointers until you can't.
 The reason is that pointers make things harder to follow/read, less safe and
 far more dangerous manipulations than any other constructs.
+   >
+   > -- <cite>[an answer from "When to use references vs. pointers"](https://stackoverflow.com/a/7058373)</cite>
 
-   [when-to-use-references-vs-pointers](https://stackoverflow.com/questions/7058339/when-to-use-references-vs-pointers)
+2. Prefer smart pointers to raw pointers.
 
-2. Prefer smart pointers to plain pointers.
+   [What is a smart pointer and when should I use one?](https://stackoverflow.com/questions/106508/what-is-a-smart-pointer-and-when-should-i-use-one)
 
-   [what-is-a-smart-pointer-and-when-should-i-use-one](https://stackoverflow.com/questions/106508/what-is-a-smart-pointer-and-when-should-i-use-one)
-
-   But use plain pointers in function parameters when needed.
+3. But use raw pointers in function parameters for reference semantics.
 
    [Smart Pointer Parameters](https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/)
+
+   >You may be wondering why I am using raw pointers here, when everybody keeps telling that raw pointers are bad, unsafe, and dangerous. Actually, that is a precious warning, but it is important to put it in the correct context: **raw pointers are bad when used for performing manual memory management, i.e. allocating and deallocating objects through new and delete. When used purely as a means to achieve reference semantics and pass around non-owning, observing pointers, there is nothing intrinsically dangerous in raw pointers**, except maybe for the fact that one should take care not to dereference a dangling pointer.
+   >
+   > -- <cite>[an answer from "Using smart pointers for class members"](https://stackoverflow.com/a/15649077)</cite>
 
 ## Const Correctness
 
@@ -56,8 +60,8 @@ In short: (Logic inside object) >> Getter, Setter > Public Member
 > Having getters and setters does not in itself break encapsulation.
 What does break encapsulation is having a getter and a setter for every data member.
 That is one step away from making all data members public.
-
---<cite>the highest scored answer from [When are Getters and Setters Justified](https://softwareengineering.stackexchange.com/questions/21802/when-are-getters-and-setters-justified)</cite>
+   >
+   > -- <cite>an answer from [When are Getters and Setters Justified](https://softwareengineering.stackexchange.com/questions/21802/when-are-getters-and-setters-justified)</cite>
 
 Still, the example provided in the answer didn't get it all right, as mentioned in its highest scored comment:
 > The example has it all wrong. There should not be an Age field nor a setAge() method. Age is a function of the Person birthDate as compared to some point in time. While seemingly trivial, this is exactly what is wrong with the modern practice of full mutability of objects and other bad designs, as seen by get/set methods for private fields versus carefully considering what is really mutable, what is a field, what the object should know about its behaviors and what state changes are actually valid (which setX methods completely destroy).
