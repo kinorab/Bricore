@@ -2,10 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 
-using namespace sf;
-using namespace std;
-
-
 enum class ButtonState {
 	UP,
 	OVER,
@@ -14,18 +10,18 @@ enum class ButtonState {
 
 class Button {
 public:
-	Button(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location);
-	void checkClick(Vector2f mousePos);
-	void setCaption(string caption);
-	string getCaption();
+	Button(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location);
+	void checkClick(sf::Vector2f mousePos);
+	void setCaption(std::string caption);
+	std::string getCaption();
 
 private:
-	Sprite spriteUp;
-	Sprite spriteOver;
-	Sprite spriteDown;
-	FloatRect hitArea;
-	Sprite * currentSprite;
-	Text text;
+	sf::Sprite spriteUp;
+	sf::Sprite spriteOver;
+	sf::Sprite spriteDown;
+	sf::FloatRect hitArea;
+	sf::Sprite * currentSprite;
+	sf::Text text;
 	ButtonState currentState;
 	void setCurrentState(ButtonState state);
 	ButtonState getCurrentState();

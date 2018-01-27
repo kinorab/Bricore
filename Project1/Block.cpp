@@ -3,6 +3,9 @@
 #include <iostream>
 #include <stdexcept>
 
+using namespace std;
+using namespace sf;
+
 Block::Block(const enum PrimitiveType type, const size_t vertexCount, const Vector2f & position, float width, float height)
 	: VertexArray(type, vertexCount), position(position), width(width), height(height) {
 

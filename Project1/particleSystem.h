@@ -2,29 +2,26 @@
 
 #include <SFML/Graphics.hpp>
 
-using namespace sf;
-using namespace std;
-
-class ParticleSystem : public Drawable, public Transformable {
+class ParticleSystem : public sf::Drawable, public sf::Transformable {
 
 public:
 
 	explicit ParticleSystem(unsigned int);
 
-	void setEmitter(Vector2f);
+	void setEmitter(sf::Vector2f);
 	void update(const float &timeSpan, const bool &light);
 
 private:
 
-	virtual void draw(RenderTarget & target, RenderStates states) const;
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const;
 	void resetParticle(size_t);
 
 	struct Particle {
-		Vector2f velocity;
+		sf::Vector2f velocity;
 		float lifetime;
 	};
-	vector<Particle>m_particles;
-	VertexArray m_vertices;
+	std::vector<Particle>m_particles;
+	sf::VertexArray m_vertices;
 	float m_lifetime;
-	Vector2f m_emitter;
+	sf::Vector2f m_emitter;
 };

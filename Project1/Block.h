@@ -2,29 +2,26 @@
 
 #include <SFML/Graphics.hpp>
 
-using namespace std;
-using namespace sf;
-
-class Block : public VertexArray, Color {
+class Block : public sf::VertexArray, sf::Color {
 public:
 
-	Block(const enum PrimitiveType type, const size_t vertexCount, const Vector2f &position, float width, float height);
+	Block(const enum sf::PrimitiveType type, const size_t vertexCount, const sf::Vector2f &position, float width, float height);
 
-	void setVerticeColor(const Color &);
-	void setVerticeColor(const Color &, const Color &, const Color &, const Color &);
+	void setVerticeColor(const sf::Color &);
+	void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
 	void setWidth(const float width);
 	void setHeight(const float height);
-	void movePosition(const Vector2f &pos);
-	void enable(CircleShape &ball, float &speedX, float &speedY);
+	void movePosition(const sf::Vector2f &pos);
+	void enable(sf::CircleShape &ball, float &speedX, float &speedY);
 
-	const Vector2f & getPosition() const;
+	const sf::Vector2f & getPosition() const;
 	const float getWidth() const;
 	const float getHeight() const;
 	//void getStatus();
 
 private:
-	void setBlockVertice(const Vector2f &, const float, const float);
-	Vector2f position;
+	void setBlockVertice(const sf::Vector2f &, const float, const float);
+	sf::Vector2f position;
 	float width;
 	float height;
 };

@@ -3,6 +3,9 @@
 #include <stdexcept>
 #include <iostream>
 
+using namespace std;
+using namespace sf;
+
 // user set the brick array manually
 Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
 

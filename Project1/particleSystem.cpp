@@ -2,6 +2,9 @@
 #include "particleSystem.h"
 #include <cmath>
 
+using namespace std;
+using namespace sf;
+
 ParticleSystem::ParticleSystem(unsigned int count)
 	:m_particles(count), m_vertices(Points, count), m_lifetime(LIFETIME), m_emitter(0, 0) {
 

@@ -6,7 +6,6 @@
 using namespace std;
 using namespace sf;
 
-
 EllipseShape::EllipseShape(const Vector2f &radius = Vector2f(0, 0)) {
 
 	try {

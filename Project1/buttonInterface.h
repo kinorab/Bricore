@@ -2,18 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 
-using namespace sf;
-using namespace std;
-
 class ButtonInterface {
 public:
+	virtual void checkClick(sf::Vector2f mousePos) = 0;
+	virtual void setCaption(std::string caption) = 0;
+	virtual std::string getCaption() = 0;
 	virtual ~ButtonInterface() = 0;
 };
 
 ButtonInterface::~ButtonInterface() {
 
 }
-
-class bb : ButtonInterface{
-
-};
