@@ -32,11 +32,11 @@ far more dangerous manipulations than any other constructs.
    >
    > -- <cite>[an answer from "When to use references vs. pointers"](https://stackoverflow.com/a/7058373)</cite>
 
-2. Prefer smart pointers to raw pointers.
+2. Prefer smart pointers to raw pointers when allocating objects.
 
    [What is a smart pointer and when should I use one?](https://stackoverflow.com/questions/106508/what-is-a-smart-pointer-and-when-should-i-use-one)
 
-3. But use raw pointers in function parameters for reference semantics.
+3. But use raw pointers for reference semantics.
 
    [Smart Pointer Parameters](https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/)
 
