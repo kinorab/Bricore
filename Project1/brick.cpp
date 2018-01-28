@@ -181,7 +181,7 @@ void Brick::collisionBroke(CircleShape &ball, float &speedX, float &speedY) {
 		// temporary setting
 		if (ballBounds.intersects(bottomBlock)) {
 			speedY = abs(speedY);
-			 area.erase(area.begin() + i);
+			area.erase(area.begin() + i);
 		}
 		else if (ballBounds.intersects(leftBlock)) {
 			speedX = -abs(speedX);

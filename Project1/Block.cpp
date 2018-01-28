@@ -54,13 +54,11 @@ void Block::resetPosition() {
 }
 
 void Block::setSpeed(const float speedX, const float speedY) {
-	update = true;
-	this->speed.x = speedX;
-	this->speed.y = speedY;
+	speed.x = speedX;
+	speed.y = speedY;
 }
 
 void Block::setSpeed(const Vector2f & speed) {
-	update = true;
 	this->speed = speed;
 }
 
@@ -71,6 +69,7 @@ void Block::move() {
 	static FloatRect rightBounds(STAGE_WIDTH, 0.0f, 1.0f, STAGE_HEIGHT);
 	static FloatRect topBounds(0.0f, 0.0f, STAGE_WIDTH, -1.0f);
 	static FloatRect bottomBounds(0.0f, STAGE_HEIGHT, STAGE_WIDTH, 1.0f);
+
 	if (blockBounds.intersects(leftBounds)) {
 		speed.x = abs(speed.x);
 	}
@@ -84,7 +83,6 @@ void Block::move() {
 	else if (blockBounds.intersects(bottomBounds)) {
 		speed.y = -abs(speed.y);
 	}
-
 
 	moveEntity(speed);
 }

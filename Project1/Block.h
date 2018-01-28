@@ -29,7 +29,6 @@ private:
 	sf::Vector2f position;
 	sf::Vector2f OriPos;
 	sf::Vector2f speed;
-	bool update = false;
 	float width;
 	float height;
 };
