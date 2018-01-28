@@ -27,6 +27,7 @@ public:
 	const sf::Vector2f & getSideLength() const;
 	const sf::Vector2f & getInterval() const;
 	const float getFrameSize() const;
+	~Brick() {};
 
 private:
 

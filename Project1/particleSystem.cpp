@@ -5,12 +5,12 @@
 using namespace std;
 using namespace sf;
 
-ParticleSystem::ParticleSystem(unsigned int count)
+ParticleSystem::ParticleSystem(const unsigned int count)
 	:m_particles(count), m_vertices(Points, count), m_lifetime(LIFETIME), m_emitter(0, 0) {
 
 }
 
-void ParticleSystem::setEmitter(Vector2f position) {
+void ParticleSystem::setEmitter(const Vector2f &position) {
 	m_emitter = position;
 }
 

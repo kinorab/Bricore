@@ -6,9 +6,9 @@ class ParticleSystem : public sf::Drawable, public sf::Transformable {
 
 public:
 
-	explicit ParticleSystem(unsigned int);
+	explicit ParticleSystem(const unsigned int count);
 
-	void setEmitter(sf::Vector2f);
+	void setEmitter(const sf::Vector2f &position);
 	void update(const float &timeSpan, const bool &light);
 
 private:

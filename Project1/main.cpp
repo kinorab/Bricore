@@ -10,6 +10,7 @@
 #include <atomic>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 #include <queue>
 #include <mutex>
 
@@ -17,10 +18,12 @@ using namespace sf;
 using namespace std;
 
 static bool start;
+static bool ready;
 static bool active;
 static bool light;
 static float speedX;
 static float speedY;
+static unsigned int stage = 1;
 static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 
@@ -33,19 +36,20 @@ void ballMove(CircleShape &ball, Shape &player);
 inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound &sound);
 void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, bool &flash);
 inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash);
+void blockCollision(vector<Block*> block);
 
 void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 	window->setActive(true);
-	static float blockLength = 100;
-	static float incre1 = 3;
+	static float blockLength = 100.f;
+	static float incre1 = 3.f;
 
-	Block block1(Quads, 4, Vector2f(blockLength, STAGE_HEIGHT - blockLength * incre1), blockLength, blockLength * incre1);
-	block1.movePosition(Vector2f(0, -block1.getHeight() * .75f));
+	Block block1(Quads, 4, Vector2f(blockLength, blockLength * incre1), blockLength, blockLength * incre1);
 	block1.setVerticeColor(Color::Green, Color::Black, Color::Cyan, Color::Black);
-	Block block2(Quads, 4, Vector2f(STAGE_WIDTH - blockLength * 2, STAGE_HEIGHT - blockLength * incre1), blockLength, blockLength * incre1);
-	block2.movePosition(Vector2f(0, -block2.getHeight() * .75f));
+	block1.setSpeed(1);
+	Block block2(Quads, 4, Vector2f(STAGE_WIDTH - blockLength * 2, blockLength * incre1), blockLength, blockLength * incre1);
 	block2.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
+	block2.setSpeed(-1);
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(200, 10));
@@ -227,6 +231,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				}
 				else if (getEvent.mouseButton.button == Mouse::Right && start) {
 					start = false;
+					ready = false;
 				}
 
 			}
@@ -265,20 +270,25 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		static constexpr float updateSpan = 10.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			playerMove(mainPlayer, redRange, PLAYERSPEED);
-			yellowRange.setPosition(mainPlayer.getPosition());
 			ballEnableMove(ball, mainPlayer, redRange, sound1);
-			if (!start) {
-				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
-			}
-			else {
+			yellowRange.setPosition(mainPlayer.getPosition());
+			if (start) {
 				ballMove(ball, mainPlayer);
-			}
-
-			if (bricks.getAreaSize() != NULL) {
+				blockCollision({ &block1, &block2 });
 				bricks.collisionBroke(ball, speedX, speedY);
+				if (bricks.getAreaSize() == NULL) {
+					ready = false;
+					start = false;
+					cout << "Finished stage: " << stage++ << "!!!" << endl;
+				}
 			}
 			else {
-				//next stage
+				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
+				if (!ready) {
+					block1.resetPosition();
+					block2.resetPosition();
+					ready = true;
+				}
 			}
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 			mouseLight.update(updateSpan, light);
@@ -428,6 +438,7 @@ void ballMove(CircleShape &ball, Shape &player) {
 	// out of bottom bound, reset the ball
 	if (ballBounds.top > STAGE_HEIGHT) {
 		start = false;
+		ready = false;
 	}
 	// window's right bound
 	else if (ballBounds.left + ballBounds.width >= STAGE_WIDTH) {
@@ -579,5 +590,28 @@ inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash) {
 	}
 	else {
 		flash = false;
+	}
+}
+
+void blockCollision(vector<Block*> block) {
+
+	try {
+		for (size_t i = 0; i < block.size(); ++i) {
+
+			for (size_t j = i + 1; j < block.size(); ++j) {
+
+				if (block.at(i)->getBounds().intersects(block.at(j)->getBounds())) {
+					block.at(i)->setSpeed(block.at(i)->getSpeed().x * -1, block.at(i)->getSpeed().y * -1);
+					block.at(j)->setSpeed(block.at(j)->getSpeed().x * -1, block.at(j)->getSpeed().y * -1);
+				}
+			}
+		}
+
+		for (size_t i = 0; i < block.size(); ++i) {
+			block.at(i)->move();
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
 	}
 }

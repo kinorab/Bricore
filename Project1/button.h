@@ -11,9 +11,9 @@ enum class ButtonState {
 class Button : public ButtonInterface {
 public:
 	Button(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location);
-	void checkClick(sf::Vector2f mousePos);
-	void setCaption(std::string caption);
-	std::string getCaption();
+	virtual void checkClick(sf::Vector2f mousePos);
+	virtual void setCaption(std::string caption);
+	virtual std::string getCaption();
 
 private:
 	sf::Sprite spriteUp;

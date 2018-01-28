@@ -7,9 +7,9 @@ using namespace std;
 using namespace sf;
 
 Block::Block(const enum PrimitiveType type, const size_t vertexCount, const Vector2f & position, float width, float height)
-	: VertexArray(type, vertexCount), position(position), width(width), height(height) {
+	: VertexArray(type, vertexCount), position(position), OriPos(position), width(width), height(height) {
 
-	setBlockVertice(getPosition(), getWidth(), getHeight());
+	setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
 }
 
 void Block::setVerticeColor(const Color & color) {
@@ -31,7 +31,7 @@ void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3
 void Block::setWidth(const float width) {
 	if (width > 0) {
 		this->width = width;
-		setBlockVertice(getPosition(), getWidth(), getHeight());
+		setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
 	}
 	else {
 		cout << "Invalid width setting." << endl;
@@ -41,18 +41,52 @@ void Block::setWidth(const float width) {
 void Block::setHeight(const float height) {
 	if (height > 0) {
 		this->height = height;
-		setBlockVertice(getPosition(), getWidth(), getHeight());
+		setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
 	}
 	else {
 		cout << "Invalid height setting." << endl;
 	}
 }
 
-void Block::movePosition(const Vector2f & pos) {
-	for (size_t i = 0; i < getVertexCount(); ++i) {
-		(*this)[i].position += pos;
+void Block::resetPosition() {
+
+	setBlockVertice(OriPos, getWidth(), getHeight());
+}
+
+void Block::setSpeed(const float speedX, const float speedY) {
+	update = true;
+	this->speed.x = speedX;
+	this->speed.y = speedY;
+}
+
+void Block::setSpeed(const Vector2f & speed) {
+	update = true;
+	this->speed = speed;
+}
+
+void Block::move() {
+
+	FloatRect blockBounds = getBounds();
+	static FloatRect leftBounds(0.0f, 0.0f, -1.0f, STAGE_HEIGHT);
+	static FloatRect rightBounds(STAGE_WIDTH, 0.0f, 1.0f, STAGE_HEIGHT);
+	static FloatRect topBounds(0.0f, 0.0f, STAGE_WIDTH, -1.0f);
+	static FloatRect bottomBounds(0.0f, STAGE_HEIGHT, STAGE_WIDTH, 1.0f);
+	if (blockBounds.intersects(leftBounds)) {
+		speed.x = abs(speed.x);
 	}
-	position = (*this)[0].position;// mark new position in [0]
+	else if (blockBounds.intersects(rightBounds)) {
+		speed.x = -abs(speed.x);
+	}
+
+	if (blockBounds.intersects(topBounds)) {
+		speed.y = abs(speed.y);
+	}
+	else if (blockBounds.intersects(bottomBounds)) {
+		speed.y = -abs(speed.y);
+	}
+
+
+	moveEntity(speed);
 }
 
 // all change direct by using abs() to prevent stuck inside the block
@@ -60,10 +94,10 @@ void Block::enable(CircleShape & ball, float &speedX, float &speedY) {
 
 	FloatRect blockBounds = getBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
-	FloatRect leftBlock = FloatRect(Vector2f(blockBounds.left, blockBounds.top + ball.getRadius()), Vector2f(1, blockBounds.height - ball.getRadius() * 2));
-	FloatRect rightBlock = FloatRect(Vector2f(blockBounds.left + blockBounds.width - 1, blockBounds.top + ball.getRadius()), Vector2f(1, blockBounds.height - ball.getRadius() * 2));
-	FloatRect topBlock = FloatRect(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top), Vector2f(blockBounds.width - ball.getRadius() * 2, 1));
-	FloatRect bottomBlock = FloatRect(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top + blockBounds.height - 1), Vector2f(blockBounds.width - ball.getRadius() * 2, 1));
+	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getRadius()), Vector2f(1, blockBounds.height - ball.getRadius() * 2));
+	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - 1, blockBounds.top + ball.getRadius()), Vector2f(1, blockBounds.height - ball.getRadius() * 2));
+	FloatRect topBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top), Vector2f(blockBounds.width - ball.getRadius() * 2, 1));
+	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top + blockBounds.height - 1), Vector2f(blockBounds.width - ball.getRadius() * 2, 1));
 
 	if (ballBounds.intersects(leftBlock)) {
 		speedX = -abs(speedX);
@@ -80,8 +114,16 @@ void Block::enable(CircleShape & ball, float &speedX, float &speedY) {
 	}
 }
 
-const Vector2f & Block::getPosition() const {
+const Vector2f & Block::getCurrentPosition() const {
 	return position;
+}
+
+const Vector2f & Block::getOriginPosition() const {
+	return OriPos;
+}
+
+const Vector2f & Block::getSpeed() const {
+	return speed;
 }
 
 const float Block::getWidth() const {
@@ -113,4 +155,11 @@ void Block::setBlockVertice(const Vector2f & position, const float width, const 
 	catch (domain_error & ex) {
 		cout << "Domain_error: " << ex.what() << endl;
 	}
+}
+
+void Block::moveEntity(const Vector2f & increpos) {
+	for (size_t i = 0; i < getVertexCount(); ++i) {
+		(*this)[i].position += increpos;
+	}
+	position = (*this)[0].position;// mark new position in [0]
 }
