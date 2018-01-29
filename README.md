@@ -19,7 +19,8 @@ Just download it and play!
 
 ## Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/kinorab/pigject/tags).
+We use [SemVer](http://semver.org/) for versioning. 
+<br />For the versions available, see the [tags on this repository](https://github.com/kinorab/pigject/tags).
 
 ## Authors
 
