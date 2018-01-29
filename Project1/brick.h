@@ -21,7 +21,7 @@ public:
 	void setInterval(const sf::Vector2f &interval);
 	void setInterval(const float x, const float y);
 	void setFrameSize(const float frame);
-	void collisionBroke(sf::CircleShape &, float &speedX, float &speedY);
+	void collisionBroke(sf::CircleShape &, float &ballSpeedX, float &ballSpeedY);
 
 	const size_t getAreaSize() const;
 	const sf::Vector2f & getSideLength() const;

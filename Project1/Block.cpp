@@ -6,8 +6,8 @@
 using namespace std;
 using namespace sf;
 
-Block::Block(const enum PrimitiveType type, const size_t vertexCount, const Vector2f & position, float width, float height)
-	: VertexArray(type, vertexCount), position(position), OriPos(position), width(width), height(height) {
+Block::Block(const Vector2f & position, float width, float height)
+	: VertexArray(Quads, 4), position(position), oriPos(position), width(width), height(height) {
 
 	setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
 }
@@ -50,12 +50,12 @@ void Block::setHeight(const float height) {
 
 void Block::resetPosition() {
 
-	setBlockVertice(OriPos, getWidth(), getHeight());
+	setBlockVertice(oriPos, getWidth(), getHeight());
 }
 
-void Block::setSpeed(const float speedX, const float speedY) {
-	speed.x = speedX;
-	speed.y = speedY;
+void Block::setSpeed(const float ballSpeedX, const float ballSpeedY) {
+	speed.x = ballSpeedX;
+	speed.y = ballSpeedY;
 }
 
 void Block::setSpeed(const Vector2f & speed) {
@@ -88,27 +88,27 @@ void Block::move() {
 }
 
 // all change direct by using abs() to prevent stuck inside the block
-void Block::enable(CircleShape & ball, float &speedX, float &speedY) {
+void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 
 	FloatRect blockBounds = getBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
-	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getRadius()), Vector2f(1, blockBounds.height - ball.getRadius() * 2));
-	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - 1, blockBounds.top + ball.getRadius()), Vector2f(1, blockBounds.height - ball.getRadius() * 2));
-	FloatRect topBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top), Vector2f(blockBounds.width - ball.getRadius() * 2, 1));
-	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top + blockBounds.height - 1), Vector2f(blockBounds.width - ball.getRadius() * 2, 1));
+	FloatRect leftBlock(blockBounds.left, blockBounds.top + ball.getRadius(), ball.getRadius(), blockBounds.height - ball.getRadius() * 2);
+	FloatRect rightBlock(blockBounds.left + blockBounds.width - ball.getRadius(), blockBounds.top + ball.getRadius(), ball.getRadius(), blockBounds.height - ball.getRadius() * 2);
+	FloatRect topBlock(blockBounds.left + ball.getRadius(), blockBounds.top, blockBounds.width - ball.getRadius() * 2, ball.getRadius());
+	FloatRect bottomBlock(blockBounds.left + ball.getRadius(), blockBounds.top + blockBounds.height - ball.getRadius(), blockBounds.width - ball.getRadius() * 2, ball.getRadius());
 
 	if (ballBounds.intersects(leftBlock)) {
-		speedX = -abs(speedX);
+		ballSpeedX = -abs(ballSpeedX);
 	}
 	else if (ballBounds.intersects(rightBlock)) {
-		speedX = abs(speedX);
+		ballSpeedX = abs(ballSpeedX);
 	}
 
 	if (ballBounds.intersects(topBlock)) {
-		speedY = -abs(speedY);
+		ballSpeedY = -abs(ballSpeedY);
 	}
 	else if (ballBounds.intersects(bottomBlock)) {
-		speedY = abs(speedY);
+		ballSpeedY = abs(ballSpeedY);
 	}
 }
 
@@ -117,7 +117,7 @@ const Vector2f & Block::getCurrentPosition() const {
 }
 
 const Vector2f & Block::getOriginPosition() const {
-	return OriPos;
+	return oriPos;
 }
 
 const Vector2f & Block::getSpeed() const {
