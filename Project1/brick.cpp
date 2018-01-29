@@ -173,12 +173,21 @@ void Brick::collisionBroke(CircleShape &ball, float &ballSpeedX, float &ballSpee
 
 		FloatRect brickBounds = area.at(i).getGlobalBounds();
 		FloatRect ballBounds = ball.getGlobalBounds();
-		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius()), Vector2f(2, brickBounds.height - ball.getRadius() * 2));
-		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 2, brickBounds.top + ball.getRadius()), Vector2f(2, brickBounds.height - ball.getRadius() * 2));
-		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top), Vector2f(brickBounds.width - ball.getRadius() * 2, 2));
-		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 2), Vector2f(brickBounds.width - ball.getRadius() * 2, 2));
+		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius())
+									, Vector2f(2, brickBounds.height - ball.getRadius() * 2));
+		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 2, brickBounds.top + ball.getRadius())
+									, Vector2f(2, brickBounds.height - ball.getRadius() * 2));
+		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top)
+									, Vector2f(brickBounds.width - ball.getRadius() * 2, 2));
+		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 2)
+									, Vector2f(brickBounds.width - ball.getRadius() * 2, 2));
 		
-		if (ballBounds.intersects(leftBlock)) {
+		//temp setting
+		if (ballBounds.intersects(bottomBlock)) {
+			ballSpeedY = abs(ballSpeedY);
+			area.erase(area.begin() + i);
+		}
+		else if (ballBounds.intersects(leftBlock)) {
 			ballSpeedX = -abs(ballSpeedX);
 			area.erase(area.begin() + i);
 		}
@@ -186,15 +195,11 @@ void Brick::collisionBroke(CircleShape &ball, float &ballSpeedX, float &ballSpee
 			ballSpeedX = abs(ballSpeedX);
 			area.erase(area.begin() + i);
 		}
-
-		if (ballBounds.intersects(topBlock)) {
+		else if (ballBounds.intersects(topBlock)) {
 			ballSpeedY = -abs(ballSpeedY);
 			area.erase(area.begin() + i);
 		}
-		else if (ballBounds.intersects(bottomBlock)) {
-			ballSpeedY = abs(ballSpeedY);
-			area.erase(area.begin() + i);
-		}
+		
 	}
 }
 

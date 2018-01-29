@@ -52,7 +52,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	block2.setSpeed(-1);
 
 	RectangleShape mainPlayer;
-	mainPlayer.setSize(Vector2f(200, 10));
+	mainPlayer.setSize(Vector2f(240, 12));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
 	mainPlayer.setPosition(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT - mainPlayer.getSize().y));
@@ -273,9 +273,11 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			ballEnableMove(ball, mainPlayer, redRange, sound1);
 			yellowRange.setPosition(mainPlayer.getPosition());
 			if (start) {
-				ballMove(ball, mainPlayer);
-				blockCollision({ &block1, &block2 });
+				block1.enable(ball, ballSpeedX, ballSpeedY);
+				block2.enable(ball, ballSpeedX, ballSpeedY);
 				bricks.collisionBroke(ball, ballSpeedX, ballSpeedY);
+				blockCollision({ &block1, &block2 });
+				ballMove(ball, mainPlayer);
 				if (bricks.getAreaSize() == NULL) {
 					ready = false;
 					start = false;
@@ -292,8 +294,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			}
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
 			mouseLight.update(updateSpan, light);
-			block1.enable(ball, ballSpeedX, ballSpeedY);
-			block2.enable(ball, ballSpeedX, ballSpeedY);
 			elapsed -= seconds(updateSpan / 1000.0f);
 		}
 
@@ -605,10 +605,6 @@ void blockCollision(vector<Block*> block) {
 					block.at(j)->setSpeed(block.at(j)->getSpeed().x * -1, block.at(j)->getSpeed().y * -1);
 				}
 			}
-		}
-
-		for (size_t i = 0; i < block.size(); ++i) {
-			block.at(i)->move();
 		}
 	}
 	catch (out_of_range &ex) {

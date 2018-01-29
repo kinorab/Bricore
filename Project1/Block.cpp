@@ -62,40 +62,19 @@ void Block::setSpeed(const Vector2f & speed) {
 	this->speed = speed;
 }
 
-void Block::move() {
-
-	FloatRect blockBounds = getBounds();
-	static FloatRect leftBounds(0.0f, 0.0f, -1.0f, STAGE_HEIGHT);
-	static FloatRect rightBounds(STAGE_WIDTH, 0.0f, 1.0f, STAGE_HEIGHT);
-	static FloatRect topBounds(0.0f, 0.0f, STAGE_WIDTH, -1.0f);
-	static FloatRect bottomBounds(0.0f, STAGE_HEIGHT, STAGE_WIDTH, 1.0f);
-
-	if (blockBounds.intersects(leftBounds)) {
-		speed.x = abs(speed.x);
-	}
-	else if (blockBounds.intersects(rightBounds)) {
-		speed.x = -abs(speed.x);
-	}
-
-	if (blockBounds.intersects(topBounds)) {
-		speed.y = abs(speed.y);
-	}
-	else if (blockBounds.intersects(bottomBounds)) {
-		speed.y = -abs(speed.y);
-	}
-
-	moveEntity(speed);
-}
-
 // all change direct by using abs() to prevent stuck inside the block
 void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 
 	FloatRect blockBounds = getBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
-	FloatRect leftBlock(blockBounds.left, blockBounds.top + ball.getRadius(), ball.getRadius(), blockBounds.height - ball.getRadius() * 2);
-	FloatRect rightBlock(blockBounds.left + blockBounds.width - ball.getRadius(), blockBounds.top + ball.getRadius(), ball.getRadius(), blockBounds.height - ball.getRadius() * 2);
-	FloatRect topBlock(blockBounds.left + ball.getRadius(), blockBounds.top, blockBounds.width - ball.getRadius() * 2, ball.getRadius());
-	FloatRect bottomBlock(blockBounds.left + ball.getRadius(), blockBounds.top + blockBounds.height - ball.getRadius(), blockBounds.width - ball.getRadius() * 2, ball.getRadius());
+	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top +  ball.getRadius())
+					, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius() * 2));
+	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - ballBounds.width, blockBounds.top + ball.getRadius())
+					, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius() * 2));
+	FloatRect topBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top)
+					, Vector2f(blockBounds.width - ball.getRadius() * 2, ballBounds.height));
+	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top + blockBounds.height - ballBounds.height)
+					, Vector2f(blockBounds.width - ball.getRadius() * 2, ballBounds.height));
 
 	if (ballBounds.intersects(leftBlock)) {
 		ballSpeedX = -abs(ballSpeedX);
@@ -110,6 +89,7 @@ void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 	else if (ballBounds.intersects(bottomBlock)) {
 		ballSpeedY = abs(ballSpeedY);
 	}
+	move();
 }
 
 const Vector2f & Block::getCurrentPosition() const {
@@ -153,6 +133,31 @@ void Block::setBlockVertice(const Vector2f & position, const float width, const 
 	catch (domain_error & ex) {
 		cout << "Domain_error: " << ex.what() << endl;
 	}
+}
+
+void Block::move() {
+
+	FloatRect blockBounds = getBounds();
+	static FloatRect leftBounds(0.0f, 0.0f, -1.0f, STAGE_HEIGHT);
+	static FloatRect rightBounds(STAGE_WIDTH, 0.0f, 1.0f, STAGE_HEIGHT);
+	static FloatRect topBounds(0.0f, 0.0f, STAGE_WIDTH, -1.0f);
+	static FloatRect bottomBounds(0.0f, STAGE_HEIGHT, STAGE_WIDTH, 1.0f);
+
+	if (blockBounds.intersects(leftBounds)) {
+		speed.x = abs(speed.x);
+	}
+	else if (blockBounds.intersects(rightBounds)) {
+		speed.x = -abs(speed.x);
+	}
+
+	if (blockBounds.intersects(topBounds)) {
+		speed.y = abs(speed.y);
+	}
+	else if (blockBounds.intersects(bottomBounds)) {
+		speed.y = -abs(speed.y);
+	}
+
+	moveEntity(speed);
 }
 
 void Block::moveEntity(const Vector2f & increpos) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 class Block : public sf::VertexArray {
 public:
@@ -14,7 +15,6 @@ public:
 	void setSpeed(const float ballSpeedX, const float ballSpeedY = 0.0f);
 	void setSpeed(const sf::Vector2f &speed);
 	void enable(sf::CircleShape &ball, float &ballSpeedX, float &ballSpeedY);
-	void move();
 
 	const sf::Vector2f & getCurrentPosition() const;
 	const sf::Vector2f & getOriginPosition() const;
@@ -24,13 +24,12 @@ public:
 
 private:
 	void setBlockVertice(const sf::Vector2f &, const float, const float);
-	void blockCollision(std::vector<Block*> block);
+	void move();
 	void moveEntity(const sf::Vector2f &);
 
 	sf::Vector2f position;
 	sf::Vector2f oriPos;
 	sf::Vector2f speed;
-	//std::vector <Block*> block;
 	float width;
 	float height;
 };
