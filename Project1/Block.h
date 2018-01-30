@@ -2,10 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 
-class Block : public sf::VertexArray {
+class Block : public sf::VertexArray{
 public:
 
 	Block(const sf::Vector2f &position, float width, float height);
+	Block(std::vector<Block*> blocks, const size_t number, const std::vector<sf::Vector2f> &position, const std::vector<sf::Vector2f> &sideLength);
 	void setVerticeColor(const sf::Color &);
 	void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
 	void setWidth(const float width);

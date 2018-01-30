@@ -1,8 +1,8 @@
 #include "ellipse.h"
 #include "particleSystem.h"
-#include "block.h"
-#include "define.h"
 #include "brick.h"
+#include "define.h"
+#include "obstacle.h"
 #include "UIFactory.h"
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
@@ -44,12 +44,16 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	static float blockLength = 100.f;
 	static float incre1 = 3.f;
 
-	Block block1(Vector2f(blockLength, blockLength * incre1), blockLength, blockLength * incre1);
+	/*Block block1(Vector2f(blockLength, blockLength * incre1), blockLength, blockLength * incre1);
 	block1.setVerticeColor(Color::Green, Color::Black, Color::Cyan, Color::Black);
 	block1.setSpeed(1);
 	Block block2(Vector2f(STAGE_WIDTH - blockLength * 2, blockLength * incre1), blockLength, blockLength * incre1);
 	block2.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
-	block2.setSpeed(-1);
+	block2.setSpeed(-1);*/
+
+	Obstacle obstacles(2
+	, { Vector2f(blockLength, blockLength * incre1), Vector2f(STAGE_WIDTH - blockLength * 2, blockLength * incre1) }
+	, { Vector2f(blockLength, blockLength * incre1), Vector2f(blockLength, blockLength * incre1) });
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(240, 12));
@@ -72,7 +76,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	ball.setRadius(5.f);
 	ball.setOutlineThickness(2.f);
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
-	
+
 	Brick bricks(6, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
 	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
@@ -273,10 +277,10 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			ballEnableMove(ball, mainPlayer, redRange, sound1);
 			yellowRange.setPosition(mainPlayer.getPosition());
 			if (start) {
-				block1.enable(ball, ballSpeedX, ballSpeedY);
-				block2.enable(ball, ballSpeedX, ballSpeedY);
+				//block1.enable(ball, ballSpeedX, ballSpeedY);
+				//block2.enable(ball, ballSpeedX, ballSpeedY);
+				obstacles.enable(ball, ballSpeedX, ballSpeedY);
 				bricks.collisionBroke(ball, ballSpeedX, ballSpeedY);
-				blockCollision({ &block1, &block2 });
 				ballMove(ball, mainPlayer);
 				if (bricks.getAreaSize() == NULL) {
 					ready = false;
@@ -287,8 +291,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			else {
 				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 				if (!ready) {
-					block1.resetPosition();
-					block2.resetPosition();
+					//block1.resetPosition();
+					//block2.resetPosition();
 					ready = true;
 				}
 			}
@@ -299,8 +303,9 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 		// render
 		window->clear(Color::White);
-		window->draw(block1);
-		window->draw(block2);
+		//window->draw(block1);
+		//window->draw(block2);
+		window->draw(obstacles);
 		window->draw(mainPlayer);
 		window->draw(yellowRange);
 		window->draw(redRange);

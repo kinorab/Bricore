@@ -11,6 +11,26 @@ Block::Block(const Vector2f & position, float width, float height)
 
 	setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
 }
+// unity of Block-->Obstacle
+Block::Block(vector<Block*> blocks, const size_t number, const vector<Vector2f> &position, const vector<Vector2f> &sideLength) {
+
+	try {
+
+		blocks.resize(number);
+		if (blocks.size() == position.size()
+			|| blocks.size() == sideLength.size()) {
+			for (size_t i = 0; i < blocks.size(); ++i) {
+				blocks.at(i) = new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y);
+			}
+		}
+		else {
+			cout << "Each other's vector allocate different size." << endl;
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+}
 
 void Block::setVerticeColor(const Color & color) {
 
@@ -67,14 +87,14 @@ void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 
 	FloatRect blockBounds = getBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
-	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top +  ball.getRadius())
-					, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius() * 2));
+	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getRadius())
+		, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius() * 2));
 	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - ballBounds.width, blockBounds.top + ball.getRadius())
-					, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius() * 2));
+		, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius() * 2));
 	FloatRect topBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top)
-					, Vector2f(blockBounds.width - ball.getRadius() * 2, ballBounds.height));
+		, Vector2f(blockBounds.width - ball.getRadius() * 2, ballBounds.height));
 	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getRadius(), blockBounds.top + blockBounds.height - ballBounds.height)
-					, Vector2f(blockBounds.width - ball.getRadius() * 2, ballBounds.height));
+		, Vector2f(blockBounds.width - ball.getRadius() * 2, ballBounds.height));
 
 	if (ballBounds.intersects(leftBlock)) {
 		ballSpeedX = -abs(ballSpeedX);

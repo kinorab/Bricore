@@ -142,6 +142,7 @@
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="hud.h" />
+    <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="UIComponent.h" />

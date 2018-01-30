@@ -187,6 +187,10 @@ void Brick::collisionBroke(CircleShape &ball, float &ballSpeedX, float &ballSpee
 			ballSpeedY = abs(ballSpeedY);
 			area.erase(area.begin() + i);
 		}
+		else if (ballBounds.intersects(topBlock)) {
+			ballSpeedY = -abs(ballSpeedY);
+			area.erase(area.begin() + i);
+		}
 		else if (ballBounds.intersects(leftBlock)) {
 			ballSpeedX = -abs(ballSpeedX);
 			area.erase(area.begin() + i);
@@ -195,10 +199,7 @@ void Brick::collisionBroke(CircleShape &ball, float &ballSpeedX, float &ballSpee
 			ballSpeedX = abs(ballSpeedX);
 			area.erase(area.begin() + i);
 		}
-		else if (ballBounds.intersects(topBlock)) {
-			ballSpeedY = -abs(ballSpeedY);
-			area.erase(area.begin() + i);
-		}
+
 		
 	}
 }
