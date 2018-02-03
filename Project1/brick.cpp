@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace sf;
+using namespace item;
 
 // user set the brick array manually
 Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
@@ -27,6 +28,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 			this->interval = interval;
 
 			if (getAreaSize() == row * amount) {
+				changeEntity = true;
 				settlePlace();
 			}
 			else {
@@ -43,7 +45,7 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 }
 
 // auto full up the window
-Brick::Brick(const size_t rowAmount, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
+Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
 
 	try {
 		if (wid <= 0.0f || hei <= 0.0f
@@ -56,9 +58,10 @@ Brick::Brick(const size_t rowAmount, const float wid, const float hei, const Vec
 			frame = frameSize;
 			this->interval = interval;
 			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x));
-			area.resize(rowAmount * amount);
+			area.resize(rowCount * amount);
 
-			if (getAreaSize() == rowAmount * amount) {
+			if (getAreaSize() == rowCount * amount) {
+				changeEntity = true;
 				settlePlace();
 			}
 			else {
@@ -174,14 +177,14 @@ void Brick::collisionBroke(CircleShape &ball, float &ballSpeedX, float &ballSpee
 		FloatRect brickBounds = area.at(i).getGlobalBounds();
 		FloatRect ballBounds = ball.getGlobalBounds();
 		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius())
-									, Vector2f(2, brickBounds.height - ball.getRadius() * 2));
-		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 2, brickBounds.top + ball.getRadius())
-									, Vector2f(2, brickBounds.height - ball.getRadius() * 2));
+			, Vector2f(ball.getRadius(), brickBounds.height - ball.getRadius() * 2));
+		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - ball.getRadius(), brickBounds.top + ball.getRadius())
+			, Vector2f(ball.getRadius(), brickBounds.height - ball.getRadius() * 2));
 		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top)
-									, Vector2f(brickBounds.width - ball.getRadius() * 2, 2));
-		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - 2)
-									, Vector2f(brickBounds.width - ball.getRadius() * 2, 2));
-		
+			, Vector2f(brickBounds.width - ball.getRadius() * 2, ball.getRadius()));
+		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - ball.getRadius())
+			, Vector2f(brickBounds.width - ball.getRadius() * 2, ball.getRadius()));
+
 		//temp setting
 		if (ballBounds.intersects(bottomBlock)) {
 			ballSpeedY = abs(ballSpeedY);
@@ -200,7 +203,124 @@ void Brick::collisionBroke(CircleShape &ball, float &ballSpeedX, float &ballSpee
 			area.erase(area.begin() + i);
 		}
 
-		
+
+	}
+}
+
+// reset automatically
+void Brick::reset(const size_t rowCount, const float wid, const float hei
+	, const Vector2f &interval, const float frameSize) {
+
+	try {
+		if (wid <= 0.0f || hei <= 0.0f
+			|| interval.x < 0.0f || interval.y < 0.0f
+			|| frameSize < 0.0f) {
+			throw domain_error("Invaild brick initialization.");
+		}
+		else {
+			sideLength = Vector2f(wid, hei);
+			frame = frameSize;
+			this->interval = interval;
+			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x));
+			area.resize(rowCount * amount);
+
+			if (getAreaSize() == rowCount * amount) {
+				changeEntity = true;
+				settlePlace();
+			}
+			else {
+				throw out_of_range("The subscripts are out of range.");
+			}
+		}
+	}
+	catch (domain_error &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+}
+
+void Brick::reset(const size_t rowCount) {
+
+	try {
+		area.resize(rowCount * amount);
+
+		if (getAreaSize() == rowCount * amount) {
+			changeEntity = true;
+			settlePlace();
+		}
+		else {
+			throw out_of_range("The subscripts are out of range.");
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+}
+
+// reset manually
+void Brick::reset(const size_t row, const size_t col, const float wid, const float hei
+	, const Vector2f & interval, const float frameSize) {
+	try {
+		if (wid <= 0.0f || hei <= 0.0f
+			|| interval.x < 0.0f || interval.y < 0.0f
+			|| frameSize < 0.0f) {
+			throw domain_error("Invaild brick initialization.");
+		}
+		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > STAGE_WIDTH
+			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
+			throw domain_error("Invaild brick initialization.");
+		}
+		else {
+			area.resize(row * col);
+			amount = col;
+			sideLength = Vector2f(wid, hei);
+			frame = frameSize;
+			this->interval = interval;
+
+			if (getAreaSize() == row * amount) {
+				changeEntity = true;
+				settlePlace();
+			}
+			else {
+				throw out_of_range("The subscripts are out of range.");
+			}
+		}
+	}
+	catch (domain_error &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+}
+
+void Brick::reset(const size_t row, const size_t col) {
+
+	try {
+		if (col * (sideLength.x + frame * 2) + interval.x * (col + 1) > STAGE_WIDTH
+			|| row * (sideLength.y + frame * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
+			throw domain_error("Invaild brick initialization.");
+		}
+		else {
+			area.resize(row * col);
+			amount = col;
+
+			if (getAreaSize() == row * amount) {
+				changeEntity = true;
+				settlePlace();
+			}
+			else {
+				throw out_of_range("The subscripts are out of range.");
+			}
+		}
+	}
+	catch (domain_error &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
 	}
 }
 

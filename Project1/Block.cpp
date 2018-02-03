@@ -5,32 +5,14 @@
 
 using namespace std;
 using namespace sf;
+using namespace item;
 
-Block::Block(const Vector2f & position, float width, float height)
+Block::Block(const Vector2f & position, const float width, const float height)
 	: VertexArray(Quads, 4), position(position), oriPos(position), width(width), height(height) {
-
-	setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
+	setBlockVertice();
 }
-// unity of Block-->Obstacle
-Block::Block(vector<Block*> blocks, const size_t number, const vector<Vector2f> &position, const vector<Vector2f> &sideLength) {
 
-	try {
-
-		blocks.resize(number);
-		if (blocks.size() == position.size()
-			|| blocks.size() == sideLength.size()) {
-			for (size_t i = 0; i < blocks.size(); ++i) {
-				blocks.at(i) = new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y);
-			}
-		}
-		else {
-			cout << "Each other's vector allocate different size." << endl;
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-}
+Block::Block() {}
 
 void Block::setVerticeColor(const Color & color) {
 
@@ -51,7 +33,7 @@ void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3
 void Block::setWidth(const float width) {
 	if (width > 0) {
 		this->width = width;
-		setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
+		setBlockVertice();
 	}
 	else {
 		cout << "Invalid width setting." << endl;
@@ -61,7 +43,7 @@ void Block::setWidth(const float width) {
 void Block::setHeight(const float height) {
 	if (height > 0) {
 		this->height = height;
-		setBlockVertice(getCurrentPosition(), getWidth(), getHeight());
+		setBlockVertice();
 	}
 	else {
 		cout << "Invalid height setting." << endl;
@@ -70,12 +52,13 @@ void Block::setHeight(const float height) {
 
 void Block::resetPosition() {
 
-	setBlockVertice(oriPos, getWidth(), getHeight());
+	position = oriPos;
+	setBlockVertice();
 }
 
-void Block::setSpeed(const float ballSpeedX, const float ballSpeedY) {
-	speed.x = ballSpeedX;
-	speed.y = ballSpeedY;
+void Block::setSpeed(const float speedX, const float speedY) {
+	speed.x = speedX;
+	speed.y = speedY;
 }
 
 void Block::setSpeed(const Vector2f & speed) {
@@ -112,49 +95,6 @@ void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 	move();
 }
 
-const Vector2f & Block::getCurrentPosition() const {
-	return position;
-}
-
-const Vector2f & Block::getOriginPosition() const {
-	return oriPos;
-}
-
-const Vector2f & Block::getSpeed() const {
-	return speed;
-}
-
-const float Block::getWidth() const {
-	return width;
-}
-
-const float Block::getHeight() const {
-	return height;
-}
-
-void Block::setBlockVertice(const Vector2f & position, const float width, const float height) {
-
-	try {
-
-		if (width > 0 && height > 0) {
-
-			for (size_t i = 0; i < getVertexCount(); ++i) {
-				(*this)[i].position = position;
-			}
-
-			(*this)[1].position += Vector2f(width, 0.0f);
-			(*this)[2].position += Vector2f(width, height);
-			(*this)[3].position += Vector2f(0.0f, height);
-		}
-		else {
-			throw domain_error("Invalid side-length for block.");
-		}
-	}
-	catch (domain_error & ex) {
-		cout << "Domain_error: " << ex.what() << endl;
-	}
-}
-
 void Block::move() {
 
 	FloatRect blockBounds = getBounds();
@@ -177,12 +117,60 @@ void Block::move() {
 		speed.y = -abs(speed.y);
 	}
 
-	moveEntity(speed);
+	moveEntity();
 }
 
-void Block::moveEntity(const Vector2f & increpos) {
-	for (size_t i = 0; i < getVertexCount(); ++i) {
-		(*this)[i].position += increpos;
+const Vector2f & Block::getCurrentPosition() const {
+	return position;
+}
+
+const Vector2f & Block::getOriginPosition() const {
+	return oriPos;
+}
+
+const Vector2f & Block::getSpeed() const {
+	return speed;
+}
+
+const float Block::getWidth() const {
+	return width;
+}
+
+const float Block::getHeight() const {
+	return height;
+}
+
+void Block::setBlockVertice() {
+
+	try {
+		if (width > 0 && height > 0) {
+
+			for (size_t i = 0; i < getVertexCount(); ++i) {
+				(*this)[i].position = position;
+			}
+
+			(*this)[1].position += Vector2f(width, 0.0f);
+			(*this)[2].position += Vector2f(width, height);
+			(*this)[3].position += Vector2f(0.0f, height);
+		}
+		else {
+			throw domain_error("Invalid side-length for block.");
+		}
 	}
-	position = (*this)[0].position;// mark new position in [0]
+	catch (domain_error & ex) {
+		cout << "Domain_error: " << ex.what() << endl;
+	}
+}
+
+void Block::moveEntity() {
+
+	try {
+		for (size_t i = 0; i < getVertexCount(); ++i) {
+			(*this)[i].position += speed;
+		}
+		position = (*this)[0].position;// mark new position in [0]
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
 }

@@ -16,6 +16,7 @@
 
 using namespace sf;
 using namespace std;
+using namespace item;
 
 static bool start;
 static bool ready;
@@ -36,7 +37,6 @@ void ballMove(CircleShape &ball, Shape &player);
 inline void ballEnableMove(CircleShape &ball, Shape &player, Shape &range, Sound &sound);
 void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Clock &elapsed, bool &flash);
 inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash);
-void blockCollision(vector<Block*> block);
 
 void renderThread(RenderWindow *window, atomic<bool> *done) {
 
@@ -44,16 +44,13 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	static float blockLength = 100.f;
 	static float incre1 = 3.f;
 
-	/*Block block1(Vector2f(blockLength, blockLength * incre1), blockLength, blockLength * incre1);
-	block1.setVerticeColor(Color::Green, Color::Black, Color::Cyan, Color::Black);
-	block1.setSpeed(1);
-	Block block2(Vector2f(STAGE_WIDTH - blockLength * 2, blockLength * incre1), blockLength, blockLength * incre1);
-	block2.setVerticeColor(Color::Black, Color::Blue, Color::Black, Color::Black);
-	block2.setSpeed(-1);*/
-
 	Obstacle obstacles(2
-	, { Vector2f(blockLength, blockLength * incre1), Vector2f(STAGE_WIDTH - blockLength * 2, blockLength * incre1) }
+		, { Vector2f(blockLength, blockLength * incre1), Vector2f(STAGE_WIDTH - blockLength * 2, blockLength * incre1) }
 	, { Vector2f(blockLength, blockLength * incre1), Vector2f(blockLength, blockLength * incre1) });
+	obstacles.setBlockColor(0, Color::Black, Color::Blue, Color::Black, Color::Black);
+	obstacles.setBlockColor(1, Color::Green, Color::Black, Color::Cyan, Color::Black);
+	obstacles.setBlockSpeed(0, 1.f);
+	obstacles.setBlockSpeed(1, -1.f);
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(240, 12));
@@ -77,7 +74,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	ball.setOutlineThickness(2.f);
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
 
-	Brick bricks(6, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
+	Brick bricks(1, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
 	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
 	ParticleSystem mouseLight(2500);
@@ -277,8 +274,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			ballEnableMove(ball, mainPlayer, redRange, sound1);
 			yellowRange.setPosition(mainPlayer.getPosition());
 			if (start) {
-				//block1.enable(ball, ballSpeedX, ballSpeedY);
-				//block2.enable(ball, ballSpeedX, ballSpeedY);
+
 				obstacles.enable(ball, ballSpeedX, ballSpeedY);
 				bricks.collisionBroke(ball, ballSpeedX, ballSpeedY);
 				ballMove(ball, mainPlayer);
@@ -286,13 +282,14 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 					ready = false;
 					start = false;
 					cout << "Finished stage: " << stage++ << "!!!" << endl;
+					bricks.reset(stage);
+					bricks.setBrickColor(Color(static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255)));
 				}
 			}
 			else {
 				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 				if (!ready) {
-					//block1.resetPosition();
-					//block2.resetPosition();
+					obstacles.reset();
 					ready = true;
 				}
 			}
@@ -303,8 +300,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 		// render
 		window->clear(Color::White);
-		//window->draw(block1);
-		//window->draw(block2);
 		window->draw(obstacles);
 		window->draw(mainPlayer);
 		window->draw(yellowRange);
@@ -435,8 +430,10 @@ void ballMove(CircleShape &ball, Shape &player) {
 		resetBall();
 		originX = ballSpeedX;
 		originY = ballSpeedY;
-		ballSpeedX >= 0 ? ballSpeedX += (abs(tempX) - ballSpeedX) * .6f : ballSpeedX += -(abs(tempX) + ballSpeedX) * .6f;
-		ballSpeedY >= 0 ? ballSpeedY += (abs(tempY) - ballSpeedY) * .6f : ballSpeedY += -(abs(tempY) + ballSpeedY) * .6f;
+		ballSpeedX >= 0 ? ballSpeedX += (abs(tempX) - ballSpeedX) * .6f
+			: ballSpeedX += -(abs(tempX) + ballSpeedX) * .6f;
+		ballSpeedY >= 0 ? ballSpeedY += (abs(tempY) - ballSpeedY) * .6f
+			: ballSpeedY += -(abs(tempY) + ballSpeedY) * .6f;
 		countTime.restart();
 	}
 
@@ -530,15 +527,15 @@ void ballMove(CircleShape &ball, Shape &player) {
 		}
 
 		// prevent speed too fast
-		if (abs(ballSpeedX) >= abs(originX) * 5) {
+		if (abs(ballSpeedX) >= MAXSPEED) {
 			if (ball.getPosition().x > player.getPosition().x) {
-				ballSpeedX = abs(originX) * 5;
+				ballSpeedX = MAXSPEED;
 			}
 			else if (ball.getPosition().x < player.getPosition().x) {
-				ballSpeedX = -abs(originX) * 5;
+				ballSpeedX = -MAXSPEED;
 			}
 			else {
-				ballSpeedX < 0 ? ballSpeedX = abs(originX) * 5 : ballSpeedX = -abs(originX) * 5;
+				ballSpeedX < 0 ? ballSpeedX = MAXSPEED : ballSpeedX = -MAXSPEED;
 			}
 		}
 		else if (abs(ballSpeedY) >= abs(originY) * 5) {
@@ -595,24 +592,5 @@ inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash) {
 	}
 	else {
 		flash = false;
-	}
-}
-
-void blockCollision(vector<Block*> block) {
-
-	try {
-		for (size_t i = 0; i < block.size(); ++i) {
-
-			for (size_t j = i + 1; j < block.size(); ++j) {
-
-				if (block.at(i)->getBounds().intersects(block.at(j)->getBounds())) {
-					block.at(i)->setSpeed(block.at(i)->getSpeed().x * -1, block.at(i)->getSpeed().y * -1);
-					block.at(j)->setSpeed(block.at(j)->getSpeed().x * -1, block.at(j)->getSpeed().y * -1);
-				}
-			}
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
 	}
 }
