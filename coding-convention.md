@@ -88,10 +88,3 @@ Omit "this" pointer whenever possible.
 Prefer interface over PIMPL idiom.
 
 <img src="https://i.imgur.com/1epMgld.png" alt="interface example" style="width: 400px;"/>
-
-## Inheritance & Composition
-
-[Why should I prefer composition over inheritance?](https://softwareengineering.stackexchange.com/a/134104)
-
-
-[Inheritance isn't generally viewed as bad, it is viewed as misused and overused.](https://softwareengineering.stackexchange.com/a/260354)

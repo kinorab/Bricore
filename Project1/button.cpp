@@ -12,6 +12,7 @@ Button::Button(const Texture & up, const Texture & over, const Texture & down, F
 	spriteUp.setPosition(location);
 	spriteOver.setPosition(location);
 	spriteDown.setPosition(location);
+
 	setCaption(caption);
 	text.setPosition(location.x + 3, location.y + 3);
 	text.setCharacterSize(14);
