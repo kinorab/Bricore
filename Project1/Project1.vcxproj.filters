@@ -51,6 +51,15 @@
     <ClInclude Include="obstacle.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="renderNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
@@ -86,6 +95,15 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="obstacle.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="renderNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="sceneNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
