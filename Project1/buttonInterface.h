@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UIComponent.h"
-#include <SFML/Graphics.hpp>
 
 class ButtonInterface : public UIComponent {
 public:
