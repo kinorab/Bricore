@@ -7,5 +7,6 @@ class SceneNode {
 public:
 
 private:
-	std::vector<RenderNode> children;
+	std::vector<SceneNode> children;
+
 };
