@@ -4,9 +4,5 @@
 #include <SFML/Graphics.hpp>
 
 class SceneNode {
-public:
-
-private:
 	std::vector<SceneNode> children;
-
 };

@@ -1,9 +1,9 @@
-#include "button.h"
+#include "defaultButton.h"
 
 using namespace std;
 using namespace sf;
 
-Button::Button(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location)
+DefaultButton::DefaultButton(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location)
 	:hitArea(hitArea), currentState(ButtonState::UP) {
 	spriteUp.setTexture(up);
 	spriteOver.setTexture(over);
@@ -18,7 +18,7 @@ Button::Button(const Texture & up, const Texture & over, const Texture & down, F
 	text.setCharacterSize(14);
 }
 
-void Button::checkClick(Vector2f mousePos) {
+void DefaultButton::checkClick(Vector2f mousePos) {
 	FloatRect mouseBox(mousePos, Vector2f(0.0f, 0.0f));
 	if (mouseBox.intersects(currentSprite->getGlobalBounds())) {
 		if (Mouse::isButtonPressed(Mouse::Left)) {
@@ -33,7 +33,7 @@ void Button::checkClick(Vector2f mousePos) {
 	}
 }
 
-void Button::setCurrentState(ButtonState state) {
+void DefaultButton::setCurrentState(ButtonState state) {
 	currentState = state;
 	if (currentState == ButtonState::UP) {
 		currentSprite = &spriteUp;
@@ -46,14 +46,14 @@ void Button::setCurrentState(ButtonState state) {
 	}
 }
 
-void Button::setCaption(string caption) {
+void DefaultButton::setCaption(string caption) {
 	text.setString(caption);
 }
 
-ButtonState Button::getCurrentState() {
+ButtonState DefaultButton::getCurrentState() {
 	return currentState;
 }
 
-string Button::getCaption() {
+string DefaultButton::getCaption() {
 	return text.getString();
 }

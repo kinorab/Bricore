@@ -1,28 +1,11 @@
 #pragma once
 
-#include "buttonInterface.h"
+#include "UIComponent.h"
 
-enum class ButtonState {
-	UP,
-	OVER,
-	DOWN
-};
-
-class Button : public ButtonInterface {
+class Button : public UIComponent {
 public:
-	Button(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location);
-	virtual void checkClick(sf::Vector2f mousePos);
-	virtual void setCaption(std::string caption);
-	virtual std::string getCaption();
-
-private:
-	sf::Sprite spriteUp;
-	sf::Sprite spriteOver;
-	sf::Sprite spriteDown;
-	sf::FloatRect hitArea;
-	sf::Sprite * currentSprite;
-	sf::Text text;
-	ButtonState currentState;
-	void setCurrentState(ButtonState state);
-	ButtonState getCurrentState();
+	virtual void checkClick(sf::Vector2f mousePos) = 0;
+	virtual void setCaption(std::string caption) = 0;
+	virtual std::string getCaption() = 0;
+	virtual ~Button() { };
 };

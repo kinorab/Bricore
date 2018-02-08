@@ -39,13 +39,7 @@
     <ClInclude Include="UIComponent.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="buttonInterface.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="UIFactory.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="button.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="obstacle.h">
@@ -58,6 +52,15 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="sceneNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="spriteNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="defaultButton.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,9 +77,6 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="brick.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="button.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="ellipse.cpp">
@@ -104,6 +104,12 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="sceneNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="spriteNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="defaultButton.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

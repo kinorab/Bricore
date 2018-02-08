@@ -138,7 +138,7 @@
   <ItemGroup>
     <ClCompile Include="block.cpp" />
     <ClCompile Include="brick.cpp" />
-    <ClCompile Include="button.cpp" />
+    <ClCompile Include="defaultButton.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,14 +147,15 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderNode.cpp" />
     <ClCompile Include="sceneNode.cpp" />
+    <ClCompile Include="spriteNode.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
+    <ClInclude Include="defaultButton.h" />
     <ClInclude Include="button.h" />
-    <ClInclude Include="buttonInterface.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="hud.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="renderNode.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sceneNode.h" />
+    <ClInclude Include="spriteNode.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIFactory.h" />
   </ItemGroup>

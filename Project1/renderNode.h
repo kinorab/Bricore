@@ -1,12 +1,11 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <SFML/Graphics.hpp>
 
 class RenderNode {
-public:
-
-private:
-	std::vector<RenderNode> children;
+	std::vector<std::unique_ptr<RenderNode>> children;
+	sf::Drawable 
 };
 
