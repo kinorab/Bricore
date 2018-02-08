@@ -3,8 +3,8 @@
 using namespace std;
 using namespace sf;
 
-DefaultButton::DefaultButton(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption, Vector2f location)
-	:hitArea(hitArea), currentState(ButtonState::UP) {
+DefaultButton::DefaultButton() {
+	/*
 	spriteUp.setTexture(up);
 	spriteOver.setTexture(over);
 	spriteDown.setTexture(down);
@@ -16,7 +16,9 @@ DefaultButton::DefaultButton(const Texture & up, const Texture & over, const Tex
 	setCaption(caption);
 	text.setPosition(location.x + 3, location.y + 3);
 	text.setCharacterSize(14);
+	*/
 }
+
 
 void DefaultButton::checkClick(Vector2f mousePos) {
 	FloatRect mouseBox(mousePos, Vector2f(0.0f, 0.0f));

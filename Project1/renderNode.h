@@ -6,6 +6,4 @@
 
 class RenderNode {
 	std::vector<std::unique_ptr<RenderNode>> children;
-	sf::Drawable 
 };
-

@@ -2,7 +2,6 @@
 #include "define.h"
 #include <iostream>
 
-
 using namespace std;
 using namespace sf;
 using namespace item;

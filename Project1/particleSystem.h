@@ -2,7 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-class ParticleSystem : public sf::Drawable, public sf::Transformable {
+class ParticleSystem :
+	public sf::Drawable,
+	public sf::Transformable {
 
 public:
 

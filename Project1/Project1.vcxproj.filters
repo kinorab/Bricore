@@ -63,6 +63,9 @@
     <ClInclude Include="button.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="containerNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
@@ -71,15 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="block.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="brick.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="ellipse.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="hud.cpp">
@@ -107,6 +101,18 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="spriteNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="ellipse.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="block.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="brick.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="containerNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="defaultButton.cpp">

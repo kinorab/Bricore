@@ -15,6 +15,6 @@ static constexpr float STAGE_WIDTH = 1200.f;
 static constexpr float STAGE_HEIGHT = 900.f;
 
 static int rng() {
-	static thread_local std::mt19937 prng(std::chrono::system_clock::now().time_since_epoch().count());
+	static thread_local std::mt19937 prng(static_cast<std::mt19937::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
 	return static_cast<int>(prng());
 }

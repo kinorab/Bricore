@@ -2,7 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-class EllipseShape : public sf::Shape {
+class EllipseShape :
+	public sf::Shape {
 
 public:
 

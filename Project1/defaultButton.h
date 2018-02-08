@@ -8,9 +8,10 @@ enum class ButtonState {
 	DOWN
 };
 
-class DefaultButton : public Button {
+class DefaultButton :
+	public Button {
 public:
-	DefaultButton(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption, sf::Vector2f location);
+	DefaultButton();
 	virtual void checkClick(sf::Vector2f mousePos);
 	virtual void setCaption(std::string caption);
 	virtual std::string getCaption();

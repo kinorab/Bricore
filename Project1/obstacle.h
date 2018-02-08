@@ -4,7 +4,8 @@
 #include <vector>
 
 namespace item {
-	class Obstacle : public item::Block {
+	class Obstacle :
+		public item::Block {
 
 	public:
 

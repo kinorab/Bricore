@@ -4,15 +4,15 @@
 #include "define.h"
 #include "obstacle.h"
 #include "UIFactory.h"
-#include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Audio.hpp>
 #include <atomic>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
 #include <queue>
 #include <mutex>
+#include <SFML/Window.hpp>
+#include <SFML/OpenGL.hpp>
+#include <SFML/Audio.hpp>
 
 using namespace sf;
 using namespace std;
@@ -80,7 +80,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	ParticleSystem mouseLight(2500);
 	Vector2i localPosition;
 	Clock clock;
-	Mouse::setPosition(Vector2i(STAGE_WIDTH / 2, STAGE_HEIGHT / 2), *window);
+	Mouse::setPosition(static_cast<Vector2i>(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT / 2)), *window);
 	Sound sound1;
 	Music bgmusic;
 	SoundBuffer buffer1;
@@ -320,7 +320,7 @@ int main() {
 	settings.majorVersion = 4;
 	settings.minorVersion = 1;
 
-	RenderWindow window(VideoMode(GAME_WIDTH, GAME_HEIGHT), "Pigject", Style::Titlebar | Style::Close, settings);
+	RenderWindow window(VideoMode(static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT)), "Pigject", Style::Titlebar | Style::Close, settings);
 	window.setMouseCursorVisible(false);
 	window.setPosition(Vector2i(window.getPosition().x, 20));
 	window.setVerticalSyncEnabled(true);
@@ -398,13 +398,13 @@ void playerMove(Shape &player, Shape &flash, float speed) {
 
 void initializeBall() {
 
-	ballSpeedX = (rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1);
+	ballSpeedX = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
 	ballSpeedY = 2.f;
 }
 
 void resetBall() {
 
-	ballSpeedX = (rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1);
+	ballSpeedX = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
 	ballSpeedY = 2.f * (rng() % 100 < 50 ? 1 : -1);
 }
 
@@ -585,7 +585,7 @@ void flashRange(CircleShape &ball, Shape &player, Shape &range, Sound &sound, Cl
 
 inline void flashElapsed(Shape &range, Clock &elapsed, bool &flash) {
 
-	float time = elapsed.getElapsedTime().asMilliseconds();
+	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
 	if (time <= 1500.f) {
 		float rate = (1.f - time / 1500.f);
 		range.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
