@@ -73,11 +73,12 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	ball.setRadius(5.f);
 	ball.setOutlineThickness(2.f);
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
+	ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 
 	Brick bricks(1, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
 	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
-	ParticleSystem mouseLight(2500);
+	ParticleSystem mouseLight(2000);
 	Vector2i localPosition;
 	Clock clock;
 	Mouse::setPosition(static_cast<Vector2i>(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT / 2)), *window);
@@ -273,8 +274,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			playerMove(mainPlayer, redRange, PLAYERSPEED);
 			ballEnableMove(ball, mainPlayer, redRange, sound1);
 			yellowRange.setPosition(mainPlayer.getPosition());
-			if (start) {
 
+			if (start) {
 				obstacles.enable(ball, ballSpeedX, ballSpeedY);
 				bricks.collisionBroke(ball, ballSpeedX, ballSpeedY);
 				ballMove(ball, mainPlayer);

@@ -176,14 +176,14 @@ void Brick::collisionBroke(CircleShape &ball, float &ballSpeedX, float &ballSpee
 
 		FloatRect brickBounds = area.at(i).getGlobalBounds();
 		FloatRect ballBounds = ball.getGlobalBounds();
-		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + ball.getRadius())
-			, Vector2f(ball.getRadius(), brickBounds.height - ball.getRadius() * 2));
-		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - ball.getRadius(), brickBounds.top + ball.getRadius())
-			, Vector2f(ball.getRadius(), brickBounds.height - ball.getRadius() * 2));
-		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top)
-			, Vector2f(brickBounds.width - ball.getRadius() * 2, ball.getRadius()));
-		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left + ball.getRadius(), brickBounds.top + brickBounds.height - ball.getRadius())
-			, Vector2f(brickBounds.width - ball.getRadius() * 2, ball.getRadius()));
+		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top)
+			, Vector2f(ball.getRadius(), brickBounds.height));
+		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - ball.getRadius(), brickBounds.top)
+			, Vector2f(ball.getRadius(), brickBounds.height));
+		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top)
+			, Vector2f(brickBounds.width, ball.getRadius()));
+		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + brickBounds.height - ball.getRadius())
+			, Vector2f(brickBounds.width, ball.getRadius()));
 
 		//temp setting
 		if (ballBounds.intersects(bottomBlock)) {
