@@ -21,10 +21,11 @@ namespace item {
 
 		const size_t getBlocksAmount() const;
 
+		static bool broke;
+
 	private:
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
-		void blockCollision(const size_t);
-		void move(const size_t);
+		void blockCollision(sf::CircleShape &ball, const size_t);
 
 		std::vector <item::Block*> blocks;
 	};

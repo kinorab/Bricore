@@ -71,13 +71,13 @@ void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 	FloatRect blockBounds = getBounds();
 	FloatRect ballBounds = ball.getGlobalBounds();
 	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getRadius() * 0.5f)
-		, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius()));
-	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - ballBounds.width, blockBounds.top + ball.getRadius() * 0.5f)
-		, Vector2f(ballBounds.width, blockBounds.height - ball.getRadius()));
+		, Vector2f(2.f, blockBounds.height - ball.getRadius()));
+	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - 2.f, blockBounds.top + ball.getRadius() * 0.5f)
+		, Vector2f(2.f, blockBounds.height - ball.getRadius()));
 	FloatRect topBlock(Vector2f(blockBounds.left + ball.getRadius() * 0.5f, blockBounds.top)
-		, Vector2f(blockBounds.width - ball.getRadius(), ballBounds.height));
-	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getRadius() * 0.5f, blockBounds.top + blockBounds.height - ballBounds.height)
-		, Vector2f(blockBounds.width - ball.getRadius(), ballBounds.height));
+		, Vector2f(blockBounds.width - ball.getRadius(), 2.f));
+	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getRadius() * 0.5f, blockBounds.top + blockBounds.height - 2.f)
+		, Vector2f(blockBounds.width - ball.getRadius(), 2.f));
 
 	if (ballBounds.intersects(leftBlock)) {
 		ballSpeedX = -abs(ballSpeedX);
@@ -86,11 +86,11 @@ void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 		ballSpeedX = abs(ballSpeedX);
 	}
 
-	if (ballBounds.intersects(topBlock)) {
-		ballSpeedY = -abs(ballSpeedY);
-	}
-	else if (ballBounds.intersects(bottomBlock)) {
+	if (ballBounds.intersects(bottomBlock)) {
 		ballSpeedY = abs(ballSpeedY);
+	}
+	else if (ballBounds.intersects(topBlock)) {
+		ballSpeedY = -abs(ballSpeedY);
 	}
 	move();
 }

@@ -49,8 +49,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	, { Vector2f(blockLength, blockLength * incre1), Vector2f(blockLength, blockLength * incre1) });
 	obstacles.setBlockColor(0, Color::Black, Color::Blue, Color::Black, Color::Black);
 	obstacles.setBlockColor(1, Color::Green, Color::Black, Color::Cyan, Color::Black);
-	obstacles.setBlockSpeed(0, 1.f);
-	obstacles.setBlockSpeed(1, -1.f);
+	obstacles.setBlockSpeed(0, 1.5f);
+	obstacles.setBlockSpeed(1, -1.5f);
 
 	RectangleShape mainPlayer;
 	mainPlayer.setSize(Vector2f(240, 12));
@@ -278,6 +278,11 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			if (start) {
 				obstacles.enable(ball, ballSpeedX, ballSpeedY);
 				bricks.collisionBroke(ball, ballSpeedX, ballSpeedY);
+				if (Obstacle::broke) {
+					ready = false;
+					start = false;
+					Obstacle::broke = false;
+				}
 				ballMove(ball, mainPlayer);
 				if (bricks.getAreaSize() == NULL) {
 					ready = false;
