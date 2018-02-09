@@ -25,7 +25,8 @@ namespace item {
 
 	private:
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
-		void blockCollision(sf::CircleShape &ball, const size_t);
+		void blockCollision(const size_t);
+		void ballBroke(sf::CircleShape &, const size_t);
 
 		std::vector <item::Block*> blocks;
 	};

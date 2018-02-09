@@ -25,7 +25,8 @@ Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const
 void Obstacle::enable(CircleShape &ball, float &ballSpeedX, float &ballSpeedY) {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		blockCollision(ball, i);
+		blockCollision(i);
+		ballBroke(ball, i);
 		blocks.at(i)->enable(ball, ballSpeedX, ballSpeedY);
 	}
 }
@@ -118,17 +119,13 @@ void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 	}
 }
 
-void Obstacle::blockCollision(sf::CircleShape &ball, const size_t number) {
+void Obstacle::blockCollision(const size_t number) {
 
 	try {
 		for (size_t j = number + 1; j < blocks.size(); ++j) {
 
 			if (blocks.at(number)->getBounds().intersects(blocks.at(j)->getBounds())) {
-				// temporary settings, it will be changed after ball class finish
-				if(ball.getGlobalBounds().intersects((blocks.at(number)->getBounds()))
-					&& ball.getGlobalBounds().intersects((blocks.at(j)->getBounds()))) {
-					broke = true;
-				}
+
 				blocks.at(number)->setSpeed(blocks.at(number)->getSpeed().x * -1, blocks.at(number)->getSpeed().y * -1);
 				blocks.at(j)->setSpeed(blocks.at(j)->getSpeed().x * -1, blocks.at(j)->getSpeed().y * -1);
 			}
@@ -138,4 +135,32 @@ void Obstacle::blockCollision(sf::CircleShape &ball, const size_t number) {
 		cout << "Exception: " << ex.what() << endl;
 	}
 
+}
+
+// temporary settings, it will be changed after ball class finished
+void Obstacle::ballBroke(CircleShape &ball, const size_t number){
+
+	FloatRect ballBounds = ball.getGlobalBounds();
+
+	if (ballBounds.intersects(blocks.at(number)->getBounds())) {
+
+		if (ballBounds.left < 0) {
+			broke = true;
+		}
+		else if (ballBounds.left + ballBounds.width > STAGE_WIDTH) {
+			broke = true;
+		}
+		else if (ballBounds.top < 0) {
+			broke = true;
+		}
+		else if (ballBounds.top + ballBounds.height > STAGE_HEIGHT) {
+			broke = true;
+		}
+
+		for (size_t j = number + 1; j < blocks.size(); ++j) {
+			if (ballBounds.intersects(blocks.at(j)->getBounds())) {
+				broke = true;
+			}
+		}
+	}
 }
