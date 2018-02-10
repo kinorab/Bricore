@@ -92,3 +92,5 @@ Prefer interface over PIMPL idiom.
 ## Prefer composition over inheritance
 
    > -- <cite>an [answer](https://softwareengineering.stackexchange.com/a/134115) from [Why should I prefer composition over inheritance?](https://softwareengineering.stackexchange.com/q/134097)</cite>
+
+## Use "override" and "final" specifiers

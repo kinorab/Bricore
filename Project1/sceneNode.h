@@ -2,9 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 
-class SceneNode {
+class SceneNode
+	:public sf::Transformable,
+	public sf::Drawable{
 public:
-	SceneNode();
-	~SceneNode();
+	virtual void addChild(SceneNode * child) = 0;
+	virtual ~SceneNode() {}
 };
 
