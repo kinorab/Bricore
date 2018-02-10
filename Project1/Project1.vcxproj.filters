@@ -48,12 +48,6 @@
     <ClInclude Include="renderer.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="renderNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="sceneNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="spriteNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -64,6 +58,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="containerNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
@@ -94,9 +91,6 @@
     <ClCompile Include="renderer.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="renderNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="sceneNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -106,9 +100,6 @@
     <ClCompile Include="ellipse.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="block.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="brick.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -116,6 +107,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="defaultButton.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="block.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,9 +1,9 @@
 #pragma once
-#include "RenderNode.h"
+
+#include "sceneNode.h"
 
 class ContainerNode :
-	public RenderNode
-{
+	public SceneNode {
 public:
 	ContainerNode();
 	~ContainerNode();

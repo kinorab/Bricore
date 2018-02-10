@@ -2,6 +2,7 @@
 #include "block.h"
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 
 using namespace std;
 using namespace sf;
@@ -80,17 +81,17 @@ void Block::enable(CircleShape & ball, float &ballSpeedX, float &ballSpeedY) {
 		, Vector2f(blockBounds.width - ball.getRadius(), 2.f));
 
 	if (ballBounds.intersects(leftBlock)) {
-		ballSpeedX = -abs(ballSpeedX);
+		ballSpeedX = min(-abs(ballSpeedX), speed.x);
 	}
 	else if (ballBounds.intersects(rightBlock)) {
-		ballSpeedX = abs(ballSpeedX);
+		ballSpeedX = max(abs(ballSpeedX), speed.x);
 	}
 
 	if (ballBounds.intersects(bottomBlock)) {
-		ballSpeedY = abs(ballSpeedY);
+		ballSpeedY = max(abs(ballSpeedY), speed.y);
 	}
 	else if (ballBounds.intersects(topBlock)) {
-		ballSpeedY = -abs(ballSpeedY);
+		ballSpeedY = min(-abs(ballSpeedY), speed.y);
 	}
 	move();
 }

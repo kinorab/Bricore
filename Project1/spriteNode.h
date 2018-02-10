@@ -1,9 +1,8 @@
 #pragma once
 
-#include "renderNode.h"
-#include <SFML/Graphics.hpp>
+#include "sceneNode.h"
 
 class SpriteNode :
-	RenderNode {
+	public SceneNode {
 
 };
