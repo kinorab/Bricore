@@ -9,7 +9,9 @@ class ContainerNode :
 public:
 	ContainerNode();
 	~ContainerNode();
+	virtual void addChild(SceneNode * child) override;
 private:
 	std::vector<std::unique_ptr<SceneNode>> children;
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 };
 

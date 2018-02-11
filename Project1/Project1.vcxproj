@@ -146,7 +146,6 @@
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="sceneNode.cpp" />
     <ClCompile Include="spriteNode.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />

@@ -91,9 +91,6 @@
     <ClCompile Include="renderer.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="sceneNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="spriteNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>

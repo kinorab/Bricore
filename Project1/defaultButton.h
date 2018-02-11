@@ -12,9 +12,9 @@ class DefaultButton :
 	public Button {
 public:
 	DefaultButton();
-	virtual void checkClick(sf::Vector2f mousePos);
-	virtual void setCaption(std::string caption);
-	virtual std::string getCaption();
+	void checkClick(sf::Vector2f mousePos);
+	void setCaption(std::string caption);
+	std::string getCaption();
 
 private:
 	sf::Sprite spriteUp;
