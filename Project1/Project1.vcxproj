@@ -146,7 +146,9 @@
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="shape.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="text.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
   </ItemGroup>
@@ -164,7 +166,9 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="displayObject.h" />
+    <ClInclude Include="shape.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="text.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIFactory.h" />
   </ItemGroup>

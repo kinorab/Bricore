@@ -2,8 +2,8 @@
 
 #include "displayObject.h"
 
-class Sprite :
+class Shape :
 	public DisplayObject,
-	public sf::Sprite {
+	public sf::Shape {
 
 };
