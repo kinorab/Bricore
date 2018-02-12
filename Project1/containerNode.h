@@ -8,10 +8,10 @@ class ContainerNode :
 	public SceneNode {
 public:
 	ContainerNode();
-	~ContainerNode();
-	virtual void addChild(SceneNode * child) override;
+	~ContainerNode() override;
+	void addChild(SceneNode * child);
 private:
+	void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	std::vector<std::unique_ptr<SceneNode>> children;
-	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 };
 
