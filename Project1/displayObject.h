@@ -2,10 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-class SceneNode :
-	public sf::Transformable,
+class DisplayObject :
 	public sf::Drawable {
 public:
-	virtual ~SceneNode() {}
+	virtual ~DisplayObject() {}
 };
 

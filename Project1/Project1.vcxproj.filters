@@ -48,19 +48,19 @@
     <ClInclude Include="renderer.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="spriteNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="defaultButton.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="button.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="containerNode.h">
+    <ClInclude Include="container.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="sceneNode.h">
+    <ClInclude Include="displayObject.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
@@ -91,22 +91,22 @@
     <ClCompile Include="renderer.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="spriteNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="ellipse.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="brick.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="containerNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="defaultButton.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="block.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="container.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

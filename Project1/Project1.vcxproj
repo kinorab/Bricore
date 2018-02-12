@@ -138,7 +138,7 @@
   <ItemGroup>
     <ClCompile Include="block.cpp" />
     <ClCompile Include="brick.cpp" />
-    <ClCompile Include="containerNode.cpp" />
+    <ClCompile Include="container.cpp" />
     <ClCompile Include="defaultButton.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="hud.cpp" />
@@ -146,14 +146,14 @@
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="spriteNode.cpp" />
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
-    <ClInclude Include="containerNode.h" />
+    <ClInclude Include="container.h" />
     <ClInclude Include="defaultButton.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="define.h" />
@@ -163,8 +163,8 @@
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="sceneNode.h" />
-    <ClInclude Include="spriteNode.h" />
+    <ClInclude Include="displayObject.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIFactory.h" />
   </ItemGroup>
