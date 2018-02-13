@@ -3,7 +3,7 @@
 #include "displayObject.h"
 
 class Text :
-	public DisplayObject,
-	public sf::Text {
+	public virtual DisplayObject,
+	public virtual sf::Text {
 };
 

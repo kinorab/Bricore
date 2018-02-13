@@ -1,10 +1,6 @@
 #include "UIFactory.h"
 #include "defaultButton.h"
 
-using namespace std;
-using namespace sf;
-
-unique_ptr<Button> UIFactory::createButton(const Texture & up, const Texture & over, const Texture & down, FloatRect hitArea, string caption)
-{
-	return unique_ptr<Button>(new DefaultButton());
+std::unique_ptr<Button> UIFactory::createButton(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption) {
+	return std::unique_ptr<Button>(new DefaultButton());
 }

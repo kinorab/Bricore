@@ -3,7 +3,7 @@
 #include "UIComponent.h"
 
 class Button :
-	public UIComponent {
+	public virtual UIComponent {
 public:
 	virtual ~Button() { }
 	virtual void checkClick(sf::Vector2f mousePos) = 0;

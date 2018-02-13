@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 class DisplayObject :
-	public sf::Drawable {
+	public virtual sf::Drawable {
 public:
 	virtual ~DisplayObject() {}
 };

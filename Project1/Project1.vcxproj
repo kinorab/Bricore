@@ -138,7 +138,7 @@
   <ItemGroup>
     <ClCompile Include="block.cpp" />
     <ClCompile Include="brick.cpp" />
-    <ClCompile Include="container.cpp" />
+    <ClCompile Include="defaultContainer.cpp" />
     <ClCompile Include="defaultButton.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="hud.cpp" />
@@ -156,6 +156,7 @@
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
     <ClInclude Include="container.h" />
+    <ClInclude Include="defaultContainer.h" />
     <ClInclude Include="defaultButton.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="define.h" />

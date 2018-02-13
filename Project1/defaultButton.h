@@ -1,6 +1,7 @@
 #pragma once
 
 #include "button.h"
+#include "defaultContainer.h"
 
 enum class ButtonState {
 	UP,
@@ -9,13 +10,13 @@ enum class ButtonState {
 };
 
 class DefaultButton :
-	public Button {
+	public virtual Button,
+	public virtual DefaultContainer {
 public:
 	DefaultButton();
 	void checkClick(sf::Vector2f mousePos);
 	void setCaption(std::string caption);
 	std::string getCaption();
-
 private:
 	sf::Sprite spriteUp;
 	sf::Sprite spriteOver;

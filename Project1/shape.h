@@ -3,7 +3,7 @@
 #include "displayObject.h"
 
 class Shape :
-	public DisplayObject,
-	public sf::Shape {
+	public virtual DisplayObject,
+	public virtual sf::Shape {
 
 };
