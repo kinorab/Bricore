@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ball.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="brick.cpp" />
     <ClCompile Include="defaultContainer.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="UIFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ball.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
     <ClInclude Include="container.h" />

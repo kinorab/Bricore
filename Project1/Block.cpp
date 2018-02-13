@@ -82,20 +82,20 @@ void Block::enable(CircleShape & ball, float & ballSpeedX, float & ballSpeedY) {
 
 	if (ballBounds.intersects(leftBlock)) {
 		ballSpeedX = -abs(ballSpeedX);
-		ball.setPosition(min(leftBlock.left - ball.getRadius() - ballSpeedX, ball.getPosition().x), ball.getPosition().y);
+		ball.setPosition(min(blockBounds.left - ball.getRadius() - ballSpeedX, ball.getPosition().x), ball.getPosition().y);
 	}
 	else if (ballBounds.intersects(rightBlock)) {
 		ballSpeedX = abs(ballSpeedX);
-		ball.setPosition(max(rightBlock.left + rightBlock.width + ball.getRadius() - ballSpeedX, ball.getPosition().x), ball.getPosition().y);
+		ball.setPosition(max(blockBounds.left + blockBounds.width + ball.getRadius() - ballSpeedX, ball.getPosition().x), ball.getPosition().y);
 	}
 
 	if (ballBounds.intersects(bottomBlock)) {
 		ballSpeedY = abs(ballSpeedY);
-		ball.setPosition(ball.getPosition().x, max(rightBlock.top + rightBlock.height + ball.getRadius() - ballSpeedY, ball.getPosition().y));
+		ball.setPosition(ball.getPosition().x, max(blockBounds.top + blockBounds.height + ball.getRadius() - ballSpeedY, ball.getPosition().y));
 	}
 	else if (ballBounds.intersects(topBlock)) {
 		ballSpeedY = -abs(ballSpeedY);
-		ball.setPosition(ball.getPosition().x, min(leftBlock.top - ball.getRadius() - ballSpeedY, ball.getPosition().y));
+		ball.setPosition(ball.getPosition().x, min(blockBounds.top - ball.getRadius() - ballSpeedY, ball.getPosition().y));
 	}
 
 	move();

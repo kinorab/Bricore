@@ -72,6 +72,9 @@
     <ClInclude Include="defaultContainer.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="ball.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
@@ -122,6 +125,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="defaultContainer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="ball.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
