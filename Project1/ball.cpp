@@ -1,6 +1,5 @@
 #include "define.h"
 #include "ball.h"
-#include "player.h"
 
 using namespace std;
 using namespace sf;
