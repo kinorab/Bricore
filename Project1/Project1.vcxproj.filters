@@ -1,42 +1,119 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="ball.cpp" />
-    <ClCompile Include="block.cpp" />
-    <ClCompile Include="brick.cpp" />
-    <ClCompile Include="defaultContainer.cpp" />
-    <ClCompile Include="defaultButton.cpp" />
-    <ClCompile Include="ellipse.cpp" />
-    <ClCompile Include="hud.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="movieClip.cpp" />
-    <ClCompile Include="obstacle.cpp" />
-    <ClCompile Include="particleSystem.cpp" />
-    <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="UIComponent.cpp" />
-    <ClCompile Include="UIFactory.cpp" />
-    <ClCompile Include="define.cpp" />
+    <ClCompile Include="ball.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="block.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="brick.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="defaultButton.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="defaultContainer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="define.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="ellipse.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="hud.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="movieClip.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="particleSystem.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="UIComponent.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFactory.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ball.h" />
-    <ClInclude Include="block.h" />
-    <ClInclude Include="brick.h" />
-    <ClInclude Include="container.h" />
-    <ClInclude Include="defaultContainer.h" />
-    <ClInclude Include="defaultButton.h" />
-    <ClInclude Include="button.h" />
-    <ClInclude Include="define.h" />
-    <ClInclude Include="ellipse.h" />
-    <ClInclude Include="hud.h" />
-    <ClInclude Include="movieClip.h" />
-    <ClInclude Include="obstacle.h" />
-    <ClInclude Include="particleSystem.h" />
-    <ClInclude Include="renderer.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="UIComponent.h" />
-    <ClInclude Include="UIFactory.h" />
+    <ClInclude Include="ball.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="block.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="brick.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="container.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="defaultButton.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="defaultContainer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ellipse.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="hud.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="movieClip.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="particleSystem.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFactory.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{0b4dd412-8da2-4de3-9d6d-086d799d127c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{54535d12-ef00-4bd3-8166-c015efa933a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="來源檔案">
+      <UniqueIdentifier>{35408483-1636-4a75-8285-7edc42a77a2a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>資源檔</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
