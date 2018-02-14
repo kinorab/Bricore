@@ -1,7 +1,6 @@
 #pragma once
 
 #include "button.h"
-#include "sprite.h"
 #include "defaultContainer.h"
 
 enum class ButtonState {

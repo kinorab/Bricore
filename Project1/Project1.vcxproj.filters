@@ -54,18 +54,6 @@
     <ClInclude Include="container.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="displayObject.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="sprite.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="shape.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="text.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="defaultContainer.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -108,15 +96,6 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="block.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="sprite.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="shape.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="text.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="defaultContainer.cpp">
