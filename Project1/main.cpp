@@ -1,5 +1,4 @@
 #include "ellipse.h"
-#include "ball.h"
 #include "particleSystem.h"
 #include "brick.h"
 #include "define.h"
