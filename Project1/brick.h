@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace item {
-	class Brick : public sf::RectangleShape {
+	class Brick : public sf::Drawable{
 
 	public:
 

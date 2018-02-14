@@ -1,4 +1,5 @@
 #include "ellipse.h"
+#include "ball.h"
 #include "particleSystem.h"
 #include "brick.h"
 #include "define.h"
@@ -7,24 +8,19 @@
 #include <atomic>
 #include <iostream>
 #include <stdexcept>
-#include <vector>
 #include <queue>
 #include <mutex>
 #include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Audio.hpp>
+//#include <SFML/OpenGL.hpp>
 
 using namespace sf;
 using namespace std;
 using namespace item;
 
-static bool start;
-static bool ready;
-static bool active;
-static bool light;
+// soon be remove
 static float ballSpeedX;
 static float ballSpeedY;
-static unsigned int stage = 1;
+
 static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 
@@ -67,13 +63,15 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 
-	CircleShape ball;
+	Ball ball(mainPlayer);
+
+	/*CircleShape ball;
 	ball.setFillColor(Color::White);
 	ball.setOutlineColor(Color::Black);
 	ball.setRadius(5.f);
 	ball.setOutlineThickness(2.f);
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
-	ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
+	ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);*/
 
 	Brick bricks(1, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
 	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
@@ -272,18 +270,18 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		static constexpr float updateSpan = 10.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			playerMove(mainPlayer, redRange, PLAYERSPEED);
-			ballEnableMove(ball, mainPlayer, redRange, sound1);
+			ball.ballEnableMove(mainPlayer, redRange, sound1);
 			yellowRange.setPosition(mainPlayer.getPosition());
 
 			if (start) {
-				obstacles.enable(ball, ballSpeedX, ballSpeedY);
-				bricks.collisionBroke(ball, ballSpeedX, ballSpeedY);
+				//obstacles.enable(ball, ballSpeedX, ballSpeedY);
+				//bricks.collisionBroke(ball, ballSpeedX, ballSpeedY);
 				if (Obstacle::broke) {
 					ready = false;
 					start = false;
 					Obstacle::broke = false;
 				}
-				ballMove(ball, mainPlayer);
+				ball.ballMove(mainPlayer);
 				if (bricks.getAreaSize() == NULL) {
 					ready = false;
 					start = false;
@@ -293,7 +291,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				}
 			}
 			else {
-				ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
+				//ball.setPosition(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top - ball.getLocalBounds().height / 2);
 				if (!ready) {
 					obstacles.reset();
 					ready = true;
@@ -347,42 +345,6 @@ int main() {
 	system("pause");
 	return 0;
 }
-
-/*
-void setItemVertices(VertexArray &array, const Vector2f &initial, float length) {
-
-	try {
-		if (length > 0) {
-			const float outsideAngle = 360.0f / array.getVertexCount();
-			for (size_t i = 0; i < array.getVertexCount(); ++i) {
-				array[i].position = initial;
-			}
-
-			cout << "(" << array[0].position.x << ", " << array[0].position.y << ")" << endl;// print array vertice position
-			for (size_t i = 1; i < array.getVertexCount(); ++i) {
-				float countAngle = outsideAngle * i;
-				float angle = PI - countAngle / 180 * PI;// place array in clockwise
-				float lengthX = sin(angle) * length;
-				array[i].position += Vector2f(lengthX, lengthY);
-				cout << "(" << array[i].position.x << ", " << array[i].position.y << ")" << endl;
-				for (size_t j = i + 1; j < array.getVertexCount(); ++j) {
-
-					array[j].position = array[i].position;
-				}
-			}
-		}
-		else {
-			throw out_of_range("Invalid initial side-length for item.");
-		}
-
-	}
-
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-
-}
-*/
 
 void playerMove(Shape &player, Shape &flash, float speed) {
 

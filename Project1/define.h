@@ -3,6 +3,12 @@
 #include <chrono>
 #include <random>
 
+static bool start;
+static bool ready;
+static bool active;
+static bool light;
+static unsigned int stage = 1;
+
 static constexpr float PI = 3.141592654f;
 static constexpr float LIFETIME = 1500.f;
 static constexpr float PLAYERSPEED = 5.5f;
