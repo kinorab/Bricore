@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "ball.h"
 
 namespace item {
 	class Block : public sf::VertexArray {
@@ -14,7 +14,7 @@ namespace item {
 		void resetPosition();
 		void setSpeed(const float speedX, const float speedY = 0.0f);
 		void setSpeed(const sf::Vector2f &speed);
-		void enable(sf::CircleShape &ball, float &ballSpeedX, float &ballSpeedY);
+		void enable(item::Ball &ball);
 		void move();
 
 		const sf::Vector2f & getCurrentPosition() const;

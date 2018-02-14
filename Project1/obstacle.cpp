@@ -5,8 +5,6 @@
 using namespace std;
 using namespace sf;
 
-bool Obstacle::broke = false;
-
 // unity of Block-->Obstacle
 Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const vector <Vector2f> &sideLength) {
 
@@ -21,12 +19,12 @@ Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const
 	}
 }
 
-void Obstacle::enable(CircleShape &ball, float &ballSpeedX, float &ballSpeedY) {
+void Obstacle::enable(item::Ball &ball) {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blockCollision(i);
 		ballBroke(ball, i);
-		blocks.at(i)->enable(ball, ballSpeedX, ballSpeedY);
+		blocks.at(i)->enable(ball);
 	}
 }
 
@@ -137,28 +135,28 @@ void Obstacle::blockCollision(const size_t number) {
 }
 
 // temporary settings, it will be changed after ball class finished
-void Obstacle::ballBroke(CircleShape &ball, const size_t number) {
+void Obstacle::ballBroke(item::Ball &ball, const size_t number) {
 
-	FloatRect ballBounds = ball.getGlobalBounds();
+	FloatRect ballBounds = ball.getMainBallBound();
 
 	if (ballBounds.intersects(blocks.at(number)->getBounds())) {
 
 		if (ballBounds.left < 0) {
-			broke = true;
+			GameState::broke = true;
 		}
 		else if (ballBounds.left + ballBounds.width > STAGE_WIDTH) {
-			broke = true;
+			GameState::broke = true;
 		}
 		else if (ballBounds.top < 0) {
-			broke = true;
+			GameState::broke = true;
 		}
 		else if (ballBounds.top + ballBounds.height > STAGE_HEIGHT) {
-			broke = true;
+			GameState::broke = true;
 		}
 
 		for (size_t j = number + 1; j < blocks.size(); ++j) {
 			if (ballBounds.intersects(blocks.at(j)->getBounds())) {
-				broke = true;
+				GameState::broke = true;
 			}
 		}
 	}

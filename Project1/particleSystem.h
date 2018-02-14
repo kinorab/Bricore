@@ -11,7 +11,7 @@ public:
 	explicit ParticleSystem(const unsigned int count);
 
 	void setEmitter(const sf::Vector2f &position);
-	void update(const float &timeSpan, const bool &light);
+	void update(const float &timeSpan);
 
 private:
 
