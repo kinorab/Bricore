@@ -46,6 +46,9 @@
     <ClCompile Include="UIFactory.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -97,6 +100,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

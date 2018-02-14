@@ -148,6 +148,7 @@
     <ClCompile Include="movieClip.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="movieClip.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="UIComponent.h" />

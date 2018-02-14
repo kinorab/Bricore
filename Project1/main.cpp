@@ -19,9 +19,6 @@ using namespace item;
 static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 
-void renderThread(RenderWindow *window, atomic<bool> *done);
-void playerMove(Shape &player, Shape &flash, float speed);
-
 void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 	window->setActive(true);
@@ -36,22 +33,9 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	obstacles.setBlockSpeed(0, 1.5f);
 	obstacles.setBlockSpeed(1, -1.5f);
 
-	RectangleShape mainPlayer;
-	mainPlayer.setSize(Vector2f(240, 12));
-	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
-	mainPlayer.setFillColor(Color::Green);
-	mainPlayer.setPosition(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT - mainPlayer.getSize().y));
-	RectangleShape yellowRange;
-	yellowRange.setSize(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
-	yellowRange.setOrigin(Vector2f(yellowRange.getSize().x / 2, yellowRange.getSize().y / 2));
-	yellowRange.setFillColor(Color::Yellow);
-	RectangleShape redRange;
-	redRange.setSize(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
-	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
-	redRange.setPosition(mainPlayer.getPosition());
-	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
+	Player player(5.5f);
 
-	Ball ball(mainPlayer);
+	Ball ball(player);
 
 	Brick bricks(1, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
 	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
@@ -249,9 +233,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 10.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			playerMove(mainPlayer, redRange, PLAYERSPEED);
-			ball.ballEnableMove(mainPlayer, redRange, sound1);
-			yellowRange.setPosition(mainPlayer.getPosition());
+			player.playerMove();
+			ball.ballEnableMove(player, sound1);
 
 			if (GameState::start) {
 				obstacles.enable(ball);
@@ -261,7 +244,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 					GameState::start = false;
 					GameState::broke = false;
 				}
-				ball.ballMove(mainPlayer);
+				ball.ballMove(player);
 				if (bricks.getAreaSize() == NULL) {
 					GameState::ready = false;
 					GameState::start = false;
@@ -271,7 +254,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				}
 			}
 			else {
-				ball.followPlayer(mainPlayer);
+				ball.followPlayer(player);
 				if (!GameState::ready) {
 					obstacles.reset();
 					GameState::ready = true;
@@ -285,9 +268,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		// render
 		window->clear(Color::White);
 		window->draw(obstacles);
-		window->draw(mainPlayer);
-		window->draw(yellowRange);
-		window->draw(redRange);
+		window->draw(player);
 		window->draw(ball);
 		window->draw(bricks);
 		window->draw(mouseLight);
@@ -324,22 +305,4 @@ int main() {
 	window.close();
 	system("pause");
 	return 0;
-}
-
-void playerMove(Shape &player, Shape &flash, float speed) {
-
-	FloatRect playerBound = player.getGlobalBounds();
-	if (playerBound.left > 0
-		&& (Keyboard::isKeyPressed(Keyboard::Left))
-		) {
-		player.move(Vector2f(-abs(speed), 0));
-		flash.move(Vector2f(-abs(speed), 0));
-	}
-
-	if (playerBound.left + playerBound.width < STAGE_WIDTH
-		&& (Keyboard::isKeyPressed(Keyboard::Right))
-		) {
-		player.move(Vector2f(abs(speed), 0));
-		flash.move(Vector2f(abs(speed), 0));
-	}
 }

@@ -7,14 +7,14 @@ using namespace item;
 
 Vector2f Ball::ballSpeed;
 
-Ball::Ball(Shape &player) {
+Ball::Ball(const Player &player) {
 
 	mainBall.setFillColor(Color::White);
 	mainBall.setOutlineColor(Color::Black);
 	mainBall.setRadius(5.f);
 	mainBall.setOutlineThickness(2.f);
 	mainBall.setOrigin(Vector2f(mainBall.getRadius(), mainBall.getRadius()));
-	mainBall.setPosition(player.getPosition().x, player.getGlobalBounds().top - mainBall.getLocalBounds().height / 2);
+	mainBall.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - mainBall.getLocalBounds().height / 2);
 }
 
 void Ball::initializeBall() {
@@ -29,20 +29,20 @@ void Ball::resetBall() {
 	ballSpeed.y = 3.f * (rng() % 100 < 50 ? 1 : -1);
 }
 
-void Ball::ballEnableMove(const Shape & player, Shape & range, Sound & sound) {
+void Ball::ballEnableMove(Player &player, Sound & sound) {
 
 	if (GameState::start) {
-		flashRange(player, range, sound);
+		flashRange(player, sound);
 	}
 
 	if (flash) {
-		flashElapsed(range);
+		flashElapsed(player);
 	}
 }
 
-void Ball::ballMove(const Shape & player) {
+void Ball::ballMove(const Player & player) {
 
-	FloatRect playerBounds = player.getGlobalBounds();
+	FloatRect playerBounds = player.getMainPlayerBounds();
 	FloatRect ballBounds = mainBall.getGlobalBounds();
 	static float originX = ballSpeed.x;
 	static float originY = ballSpeed.y;
@@ -94,7 +94,7 @@ void Ball::ballMove(const Shape & player) {
 		}
 
 		ballSpeed.y = -abs(ballSpeed.y);
-		if (mainBall.getPosition().y <= player.getPosition().y) {
+		if (mainBall.getPosition().y <= player.getMainPlayerPosition().y) {
 
 			// right side of player position
 			if (mainBall.getPosition().x >= playerBounds.left + playerBounds.width) {
@@ -159,10 +159,10 @@ void Ball::ballMove(const Shape & player) {
 
 		// prevent speed too fast
 		if (abs(ballSpeed.x) >= MAXSPEED) {
-			if (mainBall.getPosition().x > player.getPosition().x) {
+			if (mainBall.getPosition().x > player.getMainPlayerPosition().x) {
 				ballSpeed.x = MAXSPEED;
 			}
-			else if (mainBall.getPosition().x < player.getPosition().x) {
+			else if (mainBall.getPosition().x < player.getMainPlayerPosition().x) {
 				ballSpeed.x = -MAXSPEED;
 			}
 			else {
@@ -176,30 +176,30 @@ void Ball::ballMove(const Shape & player) {
 	mainBall.move(ballSpeed.x, ballSpeed.y);
 }
 
-void Ball::flashRange(const Shape & player, Shape & range, Sound & sound) {
+void Ball::flashRange(Player &player, Sound & sound) {
 
-	FloatRect playerBounds = player.getGlobalBounds();
+	FloatRect playerBounds = player.getMainPlayerBounds();
 	FloatRect ballBounds = mainBall.getGlobalBounds();
-	FloatRect rangeBounds = range.getGlobalBounds();
+	FloatRect rangeBounds = player.getFlashBounds();
 
 	if (ballBounds.intersects(playerBounds)) {
 		elapsed.restart();
 		sound.play();
 		if (ballBounds.left <= playerBounds.left) {
-			range.setPosition(playerBounds.left + rangeBounds.width / 2, player.getPosition().y);
+			player.setFlashPosition(playerBounds.left + rangeBounds.width / 2, player.getMainPlayerPosition().y);
 		}
 		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
-			range.setPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getPosition().y);
+			player.setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getMainPlayerPosition().y);
 		}
 		else {
-			range.setPosition(mainBall.getPosition().x, player.getPosition().y);
+			player.setFlashPosition(mainBall.getPosition().x, player.getMainPlayerPosition().y);
 		}
 		flash = true;
 	}
 }
 
-void Ball::followPlayer(const Shape & player) {
-	mainBall.setPosition(player.getPosition().x, player.getGlobalBounds().top - mainBall.getGlobalBounds().height / 2);
+void Ball::followPlayer(const Player & player) {
+	mainBall.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - mainBall.getGlobalBounds().height / 2);
 }
 
 void Ball::setMainBallPosition(const Vector2f & position) {
@@ -210,7 +210,7 @@ void Ball::setMainBallPosition(const float posX, const float posY) {
 	mainBall.setPosition(posX, posY);
 }
 
-const FloatRect Ball::getMainBallBound() const {
+const FloatRect & Ball::getMainBallBound() const {
 	return mainBall.getGlobalBounds();
 }
 
@@ -222,12 +222,12 @@ const Vector2f & Ball::getMainBallPosition() const {
 	return mainBall.getPosition();
 }
 
-void Ball::flashElapsed(Shape & range) {
+void Ball::flashElapsed(Player & player) {
 
 	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
 	if (time <= 1500.f) {
 		float rate = (1.f - time / 1500.f);
-		range.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
+		player.setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
 	}
 	else {
 		flash = false;
