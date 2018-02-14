@@ -167,8 +167,8 @@
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="renderer.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="displayObject.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="text.h" />
@@ -176,7 +176,7 @@
     <ClInclude Include="UIFactory.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Project1.rc" />
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
