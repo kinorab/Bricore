@@ -1,7 +1,6 @@
 #pragma once
 
 #include "button.h"
-#include "sprite.h"
 #include "defaultContainer.h"
 
 enum class ButtonState {
@@ -19,7 +18,7 @@ public:
 	void setCaption(std::string caption);
 	std::string getCaption();
 private:
-	Sprite spriteUp;
+	sf::Sprite spriteUp;
 	sf::Sprite spriteOver;
 	sf::Sprite spriteDown;
 	sf::FloatRect hitArea;

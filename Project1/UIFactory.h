@@ -1,7 +1,6 @@
 #pragma once
 
 #include "button.h"
-#include <memory>
 #include <SFML/Graphics.hpp>
 
 class UIFactory {

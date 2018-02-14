@@ -1,13 +1,13 @@
 #pragma once
 
 #include <memory>
-#include "displayObject.h"
+#include <SFML/Graphics.hpp>
 
 class Container :
-	public virtual DisplayObject,
-	public virtual sf::Transformable{
+	public virtual sf::Drawable,
+	public virtual sf::Transformable {
 public:
 	virtual ~Container() {}
-	virtual void addChild(std::unique_ptr<DisplayObject> child) = 0;
+	virtual void addChild(std::unique_ptr<sf::Drawable> child) = 0;
 };
 
