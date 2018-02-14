@@ -16,16 +16,19 @@ void DefaultContainer::draw(sf::RenderTarget & target, sf::RenderStates states) 
 	});
 }
 
-void DefaultContainer::addChild(std::vector<std::shared_ptr<sf::Drawable>> children) {
-	this->children.insert(this->children.end(), children.begin(), children.end());
+void DefaultContainer::addChild(std::vector<std::shared_ptr<sf::Drawable>> elements) {
+	children.insert(children.end(), elements.begin(), elements.end());
 }
 
-void DefaultContainer::addChildAt(std::vector<std::shared_ptr<sf::Drawable>> children, int index) {
-	this->children.insert(this->children.begin() + index, children.begin(), children.end());
+void DefaultContainer::addChildAt(std::vector<std::shared_ptr<sf::Drawable>> elements, int index) {
+	children.insert(children.begin() + index, elements.begin(), elements.end());
 }
 
-bool DefaultContainer::contains(const sf::Drawable & child) const {
-	std::find(chil)
+bool DefaultContainer::contains(const sf::Drawable & element) const {
+	return std::any_of(children.begin(), children.end(),
+		[&element] (const std::shared_ptr<sf::Drawable> & child) {
+		return child.get() == &element;
+	});
 }
 
 int DefaultContainer::getChildrenCount() const {

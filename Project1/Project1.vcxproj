@@ -141,7 +141,6 @@
     <ClCompile Include="brick.cpp" />
     <ClCompile Include="defaultContainer.cpp" />
     <ClCompile Include="defaultButton.cpp" />
-    <ClCompile Include="define.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="main.cpp" />
