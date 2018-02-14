@@ -63,6 +63,9 @@
     <ClInclude Include="resource.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="movieClip.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -102,6 +105,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="ball.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="movieClip.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

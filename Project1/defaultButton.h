@@ -10,8 +10,8 @@ enum class ButtonState {
 };
 
 class DefaultButton :
-	public virtual Button,
-	public virtual DefaultContainer {
+	public Button,
+	public DefaultContainer {
 public:
 	DefaultButton();
 	void checkClick(sf::Vector2f mousePos);

@@ -104,3 +104,7 @@ Good clues your method is doing more than one thing:
 ## Import and Export Resources
 
 [How to: Import and Export Resources](https://msdn.microsoft.com/en-us/library/saced6x2.aspx)
+
+## Resources
+
+[Google Style Guide](https://google.github.io/styleguide/cppguide.html)
