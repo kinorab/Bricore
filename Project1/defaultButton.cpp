@@ -1,8 +1,5 @@
 #include "defaultButton.h"
 
-using namespace std;
-using namespace sf;
-
 DefaultButton::DefaultButton() {
 	/*
 	spriteUp.setTexture(up);
@@ -20,10 +17,10 @@ DefaultButton::DefaultButton() {
 }
 
 
-void DefaultButton::checkClick(Vector2f mousePos) {
-	FloatRect mouseBox(mousePos, Vector2f(0.0f, 0.0f));
+void DefaultButton::checkClick(sf::Vector2f mousePos) {
+	sf::FloatRect mouseBox(mousePos, sf::Vector2f(0.0f, 0.0f));
 	if (mouseBox.intersects(currentSprite->getGlobalBounds())) {
-		if (Mouse::isButtonPressed(Mouse::Left)) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			setCurrentState(ButtonState::DOWN);
 		}
 		else {
@@ -48,7 +45,7 @@ void DefaultButton::setCurrentState(ButtonState state) {
 	}
 }
 
-void DefaultButton::setCaption(string caption) {
+void DefaultButton::setCaption(std::string caption) {
 	text.setString(caption);
 }
 
@@ -56,6 +53,6 @@ ButtonState DefaultButton::getCurrentState() {
 	return currentState;
 }
 
-string DefaultButton::getCaption() {
+std::string DefaultButton::getCaption() {
 	return text.getString();
 }

@@ -5,5 +5,5 @@
 class Sprite :
 	public virtual DisplayObject,
 	public virtual sf::Sprite {
-
+	
 };

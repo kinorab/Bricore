@@ -100,3 +100,7 @@ Good clues your method is doing more than one thing:
 >You could find long and complicated functions when working with some code. Do not be intimidated by modifying existing code: if working with such a function proves to be difficult, you find that errors are hard to debug, or you want to use a piece of it in several different contexts, consider breaking up the function into smaller and more manageable pieces.
 >
 > -- <cite>[Write Short Functions](https://google.github.io/styleguide/cppguide.html#Write_Short_Functions) in Google C++ Style Guide</cite>
+
+## Import and Export Resources
+
+[How to: Import and Export Resources](https://msdn.microsoft.com/en-us/library/saced6x2.aspx)
