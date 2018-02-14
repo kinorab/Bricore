@@ -18,7 +18,7 @@ static constexpr float STAGE_HEIGHT = 900.f;
 
 // it can define in new file(do this, please remove define.cpp also), or keeping here
 // whether change it or not, please delete the comment line
-struct GameState{
+struct GameState {
 	static bool start;
 	static bool ready;
 	static bool active;

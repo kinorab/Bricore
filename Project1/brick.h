@@ -3,7 +3,7 @@
 #include "ball.h"
 
 namespace item {
-	class Brick : 
+	class Brick :
 		public sf::Drawable {
 
 	public:

@@ -199,15 +199,15 @@ void Ball::flashRange(const Shape & player, Shape & range, Sound & sound) {
 	}
 }
 
-void Ball::followPlayer(const Shape & player){
+void Ball::followPlayer(const Shape & player) {
 	mainBall.setPosition(player.getPosition().x, player.getGlobalBounds().top - mainBall.getGlobalBounds().height / 2);
 }
 
-void Ball::setMainBallPosition(const Vector2f & position){
+void Ball::setMainBallPosition(const Vector2f & position) {
 	mainBall.setPosition(position);
 }
 
-void Ball::setMainBallPosition(const float posX, const float posY){
+void Ball::setMainBallPosition(const float posX, const float posY) {
 	mainBall.setPosition(posX, posY);
 }
 
