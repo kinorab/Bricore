@@ -4,7 +4,6 @@ extern unsigned int stage;
 
 constexpr float PI = 3.141592654f;
 constexpr float LIFETIME = 1500.f;
-constexpr float PLAYERSPEED = 5.5f;
 constexpr float RESETTIME = 20.f;
 constexpr float BOOST = 2.5f;
 constexpr float MAXSPEED = 13.f;
