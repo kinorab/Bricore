@@ -1,8 +1,12 @@
-#include "ball.h"
 #include "define.h"
+#include "ball.h"
+#include <iostream>
 
+using namespace std;
 using namespace sf;
 using namespace item;
+
+Vector2f Ball::ballSpeed;
 
 Ball::Ball(Shape &player) {
 
@@ -26,20 +30,18 @@ void Ball::resetBall() {
 	ballSpeed.y = 2.f * (rng() % 100 < 50 ? 1 : -1);
 }
 
-void Ball::ballEnableMove(Shape & player, Shape & range, Sound & sound) {
+void Ball::ballEnableMove(const Shape & player, Shape & range, Sound & sound) {
 
-	static float time;
-	static bool flash = false;
-	if (start) {
-		flashRange(player, range, sound, flash);
+	if (GameState::start) {
+		flashRange(player, range, sound);
 	}
 
 	if (flash) {
-		flashElapsed(range, flash);
+		flashElapsed(range);
 	}
 }
 
-void Ball::ballMove(sf::Shape & player) {
+void Ball::ballMove(const Shape & player) {
 
 	FloatRect playerBounds = player.getGlobalBounds();
 	FloatRect ballBounds = mainBall.getGlobalBounds();
@@ -47,13 +49,13 @@ void Ball::ballMove(sf::Shape & player) {
 	static float originY = ballSpeed.y;
 	static Clock countTime;
 	// when left mouse click will only set initial speed once
-	if (active) {
+	if (GameState::active) {
 		originX = ballSpeed.x;
 		originY = ballSpeed.y;
 		countTime.restart();
-		active = false;
+		GameState::active = false;
 	}
-	else if (countTime.getElapsedTime().asSeconds() > RESETTIME && start) {
+	else if (countTime.getElapsedTime().asSeconds() > RESETTIME && GameState::start) {
 		// preserve last speed then add 60% extra origin speed to new speed
 		float tempX = ballSpeed.x;
 		float tempY = ballSpeed.y;
@@ -69,8 +71,8 @@ void Ball::ballMove(sf::Shape & player) {
 
 	// out of bottom bound, reset the mainBall
 	if (ballBounds.top > STAGE_HEIGHT) {
-		start = false;
-		ready = false;
+		GameState::start = false;
+		GameState::ready = false;
 	}
 	// window's right bound
 	else if (ballBounds.left + ballBounds.width >= STAGE_WIDTH) {
@@ -172,11 +174,10 @@ void Ball::ballMove(sf::Shape & player) {
 			ballSpeed.y = -abs(originY) * 5;
 		}
 	}
-
 	mainBall.move(ballSpeed.x, ballSpeed.y);
 }
 
-void Ball::flashRange(Shape & player, Shape & range, Sound & sound, bool & flash) {
+void Ball::flashRange(const Shape & player, Shape & range, Sound & sound) {
 
 	FloatRect playerBounds = player.getGlobalBounds();
 	FloatRect ballBounds = mainBall.getGlobalBounds();
@@ -198,7 +199,31 @@ void Ball::flashRange(Shape & player, Shape & range, Sound & sound, bool & flash
 	}
 }
 
-inline void Ball::flashElapsed(Shape & range, bool & flash) {
+void Ball::followPlayer(const Shape & player) {
+	mainBall.setPosition(player.getPosition().x, player.getGlobalBounds().top - mainBall.getGlobalBounds().height / 2);
+}
+
+void Ball::setMainBallPosition(const Vector2f & position) {
+	mainBall.setPosition(position);
+}
+
+void Ball::setMainBallPosition(const float posX, const float posY) {
+	mainBall.setPosition(posX, posY);
+}
+
+const FloatRect Ball::getMainBallBound() const {
+	return mainBall.getGlobalBounds();
+}
+
+const float Ball::getMainBallRadius() const {
+	return mainBall.getRadius();
+}
+
+const Vector2f & Ball::getMainBallPosition() const {
+	return mainBall.getPosition();
+}
+
+void Ball::flashElapsed(Shape & range) {
 
 	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
 	if (time <= 1500.f) {

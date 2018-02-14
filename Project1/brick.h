@@ -1,10 +1,10 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <vector>
+#include "ball.h"
 
 namespace item {
-	class Brick : public sf::Drawable{
+	class Brick :
+		public sf::Drawable {
 
 	public:
 
@@ -22,7 +22,7 @@ namespace item {
 		void setInterval(const sf::Vector2f &interval);
 		void setInterval(const float x, const float y);
 		void setFrameSize(const float frame);
-		void collisionBroke(sf::CircleShape &, float &ballSpeedX, float &ballSpeedY);
+		void enable(item::Ball &ball);
 
 		void reset(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);

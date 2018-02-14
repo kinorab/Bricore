@@ -10,18 +10,25 @@ namespace item {
 	public:
 		Ball(sf::Shape &player);
 		void initializeBall();
-		void resetBall();
-		void ballEnableMove(sf::Shape &player, sf::Shape &range, sf::Sound &sound);
-		void ballMove(sf::Shape &player);
-		void flashRange(sf::Shape &player, sf::Shape &range, sf::Sound &sound, bool &flash);
+		void ballEnableMove(const sf::Shape &player, sf::Shape &range, sf::Sound &sound);
+		void ballMove(const sf::Shape &player);
+		void flashRange(const sf::Shape &player, sf::Shape &range, sf::Sound &sound);
+		void followPlayer(const sf::Shape &player);
 
-	protected:
-		sf::Vector2f ballSpeed;
+		void setMainBallPosition(const sf::Vector2f &position);
+		void setMainBallPosition(const float posX, const float posY);
+		const sf::FloatRect getMainBallBound() const;
+		const float getMainBallRadius() const;
+		const sf::Vector2f & getMainBallPosition() const;
+
+		static sf::Vector2f ballSpeed;
 
 	private:
-		inline void flashElapsed(sf::Shape &range, bool &flash);
+		void flashElapsed(sf::Shape &range);
+		void resetBall();
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
 
+		bool flash;
 		sf::Clock elapsed;
 		sf::CircleShape mainBall;
 		std::vector <sf::CircleShape> balls;

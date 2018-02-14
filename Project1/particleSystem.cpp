@@ -14,7 +14,7 @@ void ParticleSystem::setEmitter(const Vector2f &position) {
 	m_emitter = position;
 }
 
-void ParticleSystem::update(const float &timeSpan, const bool &light) {
+void ParticleSystem::update(const float &timeSpan) {
 
 	for (size_t i = 0; i < m_particles.size(); ++i) {
 
@@ -22,7 +22,7 @@ void ParticleSystem::update(const float &timeSpan, const bool &light) {
 			m_particles[i].lifetime -= timeSpan;
 		}
 		else {
-			if (light) {
+			if (GameState::light) {
 				resetParticle(i);
 			}
 			else {

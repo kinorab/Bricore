@@ -65,35 +65,35 @@ void Block::setSpeed(const Vector2f & speed) {
 }
 
 // all change direct by using abs() to prevent stuck inside the block
-void Block::enable(CircleShape & ball, float & ballSpeedX, float & ballSpeedY) {
+void Block::enable(Ball &ball) {
 
 	FloatRect blockBounds = getBounds();
-	FloatRect ballBounds = ball.getGlobalBounds();
-	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getRadius() * 0.5f)
-		, Vector2f(2.f, blockBounds.height - ball.getRadius()));
-	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - 2.f, blockBounds.top + ball.getRadius() * 0.5f)
-		, Vector2f(2.f, blockBounds.height - ball.getRadius()));
-	FloatRect topBlock(Vector2f(blockBounds.left + ball.getRadius() * 0.5f, blockBounds.top)
-		, Vector2f(blockBounds.width - ball.getRadius(), 2.f));
-	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getRadius() * 0.5f, blockBounds.top + blockBounds.height - 2.f)
-		, Vector2f(blockBounds.width - ball.getRadius(), 2.f));
+	FloatRect ballBounds = ball.getMainBallBound();
+	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getMainBallRadius() * 0.5f)
+		, Vector2f(2.f, blockBounds.height - ball.getMainBallRadius()));
+	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - 2.f, blockBounds.top + ball.getMainBallRadius() * 0.5f)
+		, Vector2f(2.f, blockBounds.height - ball.getMainBallRadius()));
+	FloatRect topBlock(Vector2f(blockBounds.left + ball.getMainBallRadius() * 0.5f, blockBounds.top)
+		, Vector2f(blockBounds.width - ball.getMainBallRadius(), 2.f));
+	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getMainBallRadius() * 0.5f, blockBounds.top + blockBounds.height - 2.f)
+		, Vector2f(blockBounds.width - ball.getMainBallRadius(), 2.f));
 
 	if (ballBounds.intersects(leftBlock)) {
-		ballSpeedX = -abs(ballSpeedX);
-		ball.setPosition(min(blockBounds.left - ball.getRadius() - ballSpeedX, ball.getPosition().x), ball.getPosition().y);
+		Ball::ballSpeed.x = -abs(Ball::ballSpeed.x);
+		ball.setMainBallPosition(min(blockBounds.left - ball.getMainBallRadius() - Ball::ballSpeed.x, ball.getMainBallPosition().x), ball.getMainBallPosition().y);
 	}
 	else if (ballBounds.intersects(rightBlock)) {
-		ballSpeedX = abs(ballSpeedX);
-		ball.setPosition(max(blockBounds.left + blockBounds.width + ball.getRadius() - ballSpeedX, ball.getPosition().x), ball.getPosition().y);
+		Ball::ballSpeed.x = abs(Ball::ballSpeed.x);
+		ball.setMainBallPosition(max(blockBounds.left + blockBounds.width + ball.getMainBallRadius() - Ball::ballSpeed.x, ball.getMainBallPosition().x), ball.getMainBallPosition().y);
 	}
 
 	if (ballBounds.intersects(bottomBlock)) {
-		ballSpeedY = abs(ballSpeedY);
-		ball.setPosition(ball.getPosition().x, max(blockBounds.top + blockBounds.height + ball.getRadius() - ballSpeedY, ball.getPosition().y));
+		Ball::ballSpeed.y = abs(Ball::ballSpeed.y);
+		ball.setMainBallPosition(ball.getMainBallPosition().x, max(blockBounds.top + blockBounds.height + ball.getMainBallRadius() - Ball::ballSpeed.y, ball.getMainBallPosition().y));
 	}
 	else if (ballBounds.intersects(topBlock)) {
-		ballSpeedY = -abs(ballSpeedY);
-		ball.setPosition(ball.getPosition().x, min(blockBounds.top - ball.getRadius() - ballSpeedY, ball.getPosition().y));
+		Ball::ballSpeed.y = -abs(Ball::ballSpeed.y);
+		ball.setMainBallPosition(ball.getMainBallPosition().x, min(blockBounds.top - ball.getMainBallRadius() - Ball::ballSpeed.y, ball.getMainBallPosition().y));
 	}
 
 	move();
