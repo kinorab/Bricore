@@ -15,6 +15,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
+    <ClCompile Include="define.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h" />

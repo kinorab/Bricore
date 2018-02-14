@@ -3,28 +3,25 @@
 #include <chrono>
 #include <random>
 
-static unsigned int stage = 1;
+extern unsigned int stage;
 
-static constexpr float PI = 3.141592654f;
-static constexpr float LIFETIME = 1500.f;
-static constexpr float PLAYERSPEED = 5.5f;
-static constexpr float RESETTIME = 20.f;
-static constexpr float BOOST = 2.5f;
-static constexpr float MAXSPEED = 13.f;
-static constexpr float GAME_WIDTH = 1500.f;
-static constexpr float GAME_HEIGHT = 900.f;
-static constexpr float STAGE_WIDTH = 1200.f;
-static constexpr float STAGE_HEIGHT = 900.f;
+constexpr float PI = 3.141592654f;
+constexpr float LIFETIME = 1500.f;
+constexpr float PLAYERSPEED = 5.5f;
+constexpr float RESETTIME = 20.f;
+constexpr float BOOST = 2.5f;
+constexpr float MAXSPEED = 13.f;
+constexpr float GAME_WIDTH = 1500.f;
+constexpr float GAME_HEIGHT = 900.f;
+constexpr float STAGE_WIDTH = 1200.f;
+constexpr float STAGE_HEIGHT = 900.f;
 
 namespace GameState {
-	static bool start = false;
-	static bool ready = false;
-	static bool active = false;
-	static bool light = false;
-	static bool broke = false;
+	extern bool start;
+	extern bool ready;
+	extern bool active;
+	extern bool light;
+	extern bool broke;
 };
 
-static int rng() {
-	static thread_local std::mt19937 prng(static_cast<std::mt19937::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
-	return static_cast<int>(prng());
-}
+extern int rng();
