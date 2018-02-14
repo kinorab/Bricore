@@ -13,7 +13,7 @@ public:
 
 private:
 
-	virtual void draw(sf::RenderTarget &, sf::RenderStates);
+	virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
 	sf::Texture image;
 	std::vector <sf::Vertex> vertices;
 };

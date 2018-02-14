@@ -4,7 +4,6 @@
 
 using namespace std;
 using namespace sf;
-using namespace item;
 
 bool Obstacle::broke = false;
 
@@ -138,7 +137,7 @@ void Obstacle::blockCollision(const size_t number) {
 }
 
 // temporary settings, it will be changed after ball class finished
-void Obstacle::ballBroke(CircleShape &ball, const size_t number){
+void Obstacle::ballBroke(CircleShape &ball, const size_t number) {
 
 	FloatRect ballBounds = ball.getGlobalBounds();
 

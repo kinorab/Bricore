@@ -13,8 +13,6 @@ Block::Block(const Vector2f & position, const float width, const float height)
 	setBlockVertice();
 }
 
-Block::Block() {}
-
 void Block::setVerticeColor(const Color & color) {
 
 	for (size_t i = 0; i < getVertexCount(); ++i) {
@@ -145,6 +143,8 @@ const float Block::getWidth() const {
 const float Block::getHeight() const {
 	return height;
 }
+
+Block::Block() {};
 
 void Block::setBlockVertice() {
 

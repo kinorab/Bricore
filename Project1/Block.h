@@ -7,7 +7,6 @@ namespace item {
 
 	public:
 		Block(const sf::Vector2f &position, const float width, const float height);
-		Block();
 		void setVerticeColor(const sf::Color &);
 		void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
 		void setWidth(const float width);
@@ -23,6 +22,9 @@ namespace item {
 		const sf::Vector2f & getSpeed() const;
 		const float getWidth() const;
 		const float getHeight() const;
+
+	protected:
+		Block();
 
 	private:
 		void setBlockVertice();
