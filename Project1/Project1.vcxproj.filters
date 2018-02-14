@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="ellipse.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -72,11 +69,12 @@
     <ClInclude Include="defaultContainer.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Project1.rc">
-      <Filter>資源檔</Filter>
-    </ResourceCompile>
+    <ClInclude Include="ball.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -124,5 +122,13 @@
     <ClCompile Include="defaultContainer.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="ball.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>資源檔</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Project1.rc
+// Used by Resource.rc
 
 // 下一個新增物件的預設值
 // 
