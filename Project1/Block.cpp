@@ -80,22 +80,20 @@ void Block::enable(Ball &ball) {
 
 	if (ballBounds.intersects(leftBlock)) {
 		Ball::ballSpeed.x = -abs(Ball::ballSpeed.x);
-		ball.setMainBallPosition(blockBounds.left - ball.getMainBallRadius() + speed.x - Ball::ballSpeed.x - 3.0f, ball.getMainBallPosition().y);
+		ball.setMainBallPosition(blockBounds.left - ball.getMainBallRadius() + speed.x - Ball::ballSpeed.x - 2.05f, ball.getMainBallPosition().y);
 	}
 	else if (ballBounds.intersects(rightBlock)) {
 		Ball::ballSpeed.x = abs(Ball::ballSpeed.x);
-		ball.setMainBallPosition(blockBounds.left + blockBounds.width + ball.getMainBallRadius() + speed.x - Ball::ballSpeed.x + 3.0f, ball.getMainBallPosition().y);
+		ball.setMainBallPosition(blockBounds.left + blockBounds.width + ball.getMainBallRadius() + speed.x - Ball::ballSpeed.x + 2.05f, ball.getMainBallPosition().y);
 	}
 
 	if (ballBounds.intersects(bottomBlock)) {
 		Ball::ballSpeed.y = abs(Ball::ballSpeed.y);
-		ball.setMainBallPosition(ball.getMainBallPosition().x, blockBounds.top + blockBounds.height + ball.getMainBallRadius() + 2.0f);
-		cout << ball.getMainBallBound().top << " " << blockBounds.top + blockBounds.height + ball.getMainBallRadius() + 2.0f << " " << ball.getMainBallBound().intersects(bottomBlock);
-		ball.setMainBallPosition(ball.getMainBallPosition().x, blockBounds.top + blockBounds.height + ball.getMainBallRadius() + speed.y - Ball::ballSpeed.y + 3.0f);
+		ball.setMainBallPosition(ball.getMainBallPosition().x, blockBounds.top + blockBounds.height + ball.getMainBallRadius() + speed.y - Ball::ballSpeed.y + 2.05f);
 	}
 	else if (ballBounds.intersects(topBlock)) {
 		Ball::ballSpeed.y = -abs(Ball::ballSpeed.y);
-		ball.setMainBallPosition(ball.getMainBallPosition().x, blockBounds.top - ball.getMainBallRadius() + speed.y - Ball::ballSpeed.y - 2.0f);
+		ball.setMainBallPosition(ball.getMainBallPosition().x, blockBounds.top - ball.getMainBallRadius() + speed.y - Ball::ballSpeed.y - 2.05f);
 	}
 
 	move();
