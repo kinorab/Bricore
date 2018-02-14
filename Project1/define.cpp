@@ -1,4 +1,6 @@
 #include "define.h"
+#include <chrono>
+#include <random>
 
 unsigned int stage = 1;
 
