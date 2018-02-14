@@ -20,13 +20,13 @@ Ball::Ball(Shape &player) {
 void Ball::initializeBall() {
 
 	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-	ballSpeed.y = 2.f;
+	ballSpeed.y = 3.f;
 }
 
 void Ball::resetBall() {
 
 	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-	ballSpeed.y = 2.f * (rng() % 100 < 50 ? 1 : -1);
+	ballSpeed.y = 3.f * (rng() % 100 < 50 ? 1 : -1);
 }
 
 void Ball::ballEnableMove(const Shape & player, Shape & range, Sound & sound) {
