@@ -17,7 +17,7 @@ namespace item {
 
 		void setMainBallPosition(const sf::Vector2f &position);
 		void setMainBallPosition(const float posX, const float posY);
-		const sf::FloatRect & getMainBallBound() const;
+		const sf::FloatRect getMainBallBounds() const;
 		const float getMainBallRadius() const;
 		const sf::Vector2f & getMainBallPosition() const;
 
