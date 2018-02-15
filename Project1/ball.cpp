@@ -210,7 +210,7 @@ void Ball::setMainBallPosition(const float posX, const float posY) {
 	mainBall.setPosition(posX, posY);
 }
 
-const FloatRect & Ball::getMainBallBounds() const {
+const FloatRect Ball::getMainBallBounds() const {
 	return mainBall.getGlobalBounds();
 }
 

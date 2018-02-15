@@ -71,12 +71,12 @@ const sf::Vector2f & Player::getMainPlayerPosition() const {
 	return mainPlayer.getPosition();
 }
 
-const sf::FloatRect & Player::getMainPlayerBounds() const {
+const sf::FloatRect Player::getMainPlayerBounds() const {
 
 	return mainPlayer.getGlobalBounds();
 }
 
-const sf::FloatRect & Player::getFlashBounds() const {
+const sf::FloatRect Player::getFlashBounds() const {
 
 	return redRange.getGlobalBounds();
 }

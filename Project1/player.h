@@ -14,8 +14,8 @@ public:
 
 	const float getMainPlayerSpeed() const;
 	const sf::Vector2f & getMainPlayerPosition() const;
-	const sf::FloatRect & getMainPlayerBounds() const;
-	const sf::FloatRect & getFlashBounds() const;
+	const sf::FloatRect getMainPlayerBounds() const;
+	const sf::FloatRect getFlashBounds() const;
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
