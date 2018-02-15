@@ -42,7 +42,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 	ParticleSystem mouseLight(2000);
 	Vector2i localPosition;
-	Clock clock;
 	Mouse::setPosition(static_cast<Vector2i>(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT / 2)), *window);
 	Sound sound1;
 	Music bgmusic;
@@ -69,8 +68,9 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	}
 
 	Time elapsed = milliseconds(0);
-
-	while (!(*done)) {
+	Clock clock;
+	bool finishing = false;
+	while (!finishing) {
 
 		Event getEvent;
 
@@ -209,7 +209,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			if (getEvent.type == Event::Closed) {
 				bgmusic.stop();
 				sound1.stop();
-				*done = true;
+				finishing = true;
 			}
 			/*	else if (getEvent.type == Event::Resized) {
 					FloatRect viewResized(0, 0, getEvent.size.width, getEvent.size.height);
@@ -231,7 +231,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		}
 
 		// updateSpan: milliseconds
-		static constexpr float updateSpan = 10.0f;
+		static constexpr float updateSpan = 20.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			player.playerMove();
 			ball.ballEnableMove(player, sound1);
@@ -275,6 +275,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		window->display();
 	}
 	// finalize...
+	*done = true;
 }
 
 int main() {
@@ -303,6 +304,7 @@ int main() {
 
 	// finalize...
 	window.close();
+	subthread.join();
 	system("pause");
 	return 0;
 }
