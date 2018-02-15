@@ -14,5 +14,10 @@ public:
 	virtual std::shared_ptr<sf::Drawable> getChildAt(int index) const = 0;
 	virtual int getChildIndex(const sf::Drawable & element) const = 0;
 	virtual int getChildrenCount() const = 0;
+	virtual void removeAllChildren() = 0;
+	virtual void removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) = 0;
+	virtual void removeChildAt(const std::vector<int> & indexes) = 0;
+	virtual void removeChildren(int beginIndex, int endIndex) = 0;
+	virtual void setChildIndex(const sf::Drawable & element, int index) = 0;
 };
 
