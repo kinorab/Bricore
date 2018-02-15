@@ -68,7 +68,7 @@ void Block::setSpeed(const Vector2f & speed) {
 void Block::enable(Ball &ball) {
 
 	FloatRect blockBounds = getBounds();
-	FloatRect ballBounds = ball.getMainBallBound();
+	FloatRect ballBounds = ball.getMainBallBounds();
 	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getMainBallRadius() * 0.5f)
 		, Vector2f(2.f, blockBounds.height - ball.getMainBallRadius()));
 	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - 2.f, blockBounds.top + ball.getMainBallRadius() * 0.5f)

@@ -176,7 +176,7 @@ void Brick::enable(Ball &ball) {
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 
 		FloatRect brickBounds = area.at(i).getGlobalBounds();
-		FloatRect ballBounds = ball.getMainBallBound();
+		FloatRect ballBounds = ball.getMainBallBounds();
 		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top)
 			, Vector2f(2.f, brickBounds.height));
 		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 2.f, brickBounds.top)

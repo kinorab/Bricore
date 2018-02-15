@@ -20,13 +20,13 @@ Ball::Ball(const Player &player) {
 void Ball::initializeBall() {
 
 	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-	ballSpeed.y = 3.f;
+	ballSpeed.y = 2.f;
 }
 
 void Ball::resetBall() {
 
 	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-	ballSpeed.y = 3.f * (rng() % 100 < 50 ? 1 : -1);
+	ballSpeed.y = 2.f * (rng() % 100 < 50 ? 1 : -1);
 }
 
 void Ball::ballEnableMove(Player &player, Sound & sound) {
@@ -210,7 +210,7 @@ void Ball::setMainBallPosition(const float posX, const float posY) {
 	mainBall.setPosition(posX, posY);
 }
 
-const FloatRect & Ball::getMainBallBound() const {
+const FloatRect & Ball::getMainBallBounds() const {
 	return mainBall.getGlobalBounds();
 }
 

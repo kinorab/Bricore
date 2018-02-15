@@ -137,7 +137,7 @@ void Obstacle::blockCollision(const size_t number) {
 // temporary settings, it will be changed after ball class finished
 void Obstacle::ballBroke(item::Ball &ball, const size_t number) {
 
-	FloatRect ballBounds = ball.getMainBallBound();
+	FloatRect ballBounds = ball.getMainBallBounds();
 
 	if (ballBounds.intersects(blocks.at(number)->getBounds())) {
 
