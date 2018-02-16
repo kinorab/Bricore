@@ -36,7 +36,7 @@ std::shared_ptr<sf::Drawable> DefaultContainer::getChildAt(int index) const {
 }
 
 int DefaultContainer::getChildIndex(const sf::Drawable * element) const {
-	return std::find(children.begin(), children.end(),
+	return std::find_if(children.begin(), children.end(),
 		[&](const std::shared_ptr<sf::Drawable> & child) {
 		return child.get() == element;
 	}) - children.begin();
