@@ -23,7 +23,6 @@ void Obstacle::enable(item::Ball &ball) {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blockCollision(i);
-		ballBroke(ball, i);
 		blocks.at(i)->enable(ball);
 	}
 }
@@ -136,9 +135,4 @@ void Obstacle::blockCollision(const size_t number) {
 		cout << "Exception: " << ex.what() << endl;
 	}
 
-}
-
-// temporary settings, it will be changed after ball class finished
-void Obstacle::ballBroke(item::Ball &ball, const size_t number) {
-	ball.ballCollided(getBlockSpeed(number));
 }

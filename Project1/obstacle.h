@@ -22,7 +22,6 @@ public:
 private:
 	virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 	void blockCollision(const size_t);
-	void ballBroke(item::Ball &, const size_t);
 
 	std::vector <item::Block*> blocks;
 };

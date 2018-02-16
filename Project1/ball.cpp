@@ -1,32 +1,34 @@
 #include "define.h"
 #include "ball.h"
 #include <algorithm>
-#include <iostream>
 
 using namespace std;
 using namespace sf;
 using namespace item;
 
-
 Ball::Ball(const Player &player) {
 	balls.resize(1);
-	balls.at(0) = new BallContent(player);
+	balls.at(0) = unique_ptr<BallContent>(new BallContent(player));
 }
 
 void Ball::initializeBall() {
 
-	balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-	balls.at(0)->ballSpeed.y = 2.f;
+	if (!balls.empty()) {
+		balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
+		balls.at(0)->ballSpeed.y = 2.f;
+	}
 }
 
 void Ball::ballEnableMove(Player &player, Sound & sound) {
 
-	if (GameState::start) {
-		flashRange(player, sound);
-	}
+	if (!balls.empty()) {
+		if (GameState::start) {
+			flashRange(player, sound);
+		}
 
-	if (flash) {
-		flashElapsed(player);
+		if (flash) {
+			flashElapsed(player);
+		}
 	}
 }
 
@@ -36,6 +38,10 @@ void Ball::move(const Player & player) {
 	Vector2f playerPos = player.getMainPlayerPosition();
 	for (size_t i = 0; i < balls.size(); ++i) {
 		balls.at(i)->ballMove(playerBounds, playerPos);
+		balls.at(i)->update();
+		if (balls.at(i)->broke) {
+			balls.erase(balls.begin() + i);
+		}
 	}
 }
 
@@ -62,7 +68,9 @@ void Ball::flashRange(Player &player, Sound & sound) {
 }
 
 void Ball::followPlayer(const Player & player) {
-	balls.at(0)->ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - balls.at(0)->ball.getGlobalBounds().height / 2);
+	if (!balls.empty()) {
+		balls.at(0)->ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - balls.at(0)->ball.getGlobalBounds().height / 2);
+	}
 }
 
 void Ball::ballCollided(const FloatRect & bounds, const Vector2f &speed) {
@@ -76,44 +84,52 @@ void Ball::ballCollided(const FloatRect & bounds, const Vector2f &speed) {
 
 		if (balls.at(i)->ball.getGlobalBounds().intersects(leftBounds)) {
 			balls.at(i)->left = true;
+			balls.at(i)->ballSpeed.x = min(-abs(balls.at(i)->ballSpeed.x), -abs(speed.x));
 		}
 		else if (balls.at(i)->ball.getGlobalBounds().intersects(rightBounds)) {
 			balls.at(i)->right = true;
+			balls.at(i)->ballSpeed.x = max(abs(balls.at(i)->ballSpeed.x), abs(speed.x));
+
 		}
 
 		if (balls.at(i)->ball.getGlobalBounds().intersects(BottomBounds)) {
 			balls.at(i)->bottom = true;
+			balls.at(i)->ballSpeed.y = max(abs(balls.at(i)->ballSpeed.y), abs(speed.y));
 		}
 		else if (balls.at(i)->ball.getGlobalBounds().intersects(TopBounds)) {
 			balls.at(i)->top = true;
+			balls.at(i)->ballSpeed.y = min(-abs(balls.at(i)->ballSpeed.y), -abs(speed.y));
 		}
 	}
+}
+
+bool Ball::ballCollided(const FloatRect & bounds) {
+
+	FloatRect leftBounds(bounds.left, bounds.top, 2.f, bounds.height);
+	FloatRect rightBounds(bounds.left + bounds.width - 2.f, bounds.top, 2.f, bounds.height);
+	FloatRect TopBounds(bounds.left, bounds.top, bounds.width, 2.f);
+	FloatRect BottomBounds(bounds.left, bounds.top + bounds.height - 2.f, bounds.width, 2.f);
 
 	for (size_t i = 0; i < balls.size(); ++i) {
-		balls.at(i)->update(speed);
+
+		if (balls.at(i)->ball.getGlobalBounds().intersects(bounds)) {
+			if (balls.at(i)->ball.getGlobalBounds().intersects(leftBounds)) {
+				balls.at(i)->ballSpeed.x = -abs(balls.at(i)->ballSpeed.x);
+			}
+			else if (balls.at(i)->ball.getGlobalBounds().intersects(rightBounds)) {
+				balls.at(i)->ballSpeed.x = abs(balls.at(i)->ballSpeed.x);
+			}
+
+			if (balls.at(i)->ball.getGlobalBounds().intersects(BottomBounds)) {
+				balls.at(i)->ballSpeed.y = abs(balls.at(i)->ballSpeed.y);
+			}
+			else if (balls.at(i)->ball.getGlobalBounds().intersects(TopBounds)) {
+				balls.at(i)->ballSpeed.y = -abs(balls.at(i)->ballSpeed.y);
+			}
+			return true;
+		}
 	}
-}
-void Ball::ballCollided(const sf::Vector2f & speed) {
-}
-
-void Ball::setMainBallPosition(const Vector2f & position) {
-	balls.at(0)->ball.setPosition(position);
-}
-
-void Ball::setMainBallPosition(const float posX, const float posY) {
-	balls.at(0)->ball.setPosition(posX, posY);
-}
-
-const FloatRect Ball::getMainBallBounds() const {
-	return balls.at(0)->ball.getGlobalBounds();
-}
-
-const float Ball::getMainBallRadius() const {
-	return balls.at(0)->ball.getRadius();
-}
-
-const Vector2f & Ball::getMainBallPosition() const {
-	return balls.at(0)->ball.getPosition();
+	return false;
 }
 
 void Ball::flashElapsed(Player & player) {
@@ -296,7 +312,7 @@ void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &positi
 	ball.move(ballSpeed.x, ballSpeed.y);
 }
 
-void Ball::BallContent::update(const Vector2f &speed) {
+void Ball::BallContent::update() {
 
 	FloatRect ballBounds = ball.getGlobalBounds();
 	if (!broke) {
@@ -307,16 +323,14 @@ void Ball::BallContent::update(const Vector2f &speed) {
 			else if (ballBounds.left < 0.0f) {
 				broke = true;
 			}
-			ballSpeed.x = -abs(ballSpeed.x);
 		}
-		if (right) {
+		else if (right) {
 			if (left) {
 				broke = true;
 			}
 			else if (ballBounds.left + ballBounds.width > STAGE_WIDTH) {
 				broke = true;
 			}
-			ballSpeed.x = abs(ballSpeed.x);
 		}
 		if (top) {
 			if (bottom) {
@@ -325,23 +339,20 @@ void Ball::BallContent::update(const Vector2f &speed) {
 			else if (ballBounds.top + ballBounds.height > STAGE_HEIGHT) {
 				broke = true;
 			}
-			ballSpeed.x = -abs(ballSpeed.x);
 		}
-		if (bottom) {
+		else if (bottom) {
 			if (top) {
 				broke = true;
 			}
 			else if (ballBounds.top < 0.0f) {
 				broke = true;
 			}
-			ballSpeed.x = abs(ballSpeed.x);
 		}
 	}
-	// if it is main ball
-	else if (main) {
+	if (main && broke) {
+		broke = false;
 		GameState::start = false;
 		GameState::ready = false;
-		broke = false;
 	}
 	left = false;
 	right = false;

@@ -176,10 +176,9 @@ void Brick::enable(Ball &ball) {
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 
 		FloatRect brickBounds = area.at(i).getGlobalBounds();
-
-		//ball.ballCollided(brickBounds);
-		//area.erase(area.begin() + i);
-
+		if (ball.ballCollided(brickBounds)) {
+			area.erase(area.begin() + i);
+		}
 	}
 }
 
