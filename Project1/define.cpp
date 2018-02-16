@@ -9,7 +9,6 @@ namespace GameState {
 	bool ready = false;
 	bool active = false;
 	bool light = false;
-	bool broke = false;
 };
 
 int rng() {

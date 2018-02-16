@@ -176,34 +176,9 @@ void Brick::enable(Ball &ball) {
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 
 		FloatRect brickBounds = area.at(i).getGlobalBounds();
-		FloatRect ballBounds = ball.getMainBallBounds();
-		FloatRect leftBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top)
-			, Vector2f(2.f, brickBounds.height));
-		FloatRect rightBlock = FloatRect(Vector2f(brickBounds.left + brickBounds.width - 2.f, brickBounds.top)
-			, Vector2f(2.f, brickBounds.height));
-		FloatRect topBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top)
-			, Vector2f(brickBounds.width, 2.f));
-		FloatRect bottomBlock = FloatRect(Vector2f(brickBounds.left, brickBounds.top + brickBounds.height - 2.f)
-			, Vector2f(brickBounds.width, 2.f));
 
-		if (ballBounds.intersects(brickBounds)) {
-
-			if (ballBounds.intersects(bottomBlock)) {
-				Ball::ballSpeed.y = abs(Ball::ballSpeed.y);
-			}
-			else if (ballBounds.intersects(topBlock)) {
-				Ball::ballSpeed.y = -abs(Ball::ballSpeed.y);
-			}
-
-			if (ballBounds.intersects(leftBlock)) {
-				Ball::ballSpeed.x = -abs(Ball::ballSpeed.x);
-			}
-			else if (ballBounds.intersects(rightBlock)) {
-				Ball::ballSpeed.x = abs(Ball::ballSpeed.x);
-			}
-			area.erase(area.begin() + i);
-		}
-
+		//ball.ballCollided(brickBounds);
+		//area.erase(area.begin() + i);
 
 	}
 }

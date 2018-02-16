@@ -17,7 +17,6 @@ namespace GameState {
 	extern bool ready;
 	extern bool active;
 	extern bool light;
-	extern bool broke;
 };
 
 extern int rng();

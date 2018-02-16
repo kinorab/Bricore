@@ -1,32 +1,22 @@
 #include "define.h"
 #include "ball.h"
+#include <algorithm>
+#include <iostream>
 
 using namespace std;
 using namespace sf;
 using namespace item;
 
-Vector2f Ball::ballSpeed;
 
 Ball::Ball(const Player &player) {
-
-	mainBall.setFillColor(Color::White);
-	mainBall.setOutlineColor(Color::Black);
-	mainBall.setRadius(5.f);
-	mainBall.setOutlineThickness(2.f);
-	mainBall.setOrigin(Vector2f(mainBall.getRadius(), mainBall.getRadius()));
-	mainBall.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - mainBall.getLocalBounds().height / 2);
+	balls.resize(1);
+	balls.at(0) = new BallContent(player);
 }
 
 void Ball::initializeBall() {
 
-	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-	ballSpeed.y = 2.f;
-}
-
-void Ball::resetBall() {
-
-	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-	ballSpeed.y = 2.f * (rng() % 100 < 50 ? 1 : -1);
+	balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
+	balls.at(0)->ballSpeed.y = 2.f;
 }
 
 void Ball::ballEnableMove(Player &player, Sound & sound) {
@@ -40,10 +30,140 @@ void Ball::ballEnableMove(Player &player, Sound & sound) {
 	}
 }
 
-void Ball::ballMove(const Player & player) {
+void Ball::move(const Player & player) {
 
 	FloatRect playerBounds = player.getMainPlayerBounds();
-	FloatRect ballBounds = mainBall.getGlobalBounds();
+	Vector2f playerPos = player.getMainPlayerPosition();
+	for (size_t i = 0; i < balls.size(); ++i) {
+		balls.at(i)->ballMove(playerBounds, playerPos);
+	}
+}
+
+void Ball::flashRange(Player &player, Sound & sound) {
+
+	FloatRect playerBounds = player.getMainPlayerBounds();
+	FloatRect ballBounds = balls.at(0)->ball.getGlobalBounds();
+	FloatRect rangeBounds = player.getFlashBounds();
+
+	if (ballBounds.intersects(playerBounds)) {
+		elapsed.restart();
+		sound.play();
+		if (ballBounds.left <= playerBounds.left) {
+			player.setFlashPosition(playerBounds.left + rangeBounds.width / 2, player.getMainPlayerPosition().y);
+		}
+		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
+			player.setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getMainPlayerPosition().y);
+		}
+		else {
+			player.setFlashPosition(balls.at(0)->ball.getPosition().x, player.getMainPlayerPosition().y);
+		}
+		flash = true;
+	}
+}
+
+void Ball::followPlayer(const Player & player) {
+	balls.at(0)->ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - balls.at(0)->ball.getGlobalBounds().height / 2);
+}
+
+void Ball::ballCollided(const FloatRect & bounds, const Vector2f &speed) {
+
+	FloatRect leftBounds(bounds.left, bounds.top, 2.f, bounds.height);
+	FloatRect rightBounds(bounds.left + bounds.width - 2.f, bounds.top, 2.f, bounds.height);
+	FloatRect TopBounds(bounds.left, bounds.top, bounds.width, 2.f);
+	FloatRect BottomBounds(bounds.left, bounds.top + bounds.height - 2.f, bounds.width, 2.f);
+
+	for (size_t i = 0; i < balls.size(); ++i) {
+
+		if (balls.at(i)->ball.getGlobalBounds().intersects(leftBounds)) {
+			balls.at(i)->left = true;
+		}
+		else if (balls.at(i)->ball.getGlobalBounds().intersects(rightBounds)) {
+			balls.at(i)->right = true;
+		}
+
+		if (balls.at(i)->ball.getGlobalBounds().intersects(BottomBounds)) {
+			balls.at(i)->bottom = true;
+		}
+		else if (balls.at(i)->ball.getGlobalBounds().intersects(TopBounds)) {
+			balls.at(i)->top = true;
+		}
+	}
+
+	for (size_t i = 0; i < balls.size(); ++i) {
+		balls.at(i)->update(speed);
+	}
+}
+void Ball::ballCollided(const sf::Vector2f & speed) {
+}
+
+void Ball::setMainBallPosition(const Vector2f & position) {
+	balls.at(0)->ball.setPosition(position);
+}
+
+void Ball::setMainBallPosition(const float posX, const float posY) {
+	balls.at(0)->ball.setPosition(posX, posY);
+}
+
+const FloatRect Ball::getMainBallBounds() const {
+	return balls.at(0)->ball.getGlobalBounds();
+}
+
+const float Ball::getMainBallRadius() const {
+	return balls.at(0)->ball.getRadius();
+}
+
+const Vector2f & Ball::getMainBallPosition() const {
+	return balls.at(0)->ball.getPosition();
+}
+
+void Ball::flashElapsed(Player & player) {
+
+	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
+	if (time <= 1500.f) {
+		float rate = (1.f - time / 1500.f);
+		player.setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
+	}
+	else {
+		flash = false;
+	}
+}
+
+void Ball::draw(RenderTarget &target, RenderStates states) const {
+
+	states.texture = NULL;
+	for (size_t i = 0; i < balls.size(); ++i) {
+		target.draw(balls.at(i)->ball, states);
+	}
+}
+
+Ball::BallContent::BallContent(const Player &player) {
+
+	ball.setFillColor(Color::White);
+	ball.setOutlineColor(Color::Black);
+	ball.setRadius(5.f);
+	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
+	ball.setOutlineThickness(2.f);
+	ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - ball.getLocalBounds().height / 2);
+	setMainColor(Color::Green);
+	main = true;
+}
+
+Ball::BallContent::BallContent() {
+	ball.setFillColor(Color::White);
+	ball.setOutlineColor(Color::Black);
+	ball.setRadius(5.f);
+	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
+	ball.setOutlineThickness(2.f);
+}
+
+void Ball::BallContent::setMainColor(const Color &color) {
+
+	ball.setFillColor(color);
+}
+
+void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &position) {
+
+	FloatRect ballBounds = ball.getGlobalBounds();
 	static float originX = ballSpeed.x;
 	static float originY = ballSpeed.y;
 	static Clock countTime;
@@ -86,7 +206,7 @@ void Ball::ballMove(const Player & player) {
 		ballSpeed.y = abs(ballSpeed.y);
 	}
 	// the collision between mainBall and player
-	else if (ballBounds.intersects(playerBounds)) {
+	else if (ballBounds.intersects(bounds)) {
 
 		countTime.restart();
 		if (ballSpeed.x == 0.0f) {
@@ -94,37 +214,37 @@ void Ball::ballMove(const Player & player) {
 		}
 
 		ballSpeed.y = -abs(ballSpeed.y);
-		if (mainBall.getPosition().y <= player.getMainPlayerPosition().y) {
+		if (ball.getPosition().y <= position.y) {
 
 			// right side of player position
-			if (mainBall.getPosition().x >= playerBounds.left + playerBounds.width) {
+			if (ball.getPosition().x >= bounds.left + bounds.width) {
 				ballSpeed.x = abs(ballSpeed.x) * 1.2f;
 			}
-			else if (mainBall.getPosition().x > playerBounds.left + playerBounds.width * .9f) {
+			else if (ball.getPosition().x > bounds.left + bounds.width * .9f) {
 				ballSpeed.x = abs(ballSpeed.x) * 1.15f;
 			}
-			else if (mainBall.getPosition().x > playerBounds.left + playerBounds.width * .75f) {
+			else if (ball.getPosition().x > bounds.left + bounds.width * .75f) {
 				ballSpeed.x = abs(ballSpeed.x) * 1.1f;
 			}
-			else if (mainBall.getPosition().x > playerBounds.left + playerBounds.width * .55f) {
+			else if (ball.getPosition().x > bounds.left + bounds.width * .55f) {
 				ballSpeed.x = abs(ballSpeed.x) * 1.05f;
 			}
 			// left side of player position
-			else if (mainBall.getPosition().x <= playerBounds.left) {
+			else if (ball.getPosition().x <= bounds.left) {
 				ballSpeed.x = -abs(ballSpeed.x) * 1.2f;
 			}
-			else if (mainBall.getPosition().x < playerBounds.left + playerBounds.width * .1f) {
+			else if (ball.getPosition().x < bounds.left + bounds.width * .1f) {
 				ballSpeed.x = -abs(ballSpeed.x) * 1.15f;
 			}
-			else if (mainBall.getPosition().x < playerBounds.left + playerBounds.width * .25f) {
+			else if (ball.getPosition().x < bounds.left + bounds.width * .25f) {
 				ballSpeed.x = -abs(ballSpeed.x) * 1.1f;
 			}
-			else if (mainBall.getPosition().x < playerBounds.left + playerBounds.width * .45f) {
+			else if (ball.getPosition().x < bounds.left + bounds.width * .45f) {
 				ballSpeed.x = -abs(ballSpeed.x) * 1.05f;
 			}
 			// hit center range(0.45f ~ 0.55f) will reset all speed, ballSpeed.x will not change direct
 			// center position
-			else if (mainBall.getPosition().x == playerBounds.left + playerBounds.width / 2) {
+			else if (ball.getPosition().x == bounds.left + bounds.width / 2) {
 				ballSpeed.x = 0.0f;
 				ballSpeed.y = -abs(originY);
 			}
@@ -138,19 +258,19 @@ void Ball::ballMove(const Player & player) {
 
 			// first hit
 			if (abs(ballSpeed.x) < BOOST) {
-				if (mainBall.getPosition().x > playerBounds.left + playerBounds.width / 2) {
+				if (ball.getPosition().x > bounds.left + bounds.width / 2) {
 					ballSpeed.x = BOOST;
 				}
-				else if (mainBall.getPosition().x < playerBounds.left + playerBounds.width / 2) {
+				else if (ball.getPosition().x < bounds.left + bounds.width / 2) {
 					ballSpeed.x = -BOOST;
 				}
 			}
 			// after first hit
 			else {
-				if (mainBall.getPosition().x > playerBounds.left + playerBounds.width / 2) {
+				if (ball.getPosition().x > bounds.left + bounds.width / 2) {
 					ballSpeed.x = abs(ballSpeed.x) * .6f * BOOST;
 				}
-				else if (mainBall.getPosition().x < playerBounds.left + playerBounds.width / 2) {
+				else if (ball.getPosition().x < bounds.left + bounds.width / 2) {
 					ballSpeed.x = -abs(ballSpeed.x) * .6f * BOOST;
 				}
 			}
@@ -159,10 +279,10 @@ void Ball::ballMove(const Player & player) {
 
 		// prevent speed too fast
 		if (abs(ballSpeed.x) >= MAXSPEED) {
-			if (mainBall.getPosition().x > player.getMainPlayerPosition().x) {
+			if (ball.getPosition().x > position.x) {
 				ballSpeed.x = MAXSPEED;
 			}
-			else if (mainBall.getPosition().x < player.getMainPlayerPosition().x) {
+			else if (ball.getPosition().x < position.x) {
 				ballSpeed.x = -MAXSPEED;
 			}
 			else {
@@ -173,69 +293,64 @@ void Ball::ballMove(const Player & player) {
 			ballSpeed.y = -abs(originY) * 5;
 		}
 	}
-	mainBall.move(ballSpeed.x, ballSpeed.y);
+	ball.move(ballSpeed.x, ballSpeed.y);
 }
 
-void Ball::flashRange(Player &player, Sound & sound) {
+void Ball::BallContent::update(const Vector2f &speed) {
 
-	FloatRect playerBounds = player.getMainPlayerBounds();
-	FloatRect ballBounds = mainBall.getGlobalBounds();
-	FloatRect rangeBounds = player.getFlashBounds();
-
-	if (ballBounds.intersects(playerBounds)) {
-		elapsed.restart();
-		sound.play();
-		if (ballBounds.left <= playerBounds.left) {
-			player.setFlashPosition(playerBounds.left + rangeBounds.width / 2, player.getMainPlayerPosition().y);
+	FloatRect ballBounds = ball.getGlobalBounds();
+	if (!broke) {
+		if (left) {
+			if (right) {
+				broke = true;
+			}
+			else if (ballBounds.left < 0.0f) {
+				broke = true;
+			}
+			ballSpeed.x = -abs(ballSpeed.x);
 		}
-		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
-			player.setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getMainPlayerPosition().y);
+		if (right) {
+			if (left) {
+				broke = true;
+			}
+			else if (ballBounds.left + ballBounds.width > STAGE_WIDTH) {
+				broke = true;
+			}
+			ballSpeed.x = abs(ballSpeed.x);
 		}
-		else {
-			player.setFlashPosition(mainBall.getPosition().x, player.getMainPlayerPosition().y);
+		if (top) {
+			if (bottom) {
+				broke = true;
+			}
+			else if (ballBounds.top + ballBounds.height > STAGE_HEIGHT) {
+				broke = true;
+			}
+			ballSpeed.x = -abs(ballSpeed.x);
 		}
-		flash = true;
+		if (bottom) {
+			if (top) {
+				broke = true;
+			}
+			else if (ballBounds.top < 0.0f) {
+				broke = true;
+			}
+			ballSpeed.x = abs(ballSpeed.x);
+		}
 	}
-}
-
-void Ball::followPlayer(const Player & player) {
-	mainBall.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - mainBall.getGlobalBounds().height / 2);
-}
-
-void Ball::setMainBallPosition(const Vector2f & position) {
-	mainBall.setPosition(position);
-}
-
-void Ball::setMainBallPosition(const float posX, const float posY) {
-	mainBall.setPosition(posX, posY);
-}
-
-const FloatRect Ball::getMainBallBounds() const {
-	return mainBall.getGlobalBounds();
-}
-
-const float Ball::getMainBallRadius() const {
-	return mainBall.getRadius();
-}
-
-const Vector2f & Ball::getMainBallPosition() const {
-	return mainBall.getPosition();
-}
-
-void Ball::flashElapsed(Player & player) {
-
-	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
-	if (time <= 1500.f) {
-		float rate = (1.f - time / 1500.f);
-		player.setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
+	// if it is main ball
+	else if (main) {
+		GameState::start = false;
+		GameState::ready = false;
+		broke = false;
 	}
-	else {
-		flash = false;
-	}
+	left = false;
+	right = false;
+	top = false;
+	bottom = false;
 }
 
-void Ball::draw(RenderTarget &target, RenderStates states) const {
+void Ball::BallContent::resetBall() {
 
-	states.texture = NULL;
-	target.draw(mainBall, states);
+	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
+	ballSpeed.y = 2.f * (rng() % 100 < 50 ? 1 : -1);
 }

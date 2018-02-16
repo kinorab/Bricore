@@ -104,6 +104,10 @@ void Obstacle::reset() {
 	}
 }
 
+const sf::Vector2f & Obstacle::getBlockSpeed(const size_t number) const {
+	return blocks.at(number)->getSpeed();
+}
+
 const size_t Obstacle::getBlocksAmount() const {
 	return blocks.size();
 }
@@ -136,28 +140,5 @@ void Obstacle::blockCollision(const size_t number) {
 
 // temporary settings, it will be changed after ball class finished
 void Obstacle::ballBroke(item::Ball &ball, const size_t number) {
-
-	FloatRect ballBounds = ball.getMainBallBounds();
-
-	if (ballBounds.intersects(blocks.at(number)->getBounds())) {
-
-		if (ballBounds.left < 0) {
-			GameState::broke = true;
-		}
-		else if (ballBounds.left + ballBounds.width > STAGE_WIDTH) {
-			GameState::broke = true;
-		}
-		else if (ballBounds.top < 0) {
-			GameState::broke = true;
-		}
-		else if (ballBounds.top + ballBounds.height > STAGE_HEIGHT) {
-			GameState::broke = true;
-		}
-
-		for (size_t j = number + 1; j < blocks.size(); ++j) {
-			if (ballBounds.intersects(blocks.at(j)->getBounds())) {
-				GameState::broke = true;
-			}
-		}
-	}
+	ball.ballCollided(getBlockSpeed(number));
 }

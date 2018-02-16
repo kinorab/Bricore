@@ -15,7 +15,6 @@ namespace item {
 		void setSpeed(const float speedX, const float speedY = 0.0f);
 		void setSpeed(const sf::Vector2f &speed);
 		void enable(item::Ball &ball);
-		void move();
 
 		const sf::Vector2f & getCurrentPosition() const;
 		const sf::Vector2f & getOriginPosition() const;

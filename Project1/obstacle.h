@@ -16,6 +16,7 @@ public:
 	void setAllSpeed(const std::vector <sf::Vector2f> &speed);
 	void reset();
 
+	const sf::Vector2f & getBlockSpeed(const size_t number) const;
 	const size_t getBlocksAmount() const;
 
 private:

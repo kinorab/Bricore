@@ -239,12 +239,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			if (GameState::start) {
 				obstacles.enable(ball);
 				bricks.enable(ball);
-				if (GameState::broke) {
-					GameState::ready = false;
-					GameState::start = false;
-					GameState::broke = false;
-				}
-				ball.ballMove(player);
+				ball.move(player);
 				if (bricks.getAreaSize() == NULL) {
 					GameState::ready = false;
 					GameState::start = false;

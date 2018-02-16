@@ -68,40 +68,7 @@ void Block::setSpeed(const Vector2f & speed) {
 void Block::enable(Ball &ball) {
 
 	FloatRect blockBounds = getBounds();
-	FloatRect ballBounds = ball.getMainBallBounds();
-	FloatRect leftBlock(Vector2f(blockBounds.left, blockBounds.top + ball.getMainBallRadius() * 0.5f)
-		, Vector2f(2.f, blockBounds.height - ball.getMainBallRadius()));
-	FloatRect rightBlock(Vector2f(blockBounds.left + blockBounds.width - 2.f, blockBounds.top + ball.getMainBallRadius() * 0.5f)
-		, Vector2f(2.f, blockBounds.height - ball.getMainBallRadius()));
-	FloatRect topBlock(Vector2f(blockBounds.left + ball.getMainBallRadius() * 0.5f, blockBounds.top)
-		, Vector2f(blockBounds.width - ball.getMainBallRadius(), 2.f));
-	FloatRect bottomBlock(Vector2f(blockBounds.left + ball.getMainBallRadius() * 0.5f, blockBounds.top + blockBounds.height - 2.f)
-		, Vector2f(blockBounds.width - ball.getMainBallRadius(), 2.f));
-
-	if (ballBounds.intersects(leftBlock)) {
-		Ball::ballSpeed.x = -abs(Ball::ballSpeed.x);
-		ball.setMainBallPosition(blockBounds.left - ball.getMainBallRadius() + speed.x - Ball::ballSpeed.x - 2.05f, ball.getMainBallPosition().y);
-	}
-	else if (ballBounds.intersects(rightBlock)) {
-		Ball::ballSpeed.x = abs(Ball::ballSpeed.x);
-		ball.setMainBallPosition(blockBounds.left + blockBounds.width + ball.getMainBallRadius() + speed.x - Ball::ballSpeed.x + 2.05f, ball.getMainBallPosition().y);
-	}
-
-	if (ballBounds.intersects(bottomBlock)) {
-		Ball::ballSpeed.y = abs(Ball::ballSpeed.y);
-		ball.setMainBallPosition(ball.getMainBallPosition().x, blockBounds.top + blockBounds.height + ball.getMainBallRadius() + speed.y - Ball::ballSpeed.y + 2.05f);
-	}
-	else if (ballBounds.intersects(topBlock)) {
-		Ball::ballSpeed.y = -abs(Ball::ballSpeed.y);
-		ball.setMainBallPosition(ball.getMainBallPosition().x, blockBounds.top - ball.getMainBallRadius() + speed.y - Ball::ballSpeed.y - 2.05f);
-	}
-
-	move();
-}
-
-void Block::move() {
-
-	FloatRect blockBounds = getBounds();
+	ball.ballCollided(blockBounds, speed);
 	static FloatRect leftBounds(0.0f, 0.0f, -1.0f, STAGE_HEIGHT);
 	static FloatRect rightBounds(STAGE_WIDTH, 0.0f, 1.0f, STAGE_HEIGHT);
 	static FloatRect topBounds(0.0f, 0.0f, STAGE_WIDTH, -1.0f);
