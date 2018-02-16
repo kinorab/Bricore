@@ -45,28 +45,6 @@ void Ball::move(const Player & player) {
 	}
 }
 
-void Ball::flashRange(Player &player, Sound & sound) {
-
-	FloatRect playerBounds = player.getMainPlayerBounds();
-	FloatRect ballBounds = balls.at(0)->ball.getGlobalBounds();
-	FloatRect rangeBounds = player.getFlashBounds();
-
-	if (ballBounds.intersects(playerBounds)) {
-		elapsed.restart();
-		sound.play();
-		if (ballBounds.left <= playerBounds.left) {
-			player.setFlashPosition(playerBounds.left + rangeBounds.width / 2, player.getMainPlayerPosition().y);
-		}
-		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
-			player.setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getMainPlayerPosition().y);
-		}
-		else {
-			player.setFlashPosition(balls.at(0)->ball.getPosition().x, player.getMainPlayerPosition().y);
-		}
-		flash = true;
-	}
-}
-
 void Ball::followPlayer(const Player & player) {
 	if (!balls.empty()) {
 		balls.at(0)->ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - balls.at(0)->ball.getGlobalBounds().height / 2);
@@ -141,6 +119,28 @@ void Ball::flashElapsed(Player & player) {
 	}
 	else {
 		flash = false;
+	}
+}
+
+void Ball::flashRange(Player &player, Sound & sound) {
+
+	FloatRect playerBounds = player.getMainPlayerBounds();
+	FloatRect ballBounds = balls.at(0)->ball.getGlobalBounds();
+	FloatRect rangeBounds = player.getFlashBounds();
+
+	if (ballBounds.intersects(playerBounds)) {
+		elapsed.restart();
+		sound.play();
+		if (ballBounds.left <= playerBounds.left) {
+			player.setFlashPosition(playerBounds.left + rangeBounds.width / 2, player.getMainPlayerPosition().y);
+		}
+		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
+			player.setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getMainPlayerPosition().y);
+		}
+		else {
+			player.setFlashPosition(balls.at(0)->ball.getPosition().x, player.getMainPlayerPosition().y);
+		}
+		flash = true;
 	}
 }
 

@@ -193,6 +193,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 					GameState::active = true;
 					GameState::start = true;
 				}
+				// when game released, please comment this
 				else if (getEvent.mouseButton.button == Mouse::Right && GameState::start) {
 					GameState::start = false;
 					GameState::ready = false;
@@ -235,7 +236,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			player.playerMove();
 			ball.ballEnableMove(player, sound1);
-
 			if (GameState::start) {
 				obstacles.enable(ball);
 				bricks.enable(ball);

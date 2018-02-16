@@ -14,13 +14,13 @@ namespace item {
 		void initializeBall();
 		void ballEnableMove(Player &player, sf::Sound &sound);
 		void move(const Player &player);
-		void flashRange(Player &player, sf::Sound &sound);
 		void followPlayer(const Player &player);
 		void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
 		bool ballCollided(const sf::FloatRect &bounds);
 
 	private:
 		void flashElapsed(Player &);
+		void flashRange(Player &player, sf::Sound &sound);
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
 
 		class BallContent {
