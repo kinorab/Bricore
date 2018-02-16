@@ -231,7 +231,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		}
 
 		// updateSpan: milliseconds
-		static constexpr float updateSpan = 20.0f;
+		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			player.playerMove();
 			ball.ballEnableMove(player, sound1);

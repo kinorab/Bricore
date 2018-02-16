@@ -24,10 +24,10 @@ void DefaultContainer::addChildAt(const std::vector<std::shared_ptr<sf::Drawable
 	children.insert(children.begin() + index, elements.begin(), elements.end());
 }
 
-bool DefaultContainer::contains(const sf::Drawable & element) const {
+bool DefaultContainer::contains(const sf::Drawable * element) const {
 	return std::any_of(children.begin(), children.end(),
 		[&](const std::shared_ptr<sf::Drawable> & child) {
-		return child.get() == &element;
+		return child.get() == element;
 	});
 }
 
@@ -35,10 +35,10 @@ std::shared_ptr<sf::Drawable> DefaultContainer::getChildAt(int index) const {
 	return children[index];
 }
 
-int DefaultContainer::getChildIndex(const sf::Drawable & element) const {
-	return std::find_if(children.begin(), children.end(),
+int DefaultContainer::getChildIndex(const sf::Drawable * element) const {
+	return std::find(children.begin(), children.end(),
 		[&](const std::shared_ptr<sf::Drawable> & child) {
-		return child.get() == &element;
+		return child.get() == element;
 	}) - children.begin();
 }
 
@@ -54,7 +54,7 @@ void DefaultContainer::removeAllChildren() {
 void DefaultContainer::removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
 	std::for_each(elements.begin(), elements.end(),
 		[&](const std::shared_ptr<sf::Drawable> & element) {
-		removeChildAt({ getChildIndex(*element) });
+		removeChildAt({ getChildIndex(element.get()) });
 	});
 }
 
@@ -69,6 +69,15 @@ void DefaultContainer::removeChildren(int beginIndex, int endIndex) {
 	children.erase(children.begin() + beginIndex, children.begin() + endIndex);
 }
 
-void DefaultContainer::setChildIndex(const sf::Drawable & element, int index) {
-	//addChildAt()
+void DefaultContainer::setChildIndex(const sf::Drawable * element, int index) {
+	auto elementIterator = children.begin() + getChildIndex(element);
+	std::move(elementIterator, elementIterator + 1, children.begin() + index);
+}
+
+void DefaultContainer::swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB) {
+	std::swap(children[getChildIndex(elementA)], children[getChildIndex(elementB)]);
+}
+
+void DefaultContainer::swapChildrenAt(int indexA, int indexB) {
+	std::swap(children[indexA], children[indexB]);
 }
