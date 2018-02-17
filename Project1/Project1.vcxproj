@@ -150,6 +150,7 @@
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
   </ItemGroup>
@@ -164,13 +165,14 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="hud.h" />
-    <ClInclude Include="interactiveObject.h" />
+    <ClInclude Include="eventDispatcher.h" />
     <ClInclude Include="movieClip.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIFactory.h" />
   </ItemGroup>

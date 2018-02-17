@@ -1,9 +1,11 @@
 #pragma once
 
 #include <memory>
+#include "eventDispatcher.h"
 #include <SFML/Graphics.hpp>
 
 class Container :
+	public virtual EventDispatcher,
 	public virtual sf::Drawable,
 	public virtual sf::Transformable {
 public:
@@ -16,7 +18,7 @@ public:
 	virtual int getChildrenCount() const = 0;
 	virtual void removeAllChildren() = 0;
 	virtual void removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) = 0;
-	virtual void removeChildAt(const std::vector<int> & indexes) = 0;
+	virtual void removeChildAt(std::vector<int> indexes) = 0;
 	virtual void removeChildren(int beginIndex, int endIndex) = 0;
 	virtual void setChildIndex(const sf::Drawable * element, int index) = 0;
 	virtual void swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB) = 0;

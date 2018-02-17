@@ -24,6 +24,10 @@ void DefaultContainer::addChildAt(const std::vector<std::shared_ptr<sf::Drawable
 	children.insert(children.begin() + index, elements.begin(), elements.end());
 }
 
+void DefaultContainer::addEventListener() {
+
+}
+
 bool DefaultContainer::contains(const sf::Drawable * element) const {
 	return std::any_of(children.begin(), children.end(),
 		[&](const std::shared_ptr<sf::Drawable> & child) {
@@ -46,27 +50,43 @@ int DefaultContainer::getChildrenCount() const {
 	return children.size();
 }
 
+bool DefaultContainer::hasEventListener() {
+	return false;
+}
+
 void DefaultContainer::removeAllChildren() {
 	children.clear();
 	children.shrink_to_fit();
 }
 
 void DefaultContainer::removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
-	std::for_each(elements.begin(), elements.end(),
+	std::vector<int> indexes;
+	std::transform(elements.begin(), elements.end(), std::back_inserter(indexes),
 		[&](const std::shared_ptr<sf::Drawable> & element) {
-		removeChildAt({ getChildIndex(element.get()) });
+		return getChildIndex(element.get());
 	});
+	removeChildAt(indexes);
 }
 
-void DefaultContainer::removeChildAt(const std::vector<int> & indexes) {
-	std::for_each(indexes.begin(), indexes.end(),
-		[&](const int & index) {
-		children.erase(children.begin() + index);
-	});
+void DefaultContainer::removeChildAt(std::vector<int> indexes) {
+	std::sort(indexes.begin(), indexes.end());
+	auto indexIterator = indexes.begin();
+	children.erase(std::remove_if(children.begin(), children.end(),
+		[&](const std::shared_ptr<sf::Drawable> & child) {
+		if (children[*indexIterator] == child) {
+			indexIterator += 1;
+			return true;
+		}
+		return false;
+	}));
 }
 
 void DefaultContainer::removeChildren(int beginIndex, int endIndex) {
 	children.erase(children.begin() + beginIndex, children.begin() + endIndex);
+}
+
+void DefaultContainer::removeEventListener() {
+
 }
 
 void DefaultContainer::setChildIndex(const sf::Drawable * element, int index) {
