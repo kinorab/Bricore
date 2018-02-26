@@ -21,7 +21,7 @@ namespace item {
 	private:
 		void flashElapsed(Player &);
 		void flashRange(Player &player, sf::Sound &sound);
-		virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
+		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 		class BallContent {
 		public:

@@ -19,4 +19,4 @@ namespace GameState {
 	extern bool light;
 };
 
-extern int rng();
+extern const int rng();

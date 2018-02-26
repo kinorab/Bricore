@@ -12,8 +12,8 @@ public:
 	void setPointCount(size_t);
 
 	const sf::Vector2f &getRadius() const;
-	virtual unsigned int getPointCount() const;
-	virtual sf::Vector2f getPoint(unsigned int) const;
+	virtual unsigned int getPointCount() const override;
+	virtual sf::Vector2f getPoint(unsigned int) const override;
 
 private:
 

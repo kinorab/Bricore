@@ -13,7 +13,7 @@ public:
 
 private:
 
-	virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
+	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 	sf::Texture image;
 	std::vector <sf::VertexArray> vertices;
 };

@@ -20,7 +20,7 @@ public:
 	const size_t getBlocksAmount() const;
 
 private:
-	virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
+	virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 	void blockCollision(const size_t);
 
 	std::vector <item::Block*> blocks;

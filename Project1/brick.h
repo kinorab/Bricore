@@ -40,7 +40,7 @@ namespace item {
 	private:
 
 		void settlePlace();
-		virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
+		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 		std::vector<sf::RectangleShape> area;
 		// bricks on every row
