@@ -1,6 +1,5 @@
 #include "define.h"
 #include "brick.h"
-#include "ball.h"
 #include <stdexcept>
 #include <iostream>
 
@@ -178,6 +177,7 @@ void Brick::enable(Ball &ball) {
 		FloatRect brickBounds = area.at(i).getGlobalBounds();
 		if (ball.ballCollided(brickBounds)) {
 			area.erase(area.begin() + i);
+			--i;
 		}
 	}
 }
@@ -297,6 +297,10 @@ void Brick::reset(const size_t row, const size_t col) {
 	catch (out_of_range &ex) {
 		cout << "Exception: " << ex.what() << endl;
 	}
+}
+
+const bool Brick::isEmpty() const {
+	return area.empty();
 }
 
 const size_t Brick::getAreaSize() const {

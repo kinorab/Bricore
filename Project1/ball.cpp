@@ -1,27 +1,22 @@
 #include "define.h"
 #include "ball.h"
+#include <iostream>
 #include <algorithm>
 
-using namespace std;
 using namespace sf;
 using namespace item;
 
+bool Ball::initialize = false;
+
 Ball::Ball(const Player &player) {
 	balls.resize(1);
-	balls.at(0) = unique_ptr<BallContent>(new BallContent(player));
-}
-
-void Ball::initializeBall() {
-
-	if (!balls.empty()) {
-		balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-		balls.at(0)->ballSpeed.y = 2.f;
-	}
+	balls.at(0) = std::unique_ptr<BallContent>(new BallContent(player));
 }
 
 void Ball::ballEnableMove(Player &player, Sound & sound) {
 
 	if (!balls.empty()) {
+		initializeBall();
 		if (GameState::start) {
 			flashRange(player, sound);
 		}
@@ -62,21 +57,21 @@ void Ball::ballCollided(const FloatRect & bounds, const Vector2f &speed) {
 
 		if (balls.at(i)->ball.getGlobalBounds().intersects(leftBounds)) {
 			balls.at(i)->left = true;
-			balls.at(i)->ballSpeed.x = min(-abs(balls.at(i)->ballSpeed.x), -abs(speed.x));
+			balls.at(i)->ballSpeed.x = std::min(-abs(balls.at(i)->ballSpeed.x), -abs(speed.x));
 		}
 		else if (balls.at(i)->ball.getGlobalBounds().intersects(rightBounds)) {
 			balls.at(i)->right = true;
-			balls.at(i)->ballSpeed.x = max(abs(balls.at(i)->ballSpeed.x), abs(speed.x));
+			balls.at(i)->ballSpeed.x = std::max(abs(balls.at(i)->ballSpeed.x), abs(speed.x));
 
 		}
 
 		if (balls.at(i)->ball.getGlobalBounds().intersects(BottomBounds)) {
 			balls.at(i)->bottom = true;
-			balls.at(i)->ballSpeed.y = max(abs(balls.at(i)->ballSpeed.y), abs(speed.y));
+			balls.at(i)->ballSpeed.y = std::max(abs(balls.at(i)->ballSpeed.y), abs(speed.y));
 		}
 		else if (balls.at(i)->ball.getGlobalBounds().intersects(TopBounds)) {
 			balls.at(i)->top = true;
-			balls.at(i)->ballSpeed.y = min(-abs(balls.at(i)->ballSpeed.y), -abs(speed.y));
+			balls.at(i)->ballSpeed.y = std::min(-abs(balls.at(i)->ballSpeed.y), -abs(speed.y));
 		}
 	}
 }
@@ -104,10 +99,42 @@ bool Ball::ballCollided(const FloatRect & bounds) {
 			else if (balls.at(i)->ball.getGlobalBounds().intersects(TopBounds)) {
 				balls.at(i)->ballSpeed.y = -abs(balls.at(i)->ballSpeed.y);
 			}
+			if (balls.at(i)->isMain()) {
+				ballDivided(50);
+			}
 			return true;
 		}
 	}
 	return false;
+}
+
+void Ball::ballDivided(const size_t number) {
+
+	Vector2f mainPos = balls.at(0)->ball.getPosition();
+	balls.resize(number + 1);
+	for (size_t i = 0; i < number; ++i) {
+		balls.at(i + 1) = std::unique_ptr<BallContent>(new BallContent());
+		balls.at(i + 1)->ball.setPosition(mainPos);
+		balls.at(i + 1)->ballSpeed.x = balls.at(0)->ballSpeed.x * static_cast<float>((rng() % 50 + 50) * .01f * (rng() % 2 == 0 ? -1 : 1));
+		balls.at(i + 1)->ballSpeed.y = balls.at(0)->ballSpeed.y * static_cast<float>((rng() % 25 + 75) * .01f * (rng() % 4 == 0 ? -1 : 1));
+	}
+}
+
+void Ball::initializeBall() {
+
+	if (!initialize && !balls.empty()) {
+		balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
+		balls.at(0)->ballSpeed.y = -2.f;
+		for (size_t i = 1; i < balls.size(); ++i) {
+			balls.erase(balls.begin() + i);
+			--i;
+		}
+		initialize = true;
+	}
+	else if (GameState::reflash) {
+		initialize = false;
+		GameState::reflash = false;
+	}
 }
 
 void Ball::flashElapsed(Player & player) {
@@ -160,7 +187,7 @@ Ball::BallContent::BallContent(const Player &player) {
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
 	ball.setOutlineThickness(2.f);
 	ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - ball.getLocalBounds().height / 2);
-	setMainColor(Color::Green);
+	setColor(Color::Green);
 	main = true;
 }
 
@@ -172,7 +199,7 @@ Ball::BallContent::BallContent() {
 	ball.setOutlineThickness(2.f);
 }
 
-void Ball::BallContent::setMainColor(const Color &color) {
+void Ball::BallContent::setColor(const Color &color) {
 
 	ball.setFillColor(color);
 }
@@ -180,23 +207,21 @@ void Ball::BallContent::setMainColor(const Color &color) {
 void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &position) {
 
 	FloatRect ballBounds = ball.getGlobalBounds();
-	static float originX = ballSpeed.x;
-	static float originY = ballSpeed.y;
 	static Clock countTime;
-	// when left mouse click will only set initial speed once
-	if (GameState::active) {
-		originX = ballSpeed.x;
-		originY = ballSpeed.y;
+
+	if (active) {
+		oriSpeed.x = ballSpeed.x;
+		oriSpeed.y = ballSpeed.y;
 		countTime.restart();
-		GameState::active = false;
+		active = false;
 	}
 	else if (countTime.getElapsedTime().asSeconds() > RESETTIME && GameState::start) {
 		// preserve last speed then add 60% extra origin speed to new speed
 		float tempX = ballSpeed.x;
 		float tempY = ballSpeed.y;
 		resetBall();
-		originX = ballSpeed.x;
-		originY = ballSpeed.y;
+		oriSpeed.x = ballSpeed.x;
+		oriSpeed.y = ballSpeed.y;
 		ballSpeed.x >= 0 ? ballSpeed.x += (abs(tempX) - ballSpeed.x) * .6f
 			: ballSpeed.x += -(abs(tempX) + ballSpeed.x) * .6f;
 		ballSpeed.y >= 0 ? ballSpeed.y += (abs(tempY) - ballSpeed.y) * .6f
@@ -206,8 +231,7 @@ void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &positi
 
 	// out of bottom bound, reset the mainBall
 	if (ballBounds.top > STAGE_HEIGHT) {
-		GameState::start = false;
-		GameState::ready = false;
+		broke = true;
 	}
 	// window's right bound
 	else if (ballBounds.left + ballBounds.width >= STAGE_WIDTH) {
@@ -226,7 +250,7 @@ void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &positi
 
 		countTime.restart();
 		if (ballSpeed.x == 0.0f) {
-			ballSpeed.x = originX;
+			ballSpeed.x = oriSpeed.x;
 		}
 
 		ballSpeed.y = -abs(ballSpeed.y);
@@ -262,11 +286,11 @@ void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &positi
 			// center position
 			else if (ball.getPosition().x == bounds.left + bounds.width / 2) {
 				ballSpeed.x = 0.0f;
-				ballSpeed.y = -abs(originY);
+				ballSpeed.y = -abs(oriSpeed.y);
 			}
 			else {
-				ballSpeed.x < 0 ? ballSpeed.x = -abs(originX) : ballSpeed.x = abs(originX);
-				ballSpeed.y = -abs(originY);
+				ballSpeed.x < 0 ? ballSpeed.x = -abs(oriSpeed.x) : ballSpeed.x = abs(oriSpeed.x);
+				ballSpeed.y = -abs(oriSpeed.y);
 			}
 		}
 		// the collision under the half of player body
@@ -305,8 +329,8 @@ void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &positi
 				ballSpeed.x < 0 ? ballSpeed.x = MAXSPEED : ballSpeed.x = -MAXSPEED;
 			}
 		}
-		else if (abs(ballSpeed.y) >= abs(originY) * 5) {
-			ballSpeed.y = -abs(originY) * 5;
+		else if (abs(ballSpeed.y) >= abs(oriSpeed.y) * 5) {
+			ballSpeed.y = -abs(oriSpeed.y) * 5;
 		}
 	}
 	ball.move(ballSpeed.x, ballSpeed.y);
@@ -351,6 +375,7 @@ void Ball::BallContent::update() {
 	}
 	if (main && broke) {
 		broke = false;
+		initialize = false;
 		GameState::start = false;
 		GameState::ready = false;
 	}
@@ -358,6 +383,10 @@ void Ball::BallContent::update() {
 	right = false;
 	top = false;
 	bottom = false;
+}
+
+const bool Ball::BallContent::isMain() const {
+	return main;
 }
 
 void Ball::BallContent::resetBall() {

@@ -189,8 +189,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 			if (getEvent.type == Event::MouseButtonPressed) {
 				if (getEvent.mouseButton.button == Mouse::Left && !GameState::start) {
-					ball.initializeBall();
-					GameState::active = true;
 					GameState::start = true;
 				}
 				// when game released, please comment this
@@ -240,9 +238,10 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				obstacles.enable(ball);
 				bricks.enable(ball);
 				ball.move(player);
-				if (bricks.getAreaSize() == NULL) {
+				if (bricks.isEmpty()) {
 					GameState::ready = false;
 					GameState::start = false;
+					GameState::reflash = true;
 					cout << "Finished stage: " << stage++ << "!!!" << endl;
 					bricks.reset(stage);
 					bricks.setBrickColor(Color(static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255)));

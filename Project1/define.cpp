@@ -7,8 +7,8 @@ unsigned int stage = 1;
 namespace GameState {
 	bool start = false;
 	bool ready = false;
-	bool active = false;
 	bool light = false;
+	bool reflash = false;
 };
 
 const int rng() {
