@@ -1,6 +1,5 @@
 #include "define.h"
 #include "ball.h"
-#include <iostream>
 #include <algorithm>
 
 using namespace sf;
