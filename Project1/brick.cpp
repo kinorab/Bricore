@@ -57,7 +57,7 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
 			this->interval = interval;
-			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x));
+			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
 			area.resize(rowCount * amount);
 
 			if (getAreaSize() == rowCount * amount) {
@@ -196,7 +196,7 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
 			this->interval = interval;
-			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x));
+			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
 			area.resize(rowCount * amount);
 
 			if (getAreaSize() == rowCount * amount) {

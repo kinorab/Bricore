@@ -37,7 +37,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 	Ball ball(player);
 
-	Brick bricks(1, 180.f, 30.f, Vector2f(5.f, 5.f), 3.f);
+	Brick bricks(1, 60.f, 25.f, Vector2f(0.8f, 2.f), 3.f);
 	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
 	ParticleSystem mouseLight(2000);
