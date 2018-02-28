@@ -1,17 +1,15 @@
 #pragma once
 
 #include "defaultContainer.h"
-#include <SFML/Graphics.hpp>
+#include "rectangleShape.h"
+#include "sprite.h"
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 class HUD :
-	// put text class into hud
 	public DefaultContainer {
 public:
-
 	explicit HUD();
-
 private:
-
-	std::shared_ptr<sf::RectangleShape> background;
+	std::shared_ptr<game::RectangleShape> background;
 };

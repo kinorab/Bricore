@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "eventDispatcher.h"
+#include <memory>
 #include <SFML/Graphics.hpp>
 
 class Container :

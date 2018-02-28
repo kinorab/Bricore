@@ -1,9 +1,9 @@
 #pragma once
 
+#include "player.h"
 #include <SFML/Audio.hpp>
 #include <vector>
 #include <memory>
-#include "player.h"
 
 namespace item {
 
