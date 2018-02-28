@@ -1,6 +1,6 @@
 # Breakout Brick
 
-A Trial Production for testing C++ coding.
+A breakout game written in C++.
 
 ## Getting Started
 

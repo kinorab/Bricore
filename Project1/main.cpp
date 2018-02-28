@@ -2,6 +2,7 @@
 #include "particleSystem.h"
 #include "brick.h"
 #include "define.h"
+#include "hud.h"
 #include "obstacle.h"
 #include "UIFactory.h"
 #include <atomic>
@@ -46,6 +47,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	Sound sound1;
 	Music bgmusic;
 	SoundBuffer buffer1;
+
+	HUD hud;
 
 	static float bufferBgVolume = 100.0f;
 	static float bufferVolume1 = 50.0f;
@@ -265,6 +268,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		window->draw(player);
 		window->draw(ball);
 		window->draw(bricks);
+		window->draw(hud);
 		window->draw(mouseLight);
 		window->display();
 	}

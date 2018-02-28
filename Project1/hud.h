@@ -9,10 +9,9 @@ class HUD :
 	public DefaultContainer {
 public:
 
-	explicit HUD(sf::Texture &);
+	explicit HUD();
 
 private:
 
-	sf::Texture image;
-	std::vector <sf::VertexArray> vertices;
+	std::shared_ptr<sf::RectangleShape> background;
 };
