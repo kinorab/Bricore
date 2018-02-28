@@ -141,6 +141,7 @@
     <ClCompile Include="brick.cpp" />
     <ClCompile Include="defaultContainer.cpp" />
     <ClCompile Include="defaultButton.cpp" />
+    <ClCompile Include="defaultEvent.cpp" />
     <ClCompile Include="define.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="hud.cpp" />
@@ -162,8 +163,10 @@
     <ClInclude Include="defaultContainer.h" />
     <ClInclude Include="defaultButton.h" />
     <ClInclude Include="button.h" />
+    <ClInclude Include="defaultEvent.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
+    <ClInclude Include="event.h" />
     <ClInclude Include="hud.h" />
     <ClInclude Include="eventDispatcher.h" />
     <ClInclude Include="movieClip.h" />

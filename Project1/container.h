@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 class Container :
-	public virtual EventDispatcher,
+	public virtual game::EventDispatcher,
 	public virtual sf::Drawable,
 	public virtual sf::Transformable {
 public:

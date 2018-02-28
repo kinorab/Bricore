@@ -5,7 +5,6 @@
 class MovieClip :
 	public Container {
 public:
-	MovieClip();
-	virtual ~MovieClip();
+	virtual ~MovieClip() override;
 };
 

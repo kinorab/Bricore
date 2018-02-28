@@ -3,7 +3,7 @@
 void game::Sprite::addEventListener() {
 }
 
-bool game::Sprite::hasEventListener() {
+bool game::Sprite::hasEventListener() const {
 	return false;
 }
 

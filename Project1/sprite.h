@@ -9,7 +9,7 @@ namespace game {
 		public sf::Sprite {
 	public:
 		virtual void addEventListener() override;
-		virtual bool hasEventListener() override;
+		virtual bool hasEventListener() const override;
 		virtual void removeEventListener() override;
 	};
 }

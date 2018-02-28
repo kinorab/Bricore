@@ -1,19 +1,18 @@
 #pragma once
 
+#include "defaultContainer.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
 
 class HUD :
 	// put text class into hud
-	public sf::Drawable,
-	public sf::Transformable {
+	public DefaultContainer {
 public:
 
 	explicit HUD(sf::Texture &);
 
 private:
 
-	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 	sf::Texture image;
 	std::vector <sf::VertexArray> vertices;
 };

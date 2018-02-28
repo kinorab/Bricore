@@ -52,6 +52,9 @@
     <ClCompile Include="sprite.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="defaultEvent.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -112,6 +115,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="sprite.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="defaultEvent.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

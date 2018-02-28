@@ -9,6 +9,8 @@ enum class ButtonState {
 	DOWN
 };
 
+#pragma warning(push)
+#pragma warning(disable:4250)
 class DefaultButton :
 	public Button,
 	public DefaultContainer {
@@ -28,3 +30,4 @@ private:
 	void setCurrentState(ButtonState state);
 	ButtonState getCurrentState();
 };
+#pragma warning(pop)

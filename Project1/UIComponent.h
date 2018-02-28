@@ -5,5 +5,5 @@
 class UIComponent :
 	public virtual Container {
 public:
-
+	virtual ~UIComponent() {}
 };

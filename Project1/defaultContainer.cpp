@@ -35,6 +35,10 @@ bool DefaultContainer::contains(const sf::Drawable * element) const {
 	});
 }
 
+bool DefaultContainer::dispatchEvent(game::Event * event) {
+	return false;
+}
+
 std::shared_ptr<sf::Drawable> DefaultContainer::getChildAt(int index) const {
 	return children[index];
 }
@@ -50,7 +54,7 @@ int DefaultContainer::getChildrenCount() const {
 	return children.size();
 }
 
-bool DefaultContainer::hasEventListener() {
+bool DefaultContainer::hasEventListener() const {
 	return false;
 }
 

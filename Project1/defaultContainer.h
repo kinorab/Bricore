@@ -11,10 +11,11 @@ public:
 	virtual void addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, int index) override;
 	virtual void addEventListener() override;
 	virtual bool contains(const sf::Drawable * element) const override;
+	virtual bool dispatchEvent(game::Event * event) override;
 	virtual std::shared_ptr<sf::Drawable> getChildAt(int index) const override;
 	virtual int getChildIndex(const sf::Drawable * element) const override;
 	virtual int getChildrenCount() const override;
-	virtual bool hasEventListener() override;
+	virtual bool hasEventListener() const override;
 	virtual void removeAllChildren() override;
 	virtual void removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) override;
 	virtual void removeChildAt(std::vector<int> indexes) override;
