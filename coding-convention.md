@@ -101,6 +101,21 @@ Good clues your method is doing more than one thing:
 >
 > -- <cite>[Write Short Functions](https://google.github.io/styleguide/cppguide.html#Write_Short_Functions) in Google C++ Style Guide</cite>
 
+## Forward-Declaration
+
+Use forward-declaration instead of #include, if possible.
+>There are no downsides to forward-declaring classes, but I can think of some downsides for including headers unnecessarily:
+>
+>longer compilation time, since all translation units including C.h will also include A.h, although they might not need it.
+>
+>possibly including other headers you don't need indirectly
+>
+>polluting the translation unit with symbols you don't need
+>
+>you might need to recompile source files that include that header if it changes (@PeterWood)
+>
+>-- <cite>an [answer](https://stackoverflow.com/a/9906429) from[Should one use forward declarations instead of includes wherever possible?](https://stackoverflow.com/q/9906402)</cite>
+
 ## Import and Export Resources
 
 [How to: Import and Export Resources](https://msdn.microsoft.com/en-us/library/saced6x2.aspx)
