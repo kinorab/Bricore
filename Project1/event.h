@@ -22,7 +22,6 @@ namespace game {
 		virtual EventPhase getEventPhase() const = 0;
 	    virtual EventDispatcher * getTarget() const = 0;
 		virtual std::string getType() const = 0;
-		virtual void stopImmediatePropagation() = 0;
 		virtual void stopPropagation() = 0;
 		virtual void preventDefault() = 0;
 	};
