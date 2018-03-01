@@ -79,20 +79,20 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 
 void Brick::loadImage(Texture *image) {
 	for (size_t i = 0; i < getAreaSize(); ++i) {
-		area.at(i).setTexture(image);
+		area.at(i)->setTexture(image);
 	}
 }
 
 void Brick::setBrickColor(const Color &color) {
 	for (size_t i = 0; i < getAreaSize(); ++i) {
-		area.at(i).setFillColor(color);
+		area.at(i)->setFillColor(color);
 	}
 }
 
 void Brick::setFrameColor(const Color &color) {
 	if (frame > 0.0f) {
 		for (size_t i = 0; i < getAreaSize(); ++i) {
-			area.at(i).setOutlineColor(color);
+			area.at(i)->setOutlineColor(color);
 		}
 	}
 	else {
@@ -174,7 +174,7 @@ void Brick::enable(Ball &ball) {
 
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 
-		FloatRect brickBounds = area.at(i).getGlobalBounds();
+		FloatRect brickBounds = area.at(i)->getGlobalBounds();
 		if (ball.ballCollided(brickBounds)) {
 			area.erase(area.begin() + i);
 			--i;
@@ -330,14 +330,14 @@ void Brick::settlePlace() {
 	try {
 		if (changeEntity == true) {
 			for (size_t i = 0; i < area.size(); ++i) {
-				area.at(i).setSize(Vector2f(sideLength.x, sideLength.y));
+				area.at(i) = unique_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
 				if (frame > 0.0f) {
-					area.at(i).setOutlineThickness(frame);
+					area.at(i)->setOutlineThickness(frame);
 					// if frames exist, the default color is set black
-					area.at(i).setOutlineColor(Color::Black);
+					area.at(i)->setOutlineColor(Color::Black);
 				}
 				// center origin position in every brick
-				area.at(i).setOrigin(Vector2f(area.at(i).getSize().x / 2, area.at(i).getSize().y / 2));
+				area.at(i)->setOrigin(Vector2f(area.at(i)->getSize().x / 2, area.at(i)->getSize().y / 2));
 			}
 			// cover all attributes again
 			whiteSpace = (STAGE_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
@@ -351,13 +351,13 @@ void Brick::settlePlace() {
 			// start placing area array
 			for (size_t i = 0; i < area.size(); ++i) {
 
-				area.at(i).setPosition(tempPos);
+				area.at(i)->setPosition(tempPos);
 				if (tempCount < amount) {
-					tempPos += Vector2f(interval.x + area.at(i).getGlobalBounds().width, 0);
+					tempPos += Vector2f(interval.x + area.at(i)->getGlobalBounds().width, 0);
 					++tempCount;
 				}
 				else {
-					tempPos = Vector2f(initialPos.x, tempPos.y + interval.y + area.at(i).getGlobalBounds().height);
+					tempPos = Vector2f(initialPos.x, tempPos.y + interval.y + area.at(i)->getGlobalBounds().height);
 					tempCount = 1;
 				}
 			}
@@ -374,7 +374,7 @@ void Brick::settlePlace() {
 void Brick::draw(RenderTarget &target, RenderStates states) const {
 
 	for (size_t i = 0; i < getAreaSize(); ++i) {
-		states.texture = area.at(i).getTexture();
-		target.draw(area.at(i), states);
+		states.texture = area.at(i)->getTexture();
+		target.draw(*area.at(i), states);
 	}
 }

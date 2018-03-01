@@ -54,23 +54,25 @@ void Ball::ballCollided(const FloatRect & bounds, const Vector2f &speed) {
 
 	for (size_t i = 0; i < balls.size(); ++i) {
 
-		if (balls.at(i)->ball.getGlobalBounds().intersects(leftBounds)) {
-			balls.at(i)->left = true;
-			balls.at(i)->ballSpeed.x = std::min(-abs(balls.at(i)->ballSpeed.x), -abs(speed.x));
-		}
-		else if (balls.at(i)->ball.getGlobalBounds().intersects(rightBounds)) {
-			balls.at(i)->right = true;
-			balls.at(i)->ballSpeed.x = std::max(abs(balls.at(i)->ballSpeed.x), abs(speed.x));
+		if (balls.at(i)->ball.getGlobalBounds().intersects(bounds)) {
+			if (balls.at(i)->ball.getGlobalBounds().intersects(leftBounds)) {
+				balls.at(i)->left = true;
+				balls.at(i)->ballSpeed.x = std::min(-abs(balls.at(i)->ballSpeed.x), -abs(speed.x));
+			}
+			else if (balls.at(i)->ball.getGlobalBounds().intersects(rightBounds)) {
+				balls.at(i)->right = true;
+				balls.at(i)->ballSpeed.x = std::max(abs(balls.at(i)->ballSpeed.x), abs(speed.x));
 
-		}
+			}
 
-		if (balls.at(i)->ball.getGlobalBounds().intersects(BottomBounds)) {
-			balls.at(i)->bottom = true;
-			balls.at(i)->ballSpeed.y = std::max(abs(balls.at(i)->ballSpeed.y), abs(speed.y));
-		}
-		else if (balls.at(i)->ball.getGlobalBounds().intersects(TopBounds)) {
-			balls.at(i)->top = true;
-			balls.at(i)->ballSpeed.y = std::min(-abs(balls.at(i)->ballSpeed.y), -abs(speed.y));
+			if (balls.at(i)->ball.getGlobalBounds().intersects(BottomBounds)) {
+				balls.at(i)->bottom = true;
+				balls.at(i)->ballSpeed.y = std::max(abs(balls.at(i)->ballSpeed.y), abs(speed.y));
+			}
+			else if (balls.at(i)->ball.getGlobalBounds().intersects(TopBounds)) {
+				balls.at(i)->top = true;
+				balls.at(i)->ballSpeed.y = std::min(-abs(balls.at(i)->ballSpeed.y), -abs(speed.y));
+			}
 		}
 	}
 }
@@ -99,7 +101,7 @@ bool Ball::ballCollided(const FloatRect & bounds) {
 				balls.at(i)->ballSpeed.y = -abs(balls.at(i)->ballSpeed.y);
 			}
 			if (balls.at(i)->isMain()) {
-				ballDivided(50);
+				ballDivided(10);
 			}
 			return true;
 		}

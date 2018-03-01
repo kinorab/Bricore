@@ -43,7 +43,7 @@ namespace item {
 		void settlePlace();
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
-		std::vector<sf::RectangleShape> area;
+		std::vector <std::unique_ptr<sf::RectangleShape>> area;
 		// bricks on every row
 		size_t amount;
 		sf::Vector2f interval;

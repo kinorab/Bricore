@@ -11,7 +11,7 @@ Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const
 	blocks.resize(number);
 	try {
 		for (size_t i = 0; i < blocks.size(); ++i) {
-			blocks.at(i) = new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y);
+			blocks.at(i) = unique_ptr<Block>(new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
 		}
 	}
 	catch (out_of_range &ex) {

@@ -97,7 +97,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 
 				switch (getEvent.key.code) {
 
-				case (Keyboard::Num0):
+				/*case (Keyboard::Num0):
 					cout << "Choice bgm volume." << endl;
 					choice = Keyboard::Num0;
 					break;
@@ -112,13 +112,16 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				case(Keyboard::Numpad1):
 					cout << "Choice sound1 volume." << endl;
 					choice = Keyboard::Numpad1;
+					break;*/
+				case(Keyboard::P):
+					GameState::pause = true;
 					break;
 				default:
 					break;
 				}
 
 				// bgm volume
-				if (choice == Keyboard::Num0 || choice == Keyboard::Numpad0) {
+				/*if (choice == Keyboard::Num0 || choice == Keyboard::Numpad0) {
 					switch (getEvent.key.code) {
 					case (Keyboard::Add):// volume up
 						if (bufferBgVolume < 95.0f) {
@@ -186,16 +189,17 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 					default:
 						break;
 					}
-				}
+				}*/
 			}
 
 
 			if (getEvent.type == Event::MouseButtonPressed) {
-				if (getEvent.mouseButton.button == Mouse::Left && !GameState::start) {
+				if (getEvent.mouseButton.button == Mouse::Left) {
 					GameState::start = true;
+					GameState::pause = false;
 				}
 				// when game released, please comment this
-				else if (getEvent.mouseButton.button == Mouse::Right && GameState::start) {
+				else if (getEvent.mouseButton.button == Mouse::Right) {
 					GameState::start = false;
 					GameState::ready = false;
 				}
@@ -213,17 +217,6 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 				sound1.stop();
 				finishing = true;
 			}
-			/*	else if (getEvent.type == Event::Resized) {
-					FloatRect viewResized(0, 0, getEvent.size.width, getEvent.size.height);
-					float bufferViewX = window->getView().getSize().x;
-					float bufferViewY = window->getView().getSize().y;
-					// need some window control, all item need to maintain initial proportion
-					window->setView(View(viewResized));
-					// item scale increment rateX
-					float rateX = window->getView().getSize().x / bufferViewX;
-					// item scale increment rateY
-					float rateY = window->getView().getSize().y / bufferViewY;
-				}*/
 		}
 
 		// update fixed 5 frames
@@ -235,26 +228,28 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			player.playerMove();
-			ball.ballEnableMove(player, sound1);
-			if (GameState::start) {
-				obstacles.enable(ball);
-				bricks.enable(ball);
-				ball.move(player);
-				if (bricks.isEmpty()) {
-					GameState::ready = false;
-					GameState::start = false;
-					GameState::reflash = true;
-					cout << "Finished stage: " << stage++ << "!!!" << endl;
-					bricks.reset(stage);
-					bricks.setBrickColor(Color(static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255)));
+			if (!GameState::pause) {
+				player.playerMove();
+				ball.ballEnableMove(player, sound1);
+				if (GameState::start) {
+					obstacles.enable(ball);
+					bricks.enable(ball);
+					ball.move(player);
+					if (bricks.isEmpty()) {
+						GameState::ready = false;
+						GameState::start = false;
+						GameState::reflash = true;
+						cout << "Finished stage: " << stage++ << "!!!" << endl;
+						bricks.reset(stage);
+						bricks.setBrickColor(Color(static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255)));
+					}
 				}
-			}
-			else {
-				ball.followPlayer(player);
-				if (!GameState::ready) {
-					obstacles.reset();
-					GameState::ready = true;
+				else {
+					ball.followPlayer(player);
+					if (!GameState::ready) {
+						obstacles.reset();
+						GameState::ready = true;
+					}
 				}
 			}
 			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
