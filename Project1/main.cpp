@@ -63,8 +63,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 		}
 		sound1.setBuffer(buffer1);
 		sound1.setVolume(bufferVolume1);
-		bgmusic.play();
-		bgmusic.setLoop(true);
+		/*bgmusic.play();
+		bgmusic.setLoop(true);*/
 	}
 	catch (runtime_error  &ex) {
 		cout << "Runtime_error: " << ex.what() << endl;
@@ -76,6 +76,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	while (!finishing) {
 
 		Event getEvent;
+		Vector2i mousePosition = Mouse::getPosition(*window);
 
 		while (!gameEventQueue.empty()) {
 
@@ -84,132 +85,59 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			gameEventQueue.pop();
 			gameEventQueueMutex.unlock();
 
-			static Keyboard::Key choice;
-			Vector2f GlobalPosition = Vector2f(Mouse::getPosition(*window));
-
-			if (getEvent.type == Event::TextEntered) {
-				if (getEvent.text.unicode < 128) {
-					cout << "ASCII charactor typed: " << static_cast<char>(getEvent.text.unicode)
-						<< ", unicode is: " << getEvent.text.unicode << endl;
+			if (getEvent.type != Keyboard::Up &&
+				getEvent.type != Keyboard::Down &&
+				getEvent.type != Keyboard::Right &&
+				getEvent.type != Keyboard::Left) {
+				if (getEvent.type == Event::KeyReleased) {
+					GameState::lock = false;
 				}
-			}
-			if (getEvent.type == Event::KeyPressed) {
-
-				switch (getEvent.key.code) {
-
-				/*case (Keyboard::Num0):
-					cout << "Choice bgm volume." << endl;
-					choice = Keyboard::Num0;
-					break;
-				case(Keyboard::Numpad0):
-					cout << "Choice bgm volume." << endl;
-					choice = Keyboard::Numpad0;
-					break;
-				case (Keyboard::Num1):
-					cout << "Choice sound1 volume." << endl;
-					choice = Keyboard::Num1;
-					break;
-				case(Keyboard::Numpad1):
-					cout << "Choice sound1 volume." << endl;
-					choice = Keyboard::Numpad1;
-					break;*/
-				case(Keyboard::P):
-					GameState::pause = true;
-					break;
-				default:
-					break;
-				}
-
-				// bgm volume
-				/*if (choice == Keyboard::Num0 || choice == Keyboard::Numpad0) {
-					switch (getEvent.key.code) {
-					case (Keyboard::Add):// volume up
-						if (bufferBgVolume < 95.0f) {
-							bgmusic.setVolume(bufferBgVolume += 5.f);
+				else if (getEvent.type == Event::KeyPressed) {
+					if (!GameState::lock) {
+						if (Keyboard::isKeyPressed(Keyboard::G)) {
+							GameState::start = true;
+							GameState::lock = true;
 						}
-						else if (bufferBgVolume >= 95.0f) {
-							bgmusic.setVolume(100.0f);
+						else if (Keyboard::isKeyPressed(Keyboard::F)) {
+							GameState::lock = true;
 						}
-						else {
-							cout << "Somethings bug ,cannot change the sound volume." << endl;
+						else if (Keyboard::isKeyPressed(Keyboard::R)) {
+							GameState::lock = true;
 						}
-						cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
-						break;
-
-					case (Keyboard::Subtract):// volume down
-						if (bufferBgVolume > 5.0f) {
-							bgmusic.setVolume(bufferBgVolume -= 5.f);
+						else if (Keyboard::isKeyPressed(Keyboard::D)) {
+							GameState::lock = true;
 						}
-						else if (bufferBgVolume <= 5.0f) {
-							bgmusic.setVolume(0.0f);
+						else if (Keyboard::isKeyPressed(Keyboard::E)) {
+							GameState::lock = true;
 						}
-						else {
-							cout << "Somethings bug ,cannot change the sound volume." << endl;
-						}
-						cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
-						break;
-
-					default:
-						break;
-					}
-				}
-				// sound1 volume
-				else if (choice == Keyboard::Num1 || choice == Keyboard::Numpad1) {
-					switch (getEvent.key.code) {
-					case (Keyboard::Add):// volume up
-						if (sound1.getBuffer() != NULL) {
-							if (bufferVolume1 < 95.0f) {
-								sound1.setVolume(bufferVolume1 += 5.f);
+						else if (Keyboard::isKeyPressed(Keyboard::P)) {
+							if (GameState::pause) {
+								GameState::pause = false;
 							}
 							else {
-								sound1.setVolume(100.0f);
+								GameState::pause = true;
 							}
-							cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
+							GameState::lock = true;
 						}
-						else {
-							cout << "sound1.getBuffer() failed ,cannot change the sound volume." << endl;
-						}
-						break;
-
-					case (Keyboard::Subtract):// volume down
-						if (sound1.getBuffer() != NULL) {
-							if (bufferVolume1 > 5.0f) {
-								sound1.setVolume(bufferVolume1 -= 5.f);
-							}
-							else {
-								sound1.setVolume(0.0f);
-							}
-							cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
-						}
-						else {
-							cout << "sound1.getBuffer() failed ,cannot change the sound volume." << endl;
-						}
-						break;
-
-					default:
-						break;
 					}
-				}*/
+				}
 			}
-
 
 			if (getEvent.type == Event::MouseButtonPressed) {
 				if (getEvent.mouseButton.button == Mouse::Left) {
 					GameState::start = true;
-					GameState::pause = false;
 				}
 				// when game released, please comment this
 				else if (getEvent.mouseButton.button == Mouse::Right) {
 					GameState::start = false;
 					GameState::ready = false;
 				}
-
-			}
-			else if (getEvent.type == Event::MouseLeft) {
-				GameState::light = false;
 			}
 			else if (getEvent.type == Event::MouseEntered) {
 				GameState::light = true;
+			}
+			else if (getEvent.type == Event::MouseLeft) {
+				GameState::light = false;
 			}
 
 			if (getEvent.type == Event::Closed) {
@@ -252,7 +180,7 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 					}
 				}
 			}
-			mouseLight.setEmitter(window->mapPixelToCoords(Mouse::getPosition(*window)));
+			mouseLight.setEmitter(window->mapPixelToCoords(mousePosition));
 			mouseLight.update(updateSpan);
 			elapsed -= seconds(updateSpan / 1000.0f);
 		}
@@ -301,3 +229,105 @@ int main() {
 	system("pause");
 	return 0;
 }
+
+/*static Keyboard::Key choice;
+if (getEvent.type == Event::TextEntered) {
+if (getEvent.text.unicode < 128) {
+cout << "ASCII charactor typed: " << static_cast<char>(getEvent.text.unicode)
+<< ", unicode is: " << getEvent.text.unicode << endl;
+}
+}
+if (getEvent.type == Event::KeyPressed) {
+
+switch (getEvent.key.code) {
+
+case (Keyboard::Num0):
+cout << "Choice bgm volume." << endl;
+choice = Keyboard::Num0;
+break;
+case(Keyboard::Numpad0):
+cout << "Choice bgm volume." << endl;
+choice = Keyboard::Numpad0;
+break;
+case (Keyboard::Num1):
+cout << "Choice sound1 volume." << endl;
+choice = Keyboard::Num1;
+break;
+case(Keyboard::Numpad1):
+cout << "Choice sound1 volume." << endl;
+choice = Keyboard::Numpad1;
+break;
+default:
+break;
+}
+}*/
+
+/*if (choice == Keyboard::Num0 || choice == Keyboard::Numpad0) {
+switch (getEvent.key.code) {
+case (Keyboard::Add):// volume up
+if (bufferBgVolume < 95.0f) {
+bgmusic.setVolume(bufferBgVolume += 5.f);
+}
+else if (bufferBgVolume >= 95.0f) {
+bgmusic.setVolume(100.0f);
+}
+else {
+cout << "Somethings bug ,cannot change the sound volume." << endl;
+}
+cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
+break;
+
+case (Keyboard::Subtract):// volume down
+if (bufferBgVolume > 5.0f) {
+bgmusic.setVolume(bufferBgVolume -= 5.f);
+}
+else if (bufferBgVolume <= 5.0f) {
+bgmusic.setVolume(0.0f);
+}
+else {
+cout << "Somethings bug ,cannot change the sound volume." << endl;
+}
+cout << "Now the bgm volume is : " << bgmusic.getVolume() << endl;
+break;
+
+default:
+break;
+}
+}
+// sound1 volume
+else if (choice == Keyboard::Num1 || choice == Keyboard::Numpad1) {
+switch (getEvent.key.code) {
+case (Keyboard::Add):// volume up
+if (sound1.getBuffer() != NULL) {
+if (bufferVolume1 < 95.0f) {
+sound1.setVolume(bufferVolume1 += 5.f);
+}
+else {
+sound1.setVolume(100.0f);
+}
+cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
+}
+else {
+cout << "sound1.getBuffer() failed ,cannot change the sound volume." << endl;
+}
+break;
+
+case (Keyboard::Subtract):// volume down
+if (sound1.getBuffer() != NULL) {
+if (bufferVolume1 > 5.0f) {
+sound1.setVolume(bufferVolume1 -= 5.f);
+}
+else {
+sound1.setVolume(0.0f);
+}
+cout << "Now the sound1 volume is : " << sound1.getVolume() << endl;
+}
+else {
+cout << "sound1.getBuffer() failed ,cannot change the sound volume." << endl;
+}
+break;
+
+default:
+break;
+}
+}*/

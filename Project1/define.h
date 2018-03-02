@@ -18,6 +18,7 @@ namespace GameState {
 	extern bool light;
 	extern bool reflash;
 	extern bool pause;
+	extern bool lock;
 };
 
 extern const int rng();

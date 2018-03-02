@@ -10,6 +10,7 @@ namespace GameState {
 	bool light = false;
 	bool reflash = false;
 	bool pause = false;
+	bool lock = false;
 };
 
 const int rng() {
