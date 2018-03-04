@@ -6,7 +6,7 @@ namespace game {
 	class DefaultEvent :
 		public Event {
 	public:
-		DefaultEvent(bool bubbles, bool cancelable);
+		DefaultEvent(std::string type, bool bubbles, bool cancelable);
 		virtual ~DefaultEvent() override;
 		virtual bool getBubbles() const override;
 		virtual bool getCancelable() const override;
@@ -23,5 +23,6 @@ namespace game {
 		bool cancelable;
 		bool defaultPrevented;
 		bool propagationStopped;
+		std::string type;
 	};
 }
