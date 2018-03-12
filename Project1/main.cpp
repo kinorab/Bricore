@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <queue>
 #include <mutex>
+#include <Windows.h>
 
 using namespace sf;
 using namespace std;
@@ -20,6 +21,7 @@ static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 static map<Keyboard::Key, bool> keyDown;
 static Sound sound1;
+static SoundBuffer buffer1;
 static Music bgmusic;
 static float bufferBgVolume = 100.0f;
 static float bufferVolume1 = 50.0f;
@@ -30,9 +32,13 @@ public:
 };
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
-
+	HIMC hIMC = 0x0;
+	//hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
 	window->setActive(true);
 	loadSounds();
+	for (Keyboard::Key i = Keyboard::Unknown; i < Keyboard::Unknown + Keyboard::KeyCount; i = static_cast<Keyboard::Key>(i + 1)) {
+		keyDown.insert({ i, false });
+	}
 	static float blockLength = 100.f;
 	static float incre1 = 3.f;
 	shared_ptr<Obstacle> obstacles(new Obstacle(2
@@ -132,8 +138,6 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 }
 
 void loadSounds() {
-	SoundBuffer buffer1;
-
 	try {
 		// if memory violation happen, reset the lib connector of project (-d have something bug)
 		if (!buffer1.loadFromFile("s1.wav")) {
@@ -156,10 +160,6 @@ void handleKeyEvent(sf::Event & event) {
 	if (event.type != Event::KeyPressed
 		&& event.type != Event::KeyReleased) {
 		return;
-	}
-
-	if (keyDown.find(event.key.code) == keyDown.end()) {
-		keyDown.insert({ event.key.code, false });
 	}
 
 	if (event.type == Event::KeyPressed) {

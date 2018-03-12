@@ -3,7 +3,7 @@
 #include <atomic>
 #include <SFML/Graphics.hpp>
 
-void renderThread(sf::RenderWindow * window, std::atomic<bool> *done);
+void renderThread(sf::RenderWindow * window, std::atomic<bool> * done);
 void loadSounds();
 void handleKeyEvent(sf::Event & event);
 void handleMouseEvent(sf::Event & event);
