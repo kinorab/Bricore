@@ -165,46 +165,36 @@ void handleKeyEvent(sf::Event & event) {
 	if (event.type == Event::KeyPressed) {
 		if (keyDown[event.key.code]) return;
 		keyDown[event.key.code] = true;
-		if (GameState::lock) return;
-		if (keyDown[Keyboard::G]
-			|| keyDown[Keyboard::F]
-			|| keyDown[Keyboard::R]
-			|| keyDown[Keyboard::D]
-			|| keyDown[Keyboard::E]
-			|| keyDown[Keyboard::P]) {
-			GameState::lock = true;
+		if (keyDown[Keyboard::P]) {
+			GameState::pause = !GameState::pause;
+			GameState::lock = !GameState::lock;
+		}
+		if (GameState::lock) {
+			return; 
+		}
+		else {
 			if (keyDown[Keyboard::G]) {
 				GameState::start = true;
-			}
-
-			if (keyDown[Keyboard::P]) {
-				GameState::pause = !GameState::pause;
 			}
 		}
 	}
 	else if (event.type == Event::KeyReleased) {
 		if (!keyDown[event.key.code]) return;
 		keyDown[event.key.code] = false;
-		if (!keyDown[Keyboard::G]
-			&& !keyDown[Keyboard::F]
-			&& !keyDown[Keyboard::R]
-			&& !keyDown[Keyboard::D]
-			&& !keyDown[Keyboard::E]
-			&& !keyDown[Keyboard::P]) {
-			GameState::lock = false;
-		}
 	}
 }
 
 void handleMouseEvent(sf::Event & event) {
 	if (event.type == Event::MouseButtonPressed) {
-		if (event.mouseButton.button == Mouse::Left) {
-			GameState::start = true;
-		}
-		// debugging feature
-		else if (event.mouseButton.button == Mouse::Right) {
-			GameState::start = false;
-			GameState::ready = false;
+		if (!GameState::lock) {
+			if (event.mouseButton.button == Mouse::Left) {
+				GameState::start = true;
+			}
+			// debugging feature
+			else if (event.mouseButton.button == Mouse::Right) {
+				GameState::start = false;
+				GameState::ready = false;
+			}
 		}
 	}
 	else if (event.type == Event::MouseEntered) {
