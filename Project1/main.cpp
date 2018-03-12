@@ -1,3 +1,4 @@
+#include "main.h"
 #include "ellipse.h"
 #include "particleSystem.h"
 #include "brick.h"
@@ -5,14 +6,11 @@
 #include "hud.h"
 #include "obstacle.h"
 #include "UIFactory.h"
-#include <atomic>
 #include <iostream>
 #include <map>
 #include <stdexcept>
 #include <queue>
 #include <mutex>
-#include <SFML/Window.hpp>
-//#include <SFML/OpenGL.hpp>
 
 using namespace sf;
 using namespace std;
@@ -20,37 +18,119 @@ using namespace item;
 
 static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
+static map<Keyboard::Key, bool> keyDown;
+static Sound sound1;
+static Music bgmusic;
+static SoundBuffer buffer1;
 
-void renderThread(RenderWindow *window, atomic<bool> *done) {
+class test {
+public:
+	std::vector<std::unique_ptr<item::Block>> blocks;
+};
+
+void renderThread(RenderWindow * window, atomic<bool> * done) {
 
 	window->setActive(true);
+	loadSounds();
 	static float blockLength = 100.f;
 	static float incre1 = 3.f;
+	shared_ptr<Obstacle> obstacles(new Obstacle(2
+		, { Vector2f(blockLength, blockLength * incre1), Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1) }
+	, { Vector2f(blockLength, blockLength * incre1), Vector2f(blockLength, blockLength * incre1) }));
+	obstacles->setBlockColor(0, Color::Black, Color::Blue, Color::Black, Color::Black);
+	obstacles->setBlockColor(1, Color::Green, Color::Black, Color::Cyan, Color::Black);
+	obstacles->setBlockSpeed(0, 1.5f);
+	obstacles->setBlockSpeed(1, -1.5f);
+	shared_ptr<Player> player(new Player(5.5f));
 
-	Obstacle obstacles(2
-		, { Vector2f(blockLength, blockLength * incre1), Vector2f(STAGE_WIDTH - blockLength * 2, blockLength * incre1) }
-	, { Vector2f(blockLength, blockLength * incre1), Vector2f(blockLength, blockLength * incre1) });
-	obstacles.setBlockColor(0, Color::Black, Color::Blue, Color::Black, Color::Black);
-	obstacles.setBlockColor(1, Color::Green, Color::Black, Color::Cyan, Color::Black);
-	obstacles.setBlockSpeed(0, 1.5f);
-	obstacles.setBlockSpeed(1, -1.5f);
+	shared_ptr<Ball> ball(new Ball(*player));
 
-	Player player(5.5f);
+	shared_ptr<Brick> bricks(new Brick(1, 60.f, 25.f, Vector2f(0.8f, 2.f), 3.f));
+	bricks->setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
 
-	Ball ball(player);
+	shared_ptr<HUD> hud(new HUD());
 
-	Brick bricks(1, 60.f, 25.f, Vector2f(0.8f, 2.f), 3.f);
-	bricks.setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
-
-	ParticleSystem mouseLight(2000);
+	shared_ptr<ParticleSystem> mouseLight(new ParticleSystem(2000));
 	Vector2i localPosition;
-	Mouse::setPosition(static_cast<Vector2i>(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT / 2)), *window);
-	Sound sound1;
-	Music bgmusic;
-	SoundBuffer buffer1;
+	Mouse::setPosition(static_cast<Vector2i>(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT / 2)), *window);
 
-	HUD hud;
+	DefaultContainer stage;
+	stage.addChild({ obstacles, player, ball, bricks, hud, mouseLight });
 
+	Time elapsed = milliseconds(0);
+	Clock clock;
+	bool finishing = false;
+
+	while (!finishing) {
+
+		Event currentEvent;
+		Vector2i mousePosition = Mouse::getPosition(*window);
+
+		while (!gameEventQueue.empty()) {
+
+			gameEventQueueMutex.lock();
+			currentEvent = gameEventQueue.front();
+			gameEventQueue.pop();
+			gameEventQueueMutex.unlock();
+
+			handleKeyEvent(currentEvent);
+			handleMouseEvent(currentEvent);
+
+			if (currentEvent.type == Event::Closed) {
+				bgmusic.stop();
+				sound1.stop();
+				finishing = true;
+			}
+		}
+
+		// maximum update span
+		elapsed += clock.restart();
+		if (elapsed.asSeconds() > 0.05f) {
+			elapsed = seconds(0.05f);
+		}
+
+		// updateSpan: milliseconds
+		static constexpr float updateSpan = 13.0f;
+		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
+			if (!GameState::pause) {
+				player->playerMove();
+				ball->ballEnableMove(*player, sound1);
+				if (GameState::start) {
+					obstacles->enable(*ball);
+					bricks->enable(*ball);
+					ball->move(*player);
+					if (bricks->isEmpty()) {
+						GameState::ready = false;
+						GameState::start = false;
+						GameState::reflash = true;
+						cout << "Finished level: " << level++ << "!!!" << endl;
+						bricks->reset(level);
+						bricks->setBrickColor(Color(static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255)));
+					}
+				}
+				else {
+					ball->followPlayer(*player);
+					if (!GameState::ready) {
+						obstacles->reset();
+						GameState::ready = true;
+					}
+				}
+			}
+			mouseLight->setEmitPosition(window->mapPixelToCoords(mousePosition));
+			mouseLight->update(updateSpan);
+			elapsed -= seconds(updateSpan / 1000.0f);
+		}
+
+		// render
+		window->clear(Color::White);
+		window->draw(stage);
+		window->display();
+	}
+	// finalize...
+	*done = true;
+}
+
+void loadSounds() {
 	static float bufferBgVolume = 100.0f;
 	static float bufferVolume1 = 50.0f;
 
@@ -70,139 +150,69 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	catch (runtime_error  &ex) {
 		cout << "Runtime_error: " << ex.what() << endl;
 	}
+}
 
-	Time elapsed = milliseconds(0);
-	Clock clock;
-	bool finishing = false;
-	map<Keyboard::Key, bool> keyDown;
-
-	while (!finishing) {
-
-		Event getEvent;
-		Vector2i mousePosition = Mouse::getPosition(*window);
-
-		while (!gameEventQueue.empty()) {
-
-			gameEventQueueMutex.lock();
-			getEvent = gameEventQueue.front();
-			gameEventQueue.pop();
-			gameEventQueueMutex.unlock();
-
-			if ((getEvent.type == Event::KeyPressed
-				|| getEvent.type == Event::KeyReleased)
-				&& keyDown.find(getEvent.key.code) == keyDown.end()
-				) {
-				keyDown.insert({ getEvent.key.code, false });
-			}
-
-			if (getEvent.type == Event::KeyPressed) {
-				if (keyDown[getEvent.key.code])	continue;
-				keyDown[getEvent.key.code] = true;
-				if (GameState::lock) continue;
-				if (keyDown[Keyboard::G]
-					|| keyDown[Keyboard::F]
-					|| keyDown[Keyboard::R]
-					|| keyDown[Keyboard::D]
-					|| keyDown[Keyboard::E]
-					|| keyDown[Keyboard::P]) {
-					GameState::lock = true;
-					if (keyDown[Keyboard::G]) {
-						GameState::start = true;
-					}
-
-					if (keyDown[Keyboard::P]) {
-						GameState::pause = !GameState::pause;
-					}
-				}
-			}
-			else if (getEvent.type == Event::KeyReleased) {
-				if (!keyDown[getEvent.key.code]) continue;
-				keyDown[getEvent.key.code] = false;
-
-				if (!keyDown[Keyboard::G]
-					&& !keyDown[Keyboard::F]
-					&& !keyDown[Keyboard::R]
-					&& !keyDown[Keyboard::D]
-					&& !keyDown[Keyboard::E]
-					&& !keyDown[Keyboard::P]) {
-					GameState::lock = false;
-				}
-			}
-
-			if (getEvent.type == Event::MouseButtonPressed) {
-				if (getEvent.mouseButton.button == Mouse::Left) {
-					GameState::start = true;
-				}
-				// when game released, please comment this
-				else if (getEvent.mouseButton.button == Mouse::Right) {
-					GameState::start = false;
-					GameState::ready = false;
-				}
-			}
-			else if (getEvent.type == Event::MouseEntered) {
-				GameState::light = true;
-			}
-			else if (getEvent.type == Event::MouseLeft) {
-				GameState::light = false;
-			}
-
-			if (getEvent.type == Event::Closed) {
-				bgmusic.stop();
-				sound1.stop();
-				finishing = true;
-			}
-		}
-
-		// update fixed 5 frames
-		elapsed += clock.restart();
-		if (elapsed.asSeconds() > 0.05f) {
-			elapsed = seconds(0.05f);
-		}
-
-		// updateSpan: milliseconds
-		static constexpr float updateSpan = 13.0f;
-		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			if (!GameState::pause) {
-				player.playerMove();
-				ball.ballEnableMove(player, sound1);
-				if (GameState::start) {
-					obstacles.enable(ball);
-					bricks.enable(ball);
-					ball.move(player);
-					if (bricks.isEmpty()) {
-						GameState::ready = false;
-						GameState::start = false;
-						GameState::reflash = true;
-						cout << "Finished stage: " << stage++ << "!!!" << endl;
-						bricks.reset(stage);
-						bricks.setBrickColor(Color(static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255)));
-					}
-				}
-				else {
-					ball.followPlayer(player);
-					if (!GameState::ready) {
-						obstacles.reset();
-						GameState::ready = true;
-					}
-				}
-			}
-			mouseLight.setEmitter(window->mapPixelToCoords(mousePosition));
-			mouseLight.update(updateSpan);
-			elapsed -= seconds(updateSpan / 1000.0f);
-		}
-
-		// render
-		window->clear(Color::White);
-		window->draw(obstacles);
-		window->draw(player);
-		window->draw(ball);
-		window->draw(bricks);
-		window->draw(hud);
-		window->draw(mouseLight);
-		window->display();
+void handleKeyEvent(sf::Event & event) {
+	if (event.type != Event::KeyPressed
+		&& event.type != Event::KeyReleased) {
+		return;
 	}
-	// finalize...
-	*done = true;
+
+	if (keyDown.find(event.key.code) == keyDown.end()) {
+		keyDown.insert({ event.key.code, false });
+	}
+
+	if (event.type == Event::KeyPressed) {
+		if (keyDown[event.key.code]) return;
+		keyDown[event.key.code] = true;
+		if (GameState::lock) return;
+		if (keyDown[Keyboard::G]
+			|| keyDown[Keyboard::F]
+			|| keyDown[Keyboard::R]
+			|| keyDown[Keyboard::D]
+			|| keyDown[Keyboard::E]
+			|| keyDown[Keyboard::P]) {
+			GameState::lock = true;
+			if (keyDown[Keyboard::G]) {
+				GameState::start = true;
+			}
+
+			if (keyDown[Keyboard::P]) {
+				GameState::pause = !GameState::pause;
+			}
+		}
+	}
+	else if (event.type == Event::KeyReleased) {
+		if (!keyDown[event.key.code]) return;
+		keyDown[event.key.code] = false;
+		if (!keyDown[Keyboard::G]
+			&& !keyDown[Keyboard::F]
+			&& !keyDown[Keyboard::R]
+			&& !keyDown[Keyboard::D]
+			&& !keyDown[Keyboard::E]
+			&& !keyDown[Keyboard::P]) {
+			GameState::lock = false;
+		}
+	}
+}
+
+void handleMouseEvent(sf::Event & event) {
+	if (event.type == Event::MouseButtonPressed) {
+		if (event.mouseButton.button == Mouse::Left) {
+			GameState::start = true;
+		}
+		// debugging feature
+		else if (event.mouseButton.button == Mouse::Right) {
+			GameState::start = false;
+			GameState::ready = false;
+		}
+	}
+	else if (event.type == Event::MouseEntered) {
+		GameState::light = true;
+	}
+	else if (event.type == Event::MouseLeft) {
+		GameState::light = false;
+	}
 }
 
 int main() {

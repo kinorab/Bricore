@@ -2,7 +2,7 @@
 #include <chrono>
 #include <random>
 
-unsigned int stage = 1;
+unsigned int level = 1;
 
 namespace GameState {
 	bool start = false;

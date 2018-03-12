@@ -231,11 +231,11 @@ void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &positi
 	}
 
 	// out of bottom bound, reset the mainBall
-	if (ballBounds.top > STAGE_HEIGHT) {
+	if (ballBounds.top > LEVEL_HEIGHT) {
 		broke = true;
 	}
 	// window's right bound
-	else if (ballBounds.left + ballBounds.width >= STAGE_WIDTH) {
+	else if (ballBounds.left + ballBounds.width >= LEVEL_WIDTH) {
 		ballSpeed.x = -abs(ballSpeed.x);
 	}
 	// window's left bound
@@ -353,7 +353,7 @@ void Ball::BallContent::update() {
 			if (left) {
 				broke = true;
 			}
-			else if (ballBounds.left + ballBounds.width > STAGE_WIDTH) {
+			else if (ballBounds.left + ballBounds.width > LEVEL_WIDTH) {
 				broke = true;
 			}
 		}
@@ -361,7 +361,7 @@ void Ball::BallContent::update() {
 			if (bottom) {
 				broke = true;
 			}
-			else if (ballBounds.top + ballBounds.height > STAGE_HEIGHT) {
+			else if (ballBounds.top + ballBounds.height > LEVEL_HEIGHT) {
 				broke = true;
 			}
 		}

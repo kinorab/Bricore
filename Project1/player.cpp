@@ -10,7 +10,7 @@ Player::Player(const float playerSpeed) {
 	mainPlayer.setSize(Vector2f(240, 12));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
-	mainPlayer.setPosition(Vector2f(STAGE_WIDTH / 2, STAGE_HEIGHT - mainPlayer.getSize().y));
+	mainPlayer.setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - mainPlayer.getSize().y));
 	yellowRange.setSize(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
 	yellowRange.setOrigin(Vector2f(yellowRange.getSize().x / 2, yellowRange.getSize().y / 2));
 	yellowRange.setFillColor(Color::Yellow);
@@ -30,7 +30,7 @@ void Player::playerMove() {
 		redRange.move(Vector2f(-abs(mainPlayerSpeed), 0));
 	}
 
-	if (playerBound.left + playerBound.width < STAGE_WIDTH
+	if (playerBound.left + playerBound.width < LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(Keyboard::Right))
 		) {
 		mainPlayer.move(Vector2f(abs(mainPlayerSpeed), 0));

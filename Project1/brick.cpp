@@ -16,8 +16,8 @@ Brick::Brick(const size_t row, const size_t col, const float wid, const float he
 			|| frameSize < 0.0f) {
 			throw domain_error("Invaild brick initialization.");
 		}
-		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > STAGE_WIDTH
-			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
+		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > LEVEL_WIDTH
+			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > LEVEL_HEIGHT) {
 			throw domain_error("Invaild brick initialization.");
 		}
 		else {
@@ -57,7 +57,7 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
 			this->interval = interval;
-			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
+			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
 			area.resize(rowCount * amount);
 
 			if (getAreaSize() == rowCount * amount) {
@@ -196,7 +196,7 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
 			this->interval = interval;
-			amount = static_cast<size_t>((STAGE_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
+			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
 			area.resize(rowCount * amount);
 
 			if (getAreaSize() == rowCount * amount) {
@@ -243,8 +243,8 @@ void Brick::reset(const size_t row, const size_t col, const float wid, const flo
 			|| frameSize < 0.0f) {
 			throw domain_error("Invaild brick initialization.");
 		}
-		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > STAGE_WIDTH
-			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
+		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > LEVEL_WIDTH
+			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > LEVEL_HEIGHT) {
 			throw domain_error("Invaild brick initialization.");
 		}
 		else {
@@ -274,8 +274,8 @@ void Brick::reset(const size_t row, const size_t col, const float wid, const flo
 void Brick::reset(const size_t row, const size_t col) {
 
 	try {
-		if (col * (sideLength.x + frame * 2) + interval.x * (col + 1) > STAGE_WIDTH
-			|| row * (sideLength.y + frame * 2) + interval.y * (row + 1) > STAGE_HEIGHT) {
+		if (col * (sideLength.x + frame * 2) + interval.x * (col + 1) > LEVEL_WIDTH
+			|| row * (sideLength.y + frame * 2) + interval.y * (row + 1) > LEVEL_HEIGHT) {
 			throw domain_error("Invaild brick initialization.");
 		}
 		else {
@@ -321,7 +321,7 @@ const float Brick::getFrameSize() const {
 
 void Brick::settlePlace() {
 
-	static float whiteSpace = (STAGE_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
+	static float whiteSpace = (LEVEL_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
 	// if window's size().x cannot be filled with full screen, remain the white space of bound
 	static Vector2f initialPos(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
 	static Vector2f tempPos = Vector2f(initialPos.x, initialPos.y);
@@ -340,7 +340,7 @@ void Brick::settlePlace() {
 				area.at(i)->setOrigin(Vector2f(area.at(i)->getSize().x / 2, area.at(i)->getSize().y / 2));
 			}
 			// cover all attributes again
-			whiteSpace = (STAGE_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
+			whiteSpace = (LEVEL_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
 			initialPos = Vector2f(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
 			tempPos = Vector2f(initialPos.x, initialPos.y);
 			changeEntity = false;

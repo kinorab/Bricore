@@ -4,8 +4,8 @@
 using namespace sf;
 
 HUD::HUD() :
-	background(new game::RectangleShape(Vector2f(GAME_WIDTH - STAGE_WIDTH, GAME_HEIGHT))) {
+	background(new game::RectangleShape(Vector2f(GAME_WIDTH - LEVEL_WIDTH, GAME_HEIGHT))) {
 	background->setFillColor(Color::Black);
 	addChild({ background });
-	setPosition(Vector2f(STAGE_WIDTH, 0.0f));
+	setPosition(Vector2f(LEVEL_WIDTH, 0.0f));
 }

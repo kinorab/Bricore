@@ -170,6 +170,7 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="hud.h" />
     <ClInclude Include="eventDispatcher.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="movieClip.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />

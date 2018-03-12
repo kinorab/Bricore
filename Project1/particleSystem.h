@@ -10,7 +10,7 @@ public:
 
 	explicit ParticleSystem(const unsigned int count);
 
-	void setEmitter(const sf::Vector2f &position);
+	void setEmitPosition(const sf::Vector2f &position);
 	void update(const float &timeSpan);
 
 private:
@@ -22,8 +22,8 @@ private:
 		sf::Vector2f velocity;
 		float lifetime;
 	};
-	std::vector<Particle>m_particles;
-	sf::VertexArray m_vertices;
-	float m_lifetime;
-	sf::Vector2f m_emitter;
+	std::vector<Particle> particles;
+	sf::VertexArray vertices;
+	float lifetime;
+	sf::Vector2f emitPosition;
 };

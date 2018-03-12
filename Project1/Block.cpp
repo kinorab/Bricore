@@ -69,10 +69,10 @@ void Block::enable(Ball &ball) {
 
 	FloatRect blockBounds = getBounds();
 	ball.ballCollided(blockBounds, speed);
-	static FloatRect leftBounds(0.0f, 0.0f, -1.0f, STAGE_HEIGHT);
-	static FloatRect rightBounds(STAGE_WIDTH, 0.0f, 1.0f, STAGE_HEIGHT);
-	static FloatRect topBounds(0.0f, 0.0f, STAGE_WIDTH, -1.0f);
-	static FloatRect bottomBounds(0.0f, STAGE_HEIGHT, STAGE_WIDTH, 1.0f);
+	static FloatRect leftBounds(0.0f, 0.0f, -1.0f, LEVEL_HEIGHT);
+	static FloatRect rightBounds(LEVEL_WIDTH, 0.0f, 1.0f, LEVEL_HEIGHT);
+	static FloatRect topBounds(0.0f, 0.0f, LEVEL_WIDTH, -1.0f);
+	static FloatRect bottomBounds(0.0f, LEVEL_HEIGHT, LEVEL_WIDTH, 1.0f);
 
 	if (blockBounds.intersects(leftBounds)) {
 		speed.x = abs(speed.x);

@@ -6,34 +6,34 @@ using namespace std;
 using namespace sf;
 
 ParticleSystem::ParticleSystem(const unsigned int count)
-	:m_particles(count), m_vertices(Points, count), m_lifetime(LIFETIME), m_emitter(0, 0) {
+	:particles(count), vertices(Points, count), lifetime(LIFETIME), emitPosition(0, 0) {
 
 }
 
-void ParticleSystem::setEmitter(const Vector2f &position) {
-	m_emitter = position;
+void ParticleSystem::setEmitPosition(const Vector2f &position) {
+	emitPosition = position;
 }
 
 void ParticleSystem::update(const float &timeSpan) {
 
-	for (size_t i = 0; i < m_particles.size(); ++i) {
+	for (size_t i = 0; i < particles.size(); ++i) {
 
-		if (m_particles[i].lifetime > 0.0f) {
-			m_particles[i].lifetime -= timeSpan;
+		if (particles[i].lifetime > 0.0f) {
+			particles[i].lifetime -= timeSpan;
 		}
 		else {
 			if (GameState::light) {
 				resetParticle(i);
 			}
 			else {
-				m_particles[i].lifetime = 0.0f;
+				particles[i].lifetime = 0.0f;
 			}
 		}
 
-		m_vertices[i].position += m_particles[i].velocity * timeSpan;
-		float ratio = m_particles[i].lifetime / m_lifetime;
+		vertices[i].position += particles[i].velocity * timeSpan;
+		float ratio = particles[i].lifetime / lifetime;
 
-		m_vertices[i].color = Color(
+		vertices[i].color = Color(
 			static_cast<Uint8>(rng() % 256),
 			static_cast<Uint8>(rng() % 256),
 			static_cast<Uint8>(rng() % 256),
@@ -46,14 +46,14 @@ void ParticleSystem::draw(RenderTarget &target, RenderStates states) const {
 
 	states.transform *= getTransform();
 	states.texture = NULL;
-	target.draw(m_vertices, states);
+	target.draw(vertices, states);
 }
 
 void ParticleSystem::resetParticle(size_t index) {
 
 	float angle = (rng() % 360) * PI / 180.0f;
 	float speed = (rng() % 50) / 1000.0f + 0.05f;
-	m_particles[index].velocity = Vector2f(cos(angle) * speed, sin(angle) * speed);
-	m_particles[index].lifetime = static_cast<float>(rand() % static_cast<int>(m_lifetime));
-	m_vertices[index].position = m_emitter;
+	particles[index].velocity = Vector2f(cos(angle) * speed, sin(angle) * speed);
+	particles[index].lifetime = static_cast<float>(rand() % static_cast<int>(lifetime));
+	vertices[index].position = emitPosition;
 }
