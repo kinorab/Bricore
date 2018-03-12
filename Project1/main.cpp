@@ -7,6 +7,7 @@
 #include "UIFactory.h"
 #include <atomic>
 #include <iostream>
+#include <map>
 #include <stdexcept>
 #include <queue>
 #include <mutex>
@@ -73,6 +74,8 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 	Time elapsed = milliseconds(0);
 	Clock clock;
 	bool finishing = false;
+	map<Keyboard::Key, bool> keyDown;
+
 	while (!finishing) {
 
 		Event getEvent;
@@ -85,41 +88,44 @@ void renderThread(RenderWindow *window, atomic<bool> *done) {
 			gameEventQueue.pop();
 			gameEventQueueMutex.unlock();
 
-			if (getEvent.type != Keyboard::Up &&
-				getEvent.type != Keyboard::Down &&
-				getEvent.type != Keyboard::Right &&
-				getEvent.type != Keyboard::Left) {
-				if (getEvent.type == Event::KeyReleased) {
-					GameState::lock = false;
-				}
-				else if (getEvent.type == Event::KeyPressed) {
-					if (!GameState::lock) {
-						if (Keyboard::isKeyPressed(Keyboard::G)) {
-							GameState::start = true;
-							GameState::lock = true;
-						}
-						else if (Keyboard::isKeyPressed(Keyboard::F)) {
-							GameState::lock = true;
-						}
-						else if (Keyboard::isKeyPressed(Keyboard::R)) {
-							GameState::lock = true;
-						}
-						else if (Keyboard::isKeyPressed(Keyboard::D)) {
-							GameState::lock = true;
-						}
-						else if (Keyboard::isKeyPressed(Keyboard::E)) {
-							GameState::lock = true;
-						}
-						else if (Keyboard::isKeyPressed(Keyboard::P)) {
-							if (GameState::pause) {
-								GameState::pause = false;
-							}
-							else {
-								GameState::pause = true;
-							}
-							GameState::lock = true;
-						}
+			if ((getEvent.type == Event::KeyPressed
+				|| getEvent.type == Event::KeyReleased)
+				&& keyDown.find(getEvent.key.code) == keyDown.end()
+				) {
+				keyDown.insert({ getEvent.key.code, false });
+			}
+
+			if (getEvent.type == Event::KeyPressed) {
+				if (keyDown[getEvent.key.code])	continue;
+				keyDown[getEvent.key.code] = true;
+				if (GameState::lock) continue;
+				if (keyDown[Keyboard::G]
+					|| keyDown[Keyboard::F]
+					|| keyDown[Keyboard::R]
+					|| keyDown[Keyboard::D]
+					|| keyDown[Keyboard::E]
+					|| keyDown[Keyboard::P]) {
+					GameState::lock = true;
+					if (keyDown[Keyboard::G]) {
+						GameState::start = true;
 					}
+
+					if (keyDown[Keyboard::P]) {
+						GameState::pause = !GameState::pause;
+					}
+				}
+			}
+			else if (getEvent.type == Event::KeyReleased) {
+				if (!keyDown[getEvent.key.code]) continue;
+				keyDown[getEvent.key.code] = false;
+
+				if (!keyDown[Keyboard::G]
+					&& !keyDown[Keyboard::F]
+					&& !keyDown[Keyboard::R]
+					&& !keyDown[Keyboard::D]
+					&& !keyDown[Keyboard::E]
+					&& !keyDown[Keyboard::P]) {
+					GameState::lock = false;
 				}
 			}
 

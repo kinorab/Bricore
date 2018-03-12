@@ -11,7 +11,7 @@ game::DefaultEvent::DefaultEvent(std::string type, bool bubbles, bool cancelable
 }
 
 game::DefaultEvent::~DefaultEvent() {
-
+	
 }
 
 bool game::DefaultEvent::getBubbles() const {
