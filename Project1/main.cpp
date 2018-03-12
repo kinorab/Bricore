@@ -21,7 +21,8 @@ static mutex gameEventQueueMutex;
 static map<Keyboard::Key, bool> keyDown;
 static Sound sound1;
 static Music bgmusic;
-static SoundBuffer buffer1;
+static float bufferBgVolume = 100.0f;
+static float bufferVolume1 = 50.0f;
 
 class test {
 public:
@@ -131,8 +132,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 }
 
 void loadSounds() {
-	static float bufferBgVolume = 100.0f;
-	static float bufferVolume1 = 50.0f;
+	SoundBuffer buffer1;
 
 	try {
 		// if memory violation happen, reset the lib connector of project (-d have something bug)
