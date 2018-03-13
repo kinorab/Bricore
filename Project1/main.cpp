@@ -109,7 +109,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 				else {
 					ball->followPlayer(*player);
 					if (!GameState::ready) {
-						obstacles->reset();
+						obstacles->resettle();
 						GameState::ready = true;
 					}
 				}
