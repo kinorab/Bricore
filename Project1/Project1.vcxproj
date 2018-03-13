@@ -145,6 +145,7 @@
     <ClCompile Include="defaultEvent.cpp" />
     <ClCompile Include="define.cpp" />
     <ClCompile Include="ellipse.cpp" />
+    <ClCompile Include="eventDispatcher.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movieClip.cpp" />

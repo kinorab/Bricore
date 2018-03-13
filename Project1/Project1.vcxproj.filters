@@ -61,6 +61,7 @@
     <ClCompile Include="audio.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="eventDispatcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
