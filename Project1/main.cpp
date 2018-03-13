@@ -1,4 +1,5 @@
 #include "main.h"
+#include "audio.h"
 #include "ellipse.h"
 #include "particleSystem.h"
 #include "brick.h"
@@ -20,22 +21,12 @@ using namespace item;
 static queue<Event> gameEventQueue;
 static mutex gameEventQueueMutex;
 static map<Keyboard::Key, bool> keyDown;
-static Sound sound1;
-static SoundBuffer buffer1;
-static Music bgmusic;
-static float bufferBgVolume = 100.0f;
-static float bufferVolume1 = 50.0f;
-
-class test {
-public:
-	std::vector<std::unique_ptr<item::Block>> blocks;
-};
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
 	HIMC hIMC = 0x0;
 	//hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
 	window->setActive(true);
-	loadSounds();
+	Audio::initialize();
 	for (Keyboard::Key i = Keyboard::Unknown; i < Keyboard::Unknown + Keyboard::KeyCount; i = static_cast<Keyboard::Key>(i + 1)) {
 		keyDown.insert({ i, false });
 	}
@@ -84,8 +75,8 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 			handleMouseEvent(currentEvent);
 
 			if (currentEvent.type == Event::Closed) {
-				bgmusic.stop();
-				sound1.stop();
+				Audio::bgmusic.stop();
+				Audio::sound1.stop();
 				finishing = true;
 			}
 		}
@@ -101,7 +92,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			if (!GameState::pause) {
 				player->playerMove();
-				ball->ballEnableMove(*player, sound1);
+				ball->ballEnableMove(*player, Audio::sound1);
 				if (GameState::start) {
 					obstacles->enable(*ball);
 					bricks->enable(*ball);
@@ -135,25 +126,6 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	}
 	// finalize...
 	*done = true;
-}
-
-void loadSounds() {
-	try {
-		// if memory violation happen, reset the lib connector of project (-d have something bug)
-		if (!buffer1.loadFromFile("s1.wav")) {
-			throw runtime_error("Cannot get the sound file.");
-		}
-		else if (!bgmusic.openFromFile("bg.wav")) {
-			throw runtime_error("Cannot get the music file.");
-		}
-		sound1.setBuffer(buffer1);
-		sound1.setVolume(bufferVolume1);
-		/*bgmusic.play();
-		bgmusic.setLoop(true);*/
-	}
-	catch (runtime_error  &ex) {
-		cout << "Runtime_error: " << ex.what() << endl;
-	}
 }
 
 void handleKeyEvent(sf::Event & event) {
