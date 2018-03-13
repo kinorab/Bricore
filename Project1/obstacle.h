@@ -7,7 +7,7 @@ class Obstacle :
 
 public:
 	Obstacle(const size_t number, const std::vector <sf::Vector2f> &position, const std::vector<sf::Vector2f> &sideLength);
-	void enable(item::Ball &ball);
+	void update(item::Ball &ball);
 	void setBlockColor(const size_t, const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
 	void setBlockColor(const size_t, const sf::Color &);
 	void setAllColor(const std::vector <sf::Color> &color);

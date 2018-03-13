@@ -170,7 +170,7 @@ void Brick::setFrameSize(const float frameSize) {
 	}
 }
 
-void Brick::enable(Ball &ball) {
+void Brick::update(Ball &ball) {
 
 	for (size_t i = 0; i < getAreaSize(); ++i) {
 

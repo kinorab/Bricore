@@ -65,7 +65,7 @@ void Block::setSpeed(const Vector2f & speed) {
 }
 
 // all change direct by using abs() to prevent stuck inside the block
-void Block::enable(Ball &ball) {
+void Block::update(Ball &ball) {
 
 	FloatRect blockBounds = getBounds();
 	ball.ballCollided(blockBounds, speed);

@@ -92,10 +92,10 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			if (!GameState::pause) {
 				player->playerMove();
-				ball->ballEnableMove(*player, Audio::sound1);
+				ball->ballUpdateMove(*player, Audio::sound1);
 				if (GameState::start) {
-					obstacles->enable(*ball);
-					bricks->enable(*ball);
+					obstacles->update(*ball);
+					bricks->update(*ball);
 					ball->move(*player);
 					if (bricks->isEmpty()) {
 						GameState::ready = false;

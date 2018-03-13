@@ -12,7 +12,7 @@ Ball::Ball(const Player &player) {
 	balls.at(0) = std::unique_ptr<BallContent>(new BallContent(player));
 }
 
-void Ball::ballEnableMove(Player &player, Sound & sound) {
+void Ball::ballUpdateMove(Player &player, Sound & sound) {
 
 	if (!balls.empty()) {
 		initializeBall();

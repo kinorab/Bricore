@@ -22,7 +22,7 @@ namespace item {
 		void setInterval(const sf::Vector2f &interval);
 		void setInterval(const float x, const float y);
 		void setFrameSize(const float frame);
-		void enable(item::Ball &ball);
+		void update(item::Ball &ball);
 
 		void reset(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);

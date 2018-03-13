@@ -11,7 +11,7 @@ namespace item {
 
 	public:
 		Ball(const Player &player);
-		void ballEnableMove(Player &player, sf::Sound &sound);
+		void ballUpdateMove(Player &player, sf::Sound &sound);
 		void move(const Player &player);
 		void followPlayer(const Player &player);
 		void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);

@@ -19,11 +19,11 @@ Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const
 	}
 }
 
-void Obstacle::enable(item::Ball &ball) {
+void Obstacle::update(item::Ball &ball) {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blockCollision(i);
-		blocks.at(i)->enable(ball);
+		blocks.at(i)->update(ball);
 	}
 }
 
