@@ -91,7 +91,7 @@ void Obstacle::setAllSpeed(const vector <Vector2f> &speed) {
 	}
 }
 
-void Obstacle::reset() {
+void Obstacle::resettle() {
 
 	try {
 		for (size_t i = 0; i < blocks.size(); ++i) {

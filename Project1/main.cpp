@@ -26,10 +26,6 @@ static Music bgmusic;
 static float bufferBgVolume = 100.0f;
 static float bufferVolume1 = 50.0f;
 
-class test {
-public:
-	std::vector<std::unique_ptr<item::Block>> blocks;
-};
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
 	HIMC hIMC = 0x0;
@@ -118,7 +114,7 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 				else {
 					ball->followPlayer(*player);
 					if (!GameState::ready) {
-						obstacles->reset();
+						obstacles->resettle();
 						GameState::ready = true;
 					}
 				}
