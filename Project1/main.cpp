@@ -27,6 +27,10 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	//hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
 	window->setActive(true);
 	Audio::initialize();
+	/*
+	Audio::bgmusic.play();
+	Audio::bgmusic.setLoop(true);
+	*/
 	for (Keyboard::Key i = Keyboard::Unknown; i < Keyboard::Unknown + Keyboard::KeyCount; i = static_cast<Keyboard::Key>(i + 1)) {
 		keyDown.insert({ i, false });
 	}

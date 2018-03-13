@@ -14,15 +14,11 @@ void Audio::initialize() {
 		if (!buffer1.loadFromFile("s1.wav")) {
 			throw std::runtime_error("Cannot get the sound file.");
 		}
-		else if (!Audio::bgmusic.openFromFile("bg.wav")) {
+		if (!Audio::bgmusic.openFromFile("bg.wav")) {
 			throw std::runtime_error("Cannot get the music file.");
 		}
 		Audio::sound1.setBuffer(buffer1);
 		Audio::sound1.setVolume(bufferVolume1);
-		/*
-		Audio::bgmusic.play();
-		Audio::bgmusic.setLoop(true);
-		*/
 	}
 	catch (std::runtime_error &ex) {
 		std::cout << "Runtime_error: " << ex.what() << std::endl;
