@@ -14,7 +14,7 @@ public:
 	void setBlockSpeed(const size_t, const float speedX, const float speedY = 0.0f);
 	void setBlockSpeed(const size_t, const sf::Vector2f &speed);
 	void setAllSpeed(const std::vector <sf::Vector2f> &speed);
-	void resettle();
+	void update();
 
 	const sf::Vector2f & getBlockSpeed(const size_t number) const;
 	const size_t getBlocksAmount() const;
