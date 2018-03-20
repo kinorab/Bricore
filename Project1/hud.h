@@ -9,7 +9,7 @@
 class HUD :
 	public DefaultContainer {
 public:
-	explicit HUD();
+	HUD();
 private:
 	std::shared_ptr<game::RectangleShape> background;
 };

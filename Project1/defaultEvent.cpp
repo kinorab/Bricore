@@ -1,53 +1,63 @@
 #include "defaultEvent.h"
 
-game::DefaultEvent::DefaultEvent(std::string type, bool bubbles, bool cancelable) :
-	bubbles(bubbles),
-	cancelable(cancelable),
-	defaultPrevented(false),
-	eventPhase(game::EventPhase::NONE),
-	propagationStopped(false),
-	type(type) {
+namespace game {
+	DefaultEvent::DispatchHelper::DispatchHelper(DefaultEvent * event) {
+		this->event = event;
+	}
 
-}
+	void DefaultEvent::DispatchHelper::setEventPhase(EventPhase phase) {
+		event->phase = phase;
+	}
 
-game::DefaultEvent::~DefaultEvent() {
-	
-}
+	DefaultEvent::DefaultEvent(std::string type, bool bubbles, bool cancelable) :
+		bubbles(bubbles),
+		cancelable(cancelable),
+		defaultPrevented(false),
+		phase(EventPhase::NONE),
+		propagationStopped(false),
+		type(type) {
 
-bool game::DefaultEvent::getBubbles() const {
-	return bubbles;
-}
+	}
 
-bool game::DefaultEvent::getCancelable() const {
-	return cancelable;
-}
+	DefaultEvent::~DefaultEvent() {
 
-game::EventDispatcher * game::DefaultEvent::getCurrentTarget() const {
-	return nullptr;
-}
+	}
 
-bool game::DefaultEvent::getDefaultPrevented() const {
-	return defaultPrevented;
-}
+	bool DefaultEvent::getBubbles() const {
+		return bubbles;
+	}
 
-game::EventPhase game::DefaultEvent::getEventPhase() const {
-	return eventPhase;
-}
+	bool DefaultEvent::getCancelable() const {
+		return cancelable;
+	}
 
-game::EventDispatcher * game::DefaultEvent::getTarget() const {
-	return nullptr;
-}
+	EventDispatcher * DefaultEvent::getCurrentTarget() const {
+		return nullptr;
+	}
 
-std::string game::DefaultEvent::getType() const {
-	return type;
-}
+	bool DefaultEvent::getDefaultPrevented() const {
+		return defaultPrevented;
+	}
 
-void game::DefaultEvent::stopPropagation() {
-	propagationStopped = true;
-}
+	EventPhase DefaultEvent::getPhase() const {
+		return phase;
+	}
 
-void game::DefaultEvent::preventDefault() {
-	if (cancelable) {
-		defaultPrevented = true;
+	EventDispatcher * DefaultEvent::getTarget() const {
+		return nullptr;
+	}
+
+	std::string DefaultEvent::getType() const {
+		return type;
+	}
+
+	void DefaultEvent::stopPropagation() {
+		propagationStopped = true;
+	}
+
+	void DefaultEvent::preventDefault() {
+		if (cancelable) {
+			defaultPrevented = true;
+		}
 	}
 }

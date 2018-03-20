@@ -10,7 +10,7 @@ namespace item {
 	class Ball : public sf::Drawable {
 
 	public:
-		Ball(const Player &player);
+		explicit Ball(const Player &player);
 		void ballUpdateMove(Player &player, sf::Sound &sound);
 		void move(const Player &player);
 		void followPlayer(const Player &player);

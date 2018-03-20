@@ -8,8 +8,5 @@ namespace game {
 		public EventDispatcher,
 		public sf::Sprite {
 	public:
-		virtual void addEventListener() override;
-		virtual bool hasEventListener() const override;
-		virtual void removeEventListener() override;
 	};
 }

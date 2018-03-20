@@ -1,12 +1,10 @@
 #include "defaultContainer.h"
 #include <algorithm>
 
-DefaultContainer::DefaultContainer()
-{
+DefaultContainer::DefaultContainer() {
 }
 
-DefaultContainer::~DefaultContainer()
-{
+DefaultContainer::~DefaultContainer() {
 }
 
 void DefaultContainer::draw(sf::RenderTarget & target, sf::RenderStates states) const {
@@ -24,10 +22,6 @@ void DefaultContainer::addChildAt(const std::vector<std::shared_ptr<sf::Drawable
 	children.insert(children.begin() + index, elements.begin(), elements.end());
 }
 
-void DefaultContainer::addEventListener() {
-
-}
-
 bool DefaultContainer::contains(const sf::Drawable * element) const {
 	return std::any_of(children.begin(), children.end(),
 		[&](const std::shared_ptr<sf::Drawable> & child) {
@@ -35,7 +29,7 @@ bool DefaultContainer::contains(const sf::Drawable * element) const {
 	});
 }
 
-bool DefaultContainer::dispatchEvent(game::Event * event) {
+bool DefaultContainer::dispatchEvent(game::DefaultEvent * event) {
 	return false;
 }
 
@@ -52,10 +46,6 @@ int DefaultContainer::getChildIndex(const sf::Drawable * element) const {
 
 int DefaultContainer::getChildrenCount() const {
 	return children.size();
-}
-
-bool DefaultContainer::hasEventListener() const {
-	return false;
 }
 
 void DefaultContainer::removeAllChildren() {
@@ -87,10 +77,6 @@ void DefaultContainer::removeChildAt(std::vector<int> indexes) {
 
 void DefaultContainer::removeChildren(int beginIndex, int endIndex) {
 	children.erase(children.begin() + beginIndex, children.begin() + endIndex);
-}
-
-void DefaultContainer::removeEventListener() {
-
 }
 
 void DefaultContainer::setChildIndex(const sf::Drawable * element, int index) {

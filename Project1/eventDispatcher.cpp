@@ -1,24 +1,38 @@
 #include "eventDispatcher.h"
+#include <algorithm>
 
-game::EventDispatcher::EventDispatcher() {
+namespace game {
+	struct EventDispatcher::EventListener {
+		std::string type;
+		std::function<void(Event *)> callback;
+		bool useCapture;
+	};
 
-}
+	EventDispatcher::EventDispatcher() {
 
-game::EventDispatcher::~EventDispatcher() {
+	}
 
-}
+	EventDispatcher::~EventDispatcher() {
 
-void game::EventDispatcher::addEventListener() {
+	}
 
-}
-
-bool game::EventDispatcher::dispatchEvent(Event * event) {
-	return false;
-}
-
-bool game::EventDispatcher::hasEventListener() const {
-	return false;
-}
-
-void game::EventDispatcher::removeEventListener() {
+	void EventDispatcher::addEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
+		removeEventListener(type, callback, useCapture);
+		listeners.push_back(EventListener{ type, callback, useCapture });
+	}
+	
+	bool EventDispatcher::dispatchEvent(DefaultEvent * event) {
+		DefaultEvent::DispatchHelper helper(event);
+		helper.setEventPhase(EventPhase::CAPTURING_PHASE);
+		return false;
+	}
+	
+	void EventDispatcher::removeEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
+		listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
+			[&](EventListener & listener) {
+			return listener.type == type
+				&& *listener.callback.target<void(Event *)>() == *callback.target<void(Event *)>()
+				&& listener.useCapture == useCapture;
+		}));
+	}
 }
