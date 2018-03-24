@@ -5,8 +5,16 @@ namespace game {
 		this->event = event;
 	}
 
-	void DefaultEvent::DispatchHelper::setEventPhase(EventPhase phase) {
+	void DefaultEvent::DispatchHelper::setCurrentTarget(EventDispatcher * target) {
+		event->currentTarget = target;
+	}
+
+	void DefaultEvent::DispatchHelper::setPhase(EventPhase phase) {
 		event->phase = phase;
+	}
+
+	void DefaultEvent::DispatchHelper::setTarget(EventDispatcher * target) {
+		event->target = target;
 	}
 
 	DefaultEvent::DefaultEvent(std::string type, bool bubbles, bool cancelable) :

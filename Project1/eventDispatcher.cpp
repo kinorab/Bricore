@@ -20,13 +20,27 @@ namespace game {
 		removeEventListener(type, callback, useCapture);
 		listeners.push_back(EventListener{ type, callback, useCapture });
 	}
-	
+
 	bool EventDispatcher::dispatchEvent(DefaultEvent * event) {
 		DefaultEvent::DispatchHelper helper(event);
-		helper.setEventPhase(EventPhase::CAPTURING_PHASE);
-		return false;
+		helper.setCurrentTarget(this);
+		if (event->getPhase() == EventPhase::NONE) {
+			return;
+		}
+
+		std::for_each(listeners.begin(), listeners.end(),
+			[&](const EventListener & listener) {
+			if ((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
+				|| ((event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
+				return;
+			}
+
+			listener.callback(event);
+		});
+
+		return !event->getDefaultPrevented();
 	}
-	
+
 	void EventDispatcher::removeEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
 		listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
 			[&](EventListener & listener) {

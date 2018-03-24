@@ -10,7 +10,9 @@ namespace game {
 		class DispatchHelper {
 		public:
 			explicit DispatchHelper(DefaultEvent * event);
-			virtual void setEventPhase(EventPhase phase);
+			virtual void setCurrentTarget(EventDispatcher * target);
+			virtual void setPhase(EventPhase phase);
+			virtual void setTarget(EventDispatcher * target);
 		private:
 			DefaultEvent * event;
 		};
@@ -26,11 +28,13 @@ namespace game {
 		virtual void stopPropagation() override;
 		virtual void preventDefault() override;
 	private:
-		EventPhase phase;
 		bool bubbles;
 		bool cancelable;
+		EventDispatcher * currentTarget;
 		bool defaultPrevented;
+		EventPhase phase;
 		bool propagationStopped;
+		EventDispatcher * target;
 		std::string type;
 	};
 }
