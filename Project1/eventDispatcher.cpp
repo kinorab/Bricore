@@ -25,7 +25,7 @@ namespace game {
 		DefaultEvent::DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 		if (event->getPhase() == EventPhase::NONE) {
-			return;
+			return true;
 		}
 
 		std::for_each(listeners.begin(), listeners.end(),
