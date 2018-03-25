@@ -159,6 +159,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rectangleShape.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="stage.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
   </ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="rectangleShape.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="stage.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIFactory.h" />
   </ItemGroup>

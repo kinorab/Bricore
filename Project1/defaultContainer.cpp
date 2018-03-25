@@ -30,7 +30,8 @@ bool DefaultContainer::contains(const sf::Drawable * element) const {
 }
 
 bool DefaultContainer::dispatchEvent(game::DefaultEvent * event) {
-	return false;
+	EventDispatcher::dispatchEvent(event);
+	return event->getDefaultPrevented();
 }
 
 std::shared_ptr<sf::Drawable> DefaultContainer::getChildAt(int index) const {

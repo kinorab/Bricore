@@ -28,14 +28,13 @@ namespace game {
 			return true;
 		}
 
-		std::for_each(listeners.begin(), listeners.end(),
+		std::vector<EventListener> tempListeners = listeners;
+		std::for_each(tempListeners.begin(), tempListeners.end(),
 			[&](const EventListener & listener) {
-			if ((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
+			if (!(event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
 				|| ((event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
-				return;
+				listener.callback(event);
 			}
-
-			listener.callback(event);
 		});
 
 		return !event->getDefaultPrevented();

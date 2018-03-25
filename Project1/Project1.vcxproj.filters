@@ -64,6 +64,9 @@
     <ClCompile Include="eventDispatcher.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="stage.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -139,6 +142,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="audio.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="stage.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

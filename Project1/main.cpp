@@ -1,12 +1,5 @@
 #include "main.h"
-#include "audio.h"
-#include "ellipse.h"
-#include "particleSystem.h"
-#include "brick.h"
-#include "define.h"
-#include "hud.h"
-#include "obstacle.h"
-#include "UIFactory.h"
+#include "stage.h"
 #include <iostream>
 #include <map>
 #include <stdexcept>
@@ -24,7 +17,7 @@ static map<Keyboard::Key, bool> keyDown;
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
 	HIMC hIMC = 0x0;
-	//hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
+	// hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
 	window->setActive(true);
 	Audio::initialize();
 	/*
@@ -34,30 +27,8 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	for (Keyboard::Key i = Keyboard::Unknown; i < Keyboard::Unknown + Keyboard::KeyCount; i = static_cast<Keyboard::Key>(i + 1)) {
 		keyDown.insert({ i, false });
 	}
-	static float blockLength = 100.f;
-	static float incre1 = 3.f;
-	shared_ptr<Obstacle> obstacles(new Obstacle(2
-		, { Vector2f(blockLength, blockLength * incre1), Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1) }
-	, { Vector2f(blockLength, blockLength * incre1), Vector2f(blockLength, blockLength * incre1) }));
-	obstacles->setBlockColor(0, Color::Black, Color::Blue, Color::Black, Color::Black);
-	obstacles->setBlockColor(1, Color::Green, Color::Black, Color::Cyan, Color::Black);
-	obstacles->setBlockSpeed(0, 1.5f);
-	obstacles->setBlockSpeed(1, -1.5f);
-	shared_ptr<Player> player(new Player(5.5f));
-
-	shared_ptr<Ball> ball(new Ball(*player));
-
-	shared_ptr<Brick> bricks(new Brick(1, 60.f, 25.f, Vector2f(0.8f, 2.f), 3.f));
-	bricks->setBrickColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(183), static_cast<Uint8>(197)));
-
-	shared_ptr<HUD> hud(new HUD());
-
-	shared_ptr<ParticleSystem> mouseLight(new ParticleSystem(2000));
-	Vector2i localPosition;
-	Mouse::setPosition(static_cast<Vector2i>(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT / 2)), *window);
-
-	DefaultContainer stage;
-	stage.addChild({ obstacles, player, ball, bricks, hud, mouseLight });
+	
+	Stage stage(*window);
 
 	Time elapsed = milliseconds(0);
 	Clock clock;
@@ -86,40 +57,12 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		}
 
 		// maximum update span
-		elapsed += clock.restart();
-		if (elapsed.asSeconds() > 0.05f) {
-			elapsed = seconds(0.05f);
-		}
+		elapsed = min<Time>(elapsed + clock.restart(), seconds(0.05f));
 
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			if (!GameState::pause) {
-				player->playerMove();
-				ball->ballUpdateMove(*player, Audio::sound1);
-				if (GameState::start) {
-					obstacles->update(*ball);
-					bricks->update(*ball);
-					ball->move(*player);
-					if (bricks->isEmpty()) {
-						GameState::ready = false;
-						GameState::start = false;
-						GameState::reflash = true;
-						cout << "Finished level: " << level++ << "!!!" << endl;
-						bricks->reset(level);
-						bricks->setBrickColor(Color(static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255), static_cast<Uint8>(rng() % 255)));
-					}
-				}
-				else {
-					ball->followPlayer(*player);
-					if (!GameState::ready) {
-						obstacles->update();
-						GameState::ready = true;
-					}
-				}
-			}
-			mouseLight->setEmitPosition(window->mapPixelToCoords(mousePosition));
-			mouseLight->update(updateSpan);
+			stage.update(updateSpan, mousePosition);
 			elapsed -= seconds(updateSpan / 1000.0f);
 		}
 
@@ -145,6 +88,7 @@ void handleKeyEvent(sf::Event & event) {
 			GameState::pause = !GameState::pause;
 			GameState::lock = !GameState::lock;
 		}
+
 		if (GameState::lock) {
 			return; 
 		}
