@@ -1,29 +1,21 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "defaultContainer.h"
 
 class ParticleSystem :
-	public sf::Drawable,
-	public sf::Transformable {
-
+	public DefaultContainer {
 public:
-
 	explicit ParticleSystem(const unsigned int count);
-
 	void setEmitPosition(const sf::Vector2f &position);
 	void update(const float &timeSpan);
-
 private:
-
-	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-	void resetParticle(size_t);
-
 	struct Particle {
 		sf::Vector2f velocity;
-		float lifetime;
+		float lifeTime;
 	};
+	void resetParticle(size_t);
 	std::vector<Particle> particles;
-	sf::VertexArray vertices;
-	float lifetime;
+	std::shared_ptr<sf::VertexArray> vertices;
+	float maxLifeTime;
 	sf::Vector2f emitPosition;
 };

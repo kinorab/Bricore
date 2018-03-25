@@ -7,9 +7,9 @@ using namespace item;
 
 bool Ball::initialize = false;
 
-Ball::Ball(const Player &player) {
+Ball::Ball() {
 	balls.resize(1);
-	balls.at(0) = std::unique_ptr<BallContent>(new BallContent(player));
+	balls.at(0) = std::unique_ptr<BallContent>(new BallContent(Color::Green));
 }
 
 void Ball::ballUpdateMove(Player &player, Sound & sound) {
@@ -180,15 +180,13 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 	}
 }
 
-Ball::BallContent::BallContent(const Player &player) {
-
+Ball::BallContent::BallContent(Color color) {
 	ball.setFillColor(Color::White);
 	ball.setOutlineColor(Color::Black);
 	ball.setRadius(5.f);
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
 	ball.setOutlineThickness(2.f);
-	ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - ball.getLocalBounds().height / 2);
-	setColor(Color::Green);
+	setColor(color);
 	main = true;
 }
 

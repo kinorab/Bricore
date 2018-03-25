@@ -10,7 +10,7 @@ namespace item {
 	class Ball : public sf::Drawable {
 
 	public:
-		explicit Ball(const Player &player);
+		Ball();
 		void ballUpdateMove(Player &player, sf::Sound &sound);
 		void move(const Player &player);
 		void followPlayer(const Player &player);
@@ -26,8 +26,8 @@ namespace item {
 
 		class BallContent {
 		public:
-			explicit BallContent(const Player &);
-			explicit BallContent();
+			BallContent();
+			explicit BallContent(sf::Color color);
 			void ballMove(const sf::FloatRect &, const sf::Vector2f &);
 			void update();
 			const bool isMain() const;
