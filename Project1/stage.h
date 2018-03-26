@@ -3,7 +3,7 @@
 #include "audio.h"
 #include "ball.h"
 #include "brick.h"
-#include "defaultContainer.h"
+#include "container.h"
 #include "define.h"
 #include "ellipse.h"
 #include "hud.h"
@@ -12,7 +12,7 @@
 #include "UIFactory.h"
 
 class Stage :
-	public DefaultContainer {
+	public Container {
 public:
 	static float blockLength;
 	static float incre1;

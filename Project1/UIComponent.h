@@ -3,7 +3,7 @@
 #include "container.h"
 
 class UIComponent :
-	public virtual Container {
+	public Container {
 public:
 	virtual ~UIComponent() {}
 };

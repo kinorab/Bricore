@@ -1,13 +1,13 @@
 #pragma once
 
-#include "defaultContainer.h"
+#include "container.h"
 #include "rectangleShape.h"
 #include "sprite.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
 
 class HUD :
-	public DefaultContainer {
+	public Container {
 public:
 	HUD();
 private:

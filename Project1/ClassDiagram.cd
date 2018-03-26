@@ -1,168 +1,140 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Audio" Collapsed="true">
-    <Position X="18.25" Y="0.5" Width="1.5" />
+    <Position X="17" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAAAEAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>audio.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Button" Collapsed="true">
-    <Position X="11.25" Y="5" Width="1.5" />
+    <Position X="10" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAgAAAAAAAAAACAAAAAAgAAAAAAAAAAAAAEAAAA=</HashCode>
+      <HashCode>AEAAAAgAAAAAAAAAICAAgAAAgAAgAAAqIAgAAAQAAAA=</HashCode>
       <FileName>button.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Container" Collapsed="true">
-    <Position X="7.75" Y="1.75" Width="1.5" />
+    <Position X="6.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QBAAAQAAAAAAACAEABBAAAEAAAgAAAAAAAAAIAAKIAI=</HashCode>
+      <HashCode>QBAAAQQAAAAAACQEABJAAAEAAAgAAAAAAAABIAAKIAI=</HashCode>
       <FileName>container.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DefaultButton" Collapsed="true">
-    <Position X="8.5" Y="6.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAgAACAAAAAAICAAgAAAgAAgAAAqIAgAAAQAAAA=</HashCode>
-      <FileName>defaultButton.h</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DefaultContainer" Collapsed="true">
-    <Position X="5.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>QBAAAQAAAAAAACQAABJAAAEAAAgAAAAAAAABoAAKICI=</HashCode>
-      <FileName>defaultContainer.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="EllipseShape" Collapsed="true">
-    <Position X="18.25" Y="1.5" Width="1.5" />
+    <Position X="17" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAIIAAIAAAAAAAACAAAAAAAACIAAAAAAACA=</HashCode>
       <FileName>ellipse.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HUD" Collapsed="true">
-    <Position X="4.5" Y="5" Width="1.5" />
+    <Position X="3.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAIAA=</HashCode>
       <FileName>hud.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MovieClip" Collapsed="true">
-    <Position X="9" Y="3.5" Width="1.5" />
+    <Position X="5.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
       <FileName>movieClip.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Obstacle" Collapsed="true">
-    <Position X="2.75" Y="8" Width="1.5" />
+    <Position X="2.75" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAAAAAACAgAoBAAAQAAAAAACAAAAIAAAEBAA=</HashCode>
       <FileName>obstacle.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ParticleSystem" Collapsed="true">
-    <Position X="9" Y="5" Width="1.5" />
+    <Position X="7.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAAAAAAAAAAAAAAAAgAAAIBAAAQAAABAAAAAAAEAAA=</HashCode>
       <FileName>particleSystem.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Player" Collapsed="true">
-    <Position X="20" Y="1.5" Width="1.5" />
+    <Position X="20.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAgAEAAAAAAgKIAAEABQAAAAgAAAAAQEQAAAAA=</HashCode>
       <FileName>player.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Renderer" Collapsed="true">
-    <Position X="21.75" Y="1.5" Width="1.5" />
+    <Position X="17" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>renderer.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UIComponent" Collapsed="true">
-    <Position X="11.25" Y="3.5" Width="1.5" />
+    <Position X="10" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>UIComponent.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UIFactory" Collapsed="true">
-    <Position X="18.25" Y="2.5" Width="1.5" />
+    <Position X="18.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UIFactory.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="item::Ball" Collapsed="true">
-    <Position X="20" Y="0.5" Width="1.5" />
+    <Position X="18.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAwAAAAAEAgCAAAcAAAQAAAAAAAAAABgAgAAAAIA=</HashCode>
       <FileName>ball.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="item::Block" Collapsed="true">
-    <Position X="2.75" Y="6.5" Width="1.5" />
+    <Position X="2.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>RAIEDAAAACAEAAwAQEAAIAAAAAAQQQAFAAAAAAAEAAA=</HashCode>
       <FileName>block.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="item::Brick" Collapsed="true">
-    <Position X="21.75" Y="0.5" Width="1.5" />
+    <Position X="20.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAEEAAAACETAgYBAACAAAABgAAAAhAwAQAkQAE=</HashCode>
       <FileName>brick.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="game::DefaultEvent" Collapsed="true">
-    <Position X="2.75" Y="1.75" Width="1.5" />
+  <Class Name="game::Event" Collapsed="true">
+    <Position X="18.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABACAAAAAEABBEIAAEABAAARCBAAAABAAFQAAhAAA=</HashCode>
-      <FileName>defaultEvent.h</FileName>
+      <HashCode>AAABACAAAAAEABBEMAAEABAAAxABAAAABAAFQAAgAAA=</HashCode>
+      <FileName>event.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="game::EventDispatcher" Collapsed="true">
-    <Position X="10" Y="0.5" Width="1.5" />
+    <Position X="8.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAgAAAAAAAAIAAAAAEAAABAAIAAAA=</HashCode>
       <FileName>eventDispatcher.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="game::Event" Collapsed="true">
-    <Position X="2.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAABACAAAAAAABAEEAAEABAAAQAAAAAABAAAQAAAAAA=</HashCode>
-      <FileName>event.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="game::RectangleShape" Collapsed="true">
-    <Position X="13.5" Y="1.75" Width="1.5" />
+    <Position X="12.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>rectangleShape.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="game::Sprite" Collapsed="true">
-    <Position X="15.75" Y="1.75" Width="1.5" />
+    <Position X="14.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>sprite.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="ButtonState" Collapsed="true">
-    <Position X="18.25" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAICAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>defaultButton.h</FileName>
-    </TypeIdentifier>
-  </Enum>
   <Enum Name="game::EventPhase" Collapsed="true">
-    <Position X="20" Y="3.75" Width="1.5" />
+    <Position X="17" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAQBAAAAAAAAAAAAAAQAAAACAAAA=</HashCode>
       <FileName>event.h</FileName>

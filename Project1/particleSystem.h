@@ -1,9 +1,9 @@
 #pragma once
 
-#include "defaultContainer.h"
+#include "container.h"
 
 class ParticleSystem :
-	public DefaultContainer {
+	public Container {
 public:
 	explicit ParticleSystem(const unsigned int count);
 	void setEmitPosition(const sf::Vector2f &position);

@@ -2,7 +2,6 @@
 #include "stage.h"
 #include <iostream>
 #include <map>
-#include <stdexcept>
 #include <queue>
 #include <mutex>
 #include <Windows.h>
@@ -16,15 +15,18 @@ static mutex gameEventQueueMutex;
 static map<Keyboard::Key, bool> keyDown;
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
+	/*
 	HIMC hIMC = 0x0;
-	// hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
-	window->setActive(true);
+	hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
+	*/
 	Audio::initialize();
 	/*
 	Audio::bgmusic.play();
 	Audio::bgmusic.setLoop(true);
 	*/
-	for (Keyboard::Key i = Keyboard::Unknown; i < Keyboard::Unknown + Keyboard::KeyCount; i = static_cast<Keyboard::Key>(i + 1)) {
+	for (Keyboard::Key i = Keyboard::Unknown;
+		i < Keyboard::Unknown + Keyboard::KeyCount;
+		i = static_cast<Keyboard::Key>(i + 1)) {
 		keyDown.insert({ i, false });
 	}
 	
@@ -50,8 +52,6 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 			handleMouseEvent(currentEvent);
 
 			if (currentEvent.type == Event::Closed) {
-				Audio::bgmusic.stop();
-				Audio::sound1.stop();
 				finishing = true;
 			}
 		}
@@ -71,7 +71,10 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 		window->draw(stage);
 		window->display();
 	}
+
 	// finalize...
+	Audio::bgmusic.stop();
+	Audio::sound1.stop();
 	*done = true;
 }
 
