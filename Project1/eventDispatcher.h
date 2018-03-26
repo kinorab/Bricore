@@ -1,6 +1,6 @@
 #pragma once
 
-#include "defaultEvent.h"
+#include "Event.h"
 #include <functional>
 #include <vector>
 
@@ -10,7 +10,7 @@ namespace game {
 		EventDispatcher();
 		virtual ~EventDispatcher();
 		virtual void addEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture);
-		virtual bool dispatchEvent(DefaultEvent * event);
+		virtual bool dispatchEvent(Event * event);
 		virtual void removeEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture);
 	private:
 		struct EventListener;

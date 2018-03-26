@@ -1,11 +1,11 @@
 #include "stage.h"
+#include "audio.h"
 #include <iostream>
-
-float Stage::blockLength = 100.f;
-float Stage::incre1 = 3.f;
 
 Stage::Stage(sf::RenderWindow & window)
 	:window(window),
+	blockLength(100.f),
+	incre1(3.f),
 	obstacles(new Obstacle(2
 		, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1) }
 	, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(blockLength, blockLength * incre1) })),
@@ -14,6 +14,11 @@ Stage::Stage(sf::RenderWindow & window)
 	bricks(new item::Brick(1, 60.f, 25.f, sf::Vector2f(0.8f, 2.f), 3.f)),
 	hud(new HUD()),
 	mouseLight(new ParticleSystem(2000)) {
+	/*
+	Audio::bgmusic.play();
+	Audio::bgmusic.setLoop(true);
+	*/
+	ball->followPlayer(*player);
 	obstacles->setBlockColor(0, sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black);
 	obstacles->setBlockColor(1, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black);
 	obstacles->setBlockSpeed(0, 1.5f);
@@ -24,7 +29,8 @@ Stage::Stage(sf::RenderWindow & window)
 }
 
 Stage::~Stage() {
-
+	Audio::bgmusic.stop();
+	Audio::sound1.stop();
 }
 
 void Stage::update(float updateSpan ,sf::Vector2i mousePosition) {

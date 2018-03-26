@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 namespace game {
@@ -14,15 +15,34 @@ namespace game {
 
 	class Event {
 	public:
-		virtual ~Event() {}
-		virtual bool getBubbles() const = 0;
-		virtual bool getCancelable() const = 0;
-	    virtual EventDispatcher * getCurrentTarget() const = 0;
-		virtual bool getDefaultPrevented() const = 0;
-		virtual EventPhase getPhase() const = 0;
-	    virtual EventDispatcher * getTarget() const = 0;
-		virtual std::string getType() const = 0;
-		virtual void stopPropagation() = 0;
-		virtual void preventDefault() = 0;
+		class DispatchHelper {
+		public:
+			explicit DispatchHelper(Event * event);
+			virtual void setCurrentTarget(EventDispatcher * target);
+			virtual void setPhase(EventPhase phase);
+			virtual void setTarget(EventDispatcher * target);
+		private:
+			Event * event;
+		};
+		Event(std::string type, bool bubbles, bool cancelable);
+		virtual ~Event();
+		virtual bool getBubbles() const;
+		virtual bool getCancelable() const;
+		virtual EventDispatcher * getCurrentTarget() const;
+		virtual bool getDefaultPrevented() const;
+		virtual EventPhase getPhase() const;
+		virtual EventDispatcher * getTarget() const;
+		virtual std::string getType() const;
+		virtual void stopPropagation();
+		virtual void preventDefault();
+	private:
+		bool bubbles;
+		bool cancelable;
+		EventDispatcher * currentTarget;
+		bool defaultPrevented;
+		EventPhase phase;
+		bool propagationStopped;
+		EventDispatcher * target;
+		std::string type;
 	};
 }

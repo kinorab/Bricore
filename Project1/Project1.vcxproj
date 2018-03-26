@@ -144,9 +144,9 @@
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="brick.cpp" />
-    <ClCompile Include="defaultContainer.cpp" />
-    <ClCompile Include="defaultButton.cpp" />
-    <ClCompile Include="defaultEvent.cpp" />
+    <ClCompile Include="container.cpp" />
+    <ClCompile Include="button.cpp" />
+    <ClCompile Include="event.cpp" />
     <ClCompile Include="define.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="eventDispatcher.cpp" />
@@ -169,10 +169,7 @@
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
     <ClInclude Include="container.h" />
-    <ClInclude Include="defaultContainer.h" />
-    <ClInclude Include="defaultButton.h" />
     <ClInclude Include="button.h" />
-    <ClInclude Include="defaultEvent.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="event.h" />

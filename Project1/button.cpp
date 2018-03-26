@@ -1,6 +1,6 @@
-#include "defaultButton.h"
+#include "button.h"
 
-DefaultButton::DefaultButton() {
+Button::Button() {
 	/*
 	spriteUp.setTexture(up);
 	spriteOver.setTexture(over);
@@ -17,7 +17,7 @@ DefaultButton::DefaultButton() {
 }
 
 
-void DefaultButton::checkClick(sf::Vector2f mousePos) {
+void Button::checkClick(sf::Vector2f mousePos) {
 	sf::FloatRect mouseBox(mousePos, sf::Vector2f(0.0f, 0.0f));
 	if (mouseBox.intersects(currentSprite->getGlobalBounds())) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -32,7 +32,7 @@ void DefaultButton::checkClick(sf::Vector2f mousePos) {
 	}
 }
 
-void DefaultButton::setCurrentState(ButtonState state) {
+void Button::setCurrentState(ButtonState state) {
 	currentState = state;
 	if (currentState == ButtonState::UP) {
 		currentSprite = &spriteUp;
@@ -45,14 +45,14 @@ void DefaultButton::setCurrentState(ButtonState state) {
 	}
 }
 
-void DefaultButton::setCaption(std::string caption) {
+void Button::setCaption(std::string caption) {
 	text.setString(caption);
 }
 
-ButtonState DefaultButton::getCurrentState() {
+Button::ButtonState Button::getCurrentState() {
 	return currentState;
 }
 
-std::string DefaultButton::getCaption() {
+std::string Button::getCaption() {
 	return text.getString();
 }

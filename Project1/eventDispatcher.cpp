@@ -21,8 +21,8 @@ namespace game {
 		listeners.push_back(EventListener{ type, callback, useCapture });
 	}
 
-	bool EventDispatcher::dispatchEvent(DefaultEvent * event) {
-		DefaultEvent::DispatchHelper helper(event);
+	bool EventDispatcher::dispatchEvent(Event * event) {
+		Event::DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 		if (event->getPhase() == EventPhase::NONE) {
 			return true;

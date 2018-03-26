@@ -10,12 +10,6 @@
     <ClCompile Include="brick.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="defaultButton.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="defaultContainer.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="define.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -52,9 +46,6 @@
     <ClCompile Include="sprite.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="defaultEvent.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="rectangleShape.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -67,6 +58,15 @@
     <ClCompile Include="stage.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="container.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="event.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -76,18 +76,6 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="brick.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="button.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="container.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="defaultButton.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="defaultContainer.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="define.h">
@@ -132,9 +120,6 @@
     <ClInclude Include="event.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="defaultEvent.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="rectangleShape.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -145,6 +130,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="stage.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="container.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
