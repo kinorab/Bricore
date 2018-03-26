@@ -16,10 +16,10 @@ static mutex gameEventQueueMutex;
 static map<Keyboard::Key, bool> keyDown;
 
 void renderThread(RenderWindow * window, atomic<bool> * done) {
-	/*
+	
 	HIMC hIMC = 0x0;
 	hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
-	*/
+	
 	Audio::initialize();
 	for (Keyboard::Key i = Keyboard::Unknown;
 		i < Keyboard::Unknown + Keyboard::KeyCount;
