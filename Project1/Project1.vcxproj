@@ -93,7 +93,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\ASUS\source\repos\pigject\lib;$(SolutionDir)SFML\SFML-2.4.2x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\lib;$(SolutionDir)SFML\SFML-2.4.2x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-main-d.lib;sfml-main.lib;sfml-window-d.lib;sfml-window.lib;sfml-graphics-d.lib;sfml-graphics.lib;sfml-system-d.lib;sfml-system.lib;sfml-audio-d.lib;sfml-audio.lib;opengl32.lib;openal32.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
