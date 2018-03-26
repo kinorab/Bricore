@@ -6,10 +6,11 @@ using namespace sf;
 using namespace item;
 
 bool Ball::initialize = false;
+bool Ball::mainSettled = false;
 
 Ball::Ball() {
 	balls.resize(1);
-	balls.at(0) = std::unique_ptr<BallContent>(new BallContent(Color::Green));
+	balls.at(0) = std::unique_ptr<BallContent>(new BallContent());
 }
 
 void Ball::ballUpdateMove(Player &player, Sound & sound) {
@@ -126,10 +127,7 @@ void Ball::initializeBall() {
 	if (!initialize && !balls.empty()) {
 		balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
 		balls.at(0)->ballSpeed.y = -2.f;
-		for (size_t i = 1; i < balls.size(); ++i) {
-			balls.erase(balls.begin() + i);
-			--i;
-		}
+		balls.erase(balls.begin() + 1, balls.end());
 		initialize = true;
 	}
 	else if (GameState::reflash) {
@@ -180,15 +178,6 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 	}
 }
 
-Ball::BallContent::BallContent(Color color) {
-	ball.setFillColor(Color::White);
-	ball.setOutlineColor(Color::Black);
-	ball.setRadius(5.f);
-	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
-	ball.setOutlineThickness(2.f);
-	setColor(color);
-	main = true;
-}
 
 Ball::BallContent::BallContent() {
 	ball.setFillColor(Color::White);
@@ -196,6 +185,11 @@ Ball::BallContent::BallContent() {
 	ball.setRadius(5.f);
 	ball.setOrigin(Vector2f(ball.getRadius(), ball.getRadius()));
 	ball.setOutlineThickness(2.f);
+	if (!mainSettled) {
+		setColor(Color::Green);
+		main = true;
+		mainSettled = true;
+	}
 }
 
 void Ball::BallContent::setColor(const Color &color) {

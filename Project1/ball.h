@@ -27,7 +27,6 @@ namespace item {
 		class BallContent {
 		public:
 			BallContent();
-			explicit BallContent(sf::Color color);
 			void ballMove(const sf::FloatRect &, const sf::Vector2f &);
 			void update();
 			const bool isMain() const;
@@ -50,6 +49,7 @@ namespace item {
 		};
 
 		bool flash;
+		static bool mainSettled;
 		static bool initialize;
 		sf::Clock elapsed;
 		std::vector<std::unique_ptr<BallContent>> balls;
