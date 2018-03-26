@@ -1,4 +1,5 @@
 #include "stage.h"
+#include "audio.h"
 #include <iostream>
 
 Stage::Stage(sf::RenderWindow & window)
@@ -13,6 +14,10 @@ Stage::Stage(sf::RenderWindow & window)
 	bricks(new item::Brick(1, 60.f, 25.f, sf::Vector2f(0.8f, 2.f), 3.f)),
 	hud(new HUD()),
 	mouseLight(new ParticleSystem(2000)) {
+	/*
+	Audio::bgmusic.play();
+	Audio::bgmusic.setLoop(true);
+	*/
 	ball->followPlayer(*player);
 	obstacles->setBlockColor(0, sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black);
 	obstacles->setBlockColor(1, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black);
@@ -24,7 +29,8 @@ Stage::Stage(sf::RenderWindow & window)
 }
 
 Stage::~Stage() {
-
+	Audio::bgmusic.stop();
+	Audio::sound1.stop();
 }
 
 void Stage::update(float updateSpan ,sf::Vector2i mousePosition) {

@@ -1,3 +1,4 @@
+#include "audio.h"
 #include "main.h"
 #include "stage.h"
 #include <iostream>
@@ -20,10 +21,6 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
 	*/
 	Audio::initialize();
-	/*
-	Audio::bgmusic.play();
-	Audio::bgmusic.setLoop(true);
-	*/
 	for (Keyboard::Key i = Keyboard::Unknown;
 		i < Keyboard::Unknown + Keyboard::KeyCount;
 		i = static_cast<Keyboard::Key>(i + 1)) {
@@ -73,8 +70,6 @@ void renderThread(RenderWindow * window, atomic<bool> * done) {
 	}
 
 	// finalize...
-	Audio::bgmusic.stop();
-	Audio::sound1.stop();
 	*done = true;
 }
 
