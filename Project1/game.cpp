@@ -9,9 +9,10 @@ using namespace std;
 using namespace item;
 
 atomic<bool> Game::finished(false);
-map<Keyboard::Key, bool> Game::keyDown;
 queue<Event> Game::eventQueue;
 mutex Game::eventQueueMutex;
+map<Keyboard::Key, bool> Game::keyDown;
+thread Game::renderThread;
 
 void Game::pushEvent(Event event) {
 	eventQueueMutex.lock();
@@ -19,57 +20,8 @@ void Game::pushEvent(Event event) {
 	eventQueueMutex.unlock();
 }
 
-void Game::renderThread(RenderWindow * window) {
-
-	HIMC hIMC = 0x0;
-	hIMC = ImmAssociateContext(window->getSystemHandle(), hIMC);
-
-	Audio::initialize();
-	for (Keyboard::Key i = Keyboard::Unknown;
-		i < Keyboard::Unknown + Keyboard::KeyCount;
-		i = static_cast<Keyboard::Key>(i + 1)) {
-		keyDown.insert({ i, false });
-	}
-
-	Stage stage(*window);
-
-	Time elapsed = milliseconds(0);
-	Clock clock;
-	bool finishing = false;
-
-	while (!finishing) {
-
-		Event currentEvent;
-
-		while (!eventQueue.empty()) {
-			currentEvent = popEvent();
-			handleKeyEvent(currentEvent);
-			handleMouseEvent(currentEvent);
-
-			if (currentEvent.type == Event::Closed) {
-				finishing = true;
-			}
-		}
-
-		// maximum update span
-		elapsed = min<Time>(elapsed + clock.restart(), seconds(0.05f));
-
-		// updateSpan: milliseconds
-		Vector2i mousePosition = Mouse::getPosition(*window);
-		static constexpr float updateSpan = 13.0f;
-		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			stage.update(updateSpan, mousePosition);
-			elapsed -= seconds(updateSpan / 1000.0f);
-		}
-
-		// render
-		window->clear(Color::White);
-		window->draw(stage);
-		window->display();
-	}
-
-	// finalize...
-	finished = true;
+void Game::start(sf::RenderWindow & window) {
+	renderThread = thread(Game::renderFunc, &window);
 }
 
 Event Game::popEvent() {
@@ -128,4 +80,55 @@ void Game::handleMouseEvent(Event & event) {
 	else if (event.type == Event::MouseLeft) {
 		GameState::light = false;
 	}
+}
+
+void Game::renderFunc(RenderWindow * window) {
+	ImmAssociateContext(window->getSystemHandle(), 0);
+
+	Audio::initialize();
+	for (Keyboard::Key i = Keyboard::Unknown;
+		i < Keyboard::Unknown + Keyboard::KeyCount;
+		i = static_cast<Keyboard::Key>(i + 1)) {
+		keyDown.insert({ i, false });
+	}
+
+	Stage stage(*window);
+
+	Time elapsed = milliseconds(0);
+	Clock clock;
+	bool finishing = false;
+
+	while (!finishing) {
+
+		Event currentEvent;
+
+		while (!eventQueue.empty()) {
+			currentEvent = popEvent();
+			handleKeyEvent(currentEvent);
+			handleMouseEvent(currentEvent);
+
+			if (currentEvent.type == Event::Closed) {
+				finishing = true;
+			}
+		}
+
+		// maximum update span
+		elapsed = min<Time>(elapsed + clock.restart(), seconds(0.05f));
+
+		// updateSpan: milliseconds
+		Vector2i mousePosition = Mouse::getPosition(*window);
+		static constexpr float updateSpan = 13.0f;
+		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
+			stage.update(updateSpan, mousePosition);
+			elapsed -= seconds(updateSpan / 1000.0f);
+		}
+
+		// render
+		window->clear(Color::White);
+		window->draw(stage);
+		window->display();
+	}
+
+	// finalize...
+	finished = true;
 }
