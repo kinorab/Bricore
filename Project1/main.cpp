@@ -14,7 +14,6 @@ int main() {
 	window.setMouseCursorVisible(false);
 	window.setPosition(sf::Vector2i(window.getPosition().x, 20));
 	window.setVerticalSyncEnabled(true);
-	window.setActive(false);
 
 	Game::start(window);
 

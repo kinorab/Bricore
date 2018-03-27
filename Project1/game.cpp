@@ -21,6 +21,7 @@ void Game::pushEvent(Event event) {
 }
 
 void Game::start(sf::RenderWindow & window) {
+	window.setActive(false);
 	renderThread = thread(Game::renderFunc, &window);
 }
 
@@ -130,5 +131,6 @@ void Game::renderFunc(RenderWindow * window) {
 	}
 
 	// finalize...
+	window->setActive(false);
 	finished = true;
 }
