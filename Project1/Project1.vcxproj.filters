@@ -126,9 +126,6 @@
     <ClInclude Include="rectangleShape.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="audio.h">
       <Filter>標頭檔</Filter>
     </ClInclude>

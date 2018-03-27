@@ -1,6 +1,5 @@
 #include "game.h"
 #include "audio.h"
-#include "main.h"
 #include "stage.h"
 #include <iostream>
 #include <Windows.h>
@@ -73,7 +72,7 @@ void Game::renderThread(RenderWindow * window) {
 	finished = true;
 }
 
-sf::Event Game::popEvent() {
+Event Game::popEvent() {
 	eventQueueMutex.lock();
 	Event event = eventQueue.front();
 	eventQueue.pop();
@@ -81,7 +80,7 @@ sf::Event Game::popEvent() {
 	return event;
 }
 
-void Game::handleKeyEvent(sf::Event & event) {
+void Game::handleKeyEvent(Event & event) {
 	if (event.type != Event::KeyPressed
 		&& event.type != Event::KeyReleased) {
 		return;
@@ -110,7 +109,7 @@ void Game::handleKeyEvent(sf::Event & event) {
 	}
 }
 
-void Game::handleMouseEvent(sf::Event & event) {
+void Game::handleMouseEvent(Event & event) {
 	if (event.type == Event::MouseButtonPressed) {
 		if (!GameState::lock) {
 			if (event.mouseButton.button == Mouse::Left) {

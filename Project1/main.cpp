@@ -1,5 +1,4 @@
 #include "game.h"
-#include "main.h"
 #include "define.h"
 #include <iostream>
 #include <Windows.h>
