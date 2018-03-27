@@ -150,6 +150,7 @@
     <ClCompile Include="define.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="eventDispatcher.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movieClip.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="event.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="hud.h" />
     <ClInclude Include="eventDispatcher.h" />
     <ClInclude Include="main.h" />
