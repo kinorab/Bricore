@@ -84,6 +84,11 @@ void Game::handleMouseEvent(Event & event) {
 }
 
 void Game::renderFunc(RenderWindow * window) {
+
+
+	window->setMouseCursorVisible(false);
+	window->setVerticalSyncEnabled(true);
+	window->setPosition(Vector2i(window->getPosition().x, 20));
 	ImmAssociateContext(window->getSystemHandle(), 0);
 
 	Audio::initialize();

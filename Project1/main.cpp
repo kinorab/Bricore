@@ -3,6 +3,7 @@
 #include <iostream>
 
 int main() {
+
 	sf::ContextSettings settings;
 	settings.depthBits = 24;
 	settings.stencilBits = 8;
@@ -11,10 +12,6 @@ int main() {
 	settings.minorVersion = 1;
 
 	sf::RenderWindow window(sf::VideoMode(static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT)), "Pigject", sf::Style::Close, settings);
-	window.setMouseCursorVisible(false);
-	window.setPosition(sf::Vector2i(window.getPosition().x, 20));
-	window.setVerticalSyncEnabled(true);
-
 	Game::start(window);
 
 	// main thread wait for event and push to queue

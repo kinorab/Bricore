@@ -83,7 +83,7 @@ const sf::FloatRect Player::getFlashBounds() const {
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
-	states.texture = NULL;
+	states.texture = nullptr;
 	target.draw(mainPlayer, states);
 	target.draw(yellowRange, states);
 	target.draw(redRange, states);

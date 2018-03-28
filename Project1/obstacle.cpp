@@ -114,7 +114,7 @@ const size_t Obstacle::getBlocksAmount() const {
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		states.texture = NULL;
+		states.texture = nullptr;
 		target.draw(*blocks.at(i), states);
 	}
 }

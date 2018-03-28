@@ -172,7 +172,7 @@ void Ball::flashRange(Player &player, Sound & sound) {
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
 
-	states.texture = NULL;
+	states.texture = nullptr;
 	for (size_t i = 0; i < balls.size(); ++i) {
 		target.draw(balls.at(i)->ball, states);
 	}
