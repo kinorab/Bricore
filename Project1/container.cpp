@@ -15,10 +15,10 @@ void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 }
 
 void Container::addChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
-	children.insert(children.end(), elements.begin(), elements.end());
+	addChildAt(elements, children.size());
 }
 
-void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, int index) {
+void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, size_t index) {
 	children.insert(children.begin() + index, elements.begin(), elements.end());
 }
 

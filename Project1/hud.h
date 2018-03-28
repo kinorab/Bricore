@@ -1,7 +1,7 @@
 #pragma once
 
 #include "container.h"
-#include "rectangleShape.h"
+#include "displayObject.h"
 #include "sprite.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
@@ -11,5 +11,5 @@ class HUD :
 public:
 	HUD();
 private:
-	std::shared_ptr<game::RectangleShape> background;
+	std::shared_ptr<game::DisplayObject<sf::RectangleShape>> background;
 };
