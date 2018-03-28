@@ -46,9 +46,6 @@
     <ClCompile Include="sprite.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="rectangleShape.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="audio.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -68,6 +65,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="displayObject.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,9 +123,6 @@
     <ClInclude Include="event.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="rectangleShape.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="audio.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -139,6 +136,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="game.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="displayObject.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

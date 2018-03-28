@@ -12,7 +12,7 @@ public:
 	Container();
 	virtual ~Container() override;
 	virtual void addChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
-	virtual void addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, int index);
+	virtual void addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, size_t index);
 	virtual bool contains(const sf::Drawable * element) const;
 	virtual bool dispatchEvent(game::Event * event) override;
 	virtual std::shared_ptr<sf::Drawable> getChildAt(int index) const;

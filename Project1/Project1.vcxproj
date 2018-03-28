@@ -158,7 +158,7 @@
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="rectangleShape.cpp" />
+    <ClCompile Include="displayObject.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="UIComponent.cpp" />
@@ -183,7 +183,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="rectangleShape.h" />
+    <ClInclude Include="displayObject.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="UIComponent.h" />
