@@ -1,6 +1,7 @@
 #include "define.h"
 #include "ball.h"
 #include <algorithm>
+#include <iostream>
 
 using namespace sf;
 using namespace item;
@@ -9,8 +10,7 @@ bool Ball::initialize = false;
 bool Ball::mainSettled = false;
 
 Ball::Ball() {
-	balls.resize(1);
-	balls.at(0) = std::unique_ptr<BallContent>(new BallContent());
+	balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
 }
 
 void Ball::ballUpdateMove(Player &player, Sound & sound) {
@@ -110,15 +110,13 @@ bool Ball::ballCollided(const FloatRect & bounds) {
 	return false;
 }
 
-void Ball::ballDivided(const size_t number) {
+void Ball::ballDivided(const size_t numbers) {
 
-	Vector2f mainPos = balls.at(0)->ball.getPosition();
-	balls.resize(number + 1);
-	for (size_t i = 0; i < number; ++i) {
-		balls.at(i + 1) = std::unique_ptr<BallContent>(new BallContent());
-		balls.at(i + 1)->ball.setPosition(mainPos);
-		balls.at(i + 1)->ballSpeed.x = balls.at(0)->ballSpeed.x * static_cast<float>((rng() % 50 + 50) * .01f * (rng() % 2 == 0 ? -1 : 1));
-		balls.at(i + 1)->ballSpeed.y = balls.at(0)->ballSpeed.y * static_cast<float>((rng() % 25 + 75) * .01f * (rng() % 4 == 0 ? -1 : 1));
+	for (size_t i = 0; i < numbers; ++i) {
+		balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
+		balls.at(balls.size() - 1)->ball.setPosition(balls.at(0)->ball.getPosition());
+		balls.at(balls.size() - 1)->ballSpeed.x = balls.at(0)->ballSpeed.x * static_cast<float>((rng() % 50 + 50) * .01f * (rng() % 2 == 0 ? -1 : 1));
+		balls.at(balls.size() - 1)->ballSpeed.y = balls.at(0)->ballSpeed.y * static_cast<float>((rng() % 25 + 75) * .01f * (rng() % 4 == 0 ? -1 : 1));
 	}
 }
 
@@ -179,7 +177,7 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 }
 
 
-Ball::BallContent::BallContent() {
+Ball::BallContainer::BallContainer() {
 	ball.setFillColor(Color::White);
 	ball.setOutlineColor(Color::Black);
 	ball.setRadius(5.f);
@@ -192,12 +190,12 @@ Ball::BallContent::BallContent() {
 	}
 }
 
-void Ball::BallContent::setColor(const Color &color) {
+void Ball::BallContainer::setColor(const Color &color) {
 
 	ball.setFillColor(color);
 }
 
-void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &position) {
+void Ball::BallContainer::ballMove(const FloatRect &bounds, const Vector2f &position) {
 
 	FloatRect ballBounds = ball.getGlobalBounds();
 	static Clock countTime;
@@ -329,7 +327,7 @@ void Ball::BallContent::ballMove(const FloatRect &bounds, const Vector2f &positi
 	ball.move(ballSpeed.x, ballSpeed.y);
 }
 
-void Ball::BallContent::update() {
+void Ball::BallContainer::update() {
 
 	FloatRect ballBounds = ball.getGlobalBounds();
 	if (!broke) {
@@ -378,11 +376,11 @@ void Ball::BallContent::update() {
 	bottom = false;
 }
 
-const bool Ball::BallContent::isMain() const {
+const bool Ball::BallContainer::isMain() const {
 	return main;
 }
 
-void Ball::BallContent::resetBall() {
+void Ball::BallContainer::resetBall() {
 
 	ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
 	ballSpeed.y = 2.f * (rng() % 100 < 50 ? 1 : -1);

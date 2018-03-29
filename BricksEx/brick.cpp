@@ -77,10 +77,13 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 	}
 }
 
-void Brick::loadImage(Texture *image) {
-	for (size_t i = 0; i < getAreaSize(); ++i) {
-		area.at(i)->setTexture(image);
-	}
+void Brick::loadImage(const string fileName) {
+	levelImage.emplace(fileName, unique_ptr<Texture>(new Texture()));
+	levelImage.at(fileName)->loadFromFile(fileName);
+}
+
+void Brick::deleteImage(const string fileName) {
+	levelImage.erase(levelImage.find(fileName));
 }
 
 void Brick::setBrickColor(const Color &color) {

@@ -1,36 +1,55 @@
 #include "game.h"
 #include "audio.h"
 #include "stage.h"
-#include <iostream>
 #include <Windows.h>
 
 using namespace sf;
 using namespace std;
-using namespace item;
 
 atomic<bool> Game::finished(false);
 queue<Event> Game::eventQueue;
 mutex Game::eventQueueMutex;
 map<Keyboard::Key, bool> Game::keyDown;
 thread Game::renderThread;
+Event Game::currentEvent;
+Event Game::nextEvent;
+ContextSettings Game::settings;
+RenderWindow Game::window;
 
-void Game::pushEvent(Event event) {
+void Game::run() {
+	settleWindow();
+	renderThread = thread(renderFunc);
+	while (!finished && window.waitEvent(nextEvent)) {
+		pushEvent();
+	}
+	window.close();
+}
+
+void Game::pushEvent() {
 	eventQueueMutex.lock();
-	eventQueue.push(event);
+	eventQueue.push(nextEvent);
 	eventQueueMutex.unlock();
 }
 
-void Game::start(sf::RenderWindow & window) {
+void Game::settleWindow() {
+	settings.depthBits = 24;
+	settings.stencilBits = 8;
+	settings.antialiasingLevel = 6;
+	settings.majorVersion = 4;
+	settings.minorVersion = 1;
+	window.create(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)), "BricksEx", Style::Close, settings);
+	window.setMouseCursorVisible(false);
+	window.setVerticalSyncEnabled(true);
+	window.setPosition(Vector2i(window.getPosition().x, 20));
+	ImmAssociateContext(window.getSystemHandle(), 0);
 	window.setActive(false);
-	renderThread = thread(Game::renderFunc, &window);
 }
 
-Event Game::popEvent() {
+void Game::popEvent() {
 	eventQueueMutex.lock();
-	Event event = eventQueue.front();
+	currentEvent = eventQueue.front();
 	eventQueue.pop();
 	eventQueueMutex.unlock();
-	return event;
 }
 
 void Game::handleKeyEvent(Event & event) {
@@ -83,13 +102,7 @@ void Game::handleMouseEvent(Event & event) {
 	}
 }
 
-void Game::renderFunc(RenderWindow * window) {
-
-
-	window->setMouseCursorVisible(false);
-	window->setVerticalSyncEnabled(true);
-	window->setPosition(Vector2i(window->getPosition().x, 20));
-	ImmAssociateContext(window->getSystemHandle(), 0);
+void Game::renderFunc() {
 
 	Audio::initialize();
 	for (Keyboard::Key i = Keyboard::Unknown;
@@ -98,18 +111,15 @@ void Game::renderFunc(RenderWindow * window) {
 		keyDown.insert({ i, false });
 	}
 
-	Stage stage(*window);
-
+	Stage stage(window);
 	Time elapsed = milliseconds(0);
 	Clock clock;
 	bool finishing = false;
 
 	while (!finishing) {
 
-		Event currentEvent;
-
 		while (!eventQueue.empty()) {
-			currentEvent = popEvent();
+			popEvent();
 			handleKeyEvent(currentEvent);
 			handleMouseEvent(currentEvent);
 
@@ -122,7 +132,7 @@ void Game::renderFunc(RenderWindow * window) {
 		elapsed = min<Time>(elapsed + clock.restart(), seconds(0.05f));
 
 		// updateSpan: milliseconds
-		Vector2i mousePosition = Mouse::getPosition(*window);
+		Vector2i mousePosition = Mouse::getPosition(window);
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			stage.update(updateSpan, mousePosition);
@@ -130,12 +140,12 @@ void Game::renderFunc(RenderWindow * window) {
 		}
 
 		// render
-		window->clear(Color::White);
-		window->draw(stage);
-		window->display();
+		window.clear(Color::White);
+		window.draw(stage);
+		window.display();
 	}
 
 	// finalize...
-	window->setActive(false);
+	window.setActive(false);
 	finished = true;
 }

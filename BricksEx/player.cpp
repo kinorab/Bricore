@@ -13,6 +13,7 @@ Player::Player(const float playerSpeed) {
 	mainPlayer.setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - mainPlayer.getSize().y));
 	yellowRange.setSize(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
 	yellowRange.setOrigin(Vector2f(yellowRange.getSize().x / 2, yellowRange.getSize().y / 2));
+	yellowRange.setPosition(mainPlayer.getPosition());
 	yellowRange.setFillColor(Color::Yellow);
 	redRange.setSize(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
 	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
@@ -23,18 +24,18 @@ Player::Player(const float playerSpeed) {
 void Player::playerMove() {
 
 	FloatRect playerBound = mainPlayer.getGlobalBounds();
-	if (playerBound.left > 0
+	if (playerBound.left > 0.0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
 		) {
-		mainPlayer.move(Vector2f(-abs(mainPlayerSpeed), 0));
-		redRange.move(Vector2f(-abs(mainPlayerSpeed), 0));
+		mainPlayer.move(Vector2f(-abs(mainPlayerSpeed), 0.0));
+		redRange.move(Vector2f(-abs(mainPlayerSpeed), 0.0));
 	}
 
 	if (playerBound.left + playerBound.width < LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(Keyboard::Right))
 		) {
-		mainPlayer.move(Vector2f(abs(mainPlayerSpeed), 0));
-		redRange.move(Vector2f(abs(mainPlayerSpeed), 0));
+		mainPlayer.move(Vector2f(abs(mainPlayerSpeed), 0.0));
+		redRange.move(Vector2f(abs(mainPlayerSpeed), 0.0));
 	}
 
 	yellowRange.setPosition(mainPlayer.getPosition());
@@ -42,7 +43,7 @@ void Player::playerMove() {
 
 void Player::setMainPlayerSpeed(const float playerSpeed) {
 
-	if (playerSpeed >= 0) {
+	if (playerSpeed >= 0.0) {
 		mainPlayerSpeed = playerSpeed;
 	}
 	else {

@@ -16,7 +16,7 @@ namespace item {
 		void followPlayer(const Player &player);
 		void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
 		bool ballCollided(const sf::FloatRect &bounds);
-		void ballDivided(const size_t number);
+		void ballDivided(const size_t numbers);
 
 	private:
 		void initializeBall();
@@ -24,9 +24,9 @@ namespace item {
 		void flashRange(Player &player, sf::Sound &sound);
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
-		class BallContent {
+		class BallContainer {
 		public:
-			BallContent();
+			BallContainer();
 			void ballMove(const sf::FloatRect &, const sf::Vector2f &);
 			void update();
 			const bool isMain() const;
@@ -52,6 +52,6 @@ namespace item {
 		static bool mainSettled;
 		static bool initialize;
 		sf::Clock elapsed;
-		std::vector<std::unique_ptr<BallContent>> balls;
+		std::vector<std::unique_ptr<BallContainer>> balls;
 	};
 }

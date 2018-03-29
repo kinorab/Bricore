@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ball.h"
+#include <map>
 
 namespace item {
 	class Brick :
@@ -13,7 +14,8 @@ namespace item {
 		Brick(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
 
-		void loadImage(sf::Texture*);
+		void loadImage(const std::string fileName);
+		void deleteImage(const std::string fileName);
 		void setBrickColor(const sf::Color&);
 		void setFrameColor(const sf::Color&);
 		void setRowAmount(const int row);
@@ -44,11 +46,13 @@ namespace item {
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 		std::vector <std::unique_ptr<sf::RectangleShape>> area;
+		std::map <std::string, std::unique_ptr<sf::Texture>> levelImage;
 		// bricks on every row
 		size_t amount;
 		sf::Vector2f interval;
 		sf::Vector2f sideLength;
 		float frame;
 		bool changeEntity;
+
 	};
 }
