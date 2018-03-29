@@ -13,10 +13,11 @@
 class Stage :
 	public Container {
 public:
-	explicit Stage(sf::RenderWindow & window);
+	Stage();
 	virtual ~Stage();
-	virtual void update(float updateSpan, sf::Vector2i mousePosition);
+	virtual void update(float updateSpan, sf::Vector2f mousePosition);
 private:
+	std::shared_ptr<game::DisplayObject<sf::RectangleShape>> background;
 	std::shared_ptr<item::Ball> ball;
 	float blockLength;
 	std::shared_ptr<item::Brick> bricks;
@@ -25,5 +26,4 @@ private:
 	std::shared_ptr<ParticleSystem> mouseLight;
 	std::shared_ptr<Obstacle> obstacles;
 	std::shared_ptr<Player> player;
-	sf::RenderWindow & window;
 };

@@ -12,22 +12,22 @@ mutex Game::eventQueueMutex;
 map<Keyboard::Key, bool> Game::keyDown;
 thread Game::renderThread;
 Event Game::currentEvent;
-Event Game::nextEvent;
 ContextSettings Game::settings;
 RenderWindow Game::window;
 
 void Game::run() {
 	settleWindow();
 	renderThread = thread(renderFunc);
+	Event nextEvent;
 	while (!finished && window.waitEvent(nextEvent)) {
-		pushEvent();
+		pushEvent(nextEvent);
 	}
 	window.close();
 }
 
-void Game::pushEvent() {
+void Game::pushEvent(Event & event) {
 	eventQueueMutex.lock();
-	eventQueue.push(nextEvent);
+	eventQueue.push(event);
 	eventQueueMutex.unlock();
 }
 
@@ -45,11 +45,12 @@ void Game::settleWindow() {
 	window.setActive(false);
 }
 
-void Game::popEvent() {
+Event Game::popEvent() {
 	eventQueueMutex.lock();
-	currentEvent = eventQueue.front();
+	Event event = eventQueue.front();
 	eventQueue.pop();
 	eventQueueMutex.unlock();
+	return event;
 }
 
 void Game::handleKeyEvent() {
@@ -111,7 +112,7 @@ void Game::renderFunc() {
 		keyDown.insert({ i, false });
 	}
 
-	Stage stage(window);
+	Stage stage;
 	Time elapsed = milliseconds(0);
 	Clock clock;
 	bool finishing = false;
@@ -119,7 +120,7 @@ void Game::renderFunc() {
 	while (!finishing) {
 
 		while (!eventQueue.empty()) {
-			popEvent();
+			currentEvent = popEvent();
 			handleKeyEvent();
 			handleMouseEvent();
 
@@ -132,7 +133,7 @@ void Game::renderFunc() {
 		elapsed = min<Time>(elapsed + clock.restart(), seconds(0.05f));
 
 		// updateSpan: milliseconds
-		Vector2i mousePosition = Mouse::getPosition(window);
+		Vector2f mousePosition = window.mapPixelToCoords(Mouse::getPosition(window));
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			stage.update(updateSpan, mousePosition);
@@ -140,7 +141,6 @@ void Game::renderFunc() {
 		}
 
 		// render
-		window.clear(Color(static_cast<Uint32>(210), static_cast<Uint32>(210), static_cast<Uint32>(210)));
 		window.draw(stage);
 		window.display();
 	}

@@ -11,18 +11,17 @@ public:
 	static void run();
 private:
 	static std::atomic<bool> finished;
-	static void pushEvent();
 	static std::queue<sf::Event> eventQueue;
 	static std::mutex eventQueueMutex;
 	static std::map<sf::Keyboard::Key, bool> keyDown;
 	static std::thread renderThread;
-	static sf::Event nextEvent;
 	static sf::Event currentEvent;
+	static sf::ContextSettings settings;
+	static sf::RenderWindow window;
+	static void pushEvent(sf::Event & event);
 	static void settleWindow();
-	static void popEvent();
+	static sf::Event popEvent();
 	static void handleKeyEvent();
 	static void handleMouseEvent();
 	static void renderFunc();
-	static sf::ContextSettings settings;
-	static sf::RenderWindow window;
 };

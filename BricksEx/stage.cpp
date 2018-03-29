@@ -2,13 +2,13 @@
 #include "audio.h"
 #include <iostream>
 
-Stage::Stage(sf::RenderWindow & window)
-	:window(window),
+Stage::Stage()
+	: background(new game::DisplayObject<sf::RectangleShape>(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT))),
 	blockLength(100.f),
 	incre1(3.f),
 	obstacles(new Obstacle(2
 		, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1) }
-	, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(blockLength, blockLength * incre1) })),
+		, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(blockLength, blockLength * incre1) })),
 	player(new Player(5.5f)),
 	ball(new item::Ball()),
 	bricks(new item::Brick(1, 60.f, 25.f, sf::Vector2f(0.8f, 2.f), 3.f)),
@@ -18,13 +18,14 @@ Stage::Stage(sf::RenderWindow & window)
 	Audio::bgmusic.play();
 	Audio::bgmusic.setLoop(true);
 	*/
+	background->setFillColor(sf::Color(210, 210, 210));
 	ball->followPlayer(*player);
 	obstacles->setBlockColor(0, sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black);
 	obstacles->setBlockColor(1, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black);
 	obstacles->setBlockSpeed(0, 1.5f);
-	obstacles->setBlockSpeed(1, -1.5f);	
-	bricks->setBrickColor(sf::Color(static_cast<sf::Uint8>(255), static_cast<sf::Uint8>(183), static_cast<sf::Uint8>(197)));
-	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
+	obstacles->setBlockSpeed(1, -1.5f);
+	bricks->setBrickColor(sf::Color(255, 183, 197));
+	addChild({ background, hud, obstacles, player, ball, bricks, mouseLight });
 }
 
 Stage::~Stage() {
@@ -32,7 +33,7 @@ Stage::~Stage() {
 	Audio::sound1.stop();
 }
 
-void Stage::update(float updateSpan ,sf::Vector2i mousePosition) {
+void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	if (!GameState::pause) {
 		player->playerMove();
 		ball->ballUpdateMove(*player, Audio::sound1);
@@ -46,7 +47,7 @@ void Stage::update(float updateSpan ,sf::Vector2i mousePosition) {
 				GameState::reflash = true;
 				std::cout << "Finished level: " << level++ << "!!!" << std::endl;
 				bricks->reset(level);
-				bricks->setBrickColor(sf::Color(static_cast<sf::Uint8>(rng() % 255), static_cast<sf::Uint8>(rng() % 255), static_cast<sf::Uint8>(rng() % 255)));
+				bricks->setBrickColor(sf::Color(rng() % 255, rng() % 255, rng() % 255));
 			}
 		}
 		else {
@@ -58,6 +59,6 @@ void Stage::update(float updateSpan ,sf::Vector2i mousePosition) {
 		}
 	}
 
-	mouseLight->setEmitPosition(window.mapPixelToCoords(mousePosition));
+	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
 }
