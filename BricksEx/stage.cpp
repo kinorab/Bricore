@@ -24,7 +24,7 @@ Stage::Stage(sf::RenderWindow & window)
 	obstacles->setBlockSpeed(0, 1.5f);
 	obstacles->setBlockSpeed(1, -1.5f);	
 	bricks->setBrickColor(sf::Color(static_cast<sf::Uint8>(255), static_cast<sf::Uint8>(183), static_cast<sf::Uint8>(197)));
-	addChild({ obstacles, player, ball, bricks, hud, mouseLight });
+	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
 }
 
 Stage::~Stage() {

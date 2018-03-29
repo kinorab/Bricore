@@ -45,7 +45,13 @@ void Brick::loadImage(const string fileName) {
 }
 
 void Brick::deleteImage(const string fileName) {
-	levelImage.erase(levelImage.find(fileName));
+	auto image = levelImage.find(fileName);
+	if (image != levelImage.end()) {
+		levelImage.erase(image);
+	}
+	else {
+		cout << "Image not found." << endl;
+	}
 }
 
 void Brick::displayImage(const string fileName) {

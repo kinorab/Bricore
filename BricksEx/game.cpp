@@ -140,7 +140,7 @@ void Game::renderFunc() {
 		}
 
 		// render
-		window.clear(Color::White);
+		window.clear(Color(static_cast<Uint32>(210), static_cast<Uint32>(210), static_cast<Uint32>(210)));
 		window.draw(stage);
 		window.display();
 	}
