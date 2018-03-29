@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project1", "Project1\Project1.vcxproj", "{AD27A493-2C84-461E-B822-04C337FD71D2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BricksEx", "BricksEx\BricksEx.vcxproj", "{AD27A493-2C84-461E-B822-04C337FD71D2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3CEC1374-E7F1-4F5D-9AA0-11AE9C231626}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1B3A6F1-F807-40C1-9EF4-DED23E7E05F1}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.md = LICENSE.md
 		log.md = log.md
@@ -33,6 +33,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {42CAE874-AE6C-4B24-A006-BF02FB28C6DD}
+		SolutionGuid = {9F2C2226-824A-4B82-8B3B-1F0FE05D3D0D}
 	EndGlobalSection
 EndGlobal
