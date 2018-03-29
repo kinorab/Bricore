@@ -73,7 +73,7 @@
     <IncludePath>$(SolutionDir)SFML\SFML-2.4.2x86\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)SFML\SFML-2.4.2x86\lib;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <TargetName>breakout game</TargetName>
+    <TargetName>BricksEx</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)SFML\SFML-2.4.2x86\include;$(IncludePath)</IncludePath>
