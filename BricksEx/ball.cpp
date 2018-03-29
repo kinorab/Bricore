@@ -1,7 +1,6 @@
 #include "define.h"
 #include "ball.h"
 #include <algorithm>
-#include <iostream>
 
 using namespace sf;
 using namespace item;

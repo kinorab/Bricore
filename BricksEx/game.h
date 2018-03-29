@@ -20,8 +20,8 @@ private:
 	static sf::Event currentEvent;
 	static void settleWindow();
 	static void popEvent();
-	static void handleKeyEvent(sf::Event & event);
-	static void handleMouseEvent(sf::Event & event);
+	static void handleKeyEvent();
+	static void handleMouseEvent();
 	static void renderFunc();
 	static sf::ContextSettings settings;
 	static sf::RenderWindow window;

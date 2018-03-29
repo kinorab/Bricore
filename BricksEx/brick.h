@@ -9,13 +9,12 @@ namespace item {
 
 	public:
 
-		Brick(const size_t row, const size_t column, const float width, const float height
-			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
 		Brick(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
 
 		void loadImage(const std::string fileName);
 		void deleteImage(const std::string fileName);
+		void displayImage(const std::string fileName);
 		void setBrickColor(const sf::Color&);
 		void setFrameColor(const sf::Color&);
 		void setRowAmount(const int row);
@@ -24,18 +23,14 @@ namespace item {
 		void setInterval(const sf::Vector2f &interval);
 		void setInterval(const float x, const float y);
 		void setFrameSize(const float frame);
-		void update(item::Ball &ball);
+		void update(Ball &ball);
 
 		void reset(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
 		void reset(const size_t rowCount);
 
-		void reset(const size_t row, const size_t column, const float width, const float height
-			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
-		void reset(const size_t row, const size_t column);
-
 		const bool isEmpty() const;
-		const size_t getAreaSize() const;
+		const size_t getBricksSize() const;
 		const sf::Vector2f & getSideLength() const;
 		const sf::Vector2f & getInterval() const;
 		const float getFrameSize() const;
@@ -45,8 +40,8 @@ namespace item {
 		void settlePlace();
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
-		std::vector <std::unique_ptr<sf::RectangleShape>> area;
-		std::map <std::string, std::unique_ptr<sf::Texture>> levelImage;
+		std::vector <std::unique_ptr<sf::RectangleShape>> bricks;
+		std::map <std::string, sf::Texture *> levelImage;
 		// bricks on every row
 		size_t amount;
 		sf::Vector2f interval;

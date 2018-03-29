@@ -52,15 +52,15 @@ void Game::popEvent() {
 	eventQueueMutex.unlock();
 }
 
-void Game::handleKeyEvent(Event & event) {
-	if (event.type != Event::KeyPressed
-		&& event.type != Event::KeyReleased) {
+void Game::handleKeyEvent() {
+	if (currentEvent.type != Event::KeyPressed
+		&& currentEvent.type != Event::KeyReleased) {
 		return;
 	}
 
-	if (event.type == Event::KeyPressed) {
-		if (keyDown[event.key.code]) return;
-		keyDown[event.key.code] = true;
+	if (currentEvent.type == Event::KeyPressed) {
+		if (keyDown[currentEvent.key.code]) return;
+		keyDown[currentEvent.key.code] = true;
 		if (keyDown[Keyboard::P]) {
 			GameState::pause = !GameState::pause;
 			GameState::lock = !GameState::lock;
@@ -75,29 +75,29 @@ void Game::handleKeyEvent(Event & event) {
 			}
 		}
 	}
-	else if (event.type == Event::KeyReleased) {
-		if (!keyDown[event.key.code]) return;
-		keyDown[event.key.code] = false;
+	else if (currentEvent.type == Event::KeyReleased) {
+		if (!keyDown[currentEvent.key.code]) return;
+		keyDown[currentEvent.key.code] = false;
 	}
 }
 
-void Game::handleMouseEvent(Event & event) {
-	if (event.type == Event::MouseButtonPressed) {
+void Game::handleMouseEvent() {
+	if (currentEvent.type == Event::MouseButtonPressed) {
 		if (!GameState::lock) {
-			if (event.mouseButton.button == Mouse::Left) {
+			if (currentEvent.mouseButton.button == Mouse::Left) {
 				GameState::start = true;
 			}
 			// debugging feature
-			else if (event.mouseButton.button == Mouse::Right) {
+			else if (currentEvent.mouseButton.button == Mouse::Right) {
 				GameState::start = false;
 				GameState::ready = false;
 			}
 		}
 	}
-	else if (event.type == Event::MouseEntered) {
+	else if (currentEvent.type == Event::MouseEntered) {
 		GameState::light = true;
 	}
-	else if (event.type == Event::MouseLeft) {
+	else if (currentEvent.type == Event::MouseLeft) {
 		GameState::light = false;
 	}
 }
@@ -120,8 +120,8 @@ void Game::renderFunc() {
 
 		while (!eventQueue.empty()) {
 			popEvent();
-			handleKeyEvent(currentEvent);
-			handleMouseEvent(currentEvent);
+			handleKeyEvent();
+			handleMouseEvent();
 
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;

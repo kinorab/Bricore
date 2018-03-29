@@ -7,44 +7,6 @@ using namespace std;
 using namespace sf;
 using namespace item;
 
-// user set the brick array manually
-Brick::Brick(const size_t row, const size_t col, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
-
-	try {
-		if (wid <= 0.0f || hei <= 0.0f
-			|| interval.x < 0.0f || interval.y < 0.0f
-			|| frameSize < 0.0f) {
-			throw domain_error("Invaild brick initialization.");
-		}
-		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > LEVEL_WIDTH
-			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > LEVEL_HEIGHT) {
-			throw domain_error("Invaild brick initialization.");
-		}
-		else {
-			area.resize(row * col);
-			amount = col;
-			sideLength = Vector2f(wid, hei);
-			frame = frameSize;
-			this->interval = interval;
-
-			if (getAreaSize() == row * amount) {
-				changeEntity = true;
-				settlePlace();
-			}
-			else {
-				throw out_of_range("The subscripts are out of range.");
-			}
-		}
-	}
-	catch (domain_error &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-}
-
-// auto full up the window
 Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
 
 	try {
@@ -58,9 +20,9 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 			frame = frameSize;
 			this->interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
-			area.resize(rowCount * amount);
+			bricks.resize(rowCount * amount);
 
-			if (getAreaSize() == rowCount * amount) {
+			if (getBricksSize() == rowCount * amount) {
 				changeEntity = true;
 				settlePlace();
 			}
@@ -78,7 +40,7 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 }
 
 void Brick::loadImage(const string fileName) {
-	levelImage.emplace(fileName, unique_ptr<Texture>(new Texture()));
+	levelImage.emplace(fileName, new Texture());
 	levelImage.at(fileName)->loadFromFile(fileName);
 }
 
@@ -86,16 +48,22 @@ void Brick::deleteImage(const string fileName) {
 	levelImage.erase(levelImage.find(fileName));
 }
 
+void Brick::displayImage(const string fileName) {
+	for (size_t i = 0; i < getBricksSize(); ++i) {
+		bricks.at(i)->setTexture(levelImage.at(fileName));
+	}
+}
+
 void Brick::setBrickColor(const Color &color) {
-	for (size_t i = 0; i < getAreaSize(); ++i) {
-		area.at(i)->setFillColor(color);
+	for (size_t i = 0; i < getBricksSize(); ++i) {
+		bricks.at(i)->setFillColor(color);
 	}
 }
 
 void Brick::setFrameColor(const Color &color) {
 	if (frame > 0.0f) {
-		for (size_t i = 0; i < getAreaSize(); ++i) {
-			area.at(i)->setOutlineColor(color);
+		for (size_t i = 0; i < getBricksSize(); ++i) {
+			bricks.at(i)->setOutlineColor(color);
 		}
 	}
 	else {
@@ -106,12 +74,12 @@ void Brick::setFrameColor(const Color &color) {
 void Brick::setRowAmount(const int row) {
 
 	if (row > 0) {
-		area.resize(row * amount);
+		bricks.resize(row * amount);
 		changeEntity = true;
 		settlePlace();
 	}
 	else {
-		cout << "Invalid area setting." << endl;
+		cout << "Invalid bricks setting." << endl;
 	}
 }
 
@@ -175,17 +143,16 @@ void Brick::setFrameSize(const float frameSize) {
 
 void Brick::update(Ball &ball) {
 
-	for (size_t i = 0; i < getAreaSize(); ++i) {
+	for (size_t i = 0; i < getBricksSize(); ++i) {
 
-		FloatRect brickBounds = area.at(i)->getGlobalBounds();
+		FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
 		if (ball.ballCollided(brickBounds)) {
-			area.erase(area.begin() + i);
+			bricks.erase(bricks.begin() + i);
 			--i;
 		}
 	}
 }
 
-// reset automatically
 void Brick::reset(const size_t rowCount, const float wid, const float hei
 	, const Vector2f &interval, const float frameSize) {
 
@@ -200,9 +167,9 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 			frame = frameSize;
 			this->interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
-			area.resize(rowCount * amount);
+			bricks.resize(rowCount * amount);
 
-			if (getAreaSize() == rowCount * amount) {
+			if (getBricksSize() == rowCount * amount) {
 				changeEntity = true;
 				settlePlace();
 			}
@@ -222,9 +189,9 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 void Brick::reset(const size_t rowCount) {
 
 	try {
-		area.resize(rowCount * amount);
+		bricks.resize(rowCount * amount);
 
-		if (getAreaSize() == rowCount * amount) {
+		if (getBricksSize() == rowCount * amount) {
 			changeEntity = true;
 			settlePlace();
 		}
@@ -237,77 +204,12 @@ void Brick::reset(const size_t rowCount) {
 	}
 }
 
-// reset manually
-void Brick::reset(const size_t row, const size_t col, const float wid, const float hei
-	, const Vector2f & interval, const float frameSize) {
-	try {
-		if (wid <= 0.0f || hei <= 0.0f
-			|| interval.x < 0.0f || interval.y < 0.0f
-			|| frameSize < 0.0f) {
-			throw domain_error("Invaild brick initialization.");
-		}
-		else if (col * (wid + frameSize * 2) + interval.x * (col + 1) > LEVEL_WIDTH
-			|| row * (hei + frameSize * 2) + interval.y * (row + 1) > LEVEL_HEIGHT) {
-			throw domain_error("Invaild brick initialization.");
-		}
-		else {
-			area.resize(row * col);
-			amount = col;
-			sideLength = Vector2f(wid, hei);
-			frame = frameSize;
-			this->interval = interval;
-
-			if (getAreaSize() == row * amount) {
-				changeEntity = true;
-				settlePlace();
-			}
-			else {
-				throw out_of_range("The subscripts are out of range.");
-			}
-		}
-	}
-	catch (domain_error &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-}
-
-void Brick::reset(const size_t row, const size_t col) {
-
-	try {
-		if (col * (sideLength.x + frame * 2) + interval.x * (col + 1) > LEVEL_WIDTH
-			|| row * (sideLength.y + frame * 2) + interval.y * (row + 1) > LEVEL_HEIGHT) {
-			throw domain_error("Invaild brick initialization.");
-		}
-		else {
-			area.resize(row * col);
-			amount = col;
-
-			if (getAreaSize() == row * amount) {
-				changeEntity = true;
-				settlePlace();
-			}
-			else {
-				throw out_of_range("The subscripts are out of range.");
-			}
-		}
-	}
-	catch (domain_error &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-}
-
 const bool Brick::isEmpty() const {
-	return area.empty();
+	return bricks.empty();
 }
 
-const size_t Brick::getAreaSize() const {
-	return area.size();
+const size_t Brick::getBricksSize() const {
+	return bricks.size();
 }
 
 const Vector2f & Brick::getSideLength() const {
@@ -332,15 +234,14 @@ void Brick::settlePlace() {
 
 	try {
 		if (changeEntity == true) {
-			for (size_t i = 0; i < area.size(); ++i) {
-				area.at(i) = unique_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
+			for (size_t i = 0; i < bricks.size(); ++i) {
+				bricks.at(i) = unique_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
 				if (frame > 0.0f) {
-					area.at(i)->setOutlineThickness(frame);
-					// if frames exist, the default color is set black
-					area.at(i)->setOutlineColor(Color::Black);
+					bricks.at(i)->setOutlineThickness(frame);
+					bricks.at(i)->setOutlineColor(Color::Black);
 				}
 				// center origin position in every brick
-				area.at(i)->setOrigin(Vector2f(area.at(i)->getSize().x / 2, area.at(i)->getSize().y / 2));
+				bricks.at(i)->setOrigin(Vector2f(bricks.at(i)->getSize().x / 2, bricks.at(i)->getSize().y / 2));
 			}
 			// cover all attributes again
 			whiteSpace = (LEVEL_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
@@ -351,16 +252,16 @@ void Brick::settlePlace() {
 
 		// ensure that total with the intervals should not be out of screen
 		if (whiteSpace >= 0.0f) {
-			// start placing area array
-			for (size_t i = 0; i < area.size(); ++i) {
+			// start placing bricks array
+			for (size_t i = 0; i < bricks.size(); ++i) {
 
-				area.at(i)->setPosition(tempPos);
+				bricks.at(i)->setPosition(tempPos);
 				if (tempCount < amount) {
-					tempPos += Vector2f(interval.x + area.at(i)->getGlobalBounds().width, 0);
+					tempPos += Vector2f(interval.x + bricks.at(i)->getGlobalBounds().width, 0);
 					++tempCount;
 				}
 				else {
-					tempPos = Vector2f(initialPos.x, tempPos.y + interval.y + area.at(i)->getGlobalBounds().height);
+					tempPos = Vector2f(initialPos.x, tempPos.y + interval.y + bricks.at(i)->getGlobalBounds().height);
 					tempCount = 1;
 				}
 			}
@@ -376,8 +277,8 @@ void Brick::settlePlace() {
 
 void Brick::draw(RenderTarget &target, RenderStates states) const {
 
-	for (size_t i = 0; i < getAreaSize(); ++i) {
-		states.texture = area.at(i)->getTexture();
-		target.draw(*area.at(i), states);
+	for (size_t i = 0; i < getBricksSize(); ++i) {
+		states.texture = bricks.at(i)->getTexture();
+		target.draw(*bricks.at(i), states);
 	}
 }
