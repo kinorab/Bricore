@@ -160,14 +160,13 @@ void Ball::BallContainer::setColor(const Color &color) {
 void Ball::BallContainer::ballMove(const FloatRect &bounds, const Vector2f &position) {
 
 	FloatRect ballBounds = ball.getGlobalBounds();
-	static Clock countTime;
 	if (active) {
 		oriSpeed.x = ballSpeed.x;
 		oriSpeed.y = ballSpeed.y;
 		countTime.restart();
 		active = false;
 	}
-	else if (countTime.getElapsedTime().asSeconds() > RESETTIME && GameState::start) {
+	else if (countTime.getElapsedTime().asSeconds() > RESETTIME) {
 		// preserve last speed then add 60% extra origin speed to new speed
 		float tempX = ballSpeed.x;
 		float tempY = ballSpeed.y;

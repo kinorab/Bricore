@@ -41,7 +41,7 @@ namespace item {
 			void setColor(const sf::Color &);
 			void resetBall();
 			sf::Vector2f oriSpeed;
-
+			sf::Clock countTime;
 			bool main = false;
 			bool active = true;
 		};
