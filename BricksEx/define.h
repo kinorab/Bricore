@@ -16,7 +16,7 @@ namespace GameState {
 	extern bool start;
 	extern bool ready;
 	extern bool light;
-	extern bool reflash;
+	extern bool finishLevel;
 	extern bool pause;
 	extern bool lock;
 };

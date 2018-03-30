@@ -8,10 +8,9 @@ using namespace sf;
 // unity of Block-->Obstacle
 Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const vector <Vector2f> &sideLength) {
 
-	blocks.resize(number);
 	try {
-		for (size_t i = 0; i < blocks.size(); ++i) {
-			blocks.at(i) = unique_ptr<Block>(new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
+		for (size_t i = 0; i < number; ++i) {
+			blocks.push_back(unique_ptr<Block>(new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
 		}
 	}
 	catch (out_of_range &ex) {
@@ -91,11 +90,14 @@ void Obstacle::setAllSpeed(const vector <Vector2f> &speed) {
 	}
 }
 
-void Obstacle::update() {
+void Obstacle::reset() {
 
 	try {
-		for (size_t i = 0; i < blocks.size(); ++i) {
-			blocks.at(i)->resetPosition();
+		if (!GameState::ready) {
+			for (size_t i = 0; i < blocks.size(); ++i) {
+				blocks.at(i)->resetPosition();
+			}				
+			GameState::ready = true;
 		}
 	}
 	catch (out_of_range &ex) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "player.h"
-#include <SFML/Audio.hpp>
 #include <vector>
 #include <memory>
 
@@ -11,17 +10,16 @@ namespace item {
 
 	public:
 		Ball();
-		void ballUpdateMove(Player &player, sf::Sound &sound);
-		void move(const Player &player);
-		void followPlayer(const Player &player);
+		void initializeBall(const sf::FloatRect &playerBounds, const sf::Vector2f &playerPos);
+		void update(const sf::FloatRect &playerBounds, const sf::Vector2f &playerPos);
+		void followPlayer(const sf::Vector2f &playerPos);
 		void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
 		bool ballCollided(const sf::FloatRect &bounds);
 		void ballDivided(const size_t numbers);
+		const sf::FloatRect getMainBallBounds() const;
+		const sf::Vector2f & getMainBallPosition() const;
 
 	private:
-		void initializeBall();
-		void flashElapsed(Player &);
-		void flashRange(Player &player, sf::Sound &sound);
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 		class BallContainer {
@@ -48,10 +46,8 @@ namespace item {
 			bool active = true;
 		};
 
-		bool flash;
 		static bool mainSettled;
 		static bool initialize;
-		sf::Clock elapsed;
 		std::vector<std::unique_ptr<BallContainer>> balls;
 	};
 }

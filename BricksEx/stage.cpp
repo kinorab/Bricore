@@ -19,7 +19,7 @@ Stage::Stage()
 	Audio::bgmusic.setLoop(true);
 	*/
 	background->setFillColor(sf::Color(210, 210, 210));
-	ball->followPlayer(*player);
+	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	obstacles->setBlockColor(0, sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black);
 	obstacles->setBlockColor(1, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black);
 	obstacles->setBlockSpeed(0, 1.5f);
@@ -34,31 +34,20 @@ Stage::~Stage() {
 }
 
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
+
 	if (!GameState::pause) {
-		player->playerMove();
-		ball->ballUpdateMove(*player, Audio::sound1);
+		player->playerMove(Audio::sound1, ball->getMainBallBounds(), ball->getMainBallPosition());
+		ball->initializeBall(player->getMainPlayerBounds(), player->getMainPlayerPos());
 		if (GameState::start) {
 			obstacles->update(*ball);
 			bricks->update(*ball);
-			ball->move(*player);
-			if (bricks->isEmpty()) {
-				GameState::ready = false;
-				GameState::start = false;
-				GameState::reflash = true;
-				std::cout << "Finished level: " << level++ << "!!!" << std::endl;
-				bricks->reset(level);
-				bricks->setBrickColor(sf::Color(rng() % 255, rng() % 255, rng() % 255));
-			}
+			ball->update(player->getMainPlayerBounds(), player->getMainPlayerPos());
 		}
 		else {
-			ball->followPlayer(*player);
-			if (!GameState::ready) {
-				obstacles->update();
-				GameState::ready = true;
-			}
+			ball->followPlayer(player->getMainPlayerTopCenterPos());
+			obstacles->reset();
 		}
 	}
-
 	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
 }

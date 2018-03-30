@@ -29,7 +29,6 @@ namespace item {
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
 		void reset(const size_t rowCount);
 
-		const bool isEmpty() const;
 		const size_t getBricksSize() const;
 		const sf::Vector2f & getSideLength() const;
 		const sf::Vector2f & getInterval() const;

@@ -149,13 +149,22 @@ void Brick::setFrameSize(const float frameSize) {
 
 void Brick::update(Ball &ball) {
 
-	for (size_t i = 0; i < getBricksSize(); ++i) {
-
-		FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
-		if (ball.ballCollided(brickBounds)) {
-			bricks.erase(bricks.begin() + i);
-			--i;
+	if (!bricks.empty()) {
+		for (size_t i = 0; i < getBricksSize(); ++i) {
+			FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
+			if (ball.ballCollided(brickBounds)) {
+				bricks.erase(bricks.begin() + i);
+				--i;
+			}
 		}
+	}
+	else {
+		GameState::ready = false;
+		GameState::start = false;
+		GameState::finishLevel = true;
+		std::cout << "Finished level: " << level++ << "!!!" << std::endl;
+		reset(level);
+		setBrickColor(sf::Color(rng() % 255, rng() % 255, rng() % 255));
 	}
 }
 
@@ -210,10 +219,6 @@ void Brick::reset(const size_t rowCount) {
 	}
 }
 
-const bool Brick::isEmpty() const {
-	return bricks.empty();
-}
-
 const size_t Brick::getBricksSize() const {
 	return bricks.size();
 }
@@ -260,7 +265,6 @@ void Brick::settlePlace() {
 		if (whiteSpace >= 0.0f) {
 			// start placing bricks array
 			for (size_t i = 0; i < bricks.size(); ++i) {
-
 				bricks.at(i)->setPosition(tempPos);
 				if (tempCount < amount) {
 					tempPos += Vector2f(interval.x + bricks.at(i)->getGlobalBounds().width, 0);

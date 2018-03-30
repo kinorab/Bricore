@@ -4,8 +4,9 @@
 
 using namespace sf;
 
-Player::Player(const float playerSpeed) {
+bool Player::flash = false;
 
+Player::Player(const float playerSpeed) {
 	mainPlayerSpeed = playerSpeed;
 	mainPlayer.setSize(Vector2f(240, 12));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
@@ -21,8 +22,7 @@ Player::Player(const float playerSpeed) {
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 }
 
-void Player::playerMove() {
-
+void Player::playerMove(Sound &sound, const FloatRect &ballBounds, const Vector2f &mainBallPos) {
 	FloatRect playerBound = mainPlayer.getGlobalBounds();
 	if (playerBound.left > 0.0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
@@ -30,19 +30,23 @@ void Player::playerMove() {
 		mainPlayer.move(Vector2f(-abs(mainPlayerSpeed), 0.0));
 		redRange.move(Vector2f(-abs(mainPlayerSpeed), 0.0));
 	}
-
 	if (playerBound.left + playerBound.width < LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(Keyboard::Right))
 		) {
 		mainPlayer.move(Vector2f(abs(mainPlayerSpeed), 0.0));
 		redRange.move(Vector2f(abs(mainPlayerSpeed), 0.0));
 	}
+	if (GameState::start) {
+		flashRange(sound, ballBounds, mainBallPos);
+	}
+	if (flash) {
+		flashElapsed();
+	}
 
 	yellowRange.setPosition(mainPlayer.getPosition());
 }
 
 void Player::setMainPlayerSpeed(const float playerSpeed) {
-
 	if (playerSpeed >= 0.0) {
 		mainPlayerSpeed = playerSpeed;
 	}
@@ -67,25 +71,57 @@ const float Player::getMainPlayerSpeed() const {
 	return mainPlayerSpeed;
 }
 
-const sf::Vector2f & Player::getMainPlayerPosition() const {
-
+const Vector2f & Player::getMainPlayerPos() const {
 	return mainPlayer.getPosition();
 }
 
-const sf::FloatRect Player::getMainPlayerBounds() const {
+const Vector2f Player::getMainPlayerTopCenterPos() const {
+	return Vector2f(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top);
+}
 
+const FloatRect Player::getMainPlayerBounds() const {
 	return mainPlayer.getGlobalBounds();
 }
 
-const sf::FloatRect Player::getFlashBounds() const {
-
+const FloatRect Player::getFlashBounds() const {
 	return redRange.getGlobalBounds();
 }
 
-void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-
+void Player::draw(RenderTarget &target, RenderStates states) const {
 	states.texture = nullptr;
 	target.draw(mainPlayer, states);
 	target.draw(yellowRange, states);
 	target.draw(redRange, states);
+}
+
+void Player::flashElapsed() {
+	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
+	if (time <= 1500.f) {
+		float rate = (1.f - time / 1500.f);
+		setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
+	}
+	else {
+		flash = false;
+	}
+}
+
+void Player::flashRange(Sound & sound, const FloatRect &ballBounds, const Vector2f &ballPos) {
+	FloatRect playerBounds = getMainPlayerBounds();
+	FloatRect rangeBounds = getFlashBounds();
+	Vector2f pos1P = getMainPlayerPos();
+
+	if (ballBounds.intersects(playerBounds)) {
+		elapsed.restart();
+		sound.play();
+		if (ballBounds.left <= playerBounds.left) {
+			setFlashPosition(playerBounds.left + rangeBounds.width / 2, pos1P.y);
+		}
+		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
+			setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y);
+		}
+		else {
+			setFlashPosition(ballPos.x, pos1P.y);
+		}
+		flash = true;
+	}
 }
