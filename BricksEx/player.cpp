@@ -47,11 +47,16 @@ void Player::playerMove(Sound &sound, const FloatRect &ballBounds, const Vector2
 }
 
 void Player::setMainPlayerSpeed(const float playerSpeed) {
-	if (playerSpeed >= 0.0) {
-		mainPlayerSpeed = playerSpeed;
+	try {
+		if (playerSpeed >= 0.0) {
+			mainPlayerSpeed = playerSpeed;
+		}
+		else {
+			std::invalid_argument("Player's speed can't be negative.");
+		}
 	}
-	else {
-		std::cout << "Player's speed can't be negative." << std::endl;
+	catch (std::invalid_argument &ex) {
+		std::cout << "Invalid_argument: " << ex.what() << std::endl;
 	}
 }
 

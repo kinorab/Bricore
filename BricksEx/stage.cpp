@@ -11,7 +11,7 @@ Stage::Stage()
 		, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(blockLength, blockLength * incre1) })),
 	player(new Player(5.5f)),
 	ball(new item::Ball()),
-	bricks(new item::Brick(1, 60.f, 25.f, sf::Vector2f(0.8f, 2.f), 3.f)),
+	bricks(new item::Brick(1, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f)),
 	hud(new HUD()),
 	mouseLight(new ParticleSystem(2000)) {
 	/*

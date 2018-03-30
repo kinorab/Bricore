@@ -30,22 +30,32 @@ void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3
 }
 
 void Block::setWidth(const float width) {
-	if (width > 0) {
-		this->width = width;
-		setBlockVertice();
+	try {
+		if (width > 0) {
+			this->width = width;
+			setBlockVertice();
+		}
+		else {
+			throw invalid_argument("Invalid width cannot be negetive.");
+		}
 	}
-	else {
-		cout << "Invalid width setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Block::setHeight(const float height) {
-	if (height > 0) {
-		this->height = height;
-		setBlockVertice();
+	try {
+		if (height > 0) {
+			this->height = height;
+			setBlockVertice();
+		}
+		else {
+			throw invalid_argument("Invalid height cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid height setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 

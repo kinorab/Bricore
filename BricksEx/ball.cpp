@@ -118,7 +118,7 @@ void Ball::ballDivided(const size_t numbers) {
 		}
 	}
 	catch (std::out_of_range &ex) {
-		std::cout << "Cannot modify balls' amount:"<< ex.what() << std::endl;
+		std::cout << "Cannot modify balls' amount: "<< ex.what() << std::endl;
 	}
 }
 
