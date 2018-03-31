@@ -3,7 +3,7 @@
 #include <iostream>
 
 Stage::Stage()
-	: background(new game::DisplayObject<sf::RectangleShape>(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT))),
+	: background(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT))),
 	blockLength(100.f),
 	incre1(3.f),
 	obstacles(new Obstacle(2
