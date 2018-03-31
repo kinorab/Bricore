@@ -10,7 +10,7 @@ namespace item {
 	public:
 
 		Brick(const size_t rowCount, const float width, const float height
-			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
+			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
 
 		void loadImage(const std::string fileName);
 		void deleteImage(const std::string fileName);
@@ -26,10 +26,9 @@ namespace item {
 		void update(Ball &ball);
 
 		void reset(const size_t rowCount, const float width, const float height
-			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f);
+			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
 		void reset(const size_t rowCount);
 
-		const bool isEmpty() const;
 		const size_t getBricksSize() const;
 		const sf::Vector2f & getSideLength() const;
 		const sf::Vector2f & getInterval() const;
@@ -44,10 +43,11 @@ namespace item {
 		std::map <std::string, sf::Texture *> levelImage;
 		// bricks on every row
 		size_t amount;
+		float frame;
 		sf::Vector2f interval;
 		sf::Vector2f sideLength;
-		float frame;
-		bool changeEntity;
+		static sf::Vector2f whiteSpace;
+		static bool changeEntity;
 
 	};
 }

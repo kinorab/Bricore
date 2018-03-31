@@ -7,19 +7,24 @@ using namespace std;
 using namespace sf;
 using namespace item;
 
-Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vector2f &interval, const float frameSize) {
+bool Brick::changeEntity = false;
+Vector2f Brick::whiteSpace(0.0f, 0.0f);
+
+Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vector2f &interval, const float frameSize, const float whiteSpaceY) {
 
 	try {
 		if (wid <= 0.0f || hei <= 0.0f
 			|| interval.x < 0.0f || interval.y < 0.0f
-			|| frameSize < 0.0f) {
-			throw domain_error("Invaild brick initialization.");
+			|| frameSize < 0.0f || whiteSpaceY < 0.0f) {
+			throw invalid_argument("Invaild brick initialization.");
 		}
 		else {
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
 			this->interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
+			whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
+			whiteSpace.y = whiteSpaceY;
 			bricks.resize(rowCount * amount);
 
 			if (getBricksSize() == rowCount * amount) {
@@ -31,8 +36,8 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 			}
 		}
 	}
-	catch (domain_error &ex) {
-		cout << "Exception: " << ex.what() << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 	catch (out_of_range &ex) {
 		cout << "Exception: " << ex.what() << endl;
@@ -46,11 +51,16 @@ void Brick::loadImage(const string fileName) {
 
 void Brick::deleteImage(const string fileName) {
 	auto image = levelImage.find(fileName);
-	if (image != levelImage.end()) {
-		levelImage.erase(image);
+	try {
+		if (image != levelImage.end()) {
+			levelImage.erase(image);
+		}
+		else {
+			domain_error("Image not found.");
+		}
 	}
-	else {
-		cout << "Image not found." << endl;
+	catch (domain_error &ex) {
+		cout << "Domain_error: " << ex.what() << endl;
 	}
 }
 
@@ -67,112 +77,152 @@ void Brick::setBrickColor(const Color &color) {
 }
 
 void Brick::setFrameColor(const Color &color) {
-	if (frame > 0.0f) {
-		for (size_t i = 0; i < getBricksSize(); ++i) {
-			bricks.at(i)->setOutlineColor(color);
+	try {
+		if (frame > 0.0f) {
+			for (size_t i = 0; i < getBricksSize(); ++i) {
+				bricks.at(i)->setOutlineColor(color);
+			}
+		}
+		else {
+			invalid_argument("Brick frames do not exist.");
 		}
 	}
-	else {
-		cout << "Brick frames do not exist." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Brick::setRowAmount(const int row) {
-
-	if (row > 0) {
-		bricks.resize(row * amount);
-		changeEntity = true;
-		settlePlace();
+	try {
+		if (row > 0) {
+			bricks.resize(row * amount);
+			changeEntity = true;
+			settlePlace();
+		}
+		else {
+			invalid_argument("Row cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid bricks setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Brick::setSideLength(const Vector2f & sideLength) {
-
-	if (sideLength.x > 0 && sideLength.y > 0) {
-		this->sideLength = sideLength;
-		changeEntity = true;
-		settlePlace();
+	try {
+		if (sideLength.x > 0 && sideLength.y > 0) {
+			this->sideLength = sideLength;
+			changeEntity = true;
+			settlePlace();
+		}
+		else {
+			invalid_argument("Side-length cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid side-length setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Brick::setSideLength(const float wid, const float hei) {
-
-	if (wid > 0 && hei > 0) {
-		sideLength = Vector2f(wid, hei);
-		changeEntity = true;
-		settlePlace();
+	try {
+		if (wid > 0 && hei > 0) {
+			sideLength = Vector2f(wid, hei);
+			changeEntity = true;
+			settlePlace();
+		}
+		else {
+			invalid_argument("Side-length cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid side-length setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Brick::setInterval(const Vector2f &interval) {
-
-	if (interval.x >= 0.0f && interval.y >= 0.0f) {
-		this->interval = interval;
-		settlePlace();
+	try {
+		if (interval.x >= 0.0f && interval.y >= 0.0f) {
+			this->interval = interval;
+			settlePlace();
+		}
+		else {
+			invalid_argument("Interval cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid interval setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Brick::setInterval(const float x, const float y) {
-
-	if (x >= 0.0f && y >= 0.0f) {
-		interval = Vector2f(x, y);
-		settlePlace();
+	try {
+		if (x >= 0.0f && y >= 0.0f) {
+			interval = Vector2f(x, y);
+			settlePlace();
+		}
+		else {
+			invalid_argument("Interval cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid interval setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Brick::setFrameSize(const float frameSize) {
-
-	if (frameSize >= 0.0f) {
-		frame = frameSize;
-		changeEntity = true;
-		settlePlace();
+	try {
+		if (frameSize >= 0.0f) {
+			frame = frameSize;
+			changeEntity = true;
+			settlePlace();
+		}
+		else {
+			invalid_argument("Frame size cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid frame size setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Brick::update(Ball &ball) {
 
-	for (size_t i = 0; i < getBricksSize(); ++i) {
-
-		FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
-		if (ball.ballCollided(brickBounds)) {
-			bricks.erase(bricks.begin() + i);
-			--i;
+	if (!bricks.empty()) {
+		for (size_t i = 0; i < getBricksSize(); ++i) {
+			FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
+			if (ball.ballCollided(brickBounds)) {
+				bricks.erase(bricks.begin() + i);
+				--i;
+			}
 		}
+	}
+	else {
+		GameState::ready = false;
+		GameState::start = false;
+		GameState::finishLevel = true;
+		std::cout << "Finished level: " << level++ << "!!!" << std::endl;
+		reset(level);
+		setBrickColor(sf::Color(rng() % 255, rng() % 255, rng() % 255));
 	}
 }
 
 void Brick::reset(const size_t rowCount, const float wid, const float hei
-	, const Vector2f &interval, const float frameSize) {
+	, const Vector2f &interval, const float frameSize, const float whiteSpaceY) {
 
 	try {
 		if (wid <= 0.0f || hei <= 0.0f
 			|| interval.x < 0.0f || interval.y < 0.0f
-			|| frameSize < 0.0f) {
-			throw domain_error("Invaild brick initialization.");
+			|| frameSize < 0.0f || whiteSpaceY < 0.0f) {
+			throw invalid_argument("Invaild brick initialization.");
 		}
 		else {
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
 			this->interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
+			whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
+			whiteSpace.y = whiteSpaceY;
 			bricks.resize(rowCount * amount);
 
 			if (getBricksSize() == rowCount * amount) {
@@ -184,8 +234,8 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 			}
 		}
 	}
-	catch (domain_error &ex) {
-		cout << "Exception: " << ex.what() << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 	catch (out_of_range &ex) {
 		cout << "Exception: " << ex.what() << endl;
@@ -193,7 +243,6 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 }
 
 void Brick::reset(const size_t rowCount) {
-
 	try {
 		bricks.resize(rowCount * amount);
 
@@ -208,10 +257,6 @@ void Brick::reset(const size_t rowCount) {
 	catch (out_of_range &ex) {
 		cout << "Exception: " << ex.what() << endl;
 	}
-}
-
-const bool Brick::isEmpty() const {
-	return bricks.empty();
 }
 
 const size_t Brick::getBricksSize() const {
@@ -232,11 +277,8 @@ const float Brick::getFrameSize() const {
 
 void Brick::settlePlace() {
 
-	static float whiteSpace = (LEVEL_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
-	// if window's size().x cannot be filled with full screen, remain the white space of bound
-	static Vector2f initialPos(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
-	static Vector2f tempPos = Vector2f(initialPos.x, initialPos.y);
-	static size_t tempCount = 1;
+	Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frame, interval.y + frame + sideLength.y / 2);
+	Vector2f tempPos = Vector2f(initialPos.x, initialPos.y + whiteSpace.y);
 
 	try {
 		if (changeEntity == true) {
@@ -249,34 +291,34 @@ void Brick::settlePlace() {
 				// center origin position in every brick
 				bricks.at(i)->setOrigin(Vector2f(bricks.at(i)->getSize().x / 2, bricks.at(i)->getSize().y / 2));
 			}
-			// cover all attributes again
-			whiteSpace = (LEVEL_WIDTH - ((interval.x + sideLength.x + frame * 2) * amount + interval.x)) / 2;
-			initialPos = Vector2f(whiteSpace + interval.x + sideLength.x / 2 + frame, interval.y + sideLength.y / 2 + frame);
-			tempPos = Vector2f(initialPos.x, initialPos.y);
 			changeEntity = false;
 		}
 
 		// ensure that total with the intervals should not be out of screen
-		if (whiteSpace >= 0.0f) {
+		if (whiteSpace.x >= 0.0f) {
 			// start placing bricks array
+			size_t tempCount = 1;
 			for (size_t i = 0; i < bricks.size(); ++i) {
-
+				FloatRect bounds = bricks.at(i)->getGlobalBounds();
 				bricks.at(i)->setPosition(tempPos);
 				if (tempCount < amount) {
-					tempPos += Vector2f(interval.x + bricks.at(i)->getGlobalBounds().width, 0);
+					tempPos += Vector2f(interval.x + bounds.width, 0);
 					++tempCount;
 				}
 				else {
-					tempPos = Vector2f(initialPos.x, tempPos.y + interval.y + bricks.at(i)->getGlobalBounds().height);
+					tempPos = Vector2f(initialPos.x, tempPos.y + bounds.height + interval.y);
 					tempCount = 1;
 				}
 			}
 		}
 		else {
-			cout << "Intervals are too long to place." << endl;
+			throw domain_error("Intervals are too large to place.");
 		}
 	}
 	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+	catch (domain_error &ex) {
 		cout << "Exception: " << ex.what() << endl;
 	}
 }

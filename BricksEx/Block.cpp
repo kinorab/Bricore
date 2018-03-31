@@ -30,22 +30,32 @@ void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3
 }
 
 void Block::setWidth(const float width) {
-	if (width > 0) {
-		this->width = width;
-		setBlockVertice();
+	try {
+		if (width > 0) {
+			this->width = width;
+			setBlockVertice();
+		}
+		else {
+			throw invalid_argument("Invalid width cannot be negetive.");
+		}
 	}
-	else {
-		cout << "Invalid width setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
 void Block::setHeight(const float height) {
-	if (height > 0) {
-		this->height = height;
-		setBlockVertice();
+	try {
+		if (height > 0) {
+			this->height = height;
+			setBlockVertice();
+		}
+		else {
+			throw invalid_argument("Invalid height cannot be negative.");
+		}
 	}
-	else {
-		cout << "Invalid height setting." << endl;
+	catch (invalid_argument &ex) {
+		cout << "Invalid_argument: " << ex.what() << endl;
 	}
 }
 
@@ -67,27 +77,21 @@ void Block::setSpeed(const Vector2f & speed) {
 // all change direct by using abs() to prevent stuck inside the block
 void Block::update(Ball &ball) {
 
-	FloatRect blockBounds = getBounds();
-	ball.ballCollided(blockBounds, speed);
-	static FloatRect leftBounds(0.0f, 0.0f, -1.0f, LEVEL_HEIGHT);
-	static FloatRect rightBounds(LEVEL_WIDTH, 0.0f, 1.0f, LEVEL_HEIGHT);
-	static FloatRect topBounds(0.0f, 0.0f, LEVEL_WIDTH, -1.0f);
-	static FloatRect bottomBounds(0.0f, LEVEL_HEIGHT, LEVEL_WIDTH, 1.0f);
-
-	if (blockBounds.intersects(leftBounds)) {
+	ball.ballCollided(getBounds(), speed);
+	Vector2f posLT = (*this)[0].position;
+	Vector2f posRB = (*this)[2].position;
+	if (posLT.x <= 0.0f) {
 		speed.x = abs(speed.x);
 	}
-	else if (blockBounds.intersects(rightBounds)) {
+	else if (posRB.x >= LEVEL_WIDTH) {
 		speed.x = -abs(speed.x);
 	}
-
-	if (blockBounds.intersects(topBounds)) {
+	if (posLT.y <= 0.0f) {
 		speed.y = abs(speed.y);
 	}
-	else if (blockBounds.intersects(bottomBounds)) {
+	else if (posRB.y >= LEVEL_HEIGHT) {
 		speed.y = -abs(speed.y);
 	}
-
 	moveEntity();
 }
 

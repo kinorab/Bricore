@@ -1,6 +1,7 @@
 #include "define.h"
 #include "ball.h"
 #include <algorithm>
+#include <iostream>
 
 using namespace sf;
 using namespace item;
@@ -12,24 +13,21 @@ Ball::Ball() {
 	balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
 }
 
-void Ball::ballUpdateMove(Player &player, Sound & sound) {
-
-	if (!balls.empty()) {
-		initializeBall();
-		if (GameState::start) {
-			flashRange(player, sound);
-		}
-
-		if (flash) {
-			flashElapsed(player);
-		}
+void Ball::initializeBall(const FloatRect &playerBounds, const Vector2f &playerPos) {
+	if (!initialize && !balls.empty()) {
+		balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
+		balls.at(0)->ballSpeed.y = -2.f;
+		balls.erase(balls.begin() + 1, balls.end());
+		initialize = true;
+	}
+	else if (GameState::finishLevel) {
+		initialize = false;
+		GameState::finishLevel = false;
 	}
 }
 
-void Ball::move(const Player & player) {
+void Ball::update(const FloatRect &playerBounds, const Vector2f &playerPos) {
 
-	FloatRect playerBounds = player.getMainPlayerBounds();
-	Vector2f playerPos = player.getMainPlayerPosition();
 	for (size_t i = 0; i < balls.size(); ++i) {
 		balls.at(i)->ballMove(playerBounds, playerPos);
 		balls.at(i)->update();
@@ -39,9 +37,9 @@ void Ball::move(const Player & player) {
 	}
 }
 
-void Ball::followPlayer(const Player & player) {
+void Ball::followPlayer(const sf::Vector2f &playerTopCenterPos) {
 	if (!balls.empty()) {
-		balls.at(0)->ball.setPosition(player.getMainPlayerPosition().x, player.getMainPlayerBounds().top - balls.at(0)->ball.getGlobalBounds().height / 2);
+		balls.at(0)->ball.setPosition(playerTopCenterPos.x, playerTopCenterPos.y - balls.at(0)->ball.getGlobalBounds().height / 2);
 	}
 }
 
@@ -111,60 +109,25 @@ bool Ball::ballCollided(const FloatRect & bounds) {
 
 void Ball::ballDivided(const size_t numbers) {
 
-	for (size_t i = 0; i < numbers; ++i) {
-		balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
-		balls.at(balls.size() - 1)->ball.setPosition(balls.at(0)->ball.getPosition());
-		balls.at(balls.size() - 1)->ballSpeed.x = balls.at(0)->ballSpeed.x * static_cast<float>((rng() % 50 + 50) * .01f * (rng() % 2 == 0 ? -1 : 1));
-		balls.at(balls.size() - 1)->ballSpeed.y = balls.at(0)->ballSpeed.y * static_cast<float>((rng() % 25 + 75) * .01f * (rng() % 4 == 0 ? -1 : 1));
+	try {
+		for (size_t i = 0; i < numbers; ++i) {
+			balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
+			balls.at(balls.size() - 1)->ball.setPosition(balls.at(0)->ball.getPosition());
+			balls.at(balls.size() - 1)->ballSpeed.x = balls.at(0)->ballSpeed.x * static_cast<float>((rng() % 50 + 50) * .01f * (rng() % 2 == 0 ? -1 : 1));
+			balls.at(balls.size() - 1)->ballSpeed.y = balls.at(0)->ballSpeed.y * static_cast<float>((rng() % 25 + 75) * .01f * (rng() % 4 == 0 ? -1 : 1));
+		}
+	}
+	catch (std::out_of_range &ex) {
+		std::cout << "Cannot modify balls' amount: "<< ex.what() << std::endl;
 	}
 }
 
-void Ball::initializeBall() {
-
-	if (!initialize && !balls.empty()) {
-		balls.at(0)->ballSpeed.x = static_cast<float>((rng() % 3 + 3) * (rng() % 2 == 0 ? 1 : -1));
-		balls.at(0)->ballSpeed.y = -2.f;
-		balls.erase(balls.begin() + 1, balls.end());
-		initialize = true;
-	}
-	else if (GameState::reflash) {
-		initialize = false;
-		GameState::reflash = false;
-	}
+const FloatRect Ball::getMainBallBounds() const {
+	return balls.at(0)->ball.getGlobalBounds();
 }
 
-void Ball::flashElapsed(Player & player) {
-
-	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
-	if (time <= 1500.f) {
-		float rate = (1.f - time / 1500.f);
-		player.setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
-	}
-	else {
-		flash = false;
-	}
-}
-
-void Ball::flashRange(Player &player, Sound & sound) {
-
-	FloatRect playerBounds = player.getMainPlayerBounds();
-	FloatRect ballBounds = balls.at(0)->ball.getGlobalBounds();
-	FloatRect rangeBounds = player.getFlashBounds();
-
-	if (ballBounds.intersects(playerBounds)) {
-		elapsed.restart();
-		sound.play();
-		if (ballBounds.left <= playerBounds.left) {
-			player.setFlashPosition(playerBounds.left + rangeBounds.width / 2, player.getMainPlayerPosition().y);
-		}
-		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
-			player.setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, player.getMainPlayerPosition().y);
-		}
-		else {
-			player.setFlashPosition(balls.at(0)->ball.getPosition().x, player.getMainPlayerPosition().y);
-		}
-		flash = true;
-	}
+const Vector2f & Ball::getMainBallPosition() const {
+	return balls.at(0)->ball.getPosition();
 }
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
@@ -197,15 +160,13 @@ void Ball::BallContainer::setColor(const Color &color) {
 void Ball::BallContainer::ballMove(const FloatRect &bounds, const Vector2f &position) {
 
 	FloatRect ballBounds = ball.getGlobalBounds();
-	static Clock countTime;
-
 	if (active) {
 		oriSpeed.x = ballSpeed.x;
 		oriSpeed.y = ballSpeed.y;
 		countTime.restart();
 		active = false;
 	}
-	else if (countTime.getElapsedTime().asSeconds() > RESETTIME && GameState::start) {
+	else if (countTime.getElapsedTime().asSeconds() > RESETTIME) {
 		// preserve last speed then add 60% extra origin speed to new speed
 		float tempX = ballSpeed.x;
 		float tempY = ballSpeed.y;
