@@ -126,7 +126,7 @@ void Obstacle::blockCollision(const size_t number) {
 	try {
 		for (size_t j = number + 1; j < blocks.size(); ++j) {
 
-			if (game::intersects(blocks.at(number)->getBounds(), blocks.at(j)->getBounds())) {
+			if (game::INCintersects(blocks.at(number)->getBounds(), blocks.at(j)->getBounds())) {
 
 				blocks.at(number)->setSpeed(blocks.at(number)->getSpeed().x * -1, blocks.at(number)->getSpeed().y * -1);
 				blocks.at(j)->setSpeed(blocks.at(j)->getSpeed().x * -1, blocks.at(j)->getSpeed().y * -1);

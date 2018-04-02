@@ -31,6 +31,8 @@ extern const size_t Prng();
 namespace game {
 
 	template <typename T>
-	extern const bool intersects(const sf::Rect<T> &a, const sf::Rect<T> &b);
+	extern const bool EXCintersects(const sf::Rect<T> &a, const sf::Rect<T> &b);
+	template <typename T>
+	extern const bool INCintersects(const sf::Rect<T> &a, const sf::Rect<T> &b);
 	#include "rect.inl"
 }

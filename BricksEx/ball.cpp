@@ -47,7 +47,7 @@ void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
 	for (size_t i = 0; i < balls.size(); ++i) {
 		FloatRect ballBounds = balls.at(i)->ball.getGlobalBounds();
 		Vector2f ballPos = balls.at(i)->ball.getPosition();
-		if (game::intersects(ballBounds, bounds)) {
+		if (game::INCintersects(ballBounds, bounds)) {
 			if (ballPos.x < bounds.left) {
 				balls.at(i)->left = true;
 				balls.at(i)->ballSpeed.x = std::min(-abs(balls.at(i)->ballSpeed.x), -abs(speed.x));
@@ -76,7 +76,7 @@ bool Ball::ballCollided(const FloatRect & bounds) {
 	for (size_t i = 0; i < balls.size(); ++i) {
 		FloatRect ballBounds = balls.at(i)->ball.getGlobalBounds();
 		Vector2f ballPos = balls.at(i)->ball.getPosition();
-		if (game::intersects(ballBounds, bounds)) {
+		if (game::INCintersects(ballBounds, bounds)) {
 			if (ballPos.x < bounds.left) {
 				balls.at(i)->ballSpeed.x = -abs(balls.at(i)->ballSpeed.x);
 			}
@@ -191,7 +191,7 @@ void Ball::BallContainer::ballMove(const FloatRect &bounds) {
 		ballSpeed.y = abs(ballSpeed.y);
 	}
 	// the collision between mainBall and player
-	else if (game::intersects(ballBounds, bounds)) {
+	else if (game::INCintersects(ballBounds, bounds)) {
 		if (!CD) {
 			countTime.restart();
 			if (ballSpeed.x == 0.0f) {

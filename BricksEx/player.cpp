@@ -116,7 +116,7 @@ void Player::flashRange(Sound & sound, const FloatRect &ballBounds) {
 	FloatRect rangeBounds = getFlashBounds();
 	Vector2f pos1P = getMainPlayerPos();
 
-	if (game::intersects(ballBounds, playerBounds)) {
+	if (game::EXCintersects(ballBounds, playerBounds)) {
 		elapsed.restart();
 		sound.play();
 		if (ballBounds.left <= playerBounds.left) {
