@@ -6,8 +6,8 @@
 class Player : public sf::Drawable {
 
 public:
-	explicit Player(const float playerSpeed);
-	void playerMove(sf::Sound &sound, const sf::FloatRect &ballBounds, const sf::Vector2f &mainBallPos);
+	explicit Player();
+	void playerMove(sf::Sound &sound, const sf::FloatRect &ballBounds);
 	void setMainPlayerSpeed(const float playerSpeed);
 	void setFlashPosition(const sf::Vector2f &position);
 	void setFlashPosition(const float posX, const float posY);
@@ -22,7 +22,7 @@ public:
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 	void flashElapsed();
-	void flashRange(sf::Sound &sound, const sf::FloatRect &, const sf::Vector2f &);
+	void flashRange(sf::Sound &sound, const sf::FloatRect &);
 
 	float mainPlayerSpeed;
 	static bool flash;

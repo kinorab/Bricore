@@ -10,8 +10,8 @@ namespace item {
 
 	public:
 		Ball();
-		void initializeBall(const sf::FloatRect &playerBounds, const sf::Vector2f &playerPos);
-		void update(const sf::FloatRect &playerBounds, const sf::Vector2f &playerPos);
+		void update(const sf::FloatRect &playerBounds);
+		void initializeBall();
 		void followPlayer(const sf::Vector2f &playerPos);
 		void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
 		bool ballCollided(const sf::FloatRect &bounds);
@@ -25,7 +25,7 @@ namespace item {
 		class BallContainer {
 		public:
 			BallContainer();
-			void ballMove(const sf::FloatRect &, const sf::Vector2f &);
+			void ballMove(const sf::FloatRect &);
 			void update();
 			const bool isMain() const;
 
@@ -36,14 +36,16 @@ namespace item {
 			bool bottom = false;
 			bool top = false;
 			bool broke = false;
+			bool CD = false;
 
 		private:
 			void setColor(const sf::Color &);
 			void resetBall();
 			sf::Vector2f oriSpeed;
 			sf::Clock countTime;
+			sf::Clock CDTime;
 			bool main = false;
-			bool active = true;
+			bool active = false;
 		};
 
 		static bool mainSettled;
