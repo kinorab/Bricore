@@ -11,13 +11,13 @@
 #include "UIFactory.h"
 
 class Stage :
-	public Container {
+	public game::Container {
 public:
 	Stage();
 	virtual ~Stage();
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
 private:
-	std::shared_ptr<game::DisplayObject<sf::RectangleShape>> background;
+	std::shared_ptr<sf::RectangleShape> background;
 	std::shared_ptr<item::Ball> ball;
 	float blockLength;
 	std::shared_ptr<item::Brick> bricks;

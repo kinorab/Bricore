@@ -3,7 +3,7 @@
 #include "container.h"
 
 class UIComponent :
-	public Container {
+	public game::Container {
 public:
 	virtual ~UIComponent() {}
 };
