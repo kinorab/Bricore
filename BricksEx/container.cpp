@@ -52,8 +52,17 @@ namespace game {
 	bool Container::dispatchEvent(Event * event) {
 		Event::DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
-		if (event->getPhase() == EventPhase::NONE) {
-			return true;
+
+		if (event->getCurrentTarget() == event->getTarget()) {
+			helper.setPhase(EventPhase::CAPTURING_PHASE);
+		}
+
+		if (event->getPhase() == EventPhase::CAPTURING_PHASE && !parent.expired()) {
+			parent.lock()->dispatchEvent(event);
+		}
+
+		if (event->getCurrentTarget() == event->getTarget()) {
+			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
 		std::vector<EventListener> tempListeners = listeners;
@@ -64,6 +73,18 @@ namespace game {
 				listener.callback(event);
 			}
 		});
+
+		if (event->getCurrentTarget() == event->getTarget()) {
+			helper.setPhase(EventPhase::BUBBLING_PHASE);
+		}
+
+		if (event->getPhase() == EventPhase::BUBBLING_PHASE && !parent.expired()) {
+			parent.lock()->dispatchEvent(event);
+		}
+
+		if (event->getCurrentTarget() == event->getTarget()) {
+			helper.setPhase(EventPhase::NONE);
+		}
 
 		return !event->getDefaultPrevented();
 	}
