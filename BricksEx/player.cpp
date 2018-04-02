@@ -7,7 +7,7 @@ using namespace sf;
 bool Player::flash = false;
 
 Player::Player() {
-	mainPlayerSpeed = MAINPLAYERSPEED / SLICE;
+	mainPlayerSpeed = MAINPLAYERSPEED;
 	mainPlayer.setSize(Vector2f(240, 12));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
@@ -24,17 +24,18 @@ Player::Player() {
 
 void Player::playerMove(Sound &sound, const FloatRect &ballBounds) {
 	FloatRect playerBound = mainPlayer.getGlobalBounds();
+	float sliceSpeed = mainPlayerSpeed / static_cast<float>(SLICE);
 	if (playerBound.left >= 0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
 		) {
-		mainPlayer.move(Vector2f(-abs(mainPlayerSpeed), 0));
-		redRange.move(Vector2f(-abs(mainPlayerSpeed), 0));
+		mainPlayer.move(Vector2f(-abs(sliceSpeed), 0));
+		redRange.move(Vector2f(-abs(sliceSpeed), 0));
 	}
 	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(Keyboard::Right))
 		) {
-		mainPlayer.move(Vector2f(abs(mainPlayerSpeed), 0));
-		redRange.move(Vector2f(abs(mainPlayerSpeed), 0));
+		mainPlayer.move(Vector2f(abs(sliceSpeed), 0));
+		redRange.move(Vector2f(abs(sliceSpeed), 0));
 	}
 	if (GameState::start) {
 		flashRange(sound, ballBounds);

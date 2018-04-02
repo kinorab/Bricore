@@ -11,15 +11,13 @@ const bool game::intersects(const sf::Rect<T>& a, const sf::Rect<T>& b) {
 		sf::Vector2<T> BLB(b.left, b.top + b.height);
 		sf::Vector2<T> BRB(b.left + b.width, b.top + b.height);
 
-		if (ARB.x >= BLT.x && ARB.y >= BLT.y
-			&& ALT.x <= BRB.x && ALT.y <= BRB.y) {
+		if (ARB.x > BLT.x && ARB.y > BLT.y
+			&& ALT.x < BRB.x && ALT.y < BRB.y) {
 			return true;
 		}
-		else if (ALB.x <= BRT.x && ALB.y >= BRT.y
-			&& ART.x >= BLB.x && ART.y <= BLB.y) {
+		else if (ALB.x < BRT.x && ALB.y > BRT.y
+			&& ART.x > BLB.x && ART.y < BLB.y) {
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 }
