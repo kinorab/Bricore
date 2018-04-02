@@ -3,11 +3,11 @@
 #include "container.h"
 
 class ParticleSystem :
-	public Container {
+	public game::Container {
 public:
 	explicit ParticleSystem(const unsigned int count);
-	void setEmitPosition(const sf::Vector2f &position);
-	void update(const float &timeSpan);
+	void setEmitPosition(const sf::Vector2f & position);
+	void update(const float & timeSpan);
 private:
 	struct Particle {
 		sf::Vector2f velocity;

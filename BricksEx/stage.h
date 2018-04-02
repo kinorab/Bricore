@@ -11,7 +11,7 @@
 #include "UIFactory.h"
 
 class Stage :
-	public Container {
+	public game::Container {
 public:
 	Stage();
 	virtual ~Stage();

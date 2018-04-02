@@ -3,7 +3,7 @@
 #include "container.h"
 
 class MovieClip :
-	public Container {
+	public game::Container {
 public:
 	virtual ~MovieClip() override;
 };

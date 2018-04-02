@@ -149,7 +149,6 @@
     <ClCompile Include="event.cpp" />
     <ClCompile Include="define.cpp" />
     <ClCompile Include="ellipse.cpp" />
-    <ClCompile Include="eventDispatcher.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="main.cpp" />
@@ -158,8 +157,6 @@
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="displayObject.cpp" />
-    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
@@ -176,15 +173,12 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="hud.h" />
-    <ClInclude Include="eventDispatcher.h" />
     <ClInclude Include="movieClip.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="displayObject.h" />
-    <ClInclude Include="sprite.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIFactory.h" />

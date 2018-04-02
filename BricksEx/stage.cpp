@@ -48,6 +48,7 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 			obstacles->reset();
 		}
 	}
+
 	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
 }

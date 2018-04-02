@@ -12,11 +12,11 @@ ParticleSystem::ParticleSystem(const unsigned int count)
 	addChild({ vertices });
 }
 
-void ParticleSystem::setEmitPosition(const Vector2f &position) {
+void ParticleSystem::setEmitPosition(const Vector2f & position) {
 	emitPosition = position;
 }
 
-void ParticleSystem::update(const float &timeSpan) {
+void ParticleSystem::update(const float & timeSpan) {
 	for (size_t i = 0; i < particles.size(); ++i) {
 		if (particles[i].lifeTime > 0.0f) {
 			particles[i].lifeTime -= timeSpan;

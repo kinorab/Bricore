@@ -11,16 +11,16 @@ namespace game {
 		BUBBLING_PHASE,
 	};
 
-	class EventDispatcher;
+	class Container;
 
 	class Event {
 	public:
 		class DispatchHelper {
 		public:
 			explicit DispatchHelper(Event * event);
-			virtual void setCurrentTarget(EventDispatcher * target);
+			virtual void setCurrentTarget(Container * target);
 			virtual void setPhase(EventPhase phase);
-			virtual void setTarget(EventDispatcher * target);
+			virtual void setTarget(Container * target);
 		private:
 			Event * event;
 		};
@@ -28,21 +28,21 @@ namespace game {
 		virtual ~Event();
 		virtual bool getBubbles() const;
 		virtual bool getCancelable() const;
-		virtual EventDispatcher * getCurrentTarget() const;
+		virtual Container * getCurrentTarget() const;
 		virtual bool getDefaultPrevented() const;
 		virtual EventPhase getPhase() const;
-		virtual EventDispatcher * getTarget() const;
+		virtual Container * getTarget() const;
 		virtual std::string getType() const;
 		virtual void stopPropagation();
 		virtual void preventDefault();
 	private:
 		bool bubbles;
 		bool cancelable;
-		EventDispatcher * currentTarget;
+		Container * currentTarget;
 		bool defaultPrevented;
 		EventPhase phase;
 		bool propagationStopped;
-		EventDispatcher * target;
+		Container * target;
 		std::string type;
 	};
 }

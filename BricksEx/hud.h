@@ -1,13 +1,11 @@
 #pragma once
 
 #include "container.h"
-#include "displayObject.h"
-#include "sprite.h"
 #include <SFML/Graphics.hpp>
 #include <utility>
 
 class HUD :
-	public Container {
+	public game::Container {
 public:
 	HUD();
 private:

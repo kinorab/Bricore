@@ -5,7 +5,7 @@ namespace game {
 		this->event = event;
 	}
 
-	void Event::DispatchHelper::setCurrentTarget(EventDispatcher * target) {
+	void Event::DispatchHelper::setCurrentTarget(Container * target) {
 		event->currentTarget = target;
 	}
 
@@ -13,7 +13,7 @@ namespace game {
 		event->phase = phase;
 	}
 
-	void Event::DispatchHelper::setTarget(EventDispatcher * target) {
+	void Event::DispatchHelper::setTarget(Container * target) {
 		event->target = target;
 	}
 
@@ -39,7 +39,7 @@ namespace game {
 		return cancelable;
 	}
 
-	EventDispatcher * Event::getCurrentTarget() const {
+	Container * Event::getCurrentTarget() const {
 		return nullptr;
 	}
 
@@ -51,7 +51,7 @@ namespace game {
 		return phase;
 	}
 
-	EventDispatcher * Event::getTarget() const {
+	Container * Event::getTarget() const {
 		return nullptr;
 	}
 
