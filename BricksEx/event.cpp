@@ -5,6 +5,10 @@ namespace game {
 		this->event = event;
 	}
 
+	bool Event::DispatchHelper::isPropagationStopped() {
+		return event->propagationStopped;
+	}
+
 	void Event::DispatchHelper::setCurrentTarget(Container * target) {
 		event->currentTarget = target;
 	}
@@ -15,6 +19,10 @@ namespace game {
 
 	void Event::DispatchHelper::setTarget(Container * target) {
 		event->target = target;
+	}
+
+	Event::Event(std::string type) :
+		Event(type, true, true){
 	}
 
 	Event::Event(std::string type, bool bubbles, bool cancelable) :
@@ -40,7 +48,7 @@ namespace game {
 	}
 
 	Container * Event::getCurrentTarget() const {
-		return nullptr;
+		return currentTarget;
 	}
 
 	bool Event::getDefaultPrevented() const {
@@ -52,7 +60,7 @@ namespace game {
 	}
 
 	Container * Event::getTarget() const {
-		return nullptr;
+		return target;
 	}
 
 	std::string Event::getType() const {

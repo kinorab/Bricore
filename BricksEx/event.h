@@ -18,12 +18,14 @@ namespace game {
 		class DispatchHelper {
 		public:
 			explicit DispatchHelper(Event * event);
+			virtual bool isPropagationStopped();
 			virtual void setCurrentTarget(Container * target);
 			virtual void setPhase(EventPhase phase);
 			virtual void setTarget(Container * target);
 		private:
 			Event * event;
 		};
+		explicit Event(std::string type);
 		Event(std::string type, bool bubbles, bool cancelable);
 		virtual ~Event();
 		virtual bool getBubbles() const;

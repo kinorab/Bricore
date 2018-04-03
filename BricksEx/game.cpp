@@ -112,7 +112,8 @@ void Game::renderFunc() {
 		keyDown.insert({ i, false });
 	}
 
-	Stage stage;
+	shared_ptr<Stage> stage(new Stage());
+	stage->initialize();
 	Time elapsed = milliseconds(0);
 	Clock clock;
 	bool finishing = false;
@@ -136,12 +137,12 @@ void Game::renderFunc() {
 		Vector2f mousePosition = window.mapPixelToCoords(Mouse::getPosition(window));
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			stage.update(updateSpan, mousePosition);
+			stage->update(updateSpan, mousePosition);
 			elapsed -= seconds(updateSpan / 1000.0f);
 		}
 
 		// render
-		window.draw(stage);
+		window.draw(*stage);
 		window.display();
 	}
 

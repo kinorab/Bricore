@@ -16,6 +16,7 @@ namespace game {
 		virtual ~Container() override;
 		virtual void addChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
 		virtual void addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, size_t index);
+		virtual void addEventListener(std::string type, std::function<void(Event *)> callback);
 		virtual void addEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture);
 		virtual bool contains(const sf::Drawable * element) const;
 		virtual bool dispatchEvent(Event * event);
@@ -23,6 +24,7 @@ namespace game {
 		virtual int getChildIndex(const sf::Drawable * element) const;
 		virtual int getChildrenCount() const;
 		virtual std::weak_ptr<Container> getParent() const;
+		virtual void initialize();
 		virtual void removeAllChildren();
 		virtual void removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
 		virtual void removeChildAt(std::vector<int> indexes);

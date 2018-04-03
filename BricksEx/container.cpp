@@ -37,6 +37,10 @@ namespace game {
 		children.insert(children.begin() + index, elements.begin(), elements.end());
 	}
 
+	void Container::addEventListener(std::string type, std::function<void(Event*)> callback) {
+		addEventListener(type, callback, false);
+	}
+
 	void Container::addEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
 		removeEventListener(type, callback, useCapture);
 		listeners.push_back(EventListener{ type, callback, useCapture });
@@ -53,33 +57,38 @@ namespace game {
 		Event::DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 
-		if (event->getCurrentTarget() == event->getTarget()) {
+		if (event->getPhase() == EventPhase::NONE) {
+			helper.setTarget(this);
 			helper.setPhase(EventPhase::CAPTURING_PHASE);
 		}
 
 		if (event->getPhase() == EventPhase::CAPTURING_PHASE && !parent.expired()) {
 			parent.lock()->dispatchEvent(event);
+			helper.setCurrentTarget(this);
 		}
 
 		if (event->getCurrentTarget() == event->getTarget()) {
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		std::vector<EventListener> tempListeners = listeners;
-		std::for_each(tempListeners.begin(), tempListeners.end(),
-			[&](const EventListener & listener) {
-			if (!(event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
-				|| ((event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
-				listener.callback(event);
-			}
-		});
+		if (!helper.isPropagationStopped()) {
+			std::vector<EventListener> tempListeners = listeners;
+			std::for_each(tempListeners.begin(), tempListeners.end(),
+				[&](const EventListener & listener) {
+				if (!((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
+					|| (event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
+					listener.callback(event);
+				}
+			});
+		}
 
 		if (event->getCurrentTarget() == event->getTarget()) {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}
 
-		if (event->getPhase() == EventPhase::BUBBLING_PHASE && !parent.expired()) {
+		if (event->getPhase() == EventPhase::BUBBLING_PHASE && event->getBubbles() && !parent.expired()) {
 			parent.lock()->dispatchEvent(event);
+			helper.setCurrentTarget(this);
 		}
 
 		if (event->getCurrentTarget() == event->getTarget()) {
@@ -108,6 +117,17 @@ namespace game {
 		return parent;
 	}
 
+	void Container::initialize() {
+		std::for_each(children.begin(), children.end(),
+			[&](const std::shared_ptr<sf::Drawable> & child) {
+			Container * container = dynamic_cast<Container *>(child.get());
+			if (container) {
+				container->setParent(weak_from_this());
+				container->initialize();
+			}
+		});
+	}
+
 	void Container::removeAllChildren() {
 		children.clear();
 		children.shrink_to_fit();
@@ -132,7 +152,7 @@ namespace game {
 				return true;
 			}
 			return false;
-		}));
+		}), children.end());
 	}
 
 	void Container::removeChildren(int beginIndex, int endIndex) {
@@ -145,7 +165,7 @@ namespace game {
 			return listener.type == type
 				&& *listener.callback.target<void(Event *)>() == *callback.target<void(Event *)>()
 				&& listener.useCapture == useCapture;
-		}));
+		}), listeners.end());
 	}
 
 	void Container::setChildIndex(const sf::Drawable * element, int index) {

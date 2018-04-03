@@ -33,6 +33,19 @@ Stage::~Stage() {
 	Audio::sound1.stop();
 }
 
+void Stage::initialize() {
+	Container::initialize();
+	addEventListener("SomeEvent",
+		[this](game::Event * event) {
+		bricks->setBrickColor(sf::Color(150, 150, 150));
+	}, false);
+	hud->addEventListener("SomeEvent",
+		[this](game::Event * event) {
+		bricks->setBrickColor(sf::Color(0, 150, 150));
+	}, false);
+	hud->dispatchEvent(new game::Event("SomeEvent"));
+}
+
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 
 	if (!GameState::pause) {
