@@ -38,7 +38,7 @@ void Ball::initializeBall() {
 
 void Ball::followPlayer(const Vector2f &playerTopCenterPos) {
 	if (!balls.empty()) {
-		balls.at(0)->ball.setPosition(playerTopCenterPos.x, playerTopCenterPos.y - balls.at(0)->ball.getGlobalBounds().height / 2);
+		balls.at(0)->ball.setPosition(playerTopCenterPos.x, playerTopCenterPos.y - balls.at(0)->ball.getGlobalBounds().height / 2 - 1.f);
 	}
 }
 
@@ -255,10 +255,8 @@ void Ball::BallContainer::ballMove(const FloatRect &bounds) {
 			CD = true;
 			CDTime.restart();
 		}
-		else {
-			if (CDTime.getElapsedTime().asSeconds() > 0.25f) {
-				CD = false;
-			}
+		else if (CDTime.getElapsedTime().asSeconds() > 0.25f) {
+			CD = false;
 		}
 		// prevent speed too fast
 		if (abs(ballSpeed.x) >= MAXSPEED) {

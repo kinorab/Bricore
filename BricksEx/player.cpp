@@ -115,19 +115,28 @@ void Player::flashRange(Sound & sound, const FloatRect &ballBounds) {
 	FloatRect playerBounds = getMainPlayerBounds();
 	FloatRect rangeBounds = getFlashBounds();
 	Vector2f pos1P = getMainPlayerPos();
+	static Clock CDTime;
+	static bool flashCD = false;
 
-	if (game::EXCintersects(ballBounds, playerBounds)) {
-		elapsed.restart();
-		sound.play();
-		if (ballBounds.left <= playerBounds.left) {
-			setFlashPosition(playerBounds.left + rangeBounds.width / 2, pos1P.y);
+	if (!flashCD) {
+		if (game::INCintersects(ballBounds, playerBounds)) {
+			elapsed.restart();
+			sound.play();
+			if (ballBounds.left <= playerBounds.left) {
+				setFlashPosition(playerBounds.left + rangeBounds.width / 2, pos1P.y);
+			}
+			else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
+				setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y);
+			}
+			else {
+				setFlashPosition(ballBounds.left + ballBounds.width, pos1P.y);
+			}
+			flash = true;
+			flashCD = true;
+			CDTime.restart();
 		}
-		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
-			setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y);
-		}
-		else {
-			setFlashPosition(ballBounds.left + ballBounds.width, pos1P.y);
-		}
-		flash = true;
+	}
+	else if(CDTime.getElapsedTime().asSeconds() > 0.25f) {
+		flashCD = false;
 	}
 }
