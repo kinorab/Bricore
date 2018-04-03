@@ -37,12 +37,12 @@ void Stage::initialize() {
 	Container::initialize();
 	addEventListener("SomeEvent",
 		[this](game::Event * event) {
-		bricks->setBrickColor(sf::Color(150, 150, 150));
-	}, false);
+		std::cout << "Stage:SomeEvent" << std::endl;
+	});
 	hud->addEventListener("SomeEvent",
 		[this](game::Event * event) {
-		bricks->setBrickColor(sf::Color(0, 150, 150));
-	}, false);
+		std::cout << "HUD:SomeEvent" << std::endl;
+	});
 	hud->dispatchEvent(new game::Event("SomeEvent"));
 }
 
