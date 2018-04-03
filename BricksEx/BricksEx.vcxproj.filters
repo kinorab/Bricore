@@ -142,5 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="rect.inl">
+      <Filter>資源檔</Filter>
+    </None>
   </ItemGroup>
 </Project>

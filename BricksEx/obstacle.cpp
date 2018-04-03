@@ -96,7 +96,7 @@ void Obstacle::reset() {
 		if (!GameState::ready) {
 			for (size_t i = 0; i < blocks.size(); ++i) {
 				blocks.at(i)->resetPosition();
-			}				
+			}
 			GameState::ready = true;
 		}
 	}
@@ -105,7 +105,7 @@ void Obstacle::reset() {
 	}
 }
 
-const sf::Vector2f & Obstacle::getBlockSpeed(const size_t number) const {
+const Vector2f & Obstacle::getBlockSpeed(const size_t number) const {
 	return blocks.at(number)->getSpeed();
 }
 
@@ -126,7 +126,7 @@ void Obstacle::blockCollision(const size_t number) {
 	try {
 		for (size_t j = number + 1; j < blocks.size(); ++j) {
 
-			if (blocks.at(number)->getBounds().intersects(blocks.at(j)->getBounds())) {
+			if (game::INCintersects(blocks.at(number)->getBounds(), blocks.at(j)->getBounds())) {
 
 				blocks.at(number)->setSpeed(blocks.at(number)->getSpeed().x * -1, blocks.at(number)->getSpeed().y * -1);
 				blocks.at(j)->setSpeed(blocks.at(j)->getSpeed().x * -1, blocks.at(j)->getSpeed().y * -1);

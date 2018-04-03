@@ -6,8 +6,8 @@ using namespace sf;
 
 bool Player::flash = false;
 
-Player::Player(const float playerSpeed) {
-	mainPlayerSpeed = playerSpeed;
+Player::Player() {
+	mainPlayerSpeed = MAINPLAYERSPEED;
 	mainPlayer.setSize(Vector2f(240, 12));
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
@@ -22,22 +22,23 @@ Player::Player(const float playerSpeed) {
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 }
 
-void Player::playerMove(Sound &sound, const FloatRect &ballBounds, const Vector2f &mainBallPos) {
+void Player::playerMove(Sound &sound, const FloatRect &ballBounds) {
 	FloatRect playerBound = mainPlayer.getGlobalBounds();
-	if (playerBound.left > 0.0
+	float sliceSpeed = mainPlayerSpeed / static_cast<float>(SLICE);
+	if (playerBound.left >= 0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
 		) {
-		mainPlayer.move(Vector2f(-abs(mainPlayerSpeed), 0.0));
-		redRange.move(Vector2f(-abs(mainPlayerSpeed), 0.0));
+		mainPlayer.move(Vector2f(-abs(sliceSpeed), 0));
+		redRange.move(Vector2f(-abs(sliceSpeed), 0));
 	}
-	if (playerBound.left + playerBound.width < LEVEL_WIDTH
+	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(Keyboard::Right))
 		) {
-		mainPlayer.move(Vector2f(abs(mainPlayerSpeed), 0.0));
-		redRange.move(Vector2f(abs(mainPlayerSpeed), 0.0));
+		mainPlayer.move(Vector2f(abs(sliceSpeed), 0));
+		redRange.move(Vector2f(abs(sliceSpeed), 0));
 	}
 	if (GameState::start) {
-		flashRange(sound, ballBounds, mainBallPos);
+		flashRange(sound, ballBounds);
 	}
 	if (flash) {
 		flashElapsed();
@@ -110,23 +111,32 @@ void Player::flashElapsed() {
 	}
 }
 
-void Player::flashRange(Sound & sound, const FloatRect &ballBounds, const Vector2f &ballPos) {
+void Player::flashRange(Sound & sound, const FloatRect &ballBounds) {
 	FloatRect playerBounds = getMainPlayerBounds();
 	FloatRect rangeBounds = getFlashBounds();
 	Vector2f pos1P = getMainPlayerPos();
+	static Clock CDTime;
+	static bool flashCD = false;
 
-	if (ballBounds.intersects(playerBounds)) {
-		elapsed.restart();
-		sound.play();
-		if (ballBounds.left <= playerBounds.left) {
-			setFlashPosition(playerBounds.left + rangeBounds.width / 2, pos1P.y);
+	if (!flashCD) {
+		if (game::INCintersects(ballBounds, playerBounds)) {
+			elapsed.restart();
+			sound.play();
+			if (ballBounds.left <= playerBounds.left) {
+				setFlashPosition(playerBounds.left + rangeBounds.width / 2, pos1P.y);
+			}
+			else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
+				setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y);
+			}
+			else {
+				setFlashPosition(ballBounds.left + ballBounds.width, pos1P.y);
+			}
+			flash = true;
+			flashCD = true;
+			CDTime.restart();
 		}
-		else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
-			setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y);
-		}
-		else {
-			setFlashPosition(ballPos.x, pos1P.y);
-		}
-		flash = true;
+	}
+	else if(CDTime.getElapsedTime().asSeconds() > 0.25f) {
+		flashCD = false;
 	}
 }

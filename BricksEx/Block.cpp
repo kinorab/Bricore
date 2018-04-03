@@ -143,7 +143,7 @@ void Block::moveEntity() {
 
 	try {
 		for (size_t i = 0; i < getVertexCount(); ++i) {
-			(*this)[i].position += speed;
+			(*this)[i].position += speed / static_cast<float>(SLICE);
 		}
 		position = (*this)[0].position;// mark new position in [0]
 	}
