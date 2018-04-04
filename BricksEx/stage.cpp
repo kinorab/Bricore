@@ -2,30 +2,30 @@
 #include "audio.h"
 #include <iostream>
 
-Stage::Stage()
-	: background(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT))),
-	blockLength(100.f),
-	incre1(3.f),
-	obstacles(new Obstacle(2
-		, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1) }
-		, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(blockLength, blockLength * incre1) })),
-	player(new Player()),
-	ball(new item::Ball()),
-	bricks(new item::Brick(1, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f)),
-	hud(new HUD()),
-	mouseLight(new ParticleSystem(2000)) {
+float Stage::blockLength(100.f);
+float Stage::incre1(3.f);
+std::shared_ptr<item::Ball> Stage::ball(new item::Ball());
+std::shared_ptr<item::Brick> Stage::bricks(new item::Brick(1, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f));
+std::shared_ptr<HUD> Stage::hud(new HUD());
+std::shared_ptr<ParticleSystem> Stage::mouseLight(new ParticleSystem(2000));
+std::shared_ptr<Obstacle> Stage::obstacles(new Obstacle(2
+	, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1) }
+, { sf::Vector2f(blockLength, blockLength * incre1), sf::Vector2f(blockLength, blockLength * incre1) }));
+std::shared_ptr<Player> Stage::player(new Player());
+
+Stage::Stage() {
 	/*
 	Audio::bgmusic.play();
 	Audio::bgmusic.setLoop(true);
 	*/
-	background->setFillColor(sf::Color(210, 210, 210));
-	ball->followPlayer(player->getMainPlayerTopCenterPos());
-	obstacles->setBlockColor(0, sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black);
-	obstacles->setBlockColor(1, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black);
-	obstacles->setBlockSpeed(0, 1.5f);
-	obstacles->setBlockSpeed(1, -1.5f);
-	bricks->setBrickColor(sf::Color(255, 183, 197));
-	addChild({ background, hud, obstacles, player, ball, bricks, mouseLight });
+	HUD::setBackgroundColor(sf::Color(210, 210, 210));
+	item::Ball::followPlayer(player->getMainPlayerTopCenterPos());
+	Obstacle::setBlockColor(0, sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black);
+	Obstacle::setBlockColor(1, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black);
+	Obstacle::setBlockSpeed(0, 1.5f);
+	Obstacle::setBlockSpeed(1, -1.5f);
+	item::Brick::setBrickColor(sf::Color(255, 183, 197));
+	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
 }
 
 Stage::~Stage() {
@@ -49,17 +49,17 @@ void Stage::initialize() {
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 
 	if (!GameState::pause) {
-		ball->initializeBall();
+		item::Ball::initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
-			player->playerMove(Audio::sound1, ball->getMainBallBounds());
+			Player::playerMove(Audio::sound1, item::Ball::getMainBallBounds());
 			if (GameState::start) {
-				obstacles->update(*ball);
-				bricks->update(*ball);
-				ball->update(player->getMainPlayerBounds());
+				Obstacle::update();
+				item::Brick::update();
+				item::Ball::update(player->getMainPlayerBounds());
 			}
 			else {
-				ball->followPlayer(player->getMainPlayerTopCenterPos());
-				obstacles->reset();
+				item::Ball::followPlayer(player->getMainPlayerTopCenterPos());
+				Obstacle::reset();
 			}
 		}
 	}

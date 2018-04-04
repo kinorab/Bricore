@@ -1,16 +1,19 @@
 #include "obstacle.h"
 #include "define.h"
+#include "ball.h"
 #include <iostream>
 
 using namespace std;
 using namespace sf;
+
+std::vector <std::unique_ptr<item::Block>> Obstacle::blocks;
 
 // unity of Block-->Obstacle
 Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const vector <Vector2f> &sideLength) {
 
 	try {
 		for (size_t i = 0; i < number; ++i) {
-			blocks.push_back(unique_ptr<Block>(new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
+			blocks.push_back(unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
 		}
 	}
 	catch (out_of_range &ex) {
@@ -18,11 +21,11 @@ Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const
 	}
 }
 
-void Obstacle::update(item::Ball &ball) {
+void Obstacle::update() {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blockCollision(i);
-		blocks.at(i)->update(ball);
+		blocks.at(i)->update();
 	}
 }
 
@@ -105,18 +108,17 @@ void Obstacle::reset() {
 	}
 }
 
-const Vector2f & Obstacle::getBlockSpeed(const size_t number) const {
+const Vector2f & Obstacle::getBlockSpeed(const size_t number) {
 	return blocks.at(number)->getSpeed();
 }
 
-const size_t Obstacle::getBlocksAmount() const {
+const size_t Obstacle::getBlocksAmount() {
 	return blocks.size();
 }
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
-
+	states.texture = nullptr;
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		states.texture = nullptr;
 		target.draw(*blocks.at(i), states);
 	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "player.h"
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
 
@@ -10,27 +10,35 @@ namespace item {
 
 	public:
 		Ball();
-		void update(const sf::FloatRect &playerBounds);
-		void initializeBall();
-		void followPlayer(const sf::Vector2f &playerPos);
-		void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
-		bool ballCollided(const sf::FloatRect &bounds);
-		void ballDivided(const size_t numbers);
-		const sf::FloatRect getMainBallBounds() const;
-		const sf::Vector2f & getMainBallPosition() const;
+		static void update(const sf::FloatRect &playerBounds);
+		static void initializeBall();
+		static void followPlayer(const sf::Vector2f &playerPos);
+		static void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
+		static bool isBallCollided(const sf::FloatRect &bounds);
+		static void ballDivided(const size_t numbers);
+		static const sf::FloatRect getMainBallBounds();
+		static const sf::Vector2f & getMainBallPosition();
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
-		class BallContainer {
+		class BallContainer : public sf::Drawable {
 		public:
 			BallContainer();
-			void ballMove(const sf::FloatRect &);
 			void update();
-			const bool isMain() const;
+			void ballMove(const sf::FloatRect &);
+			void setSpeedX(const float);
+			void setSpeedY(const float);
+			void setPosition(const sf::Vector2f &);
+			void setPosition(const float, const float);
+			virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
-			sf::CircleShape ball;
-			sf::Vector2f ballSpeed;
+			const bool isMain() const;
+			const float getSpeedX() const;
+			const float getSpeedY() const;
+			const sf::Vector2f & getPosition() const;
+			const sf::FloatRect getBounds() const;
+
 			bool left = false;
 			bool right = false;
 			bool bottom = false;
@@ -41,15 +49,17 @@ namespace item {
 		private:
 			void setColor(const sf::Color &);
 			void resetBall();
+			sf::Vector2f ballSpeed;
 			sf::Vector2f oriSpeed;
 			sf::Clock countTime;
 			sf::Clock CDTime;
+			sf::CircleShape ball;
 			bool main = false;
 			bool active = false;
 		};
 
 		static bool mainSettled;
 		static bool initialize;
-		std::vector<std::unique_ptr<BallContainer>> balls;
+		static std::vector<std::unique_ptr<BallContainer>> balls;
 	};
 }

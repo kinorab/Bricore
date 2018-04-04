@@ -7,29 +7,25 @@ class Player : public sf::Drawable {
 
 public:
 	explicit Player();
-	void playerMove(sf::Sound &sound, const sf::FloatRect &ballBounds);
-	void setMainPlayerSpeed(const float playerSpeed);
-	void setFlashPosition(const sf::Vector2f &position);
-	void setFlashPosition(const float posX, const float posY);
-	void setFlashFillColor(const sf::Color &color);
+	static void playerMove(sf::Sound &sound, const sf::FloatRect &ballBounds);
 
-	const float getMainPlayerSpeed() const;
-	const sf::Vector2f & getMainPlayerPos() const;
-	const sf::Vector2f getMainPlayerTopCenterPos() const;
-	const sf::FloatRect getMainPlayerBounds() const;
-	const sf::FloatRect getFlashBounds() const;
+	static const sf::Vector2f & getMainPlayerPos();
+	static const sf::Vector2f getMainPlayerTopCenterPos();
+	static const sf::FloatRect getMainPlayerBounds();
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-	void flashElapsed();
-	void flashRange(sf::Sound &sound, const sf::FloatRect &);
+	static void setFlashPosition(const sf::Vector2f &position);
+	static void setFlashPosition(const float posX, const float posY);
+	static void setFlashFillColor(const sf::Color &color);
+	static void flashElapsed();
+	static void flashRange(sf::Sound &sound, const sf::FloatRect &);
 
-	float mainPlayerSpeed;
 	static bool flash;
-	sf::Clock elapsed;
-	sf::RectangleShape mainPlayer;
-	sf::RectangleShape redRange;
-	sf::RectangleShape yellowRange;
+	static sf::Clock elapsed;
+	static sf::RectangleShape mainPlayer;
+	static sf::RectangleShape redRange;
+	static sf::RectangleShape yellowRange;
 
 	//sf::RectangleShape subPlayer;
 };

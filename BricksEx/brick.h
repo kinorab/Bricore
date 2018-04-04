@@ -1,6 +1,8 @@
 #pragma once
 
-#include "ball.h"
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
 #include <map>
 
 namespace item {
@@ -12,42 +14,41 @@ namespace item {
 		Brick(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
 
-		void loadImage(const std::string fileName);
-		void deleteImage(const std::string fileName);
-		void displayImage(const std::string fileName);
-		void setBrickColor(const sf::Color&);
-		void setFrameColor(const sf::Color&);
-		void setRowAmount(const int row);
-		void setSideLength(const sf::Vector2f &sideLength);
-		void setSideLength(const float width, const float height);
-		void setInterval(const sf::Vector2f &interval);
-		void setInterval(const float x, const float y);
-		void setFrameSize(const float frame);
-		void update(Ball &ball);
+		static void update();
+		static void loadImage(const std::string fileName);
+		static void deleteImage(const std::string fileName);
+		static void displayImage(const std::string fileName);
+		static void setBrickColor(const sf::Color&);
+		static void setFrameColor(const sf::Color&);
+		static void setRowAmount(const int row);
+		static void setSideLength(const sf::Vector2f &sideLength);
+		static void setSideLength(const float width, const float height);
+		static void setInterval(const sf::Vector2f &interval);
+		static void setInterval(const float x, const float y);
+		static void setFrameSize(const float frame);
 
-		void reset(const size_t rowCount, const float width, const float height
+		static void reset(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
-		void reset(const size_t rowCount);
+		static void reset(const size_t rowCount);
 
-		const size_t getBricksSize() const;
-		const sf::Vector2f & getSideLength() const;
-		const sf::Vector2f & getInterval() const;
-		const float getFrameSize() const;
+		static const size_t getBricksSize();
+		static const sf::Vector2f & getSideLength();
+		static const sf::Vector2f & getInterval();
+		static const float getFrameSize();
 
 	private:
 
-		void settlePlace();
+		static void settlePlace();
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
-		std::vector <std::unique_ptr<sf::RectangleShape>> bricks;
-		std::map <std::string, sf::Texture *> levelImage;
+		static std::vector <std::unique_ptr<sf::RectangleShape>> bricks;
+		static std::map <std::string, sf::Texture *> levelImage;
 		// bricks on every row
-		size_t amount;
-		float frame;
-		sf::Vector2f interval;
-		sf::Vector2f sideLength;
+		static size_t amount;
+		static float frame;
+		static sf::Vector2f interval;
+		static sf::Vector2f sideLength;
 		static sf::Vector2f whiteSpace;
 		static bool changeEntity;
-
 	};
 }

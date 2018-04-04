@@ -4,7 +4,7 @@
 #include <algorithm>
 
 unsigned int level = 1;
-float MAINPLAYERSPEED = 5.5f;
+float MAINPLAYERSPEED = 6.f;
 
 namespace GameState {
 	bool start = false;
@@ -20,12 +20,12 @@ const int rng() {
 	return static_cast<int>(prng());
 }
 
-const size_t Prng() {
-	const size_t PNum = std::abs(rng());
-	if (PNum > 100000) {
+const size_t Prng(const size_t PRange) {
+	const size_t PNum = abs(rng());
+	if (PNum >= PRange) {
 		return PNum;
 	}
 	else {
-		return Prng();
+		return Prng(PRange);
 	}
 }

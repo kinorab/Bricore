@@ -1,5 +1,6 @@
 #include "define.h"
 #include "brick.h"
+#include "ball.h"
 #include <stdexcept>
 #include <iostream>
 
@@ -7,8 +8,14 @@ using namespace std;
 using namespace sf;
 using namespace item;
 
-bool Brick::changeEntity = false;
+vector <unique_ptr<RectangleShape>> Brick::bricks;
+map <string, Texture *> Brick::levelImage;
+size_t Brick::amount;
+float Brick::frame;
+Vector2f Brick::interval;
+Vector2f Brick::sideLength;
 Vector2f Brick::whiteSpace(0.0f, 0.0f);
+bool Brick::changeEntity(false);
 
 Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vector2f &interval, const float frameSize, const float whiteSpaceY) {
 
@@ -111,7 +118,7 @@ void Brick::setRowAmount(const int row) {
 void Brick::setSideLength(const Vector2f & sideLength) {
 	try {
 		if (sideLength.x > 0 && sideLength.y > 0) {
-			this->sideLength = sideLength;
+			Brick::sideLength = sideLength;
 			changeEntity = true;
 			settlePlace();
 		}
@@ -143,7 +150,7 @@ void Brick::setSideLength(const float wid, const float hei) {
 void Brick::setInterval(const Vector2f &interval) {
 	try {
 		if (interval.x >= 0.0f && interval.y >= 0.0f) {
-			this->interval = interval;
+			Brick::interval = interval;
 			settlePlace();
 		}
 		else {
@@ -186,12 +193,12 @@ void Brick::setFrameSize(const float frameSize) {
 	}
 }
 
-void Brick::update(Ball &ball) {
+void Brick::update() {
 
 	if (!bricks.empty()) {
 		for (size_t i = 0; i < getBricksSize(); ++i) {
 			FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
-			if (ball.ballCollided(brickBounds)) {
+			if (Ball::isBallCollided(brickBounds)) {
 				bricks.erase(bricks.begin() + i);
 				--i;
 			}
@@ -219,9 +226,9 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 		else {
 			sideLength = Vector2f(wid, hei);
 			frame = frameSize;
-			this->interval = interval;
+			Brick::interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
-			whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
+			whiteSpace.x = (LEVEL_WIDTH - ((Brick::interval.x + sideLength.x + frame * 2) * amount - Brick::interval.x)) / 2;
 			whiteSpace.y = whiteSpaceY;
 			bricks.resize(rowCount * amount);
 
@@ -259,19 +266,19 @@ void Brick::reset(const size_t rowCount) {
 	}
 }
 
-const size_t Brick::getBricksSize() const {
+const size_t Brick::getBricksSize() {
 	return bricks.size();
 }
 
-const Vector2f & Brick::getSideLength() const {
+const Vector2f & Brick::getSideLength() {
 	return sideLength;
 }
 
-const Vector2f & Brick::getInterval() const {
+const Vector2f & Brick::getInterval() {
 	return interval;
 }
 
-const float Brick::getFrameSize() const {
+const float Brick::getFrameSize() {
 	return frame;
 }
 
