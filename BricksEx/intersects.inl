@@ -54,7 +54,7 @@ const bool game::pointIntersects(const sf::Vector2<T>& point, const sf::Rect<T>&
 	sf::Vector2<T> LT(block.left, block.top);
 	sf::Vector2<T> RB(block.left + block.width, block.top + block.height);
 
-	if (point.x >= LT.x && point.x <= RB.y
+	if (point.x >= LT.x && point.x <= RB.x
 		&& point.y >= LT.y && point.y <= RB.y) {
 		return true;
 	}
