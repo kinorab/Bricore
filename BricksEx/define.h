@@ -37,4 +37,4 @@ namespace game {
 	template <typename T>
 	extern const bool pointIntersects(const sf::Vector2<T> &point, const sf::Rect<T> &block);
 }
-#include "rect.inl"
+#include "intersects.inl"
