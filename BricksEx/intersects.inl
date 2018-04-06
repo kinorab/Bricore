@@ -1,7 +1,6 @@
-#include "define.h"
 // exclude 4-points edge frame
 template<typename T>
-const bool game::EXCintersects(const sf::Rect<T>& a, const sf::Rect<T>& b) {
+extern const bool EXCintersects(const sf::Rect<T> &a, const sf::Rect<T> &b) {
 
 	sf::Vector2<T> ALT(a.left, a.top);
 	sf::Vector2<T> ARB(a.left + a.width, a.top + a.height);
@@ -16,7 +15,7 @@ const bool game::EXCintersects(const sf::Rect<T>& a, const sf::Rect<T>& b) {
 }
 // include 4-points edge frame
 template<typename T>
-const bool game::INCintersects(const sf::Rect<T>& a, const sf::Rect<T>& b) {
+extern const bool INCintersects(const sf::Rect<T> &a, const sf::Rect<T> &b) {
 
 	sf::Vector2<T> ALT(a.left, a.top);
 	sf::Vector2<T> ARB(a.left + a.width, a.top + a.height);
@@ -31,13 +30,24 @@ const bool game::INCintersects(const sf::Rect<T>& a, const sf::Rect<T>& b) {
 }
 
 template<typename T>
-const bool game::pointIntersects(const sf::Vector2<T>& point, const sf::Rect<T>& block) {
+extern const bool pointIntersects(const sf::Vector2<T> &point, const sf::Rect<T> &block) {
 
 	sf::Vector2<T> LT(block.left, block.top);
 	sf::Vector2<T> RB(block.left + block.width, block.top + block.height);
 
 	if (point.x >= LT.x && point.x <= RB.x
 		&& point.y >= LT.y && point.y <= RB.y) {
+		return true;
+	}
+	return false;
+}
+
+template<typename T>
+extern const bool ballIntersects(const sf::Vector2<T> &APos, const T &ARadius, const sf::Vector2<T> &BPos, const T &BRadius) {
+	
+	T distance = std::sqrt(std::pow(APos.x - BPos.x, 2) + std::pow(APos.y - BPos.y, 2));
+
+	if (distance <= ARadius + BRadius) {
 		return true;
 	}
 	return false;

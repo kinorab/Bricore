@@ -18,6 +18,7 @@ void Ball::update(const FloatRect &playerBounds) {
 	for (size_t i = 0; i < balls.size(); ++i) {
 		balls.at(i)->ballMove(playerBounds);
 		balls.at(i)->update();
+		collision(i);
 		if (balls.at(i)->broke) {
 			balls.erase(balls.begin() + i);
 		}
@@ -72,7 +73,7 @@ void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
 	}
 }
 
-bool Ball::isBallCollided(const FloatRect & bounds) {
+bool Ball::isBallCollided(const FloatRect &bounds) {
 
 	for (size_t i = 0; i < balls.size(); ++i) {
 		FloatRect ballBounds = balls.at(i)->getBounds();
@@ -104,9 +105,10 @@ bool Ball::isBallCollided(const FloatRect & bounds) {
 void Ball::ballDivided(const size_t numbers) {
 
 	try {
+		Vector2f mainPos = balls.at(0)->getPosition();
 		for (size_t i = 0; i < numbers; ++i) {
 			balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
-			balls.at(balls.size() - 1)->setPosition(balls.at(0)->getPosition());
+			balls.at(balls.size() - 1)->setPosition(mainPos);
 			balls.at(balls.size() - 1)->setSpeedX(balls.at(0)->getSpeedX() * ((Prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
 			balls.at(balls.size() - 1)->setSpeedY(balls.at(0)->getSpeedY() * ((Prng(20) % 20 + 80) * .01f * (Prng(4) % 4 == 0 ? -1 : 1)));
 		}
@@ -128,6 +130,26 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 	states.texture = nullptr;
 	for (size_t i = 0; i < balls.size(); ++i) {
 		balls.at(i)->draw(target, states);
+	}
+}
+
+void Ball::collision(const size_t number) {
+	try {
+		for (size_t j = number + 1; j < balls.size(); ++j) {
+			Vector2f APos = balls.at(number)->getPosition();
+			float AR = balls.at(number)->getRadius();
+			Vector2f BPos = balls.at(j)->getPosition();
+			float BR = balls.at(j)->getRadius();
+			if (game::ballIntersects(APos, AR, BPos, BR)) {
+				balls.at(number)->setSpeedX(balls.at(number)->getSpeedX() * -1);
+				balls.at(number)->setSpeedY(balls.at(number)->getSpeedY() * -1);
+				balls.at(j)->setSpeedX(balls.at(j)->getSpeedX() * -1);
+				balls.at(j)->setSpeedY(balls.at(j)->getSpeedY() * -1);
+			}
+		}
+	}
+	catch (std::out_of_range &ex) {
+		std::cout << "Exception: " << ex.what() << std::endl;
 	}
 }
 
@@ -336,6 +358,10 @@ void Ball::BallContainer::setPosition(const float posX, const float posY) {
 	ball.setPosition(posX, posY);
 }
 
+void Ball::BallContainer::setRadius(const float radius) {
+	ball.setRadius(radius);
+}
+
 void Ball::BallContainer::draw(RenderTarget &target, RenderStates states) const {
 	target.draw(ball, states);
 }
@@ -350,6 +376,10 @@ const float Ball::BallContainer::getSpeedX() const {
 
 const float Ball::BallContainer::getSpeedY() const {
 	return ballSpeed.y;
+}
+
+const float Ball::BallContainer::getRadius() const {
+	return ball.getRadius() + ball.getOutlineThickness();
 }
 
 const Vector2f & Ball::BallContainer::getPosition() const {

@@ -3,7 +3,7 @@
 #include <random>
 #include <algorithm>
 
-unsigned int level = 1;
+unsigned int level = 4;
 float MAINPLAYERSPEED = 6.f;
 
 namespace GameState {

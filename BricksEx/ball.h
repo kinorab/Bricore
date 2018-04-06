@@ -21,6 +21,7 @@ namespace item {
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		static void collision(const size_t);
 
 		class BallContainer : public sf::Drawable {
 		public:
@@ -31,11 +32,13 @@ namespace item {
 			void setSpeedY(const float);
 			void setPosition(const sf::Vector2f &);
 			void setPosition(const float, const float);
+			void setRadius(const float);
 			virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 			const bool isMain() const;
 			const float getSpeedX() const;
 			const float getSpeedY() const;
+			const float getRadius() const;
 			const sf::Vector2f & getPosition() const;
 			const sf::FloatRect getBounds() const;
 
