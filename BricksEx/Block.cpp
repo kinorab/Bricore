@@ -79,8 +79,8 @@ void Block::setSpeed(const Vector2f & speed) {
 void Block::update() {
 
 	Ball::ballCollided(getBounds(), speed);
-	Vector2f posLT = (*this)[0].position;
-	Vector2f posRB = (*this)[2].position;
+	const Vector2f posLT = (*this)[0].position;
+	const Vector2f posRB = (*this)[2].position;
 	if (posLT.x <= 0.0f) {
 		speed.x = abs(speed.x);
 	}

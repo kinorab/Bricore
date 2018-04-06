@@ -8,6 +8,8 @@ using namespace item;
 
 bool Ball::initialize(false);
 bool Ball::mainSettled(false);
+bool Ball::ballStartC(false);
+bool Ball::multiple(false);
 std::vector<std::unique_ptr<Ball::BallContainer>> Ball::balls;
 
 Ball::Ball() {
@@ -18,10 +20,12 @@ void Ball::update(const FloatRect &playerBounds) {
 	for (size_t i = 0; i < balls.size(); ++i) {
 		balls.at(i)->ballMove(playerBounds);
 		balls.at(i)->update();
-		collision(i);
 		if (balls.at(i)->broke) {
 			balls.erase(balls.begin() + i);
 		}
+	}
+	if (multiple) {
+		collision();
 	}
 }
 
@@ -47,9 +51,9 @@ void Ball::followPlayer(const Vector2f &playerTopCenterPos) {
 void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
 
 	for (size_t i = 0; i < balls.size(); ++i) {
-		FloatRect ballBounds = balls.at(i)->getBounds();
-		Vector2f ballPos = balls.at(i)->getPosition();
-		if (game::INCintersects(ballBounds, bounds)) {
+		const FloatRect ballBounds = balls.at(i)->getBounds();
+		const Vector2f ballPos = balls.at(i)->getPosition();
+		if (game::INCIntersects(ballBounds, bounds)) {
 			if (ballPos.x < bounds.left) {
 				balls.at(i)->left = true;
 				balls.at(i)->setSpeedX(-std::max(abs(balls.at(i)->getSpeedX()), abs(speed.x)));
@@ -76,9 +80,9 @@ void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
 bool Ball::isBallCollided(const FloatRect &bounds) {
 
 	for (size_t i = 0; i < balls.size(); ++i) {
-		FloatRect ballBounds = balls.at(i)->getBounds();
-		Vector2f ballPos = balls.at(i)->getPosition();
-		if (game::INCintersects(ballBounds, bounds)) {
+		const FloatRect ballBounds = balls.at(i)->getBounds();
+		const Vector2f ballPos = balls.at(i)->getPosition();
+		if (game::INCIntersects(ballBounds, bounds)) {
 			if (ballPos.x < bounds.left) {
 				balls.at(i)->setSpeedX(-abs(balls.at(i)->getSpeedX()));
 			}
@@ -105,13 +109,15 @@ bool Ball::isBallCollided(const FloatRect &bounds) {
 void Ball::ballDivided(const size_t numbers) {
 
 	try {
-		Vector2f mainPos = balls.at(0)->getPosition();
+		const Vector2f mainPos = balls.at(0)->getPosition();
 		for (size_t i = 0; i < numbers; ++i) {
 			balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
 			balls.at(balls.size() - 1)->setPosition(mainPos);
 			balls.at(balls.size() - 1)->setSpeedX(balls.at(0)->getSpeedX() * ((Prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
 			balls.at(balls.size() - 1)->setSpeedY(balls.at(0)->getSpeedY() * ((Prng(20) % 20 + 80) * .01f * (Prng(4) % 4 == 0 ? -1 : 1)));
 		}
+		ballStartC = false;
+		multiple = true;
 	}
 	catch (std::out_of_range &ex) {
 		std::cout << "Cannot modify balls' amount: " << ex.what() << std::endl;
@@ -133,19 +139,35 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 	}
 }
 
-void Ball::collision(const size_t number) {
+void Ball::collision() {
 	try {
-		for (size_t j = number + 1; j < balls.size(); ++j) {
-			Vector2f APos = balls.at(number)->getPosition();
-			float AR = balls.at(number)->getRadius();
-			Vector2f BPos = balls.at(j)->getPosition();
-			float BR = balls.at(j)->getRadius();
-			if (game::ballIntersects(APos, AR, BPos, BR)) {
-				balls.at(number)->setSpeedX(balls.at(number)->getSpeedX() * -1);
-				balls.at(number)->setSpeedY(balls.at(number)->getSpeedY() * -1);
-				balls.at(j)->setSpeedX(balls.at(j)->getSpeedX() * -1);
-				balls.at(j)->setSpeedY(balls.at(j)->getSpeedY() * -1);
+		for (size_t i = 0; i < balls.size() - 1; ++i) {
+			for (size_t j = i + 1; j < balls.size(); ++j) {
+				const Vector2f APos = balls.at(i)->getPosition();
+				const float AR = balls.at(i)->getRadius();
+				const Vector2f BPos = balls.at(j)->getPosition();
+				const float BR = balls.at(j)->getRadius();
+
+				if (ballStartC && game::ballIntersects(APos, AR, BPos, BR)) {
+					const Vector2f avarageSpeed((abs(balls.at(i)->getSpeedX()) + abs(balls.at(j)->getSpeedX())) / 2
+						, (abs(balls.at(i)->getSpeedY()) + abs(balls.at(j)->getSpeedY())) / 2);
+					const float ASpeedX = balls.at(j)->getSpeedX() < 0 ? -abs(avarageSpeed.x) : abs(avarageSpeed.x);
+					const float ASpeedY = balls.at(j)->getSpeedY() < 0 ? -abs(avarageSpeed.y) : abs(avarageSpeed.y);
+					const float BSpeedX = balls.at(i)->getSpeedX() < 0 ? -abs(avarageSpeed.x) : abs(avarageSpeed.x);
+					const float BSpeedY = balls.at(i)->getSpeedY() < 0 ? -abs(avarageSpeed.y) : abs(avarageSpeed.y);
+
+					balls.at(i)->setSpeedX(ASpeedX);
+					balls.at(i)->setSpeedY(ASpeedY);
+					balls.at(j)->setSpeedX(BSpeedX);
+					balls.at(j)->setSpeedY(BSpeedY);
+				}
+				else if(game::ballDistance(APos, AR, BPos, BR) < 1.f) {
+					return;
+				}
 			}
+		}
+		if (!ballStartC) {
+			ballStartC = true;
 		}
 	}
 	catch (std::out_of_range &ex) {
@@ -173,7 +195,7 @@ void Ball::BallContainer::setColor(const Color &color) {
 
 void Ball::BallContainer::update() {
 
-	FloatRect ballBounds = ball.getGlobalBounds();
+	const FloatRect ballBounds = ball.getGlobalBounds();
 	if (!broke) {
 		if (left) {
 			if (right) {
@@ -223,8 +245,8 @@ void Ball::BallContainer::update() {
 
 void Ball::BallContainer::ballMove(const FloatRect &bounds) {
 
-	FloatRect ballBounds = ball.getGlobalBounds();
-	Vector2f ballPos = ball.getPosition();
+	const FloatRect ballBounds = ball.getGlobalBounds();
+	const Vector2f ballPos = ball.getPosition();
 	if (!active) {
 		oriSpeed.x = ballSpeed.x;
 		oriSpeed.y = ballSpeed.y;
@@ -262,7 +284,7 @@ void Ball::BallContainer::ballMove(const FloatRect &bounds) {
 		ballSpeed.y = abs(ballSpeed.y);
 	}
 	// the collision between mainBall and player
-	else if (game::INCintersects(ballBounds, bounds)) {
+	else if (game::INCIntersects(ballBounds, bounds)) {
 		if (!CD) {
 			countTime.restart();
 			if (ballSpeed.x == 0.0f) {
@@ -326,7 +348,7 @@ void Ball::BallContainer::ballMove(const FloatRect &bounds) {
 			CD = true;
 			CDTime.restart();
 		}
-		else if (CDTime.getElapsedTime().asSeconds() > 0.25f) {
+		else if (CDTime.getElapsedTime().asSeconds() > 0.1f) {
 			CD = false;
 		}
 		// prevent speed too fast

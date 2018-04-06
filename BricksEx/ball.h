@@ -21,7 +21,7 @@ namespace item {
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		static void collision(const size_t);
+		static void collision();
 
 		class BallContainer : public sf::Drawable {
 		public:
@@ -61,6 +61,8 @@ namespace item {
 			bool active = false;
 		};
 
+		static bool multiple;
+		static bool ballStartC;
 		static bool mainSettled;
 		static bool initialize;
 		static std::vector<std::unique_ptr<BallContainer>> balls;

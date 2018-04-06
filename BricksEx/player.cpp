@@ -96,7 +96,7 @@ void Player::flashRange(Sound & sound, const FloatRect &ballBounds) {
 	static bool flashCD = false;
 
 	if (!flashCD) {
-		if (game::INCintersects(ballBounds, playerBounds)) {
+		if (game::INCIntersects(ballBounds, playerBounds)) {
 			elapsed.restart();
 			sound.play();
 			if (ballBounds.left <= playerBounds.left) {

@@ -197,7 +197,7 @@ void Brick::update() {
 
 	if (!bricks.empty()) {
 		for (size_t i = 0; i < getBricksSize(); ++i) {
-			FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
+			const FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
 			if (Ball::isBallCollided(brickBounds)) {
 				bricks.erase(bricks.begin() + i);
 				--i;
@@ -284,7 +284,7 @@ const float Brick::getFrameSize() {
 
 void Brick::settlePlace() {
 
-	Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frame, interval.y + frame + sideLength.y / 2);
+	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frame, interval.y + frame + sideLength.y / 2);
 	Vector2f tempPos = Vector2f(initialPos.x, initialPos.y + whiteSpace.y);
 
 	try {
