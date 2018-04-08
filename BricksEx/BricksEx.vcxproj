@@ -190,7 +190,7 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="diagonalPoint.inl" />
-    <None Include="intersects.inl" />
+    <None Include="intersects.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -72,3 +72,4 @@ namespace sys {
 	typedef DPoint<unsigned int> DPointu;
 	typedef DPoint<float>        DPointf;
 }
+

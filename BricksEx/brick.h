@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include <map>
-#include "define.h"
+#include "diagonalPoint.h"
 
 namespace item {
 	class Brick :

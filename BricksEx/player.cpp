@@ -1,5 +1,6 @@
 #include "player.h"
 #include "define.h"
+#include "intersects.h"
 #include <iostream>
 
 using namespace sf;
@@ -56,6 +57,13 @@ const Vector2f Player::getMainPlayerTopCenterPos() {
 
 const FloatRect Player::getMainPlayerBounds() {
 	return mainPlayer.getGlobalBounds();
+}
+
+const sys::DPointf Player::getMainPlayerDP() {
+	const Vector2f LT(mainPlayer.getGlobalBounds().left, mainPlayer.getGlobalBounds().top);
+	const Vector2f RB(mainPlayer.getGlobalBounds().left + mainPlayer.getGlobalBounds().width
+		, mainPlayer.getGlobalBounds().top + mainPlayer.getGlobalBounds().height);
+	return sys::DPointf(LT, RB);
 }
 
 void Player::draw(RenderTarget &target, RenderStates states) const {

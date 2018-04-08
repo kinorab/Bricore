@@ -1,4 +1,5 @@
 #include "block.h"
+#include "define.h"
 #include "ball.h"
 #include <iostream>
 #include <stdexcept>

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics/Rect.hpp>
-#include "diagonalPoint.h"
 
 extern unsigned int level;
 extern float MAINPLAYERSPEED;
@@ -28,7 +27,3 @@ namespace GameState {
 
 extern const int rng();
 extern const size_t Prng(const size_t PRange = 0);
-
-namespace game {
-#include "intersects.inl"
-}

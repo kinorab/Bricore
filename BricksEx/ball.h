@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "define.h"
 #include <vector>
 #include <memory>
+#include "diagonalPoint.h"
 
 namespace item {
 
@@ -11,13 +11,13 @@ namespace item {
 
 	public:
 		Ball();
-		static void update(const sf::FloatRect &playerBounds);
+		static void update(const sys::DPointf &playerDP);
 		static void initializeBall();
-		static void followPlayer(const sf::Vector2f &playerPos);
+		static void followPlayer(const sf::Vector2f &playerTopCenterPos);
 		static void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
-		static void ballCollided(const sys::DPointf &bounds, const sf::Vector2f &speed);
+		static void ballCollided(const sys::DPointf &boundsDP, const sf::Vector2f &speed);
 		static bool isBallCollided(const sf::FloatRect &bounds);
-		static bool isBallCollided(const sys::DPointf &bounds);
+		static bool isBallCollided(const sys::DPointf &boundsDP);
 		static void ballDivided(const size_t numbers);
 		static const float getMainBallRadius();
 		static const sf::Vector2f & getMainBallPosition();
@@ -30,19 +30,19 @@ namespace item {
 		public:
 			BallContainer();
 			void update();
-			void ballMove(const sf::FloatRect &);
+			void ballMove(const sys::DPointf &);
 			void setSpeedX(const float);
 			void setSpeedY(const float);
-			void setPosition(const sf::Vector2f &);
-			void setPosition(const float, const float);
+			void setPos(const sf::Vector2f &);
+			void setPos(const float, const float);
 			void setRadius(const float);
 			virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 			const bool isMain() const;
 			const float getSpeedX() const;
 			const float getSpeedY() const;
-			const float getRadius() const;
-			const sf::Vector2f & getPosition() const;
+			const float getRad() const;
+			const sf::Vector2f & getPos() const;
 
 			bool left = false;
 			bool right = false;
@@ -50,6 +50,7 @@ namespace item {
 			bool top = false;
 			bool broke = false;
 			bool CD = false;
+			bool active = false;
 
 		private:
 			void setColor(const sf::Color &);
@@ -60,7 +61,6 @@ namespace item {
 			sf::Clock CDTime;
 			sf::CircleShape ball;
 			bool main = false;
-			bool active = false;
 		};
 
 		static bool multiple;

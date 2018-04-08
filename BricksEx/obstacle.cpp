@@ -1,4 +1,6 @@
 #include "obstacle.h"
+#include "define.h"
+#include "intersects.h"
 #include "ball.h"
 #include <iostream>
 

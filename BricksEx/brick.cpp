@@ -1,5 +1,6 @@
 #include "brick.h"
 #include "ball.h"
+#include "define.h"
 #include <stdexcept>
 #include <iostream>
 

@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "diagonalPoint.h"
 
 class Player : public sf::Drawable {
 
@@ -12,6 +13,7 @@ public:
 	static const sf::Vector2f & getMainPlayerPos();
 	static const sf::Vector2f getMainPlayerTopCenterPos();
 	static const sf::FloatRect getMainPlayerBounds();
+	static const sys::DPointf getMainPlayerDP();
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
