@@ -78,9 +78,10 @@ void Block::setSpeed(const Vector2f & speed) {
 // all change direct by using abs() to prevent stuck inside the block
 void Block::update() {
 
-	Ball::ballCollided(getBounds(), speed);
 	const Vector2f posLT = (*this)[0].position;
 	const Vector2f posRB = (*this)[2].position;
+	Ball::ballCollided(sys::DPointf(posLT, posRB), speed);
+
 	if (posLT.x <= 0.0f) {
 		speed.x = abs(speed.x);
 	}
