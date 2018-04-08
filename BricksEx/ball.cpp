@@ -51,9 +51,9 @@ void Ball::followPlayer(const Vector2f &playerTopCenterPos) {
 void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
 
 	for (size_t i = 0; i < balls.size(); ++i) {
-		const FloatRect ballBounds = balls.at(i)->getBounds();
+		const float radius = balls.at(i)->getRadius();
 		const Vector2f ballPos = balls.at(i)->getPosition();
-		if (game::INCIntersects(ballBounds, bounds)) {
+		if (game::ballRectINCIntersects(ballPos, radius, bounds)) {
 			if (ballPos.x < bounds.left) {
 				balls.at(i)->left = true;
 				balls.at(i)->setSpeedX(-std::max(abs(balls.at(i)->getSpeedX()), abs(speed.x)));
@@ -80,9 +80,9 @@ void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
 bool Ball::isBallCollided(const FloatRect &bounds) {
 
 	for (size_t i = 0; i < balls.size(); ++i) {
-		const FloatRect ballBounds = balls.at(i)->getBounds();
+		const float radius = balls.at(i)->getRadius();
 		const Vector2f ballPos = balls.at(i)->getPosition();
-		if (game::INCIntersects(ballBounds, bounds)) {
+		if (game::ballRectINCIntersects(ballPos, radius, bounds)) {
 			if (ballPos.x < bounds.left) {
 				balls.at(i)->setSpeedX(-abs(balls.at(i)->getSpeedX()));
 			}
@@ -148,7 +148,7 @@ void Ball::collision() {
 				const Vector2f BPos = balls.at(j)->getPosition();
 				const float BR = balls.at(j)->getRadius();
 
-				if (ballStartC && game::ballIntersects(APos, AR, BPos, BR)) {
+				if (ballStartC && game::ballsIntersects(APos, AR, BPos, BR)) {
 					const Vector2f avarageSpeed((abs(balls.at(i)->getSpeedX()) + abs(balls.at(j)->getSpeedX())) / 2
 						, (abs(balls.at(i)->getSpeedY()) + abs(balls.at(j)->getSpeedY())) / 2);
 					const float ASpeedX = balls.at(j)->getSpeedX() < 0 ? -abs(avarageSpeed.x) : abs(avarageSpeed.x);
@@ -161,7 +161,7 @@ void Ball::collision() {
 					balls.at(j)->setSpeedX(BSpeedX);
 					balls.at(j)->setSpeedY(BSpeedY);
 				}
-				else if(game::ballDistance(APos, AR, BPos, BR) < 1.f) {
+				else if(game::ballsDistance(APos, AR, BPos, BR) < 1.f) {
 					return;
 				}
 			}
