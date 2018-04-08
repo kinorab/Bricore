@@ -169,6 +169,7 @@
     <ClInclude Include="container.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="diagonalPoint.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
@@ -188,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="diagonalPoint.inl" />
     <None Include="intersects.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

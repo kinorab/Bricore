@@ -22,7 +22,7 @@ Player::Player() {
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 }
 
-void Player::playerMove(Sound &sound, const FloatRect &ballBounds) {
+void Player::playerMove(Sound &sound, const Vector2f ballPos, const float radius) {
 	FloatRect playerBound = mainPlayer.getGlobalBounds();
 	if (playerBound.left >= 0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
@@ -37,7 +37,7 @@ void Player::playerMove(Sound &sound, const FloatRect &ballBounds) {
 		redRange.move(Vector2f(MAINPLAYERSPEED / SLICE, 0));
 	}
 	if (GameState::start) {
-		flashRange(sound, ballBounds);
+		flashRange(sound, ballPos, radius);
 	}
 	if (flash) {
 		flashElapsed();
@@ -88,7 +88,7 @@ void Player::flashElapsed() {
 	}
 }
 
-void Player::flashRange(Sound & sound, const FloatRect &ballBounds) {
+void Player::flashRange(Sound & sound, const Vector2f ballPos, const float radius) {
 	FloatRect playerBounds = getMainPlayerBounds();
 	FloatRect rangeBounds = redRange.getGlobalBounds();
 	Vector2f pos1P = getMainPlayerPos();
@@ -96,17 +96,17 @@ void Player::flashRange(Sound & sound, const FloatRect &ballBounds) {
 	static bool flashCD = false;
 
 	if (!flashCD) {
-		if (game::INCIntersects(ballBounds, playerBounds)) {
+		if (game::ballRectINCIntersects(ballPos, radius, playerBounds)) {
 			elapsed.restart();
 			sound.play();
-			if (ballBounds.left <= playerBounds.left) {
+			if (ballPos.x - radius <= playerBounds.left) {
 				setFlashPosition(playerBounds.left + rangeBounds.width / 2, pos1P.y);
 			}
-			else if (ballBounds.left + ballBounds.width >= playerBounds.left + playerBounds.width) {
+			else if (ballPos.x + radius >= playerBounds.left + playerBounds.width) {
 				setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y);
 			}
 			else {
-				setFlashPosition(ballBounds.left + ballBounds.width, pos1P.y);
+				setFlashPosition(ballPos.x, pos1P.y);
 			}
 			flash = true;
 			flashCD = true;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "define.h"
 
 namespace item {
 	class Block : public sf::VertexArray {
@@ -16,6 +17,7 @@ namespace item {
 		void setSpeed(const sf::Vector2f &speed);
 		void update();
 
+		const sys::DPointf getDP() const;
 		const sf::Vector2f & getCurrentPosition() const;
 		const sf::Vector2f & getOriginPosition() const;
 		const sf::Vector2f & getSpeed() const;

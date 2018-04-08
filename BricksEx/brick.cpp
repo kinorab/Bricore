@@ -1,4 +1,3 @@
-#include "define.h"
 #include "brick.h"
 #include "ball.h"
 #include <stdexcept>
@@ -197,8 +196,7 @@ void Brick::update() {
 
 	if (!bricks.empty()) {
 		for (size_t i = 0; i < getBricksSize(); ++i) {
-			const FloatRect brickBounds = bricks.at(i)->getGlobalBounds();
-			if (Ball::isBallCollided(brickBounds)) {
+			if (Ball::isBallCollided(getDP(i))) {
 				bricks.erase(bricks.begin() + i);
 				--i;
 			}
@@ -280,6 +278,13 @@ const Vector2f & Brick::getInterval() {
 
 const float Brick::getFrameSize() {
 	return frame;
+}
+
+const sys::DPointf Brick::getDP(const size_t number) {
+	Vector2f dot1(bricks.at(number)->getGlobalBounds().left, bricks.at(number)->getGlobalBounds().top);
+	Vector2f dot2(bricks.at(number)->getGlobalBounds().left + bricks.at(number)->getGlobalBounds().width,
+		bricks.at(number)->getGlobalBounds().top + bricks.at(number)->getGlobalBounds().height);
+	return sys::DPointf(dot1, dot2);
 }
 
 void Brick::settlePlace() {

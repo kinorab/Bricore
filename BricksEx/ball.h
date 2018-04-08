@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "define.h"
 #include <vector>
 #include <memory>
 
@@ -14,9 +15,11 @@ namespace item {
 		static void initializeBall();
 		static void followPlayer(const sf::Vector2f &playerPos);
 		static void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
+		static void ballCollided(const sys::DPointf &bounds, const sf::Vector2f &speed);
 		static bool isBallCollided(const sf::FloatRect &bounds);
+		static bool isBallCollided(const sys::DPointf &bounds);
 		static void ballDivided(const size_t numbers);
-		static const sf::FloatRect getMainBallBounds();
+		static const float getMainBallRadius();
 		static const sf::Vector2f & getMainBallPosition();
 
 	private:
@@ -40,7 +43,6 @@ namespace item {
 			const float getSpeedY() const;
 			const float getRadius() const;
 			const sf::Vector2f & getPosition() const;
-			const sf::FloatRect getBounds() const;
 
 			bool left = false;
 			bool right = false;

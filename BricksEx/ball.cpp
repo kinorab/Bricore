@@ -1,4 +1,3 @@
-#include "define.h"
 #include "ball.h"
 #include <algorithm>
 #include <iostream>
@@ -44,12 +43,11 @@ void Ball::initializeBall() {
 
 void Ball::followPlayer(const Vector2f &playerTopCenterPos) {
 	if (!balls.empty()) {
-		balls.at(0)->setPosition(playerTopCenterPos.x, playerTopCenterPos.y - balls.at(0)->getBounds().height / 2 - 1.f);
+		balls.at(0)->setPosition(playerTopCenterPos.x, playerTopCenterPos.y - balls.at(0)->getRadius() - 1.f);
 	}
 }
 
 void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
-
 	for (size_t i = 0; i < balls.size(); ++i) {
 		const float radius = balls.at(i)->getRadius();
 		const Vector2f ballPos = balls.at(i)->getPosition();
@@ -77,8 +75,35 @@ void Ball::ballCollided(const FloatRect &bounds, const Vector2f &speed) {
 	}
 }
 
-bool Ball::isBallCollided(const FloatRect &bounds) {
+void Ball::ballCollided(const sys::DPointf & bounds, const sf::Vector2f & speed) {
+	for (size_t i = 0; i < balls.size(); ++i) {
+		const float radius = balls.at(i)->getRadius();
+		const Vector2f ballPos = balls.at(i)->getPosition();
+		if (game::ballRectINCIntersects(ballPos, radius, bounds)) {
+			if (ballPos.x < bounds.dot1.x) {
+				balls.at(i)->left = true;
+				balls.at(i)->setSpeedX(-std::max(abs(balls.at(i)->getSpeedX()), abs(speed.x)));
+			}
+			else if (ballPos.x > bounds.dot2.x) {
+				balls.at(i)->right = true;
+				balls.at(i)->setSpeedX(std::max(abs(balls.at(i)->getSpeedX()), abs(speed.x)));
 
+			}
+
+			if (ballPos.y > bounds.dot2.y) {
+				balls.at(i)->bottom = true;
+				balls.at(i)->setSpeedY(std::max(abs(balls.at(i)->getSpeedY()), abs(speed.y)));
+			}
+			else if (ballPos.y < bounds.dot1.y) {
+				balls.at(i)->top = true;
+				balls.at(i)->setSpeedY(-std::max(abs(balls.at(i)->getSpeedY()), abs(speed.y)));
+			}
+			balls.at(i)->CD = false;
+		}
+	}
+}
+
+bool Ball::isBallCollided(const FloatRect &bounds) {
 	for (size_t i = 0; i < balls.size(); ++i) {
 		const float radius = balls.at(i)->getRadius();
 		const Vector2f ballPos = balls.at(i)->getPosition();
@@ -94,6 +119,35 @@ bool Ball::isBallCollided(const FloatRect &bounds) {
 				balls.at(i)->setSpeedY(abs(balls.at(i)->getSpeedY()));
 			}
 			else if (ballPos.y < bounds.top) {
+				balls.at(i)->setSpeedY(-abs(balls.at(i)->getSpeedY()));
+			}
+			if (balls.at(i)->isMain()) {
+				ballDivided(10);
+			}
+			balls.at(i)->CD = false;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Ball::isBallCollided(const sys::DPointf & bounds) {
+
+	for (size_t i = 0; i < balls.size(); ++i) {
+		const float radius = balls.at(i)->getRadius();
+		const Vector2f ballPos = balls.at(i)->getPosition();
+		if (game::ballRectINCIntersects(ballPos, radius, bounds)) {
+			if (ballPos.x < bounds.dot1.x) {
+				balls.at(i)->setSpeedX(-abs(balls.at(i)->getSpeedX()));
+			}
+			else if (ballPos.x > bounds.dot2.x) {
+				balls.at(i)->setSpeedX(abs(balls.at(i)->getSpeedX()));
+			}
+
+			if (ballPos.y > bounds.dot2.y) {
+				balls.at(i)->setSpeedY(abs(balls.at(i)->getSpeedY()));
+			}
+			else if (ballPos.y < bounds.dot1.y) {
 				balls.at(i)->setSpeedY(-abs(balls.at(i)->getSpeedY()));
 			}
 			if (balls.at(i)->isMain()) {
@@ -124,8 +178,8 @@ void Ball::ballDivided(const size_t numbers) {
 	}
 }
 
-const FloatRect Ball::getMainBallBounds() {
-	return balls.at(0)->getBounds();
+const float Ball::getMainBallRadius() {
+	return balls.at(0)->getRadius();
 }
 
 const Vector2f & Ball::getMainBallPosition() {
@@ -147,7 +201,6 @@ void Ball::collision() {
 				const float AR = balls.at(i)->getRadius();
 				const Vector2f BPos = balls.at(j)->getPosition();
 				const float BR = balls.at(j)->getRadius();
-
 				if (ballStartC && game::ballsIntersects(APos, AR, BPos, BR)) {
 					const Vector2f avarageSpeed((abs(balls.at(i)->getSpeedX()) + abs(balls.at(j)->getSpeedX())) / 2
 						, (abs(balls.at(i)->getSpeedY()) + abs(balls.at(j)->getSpeedY())) / 2);
@@ -161,7 +214,7 @@ void Ball::collision() {
 					balls.at(j)->setSpeedX(BSpeedX);
 					balls.at(j)->setSpeedY(BSpeedY);
 				}
-				else if(game::ballsDistance(APos, AR, BPos, BR) < 1.f) {
+				else if (game::ballsDistance(APos, AR, BPos, BR) < 1.f) {
 					return;
 				}
 			}
@@ -406,10 +459,6 @@ const float Ball::BallContainer::getRadius() const {
 
 const Vector2f & Ball::BallContainer::getPosition() const {
 	return ball.getPosition();
-}
-
-const FloatRect Ball::BallContainer::getBounds() const {
-	return ball.getGlobalBounds();
 }
 
 void Ball::BallContainer::resetBall() {

@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include "define.h"
 
 namespace item {
 	class Brick :
@@ -35,6 +36,7 @@ namespace item {
 		static const sf::Vector2f & getSideLength();
 		static const sf::Vector2f & getInterval();
 		static const float getFrameSize();
+		static const sys::DPointf getDP(const size_t number);
 
 	private:
 

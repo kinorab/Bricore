@@ -51,7 +51,7 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	if (!GameState::pause) {
 		item::Ball::initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
-			Player::playerMove(Audio::sound1, item::Ball::getMainBallBounds());
+			Player::playerMove(Audio::sound1, item::Ball::getMainBallPosition(), item::Ball::getMainBallRadius());
 			if (GameState::start) {
 				Obstacle::update();
 				item::Brick::update();

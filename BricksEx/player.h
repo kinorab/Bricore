@@ -7,7 +7,7 @@ class Player : public sf::Drawable {
 
 public:
 	explicit Player();
-	static void playerMove(sf::Sound &sound, const sf::FloatRect &ballBounds);
+	static void playerMove(sf::Sound &sound, const sf::Vector2f ballPos, const float radius);
 
 	static const sf::Vector2f & getMainPlayerPos();
 	static const sf::Vector2f getMainPlayerTopCenterPos();
@@ -19,7 +19,7 @@ private:
 	static void setFlashPosition(const float posX, const float posY);
 	static void setFlashFillColor(const sf::Color &color);
 	static void flashElapsed();
-	static void flashRange(sf::Sound &sound, const sf::FloatRect &);
+	static void flashRange(sf::Sound &sound, const sf::Vector2f ballPos, const float radius);
 
 	static bool flash;
 	static sf::Clock elapsed;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/Rect.hpp>
+#include "diagonalPoint.h"
 
 extern unsigned int level;
 extern float MAINPLAYERSPEED;

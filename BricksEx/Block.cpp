@@ -1,4 +1,3 @@
-#include "define.h"
 #include "block.h"
 #include "ball.h"
 #include <iostream>
@@ -94,6 +93,10 @@ void Block::update() {
 		speed.y = -abs(speed.y);
 	}
 	moveEntity();
+}
+
+const sys::DPointf Block::getDP() const {
+	return sys::DPointf((*this)[0].position, (*this)[2].position);
 }
 
 const Vector2f & Block::getCurrentPosition() const {
