@@ -11,11 +11,13 @@ using namespace item;
 vector <unique_ptr<RectangleShape>> Brick::bricks;
 map <string, Texture *> Brick::levelImage;
 size_t Brick::amount;
+size_t Brick::rowCount;
 float Brick::frame;
 Vector2f Brick::interval;
 Vector2f Brick::sideLength;
 Vector2f Brick::whiteSpace(0.0f, 0.0f);
 bool Brick::changeEntity(false);
+RectangleShape Brick::bricksArea;
 
 Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vector2f &interval, const float frameSize, const float whiteSpaceY) {
 
@@ -27,6 +29,7 @@ Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vect
 		}
 		else {
 			sideLength = Vector2f(wid, hei);
+			this->rowCount = rowCount;
 			frame = frameSize;
 			this->interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
@@ -197,7 +200,7 @@ void Brick::update() {
 
 	if (!bricks.empty()) {
 		for (size_t i = 0; i < getBricksSize(); ++i) {
-			if (Ball::isBallCollided(getDP(i))) {
+			if (Ball::isBallCollided(getDP(i), sys::DPointf(Vector2f(), bricksArea.getSize()))) {
 				bricks.erase(bricks.begin() + i);
 				--i;
 			}
@@ -224,6 +227,7 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 		}
 		else {
 			sideLength = Vector2f(wid, hei);
+			Brick::rowCount = rowCount;
 			frame = frameSize;
 			Brick::interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
@@ -250,9 +254,10 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 
 void Brick::reset(const size_t rowCount) {
 	try {
-		bricks.resize(rowCount * amount);
+		Brick::rowCount = rowCount;
+		bricks.resize(Brick::rowCount * amount);
 
-		if (getBricksSize() == rowCount * amount) {
+		if (getBricksSize() == Brick::rowCount * amount) {
 			changeEntity = true;
 			settlePlace();
 		}
@@ -292,7 +297,7 @@ void Brick::settlePlace() {
 
 	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frame, interval.y + frame + sideLength.y / 2);
 	Vector2f tempPos = Vector2f(initialPos.x, initialPos.y + whiteSpace.y);
-
+	const float height = rowCount * (sideLength.y + frame * 2 + interval.y) + interval.y + whiteSpace.y;
 	try {
 		if (changeEntity == true) {
 			for (size_t i = 0; i < bricks.size(); ++i) {
@@ -304,6 +309,7 @@ void Brick::settlePlace() {
 				// center origin position in every brick
 				bricks.at(i)->setOrigin(Vector2f(bricks.at(i)->getSize().x / 2, bricks.at(i)->getSize().y / 2));
 			}
+			bricksArea.setSize(Vector2f(LEVEL_WIDTH, height));
 			changeEntity = false;
 		}
 
@@ -312,7 +318,7 @@ void Brick::settlePlace() {
 			// start placing bricks array
 			size_t tempCount = 1;
 			for (size_t i = 0; i < bricks.size(); ++i) {
-				FloatRect bounds = bricks.at(i)->getGlobalBounds();
+				const FloatRect bounds = bricks.at(i)->getGlobalBounds();
 				bricks.at(i)->setPosition(tempPos);
 				if (tempCount < amount) {
 					tempPos += Vector2f(interval.x + bounds.width, 0);

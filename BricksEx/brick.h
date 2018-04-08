@@ -43,10 +43,12 @@ namespace item {
 		static void settlePlace();
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
+		static sf::RectangleShape bricksArea;
 		static std::vector <std::unique_ptr<sf::RectangleShape>> bricks;
 		static std::map <std::string, sf::Texture *> levelImage;
 		// bricks on every row
 		static size_t amount;
+		static size_t rowCount;
 		static float frame;
 		static sf::Vector2f interval;
 		static sf::Vector2f sideLength;

@@ -25,9 +25,9 @@ void Ball::update(const sys::DPointf &playerDP) {
 			balls.erase(balls.begin() + i);
 		}
 	}
-	/*if (multiple) {
+	if (multiple) {
 		collision();
-	}*/
+	}
 }
 
 void Ball::initializeBall() {
@@ -106,58 +106,62 @@ void Ball::ballCollided(const sys::DPointf & boundsDP, const Vector2f & speed) {
 	}
 }
 
-bool Ball::isBallCollided(const FloatRect &bounds) {
+bool Ball::isBallCollided(const FloatRect &bounds, const FloatRect &area) {
 	for (size_t i = 0; i < balls.size(); ++i) {
 		const float radius = balls.at(i)->getRad();
 		const Vector2f ballPos = balls.at(i)->getPos();
-		if (game::ballRectINCIntersects(ballPos, radius, bounds)) {
-			if (ballPos.x < bounds.left) {
-				balls.at(i)->setSpeedX(-abs(balls.at(i)->getSpeedX()));
-			}
-			else if (ballPos.x > bounds.left + bounds.width) {
-				balls.at(i)->setSpeedX(abs(balls.at(i)->getSpeedX()));
-			}
+		if (game::ballRectINCIntersects(ballPos, radius, area)) {
+			if (game::ballRectINCIntersects(ballPos, radius, bounds)) {
+				if (ballPos.x < bounds.left) {
+					balls.at(i)->setSpeedX(-abs(balls.at(i)->getSpeedX()));
+				}
+				else if (ballPos.x > bounds.left + bounds.width) {
+					balls.at(i)->setSpeedX(abs(balls.at(i)->getSpeedX()));
+				}
 
-			if (ballPos.y > bounds.top + bounds.height) {
-				balls.at(i)->setSpeedY(abs(balls.at(i)->getSpeedY()));
+				if (ballPos.y > bounds.top + bounds.height) {
+					balls.at(i)->setSpeedY(abs(balls.at(i)->getSpeedY()));
+				}
+				else if (ballPos.y < bounds.top) {
+					balls.at(i)->setSpeedY(-abs(balls.at(i)->getSpeedY()));
+				}
+				if (balls.at(i)->isMain()) {
+					ballDivided(10);
+				}
+				balls.at(i)->CD = false;
+				return true;
 			}
-			else if (ballPos.y < bounds.top) {
-				balls.at(i)->setSpeedY(-abs(balls.at(i)->getSpeedY()));
-			}
-			if (balls.at(i)->isMain()) {
-				ballDivided(10);
-			}
-			balls.at(i)->CD = false;
-			return true;
 		}
 	}
 	return false;
 }
 
-bool Ball::isBallCollided(const sys::DPointf & boundsDP) {
+bool Ball::isBallCollided(const sys::DPointf & boundsDP, const sys::DPointf & areaDP) {
 
 	for (size_t i = 0; i < balls.size(); ++i) {
 		const float radius = balls.at(i)->getRad();
 		const Vector2f ballPos = balls.at(i)->getPos();
-		if (game::ballRectINCIntersects(ballPos, radius, boundsDP)) {
-			if (ballPos.x < boundsDP.dot1.x) {
-				balls.at(i)->setSpeedX(-abs(balls.at(i)->getSpeedX()));
-			}
-			else if (ballPos.x > boundsDP.dot2.x) {
-				balls.at(i)->setSpeedX(abs(balls.at(i)->getSpeedX()));
-			}
+		if (game::ballRectINCIntersects(ballPos, radius, areaDP)) {
+			if (game::ballRectINCIntersects(ballPos, radius, boundsDP)) {
+				if (ballPos.x < boundsDP.dot1.x) {
+					balls.at(i)->setSpeedX(-abs(balls.at(i)->getSpeedX()));
+				}
+				else if (ballPos.x > boundsDP.dot2.x) {
+					balls.at(i)->setSpeedX(abs(balls.at(i)->getSpeedX()));
+				}
 
-			if (ballPos.y > boundsDP.dot2.y) {
-				balls.at(i)->setSpeedY(abs(balls.at(i)->getSpeedY()));
+				if (ballPos.y > boundsDP.dot2.y) {
+					balls.at(i)->setSpeedY(abs(balls.at(i)->getSpeedY()));
+				}
+				else if (ballPos.y < boundsDP.dot1.y) {
+					balls.at(i)->setSpeedY(-abs(balls.at(i)->getSpeedY()));
+				}
+				if (balls.at(i)->isMain()) {
+					ballDivided(10);
+				}
+				balls.at(i)->CD = false;
+				return true;
 			}
-			else if (ballPos.y < boundsDP.dot1.y) {
-				balls.at(i)->setSpeedY(-abs(balls.at(i)->getSpeedY()));
-			}
-			if (balls.at(i)->isMain()) {
-				ballDivided(10);
-			}
-			balls.at(i)->CD = false;
-			return true;
 		}
 	}
 	return false;

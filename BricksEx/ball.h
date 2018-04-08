@@ -16,8 +16,8 @@ namespace item {
 		static void followPlayer(const sf::Vector2f &playerTopCenterPos);
 		static void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
 		static void ballCollided(const sys::DPointf &boundsDP, const sf::Vector2f &speed);
-		static bool isBallCollided(const sf::FloatRect &bounds);
-		static bool isBallCollided(const sys::DPointf &boundsDP);
+		static bool isBallCollided(const sf::FloatRect &bounds, const sf::FloatRect &area);
+		static bool isBallCollided(const sys::DPointf &boundsDP, const sys::DPointf &areaDP);
 		static void ballDivided(const size_t numbers);
 		static const float getMainBallRadius();
 		static const sf::Vector2f & getMainBallPosition();
