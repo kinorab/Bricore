@@ -25,5 +25,6 @@ namespace GameState {
 	extern bool lock;
 };
 
-extern const int rng();
-extern const size_t Prng(const size_t PRange = 0);
+extern int rng();
+extern int rng(int lowerLimit, int upperLimit);
+extern int prng(const int lowerLimit = 0);

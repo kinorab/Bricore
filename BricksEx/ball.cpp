@@ -33,7 +33,7 @@ void Ball::update(const sys::DPointf &playerDP) {
 void Ball::initializeBall() {
 	if (!initialize && !balls.empty()) {
 		balls.erase(balls.begin() + 1, balls.end());
-		balls.at(0)->setSpeedX((Prng(200) % 200 * .01f + 2.f) * (rng() < 0 ? 1 : -1));
+		balls.at(0)->setSpeedX((prng(200) % 200 * .01f + 2.f) * (rng() < 0 ? 1 : -1));
 		balls.at(0)->setSpeedY(-2.f);
 		balls.at(0)->active = false;
 		initialize = true;
@@ -174,8 +174,8 @@ void Ball::ballDivided(const size_t numbers) {
 		for (size_t i = 0; i < numbers; ++i) {
 			balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
 			balls.at(balls.size() - 1)->setPos(mainPos);
-			balls.at(balls.size() - 1)->setSpeedX(balls.at(0)->getSpeedX() * ((Prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
-			balls.at(balls.size() - 1)->setSpeedY(balls.at(0)->getSpeedY() * ((Prng(20) % 20 + 80) * .01f * (Prng(4) % 4 == 0 ? -1 : 1)));
+			balls.at(balls.size() - 1)->setSpeedX(balls.at(0)->getSpeedX() * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
+			balls.at(balls.size() - 1)->setSpeedY(balls.at(0)->getSpeedY() * ((prng(20) % 20 + 80) * .01f * (prng(4) % 4 == 0 ? -1 : 1)));
 		}
 		ballStartC = false;
 		multiple = true;
@@ -472,6 +472,6 @@ const Vector2f & Ball::BallContainer::getPos() const {
 
 void Ball::BallContainer::resetBall() {
 
-	ballSpeed.x = (Prng(200) % 200 * .01f + 2.f) * (rng() < 0 ? 1 : -1);
+	ballSpeed.x = (prng(200) % 200 * .01f + 2.f) * (rng() < 0 ? 1 : -1);
 	ballSpeed.y = 2.f * (rng() < 0 ? 1 : -1);
 }

@@ -15,17 +15,17 @@ namespace GameState {
 	bool lock = false;
 };
 
-const int rng() {
-	static thread_local std::mt19937 prng(static_cast<std::mt19937::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
-	return static_cast<int>(prng());
+int rng() {
+	std::numeric_limits<int> intLimit;
+	return rng(intLimit.min(), intLimit.max());
 }
 
-const size_t Prng(const size_t PRange) {
-	const size_t PNum = abs(rng());
-	if (PNum >= PRange) {
-		return PNum;
-	}
-	else {
-		return Prng(PRange);
-	}
+int rng(int lowerLimit, int upperLimit) {
+	static thread_local std::mt19937 generator(static_cast<std::mt19937::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
+	std::uniform_int_distribution<> dist(lowerLimit, upperLimit);
+	return static_cast<int>(dist(generator));
+}
+
+int prng(const int lowerLimit) {
+	return rng(lowerLimit, std::numeric_limits<int>().max());
 }
