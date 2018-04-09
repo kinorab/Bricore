@@ -16,8 +16,7 @@ namespace GameState {
 };
 
 int rng() {
-	std::numeric_limits<int> intLimit;
-	return rng(intLimit.min(), intLimit.max());
+	return rng(std::numeric_limits<int>().min(), std::numeric_limits<int>().max());
 }
 
 int rng(int lowerLimit, int upperLimit) {
