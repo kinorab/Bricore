@@ -37,6 +37,7 @@ namespace item {
 		static const sf::Vector2f & getInterval();
 		static const float getFrameSize();
 		static const sys::DPointf getDP(const size_t number);
+		static const sys::DPointf getBrickAreaDP();
 
 	private:
 

@@ -199,10 +199,14 @@ void Brick::setFrameSize(const float frameSize) {
 void Brick::update() {
 
 	if (!bricks.empty()) {
-		for (size_t i = 0; i < getBricksSize(); ++i) {
-			if (Ball::isBallCollided(getDP(i), sys::DPointf(Vector2f(), bricksArea.getSize()))) {
-				bricks.erase(bricks.begin() + i);
-				--i;
+		for (size_t i = 0; i < Ball::getBallsAmount(); ++i) {
+			if (Ball::isBallEnteredBrickArea(i)){
+				for (size_t j = 0; j < getBricksSize(); ++j) {
+					if (Ball::isBallCollided(i, j)) {
+						bricks.erase(bricks.begin() + j);
+						--j;
+					}
+				}
 			}
 		}
 	}
@@ -287,10 +291,17 @@ const float Brick::getFrameSize() {
 }
 
 const sys::DPointf Brick::getDP(const size_t number) {
-	Vector2f dot1(bricks.at(number)->getGlobalBounds().left, bricks.at(number)->getGlobalBounds().top);
-	Vector2f dot2(bricks.at(number)->getGlobalBounds().left + bricks.at(number)->getGlobalBounds().width,
+	Vector2f LT(bricks.at(number)->getGlobalBounds().left, bricks.at(number)->getGlobalBounds().top);
+	Vector2f RB(bricks.at(number)->getGlobalBounds().left + bricks.at(number)->getGlobalBounds().width,
 		bricks.at(number)->getGlobalBounds().top + bricks.at(number)->getGlobalBounds().height);
-	return sys::DPointf(dot1, dot2);
+	return sys::DPointf(LT, RB);
+}
+
+const sys::DPointf Brick::getBrickAreaDP() {
+	FloatRect bounds = bricksArea.getGlobalBounds();
+	Vector2f LT(bounds.left, bounds.top);
+	Vector2f RB(bounds.left + bounds.width, bounds.top + bounds.height);
+	return sys::DPointf(LT, RB);
 }
 
 void Brick::settlePlace() {

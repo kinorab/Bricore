@@ -18,9 +18,12 @@ namespace item {
 		static void ballCollided(const sys::DPointf &boundsDP, const sf::Vector2f &speed);
 		static bool isBallCollided(const sf::FloatRect &bounds, const sf::FloatRect &area);
 		static bool isBallCollided(const sys::DPointf &boundsDP, const sys::DPointf &areaDP);
+		static bool isBallCollided(const size_t number, const size_t brickNumber);
+		static bool isBallEnteredBrickArea(const size_t ballNumber);
 		static void ballDivided(const size_t numbers);
 		static const float getMainBallRadius();
 		static const sf::Vector2f & getMainBallPosition();
+		static const size_t getBallsAmount();
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
