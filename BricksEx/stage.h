@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ball.h"
+#include "player.h"
 #include "brick.h"
 #include "container.h"
 #include "define.h"
@@ -17,14 +18,14 @@ public:
 	virtual ~Stage();
 	virtual void initialize() override;
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
+
 private:
-	std::shared_ptr<sf::RectangleShape> background;
-	std::shared_ptr<item::Ball> ball;
-	float blockLength;
-	std::shared_ptr<item::Brick> bricks;
-	std::shared_ptr<HUD> hud;
-	float incre1;
-	std::shared_ptr<ParticleSystem> mouseLight;
-	std::shared_ptr<Obstacle> obstacles;
-	std::shared_ptr<Player> player;
+	static float blockLength;
+	static float incre1;
+	static std::shared_ptr<item::Ball> ball;
+	static std::shared_ptr<item::Brick> bricks;
+	static std::shared_ptr<HUD> hud;
+	static std::shared_ptr<ParticleSystem> mouseLight;
+	static std::shared_ptr<Obstacle> obstacles;
+	static std::shared_ptr<Player> player;
 };

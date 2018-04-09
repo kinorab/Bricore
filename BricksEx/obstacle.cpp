@@ -1,16 +1,20 @@
 #include "obstacle.h"
 #include "define.h"
+#include "intersects.h"
+#include "ball.h"
 #include <iostream>
 
 using namespace std;
 using namespace sf;
+
+std::vector <std::unique_ptr<item::Block>> Obstacle::blocks;
 
 // unity of Block-->Obstacle
 Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const vector <Vector2f> &sideLength) {
 
 	try {
 		for (size_t i = 0; i < number; ++i) {
-			blocks.push_back(unique_ptr<Block>(new Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
+			blocks.push_back(unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
 		}
 	}
 	catch (out_of_range &ex) {
@@ -18,11 +22,11 @@ Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const
 	}
 }
 
-void Obstacle::update(item::Ball &ball) {
+void Obstacle::update() {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blockCollision(i);
-		blocks.at(i)->update(ball);
+		blocks.at(i)->update();
 	}
 }
 
@@ -105,18 +109,17 @@ void Obstacle::reset() {
 	}
 }
 
-const Vector2f & Obstacle::getBlockSpeed(const size_t number) const {
+const Vector2f & Obstacle::getBlockSpeed(const size_t number) {
 	return blocks.at(number)->getSpeed();
 }
 
-const size_t Obstacle::getBlocksAmount() const {
+const size_t Obstacle::getBlocksAmount() {
 	return blocks.size();
 }
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
-
+	states.texture = nullptr;
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		states.texture = nullptr;
 		target.draw(*blocks.at(i), states);
 	}
 }
@@ -126,7 +129,7 @@ void Obstacle::blockCollision(const size_t number) {
 	try {
 		for (size_t j = number + 1; j < blocks.size(); ++j) {
 
-			if (game::INCintersects(blocks.at(number)->getBounds(), blocks.at(j)->getBounds())) {
+			if (game::INCIntersects(blocks.at(number)->getDP(), blocks.at(j)->getDP())) {
 
 				blocks.at(number)->setSpeed(blocks.at(number)->getSpeed().x * -1, blocks.at(number)->getSpeed().y * -1);
 				blocks.at(j)->setSpeed(blocks.at(j)->getSpeed().x * -1, blocks.at(j)->getSpeed().y * -1);

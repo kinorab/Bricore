@@ -1,4 +1,6 @@
 #include "button.h"
+#include "define.h"
+#include "intersects.h"
 
 Button::Button() {
 	/*
@@ -18,8 +20,7 @@ Button::Button() {
 
 
 void Button::checkClick(sf::Vector2f mousePos) {
-	sf::FloatRect mouseBox(mousePos, sf::Vector2f(0.0f, 0.0f));
-	if (mouseBox.intersects(currentSprite->getGlobalBounds())) {
+	if (game::pointIntersects(mousePos, currentSprite->getGlobalBounds())) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			setCurrentState(ButtonState::DOWN);
 		}

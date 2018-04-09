@@ -1,27 +1,28 @@
 #pragma once
 
 #include "block.h"
+#include <memory>
+#include <vector>
 
-class Obstacle :
-	public item::Block {
+class Obstacle : public sf::Drawable {
 
 public:
 	Obstacle(const size_t number, const std::vector <sf::Vector2f> &position, const std::vector<sf::Vector2f> &sideLength);
-	void update(item::Ball &ball);
-	void setBlockColor(const size_t, const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
-	void setBlockColor(const size_t, const sf::Color &);
-	void setAllColor(const std::vector <sf::Color> &color);
-	void setBlockSpeed(const size_t, const float speedX, const float speedY = 0.0f);
-	void setBlockSpeed(const size_t, const sf::Vector2f &speed);
-	void setAllSpeed(const std::vector <sf::Vector2f> &speed);
-	void reset();
+	static void update();
+	static void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
+	static void setBlockColor(const size_t number, const sf::Color &all);
+	static void setAllColor(const std::vector <sf::Color> &color);
+	static void setBlockSpeed(const size_t, const float speedX, const float speedY = 0.0f);
+	static void setBlockSpeed(const size_t, const sf::Vector2f &speed);
+	static void setAllSpeed(const std::vector <sf::Vector2f> &speed);
+	static void reset();
 
-	const sf::Vector2f & getBlockSpeed(const size_t number) const;
-	const size_t getBlocksAmount() const;
+	static const sf::Vector2f & getBlockSpeed(const size_t number);
+	static const size_t getBlocksAmount();
 
 private:
-	virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
-	void blockCollision(const size_t);
+	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+	static void blockCollision(const size_t);
 
-	std::vector <std::unique_ptr<item::Block>> blocks;
+	static std::vector <std::unique_ptr<item::Block>> blocks;
 };

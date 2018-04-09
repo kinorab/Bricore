@@ -1,8 +1,9 @@
 #pragma once
 
-#include "player.h"
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include "diagonalPoint.h"
 
 namespace item {
 
@@ -10,46 +11,62 @@ namespace item {
 
 	public:
 		Ball();
-		void update(const sf::FloatRect &playerBounds);
-		void initializeBall();
-		void followPlayer(const sf::Vector2f &playerPos);
-		void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
-		bool ballCollided(const sf::FloatRect &bounds);
-		void ballDivided(const size_t numbers);
-		const sf::FloatRect getMainBallBounds() const;
-		const sf::Vector2f & getMainBallPosition() const;
+		static void update(const sys::DPointf &playerDP);
+		static void initializeBall();
+		static void followPlayer(const sf::Vector2f &playerTopCenterPos);
+		static void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
+		static void ballCollided(const sys::DPointf &boundsDP, const sf::Vector2f &speed);
+		static bool isBallCollided(const sf::FloatRect &bounds, const sf::FloatRect &area);
+		static bool isBallCollided(const sys::DPointf &boundsDP, const sys::DPointf &areaDP);
+		static void ballDivided(const size_t numbers);
+		static const float getMainBallRadius();
+		static const sf::Vector2f & getMainBallPosition();
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		static void collision();
 
-		class BallContainer {
+		class BallContainer : public sf::Drawable {
 		public:
 			BallContainer();
-			void ballMove(const sf::FloatRect &);
 			void update();
-			const bool isMain() const;
+			void ballMove(const sys::DPointf &);
+			void setSpeedX(const float);
+			void setSpeedY(const float);
+			void setPos(const sf::Vector2f &);
+			void setPos(const float, const float);
+			void setRadius(const float);
+			virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
-			sf::CircleShape ball;
-			sf::Vector2f ballSpeed;
+			const bool isMain() const;
+			const float getSpeedX() const;
+			const float getSpeedY() const;
+			const float getRad() const;
+			const sf::Vector2f & getPos() const;
+
 			bool left = false;
 			bool right = false;
 			bool bottom = false;
 			bool top = false;
 			bool broke = false;
 			bool CD = false;
+			bool active = false;
 
 		private:
 			void setColor(const sf::Color &);
 			void resetBall();
+			sf::Vector2f ballSpeed;
 			sf::Vector2f oriSpeed;
 			sf::Clock countTime;
 			sf::Clock CDTime;
+			sf::CircleShape ball;
 			bool main = false;
-			bool active = false;
 		};
 
+		static bool multiple;
+		static bool ballStartC;
 		static bool mainSettled;
 		static bool initialize;
-		std::vector<std::unique_ptr<BallContainer>> balls;
+		static std::vector<std::unique_ptr<BallContainer>> balls;
 	};
 }

@@ -1,5 +1,6 @@
-#include "define.h"
 #include "block.h"
+#include "define.h"
+#include "ball.h"
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
@@ -75,11 +76,12 @@ void Block::setSpeed(const Vector2f & speed) {
 }
 
 // all change direct by using abs() to prevent stuck inside the block
-void Block::update(Ball &ball) {
+void Block::update() {
 
-	ball.ballCollided(getBounds(), speed);
-	Vector2f posLT = (*this)[0].position;
-	Vector2f posRB = (*this)[2].position;
+	const Vector2f posLT = (*this)[0].position;
+	const Vector2f posRB = (*this)[2].position;
+	Ball::ballCollided(sys::DPointf(posLT, posRB), speed);
+
 	if (posLT.x <= 0.0f) {
 		speed.x = abs(speed.x);
 	}
@@ -93,6 +95,10 @@ void Block::update(Ball &ball) {
 		speed.y = -abs(speed.y);
 	}
 	moveEntity();
+}
+
+const sys::DPointf Block::getDP() const {
+	return sys::DPointf((*this)[0].position, (*this)[2].position);
 }
 
 const Vector2f & Block::getCurrentPosition() const {

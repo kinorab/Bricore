@@ -8,9 +8,10 @@ class HUD :
 	public game::Container {
 public:
 	HUD();
+	static void setBackgroundColor(const sf::Color &);
 private:
-	std::vector <std::shared_ptr<sf::RectangleShape>> background;
-	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel1;
-	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel2;
-	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel3;
+	static std::vector <std::shared_ptr<sf::RectangleShape>> interface;
+	static std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel1;
+	static std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel2;
+	static std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel3;
 };

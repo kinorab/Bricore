@@ -36,7 +36,7 @@ namespace game {
 		virtual void swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB);
 		virtual void swapChildrenAt(int indexA, int indexB);
 	protected:
-		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const;
+		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:
 		struct EventListener;
 		std::vector<std::shared_ptr<sf::Drawable>> children;

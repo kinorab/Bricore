@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Rect.hpp>
 
 extern unsigned int level;
+extern float MAINPLAYERSPEED;
 
 constexpr float PI = 3.141592654f;
 constexpr float LIFETIME = 1500.f;
@@ -13,8 +14,7 @@ constexpr float GAME_WIDTH = 1500.f;
 constexpr float GAME_HEIGHT = 900.f;
 constexpr float LEVEL_WIDTH = 1200.f;
 constexpr float LEVEL_HEIGHT = 900.f;
-constexpr size_t SLICE = 10;
-extern float MAINPLAYERSPEED;
+constexpr size_t SLICE = 5;
 
 namespace GameState {
 	extern bool start;
@@ -26,13 +26,4 @@ namespace GameState {
 };
 
 extern const int rng();
-extern const size_t Prng();
-
-namespace game {
-
-	template <typename T>
-	extern const bool EXCintersects(const sf::Rect<T> &a, const sf::Rect<T> &b);
-	template <typename T>
-	extern const bool INCintersects(const sf::Rect<T> &a, const sf::Rect<T> &b);
-	#include "rect.inl"
-}
+extern const size_t Prng(const size_t PRange = 0);

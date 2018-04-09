@@ -123,6 +123,9 @@
     <ClInclude Include="game.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="diagonalPoint.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="標頭檔">
@@ -142,8 +145,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="rect.inl">
+    <None Include="diagonalPoint.inl">
       <Filter>資源檔</Filter>
+    </None>
+    <None Include="intersects.h">
+      <Filter>標頭檔</Filter>
     </None>
   </ItemGroup>
 </Project>
