@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics/Rect.hpp>
-
 extern unsigned int level;
 extern float MAINPLAYERSPEED;
 

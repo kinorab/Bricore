@@ -1,4 +1,5 @@
 #include "ball.h"
+#include "brick.h"
 #include "define.h"
 #include "intersects.h"
 #include <algorithm>
@@ -25,9 +26,9 @@ void Ball::update(const sys::DPointf &playerDP) {
 			balls.erase(balls.begin() + i);
 		}
 	}
-	if (multiple) {
+	/*if (multiple) {
 		collision();
-	}
+	}*/
 }
 
 void Ball::initializeBall() {
@@ -167,6 +168,39 @@ bool Ball::isBallCollided(const sys::DPointf & boundsDP, const sys::DPointf & ar
 	return false;
 }
 
+bool Ball::isBallCollided(const size_t ballNumber, const size_t brickNumber) {
+	const float radius = balls.at(ballNumber)->getRad();
+	const Vector2f ballPos = balls.at(ballNumber)->getPos();
+	const sys::DPointf boundsDP(Brick::getDP(brickNumber));
+	if (game::ballRectINCIntersects(ballPos, radius, boundsDP)) {
+		if (ballPos.x < boundsDP.dot1.x) {
+			balls.at(ballNumber)->setSpeedX(-abs(balls.at(ballNumber)->getSpeedX()));
+		}
+		else if (ballPos.x > boundsDP.dot2.x) {
+			balls.at(ballNumber)->setSpeedX(abs(balls.at(ballNumber)->getSpeedX()));
+		}
+
+		if (ballPos.y > boundsDP.dot2.y) {
+			balls.at(ballNumber)->setSpeedY(abs(balls.at(ballNumber)->getSpeedY()));
+		}
+		else if (ballPos.y < boundsDP.dot1.y) {
+			balls.at(ballNumber)->setSpeedY(-abs(balls.at(ballNumber)->getSpeedY()));
+		}
+		if (balls.at(ballNumber)->isMain()) {
+			ballDivided(10);
+		}
+		balls.at(ballNumber)->CD = false;
+		return true;
+	}
+	return false;
+}
+
+bool Ball::isBallEnteredBrickArea(const size_t number) {
+	const float radius = balls.at(number)->getRad();
+	const Vector2f ballPos = balls.at(number)->getPos();
+	return game::ballRectINCIntersects(ballPos, radius, Brick::getBrickAreaDP());
+}
+
 void Ball::ballDivided(const size_t numbers) {
 
 	try {
@@ -191,6 +225,10 @@ const float Ball::getMainBallRadius() {
 
 const Vector2f & Ball::getMainBallPosition() {
 	return balls.at(0)->getPos();
+}
+
+const size_t Ball::getBallsAmount() {
+	return balls.size();
 }
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
