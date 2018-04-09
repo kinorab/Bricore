@@ -19,6 +19,7 @@ namespace game {
 		virtual void addEventListener(std::string type, std::function<void(Event *)> callback);
 		virtual void addEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture);
 		virtual bool contains(const sf::Drawable * element) const;
+		virtual bool containsPoint(const sf::Vector2f & point) const;
 		virtual bool dispatchEvent(Event * event);
 		virtual std::shared_ptr<sf::Drawable> getChildAt(int index) const;
 		virtual int getChildIndex(const sf::Drawable * element) const;

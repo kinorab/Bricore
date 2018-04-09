@@ -53,6 +53,18 @@ namespace game {
 		});
 	}
 
+	bool Container::containsPoint(const sf::Vector2f & point) const {
+		std::for_each(children.begin(), children.end(),
+			[&](const std::shared_ptr<sf::Drawable> & child) {
+			Container * container = dynamic_cast<Container *>(child.get());
+			if (container->containsPoint(point)) {
+				return true;
+			}
+		});
+
+		return false;
+	}
+
 	bool Container::dispatchEvent(Event * event) {
 		Event::DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
