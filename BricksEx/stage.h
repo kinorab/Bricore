@@ -16,7 +16,6 @@ class Stage :
 public:
 	Stage();
 	virtual ~Stage();
-	virtual void initialize() override;
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
 
 private:

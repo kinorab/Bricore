@@ -91,6 +91,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)SFML\SFML-2.4.2x86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)BricksEx\lib;$(SolutionDir)SFML\SFML-2.4.2x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

@@ -26,11 +26,11 @@ Stage::Stage() {
 	Obstacle::setBlockSpeed(1, -1.5f);
 	item::Brick::setBrickColor(sf::Color(255, 183, 197));
 	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
-	addEventListener("SomeEvent",
+	addEventListener("initialized",
 		[this](game::Event * event) {
 		std::cout << "Stage:" << event->getType() << std::endl;
 	});
-	hud->addEventListener("SomeEvent",
+	hud->addEventListener("initialized",
 		[this](game::Event * event) {
 		std::cout << "HUD:" << event->getType() << std::endl;
 	});
@@ -39,11 +39,6 @@ Stage::Stage() {
 Stage::~Stage() {
 	Audio::bgmusic.stop();
 	Audio::sound1.stop();
-}
-
-void Stage::initialize() {
-	Container::initialize();
-	hud->dispatchEvent(new game::Event("SomeEvent"));
 }
 
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {

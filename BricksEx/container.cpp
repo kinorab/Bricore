@@ -29,8 +29,7 @@ namespace game {
 	void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, size_t index) {
 		std::for_each(elements.begin(), elements.end(),
 			[&](const std::shared_ptr<sf::Drawable> & element) {
-			Container * container = dynamic_cast<Container *>(element.get());
-			if (container) {
+			if (Container * container = dynamic_cast<Container *>(element.get()); container) {
 				container->setParent(weak_from_this());
 			}
 		});
@@ -56,9 +55,20 @@ namespace game {
 	bool Container::containsPoint(const sf::Vector2f & point) const {
 		std::for_each(children.begin(), children.end(),
 			[&](const std::shared_ptr<sf::Drawable> & child) {
-			Container * container = dynamic_cast<Container *>(child.get());
-			if (container->containsPoint(point)) {
+			if (Container * container = dynamic_cast<Container *>(child.get()); container && container->containsPoint(point)) {
 				return true;
+			}
+
+			if (sf::CircleShape * circle = dynamic_cast<sf::CircleShape *>(child.get()); circle) {
+				return false;
+			}
+
+			if (sf::RectangleShape * rectangle = dynamic_cast<sf::RectangleShape *>(child.get()); rectangle) {
+				return false;
+			}
+
+			if (sf::VertexArray * vertices = dynamic_cast<sf::VertexArray *>(child.get()); vertices) {
+				return false;
 			}
 		});
 
@@ -132,12 +142,13 @@ namespace game {
 	void Container::initialize() {
 		std::for_each(children.begin(), children.end(),
 			[&](const std::shared_ptr<sf::Drawable> & child) {
-			Container * container = dynamic_cast<Container *>(child.get());
-			if (container) {
+			if (Container * container = dynamic_cast<Container *>(child.get()); container) {
 				container->setParent(weak_from_this());
 				container->initialize();
 			}
 		});
+
+		dispatchEvent(new Event("initialized", false, false));
 	}
 
 	void Container::removeAllChildren() {
