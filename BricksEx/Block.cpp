@@ -1,6 +1,5 @@
 #include "block.h"
 #include "define.h"
-#include "ball.h"
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
@@ -80,7 +79,6 @@ void Block::update() {
 
 	const Vector2f posLT = (*this)[0].position;
 	const Vector2f posRB = (*this)[2].position;
-	Ball::ballCollided(sys::DPointf(posLT, posRB), speed);
 
 	if (posLT.x <= 0.0f) {
 		speed.x = abs(speed.x);

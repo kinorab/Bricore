@@ -14,6 +14,7 @@ public:
 	static const sf::Vector2f getMainPlayerTopCenterPos();
 	static const sf::FloatRect getMainPlayerBounds();
 	static const sys::DPointf getMainPlayerDP();
+	static const sys::DPointf getPlayerAreaDP();
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
@@ -28,6 +29,7 @@ private:
 	static sf::RectangleShape mainPlayer;
 	static sf::RectangleShape redRange;
 	static sf::RectangleShape yellowRange;
+	static sf::RectangleShape playerArea;
 
 	//sf::RectangleShape subPlayer;
 };

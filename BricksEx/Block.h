@@ -32,7 +32,7 @@ namespace item {
 		void moveEntity();
 
 		sf::Vector2f position;
-		sf::Vector2f oriPos;
+		const sf::Vector2f oriPos;
 		sf::Vector2f speed;
 		float width;
 		float height;

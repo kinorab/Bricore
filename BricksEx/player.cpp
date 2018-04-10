@@ -6,10 +6,11 @@
 using namespace sf;
 
 bool Player::flash = false;
-sf::Clock Player::elapsed;
-sf::RectangleShape Player::mainPlayer(Vector2f(240, 12));
-sf::RectangleShape Player::yellowRange(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
-sf::RectangleShape Player::redRange(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
+Clock Player::elapsed;
+RectangleShape Player::mainPlayer(Vector2f(240, 12));
+RectangleShape Player::yellowRange(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
+RectangleShape Player::redRange(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
+RectangleShape Player::playerArea(Vector2f(LEVEL_WIDTH, 100.f));
 
 Player::Player() {
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
@@ -21,6 +22,7 @@ Player::Player() {
 	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
+	playerArea.setPosition(0.0f, LEVEL_HEIGHT - 100.f);
 }
 
 void Player::playerMove(Sound &sound, const Vector2f ballPos, const float radius) {
@@ -63,6 +65,12 @@ const sys::DPointf Player::getMainPlayerDP() {
 	const Vector2f LT(mainPlayer.getGlobalBounds().left, mainPlayer.getGlobalBounds().top);
 	const Vector2f RB(mainPlayer.getGlobalBounds().left + mainPlayer.getGlobalBounds().width
 		, mainPlayer.getGlobalBounds().top + mainPlayer.getGlobalBounds().height);
+	return sys::DPointf(LT, RB);
+}
+
+const sys::DPointf Player::getPlayerAreaDP() {
+	const Vector2f LT(playerArea.getGlobalBounds().left, playerArea.getGlobalBounds().top);
+	const Vector2f RB(LT.x + playerArea.getGlobalBounds().width, LT.y + playerArea.getGlobalBounds().height);
 	return sys::DPointf(LT, RB);
 }
 

@@ -2,6 +2,7 @@
 
 extern unsigned int level;
 extern float MAINPLAYERSPEED;
+extern const size_t startTimeP;
 
 constexpr float PI = 3.141592654f;
 constexpr float LIFETIME = 1500.f;
@@ -12,6 +13,7 @@ constexpr float GAME_WIDTH = 1500.f;
 constexpr float GAME_HEIGHT = 900.f;
 constexpr float LEVEL_WIDTH = 1200.f;
 constexpr float LEVEL_HEIGHT = 900.f;
+constexpr float AREAINTERVAL = 100.f;
 constexpr size_t SLICE = 5;
 
 namespace GameState {
@@ -23,6 +25,7 @@ namespace GameState {
 	extern bool lock;
 };
 
-extern int rng();
-extern int rng(int lowerLimit, int upperLimit);
-extern int prng(const int lowerLimit = 0);
+extern const int rng();
+extern const int rng(const int lowerLimit, const int upperLimit);
+extern const int prng(const int lowerLimit = 0);
+extern void getPlayedTime();

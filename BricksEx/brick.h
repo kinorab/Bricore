@@ -21,7 +21,6 @@ namespace item {
 		static void displayImage(const std::string fileName);
 		static void setBrickColor(const sf::Color&);
 		static void setFrameColor(const sf::Color&);
-		static void setRowAmount(const int row);
 		static void setSideLength(const sf::Vector2f &sideLength);
 		static void setSideLength(const float width, const float height);
 		static void setInterval(const sf::Vector2f &interval);

@@ -1,10 +1,13 @@
 #include "define.h"
-#include <chrono>
 #include <random>
+#include <chrono>
 #include <algorithm>
+#include <iostream>
+#include <iomanip>
 
 unsigned int level = 5;
 float MAINPLAYERSPEED = 6.f;
+const size_t startTimeP = static_cast<size_t>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count());
 
 namespace GameState {
 	bool start = false;
@@ -15,16 +18,30 @@ namespace GameState {
 	bool lock = false;
 };
 
-int rng() {
+const int rng() {
 	return rng(std::numeric_limits<int>().min(), std::numeric_limits<int>().max());
 }
 
-int rng(int lowerLimit, int upperLimit) {
+const int rng(const int lowerLimit, const int upperLimit) {
 	static thread_local std::mt19937 generator(static_cast<std::mt19937::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
-	std::uniform_int_distribution<> dist(lowerLimit, upperLimit);
+	const std::uniform_int_distribution<> dist(lowerLimit, upperLimit);
 	return static_cast<int>(dist(generator));
 }
 
-int prng(const int lowerLimit) {
+const int prng(const int lowerLimit) {
 	return rng(lowerLimit, std::numeric_limits<int>().max());
+}
+
+void getPlayedTime() {
+	const size_t endTimeP = static_cast<size_t>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count());
+	const size_t playedTime = endTimeP - startTimeP;
+	const size_t sec = playedTime >= 60 ? playedTime % 60 : playedTime;
+	const size_t min = playedTime >= 3600 ? playedTime / 3600 : playedTime / 60;
+	const size_t hr = playedTime >= 86400 ? playedTime / 86400 : playedTime / 3600;
+	const size_t day = playedTime / 86400;
+	std::cout
+		<< day << ":"
+		<< std::setw(2) << std::setfill('0') << hr << ":" 
+		<< std::setw(2) << std::setfill('0') << min << ":" 
+		<< std::setw(2) << std::setfill('0') << sec << std::endl;
 }

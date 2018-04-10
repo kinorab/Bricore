@@ -60,7 +60,7 @@ void Brick::loadImage(const string fileName) {
 }
 
 void Brick::deleteImage(const string fileName) {
-	auto image = levelImage.find(fileName);
+	const auto image = levelImage.find(fileName);
 	try {
 		if (image != levelImage.end()) {
 			levelImage.erase(image);
@@ -95,22 +95,6 @@ void Brick::setFrameColor(const Color &color) {
 		}
 		else {
 			invalid_argument("Brick frames do not exist.");
-		}
-	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
-	}
-}
-
-void Brick::setRowAmount(const int row) {
-	try {
-		if (row > 0) {
-			bricks.resize(row * amount);
-			changeEntity = true;
-			settlePlace();
-		}
-		else {
-			invalid_argument("Row cannot be negative.");
 		}
 	}
 	catch (invalid_argument &ex) {
@@ -200,7 +184,7 @@ void Brick::update() {
 
 	if (!bricks.empty()) {
 		for (size_t i = 0; i < Ball::getBallsAmount(); ++i) {
-			if (Ball::isBallEnteredBrickArea(i)){
+			if (Ball::isBallEnteredBricksArea(i)){
 				for (size_t j = 0; j < getBricksSize(); ++j) {
 					if (Ball::isBallCollided(i, j)) {
 						bricks.erase(bricks.begin() + j);
@@ -291,16 +275,15 @@ const float Brick::getFrameSize() {
 }
 
 const sys::DPointf Brick::getDP(const size_t number) {
-	Vector2f LT(bricks.at(number)->getGlobalBounds().left, bricks.at(number)->getGlobalBounds().top);
-	Vector2f RB(bricks.at(number)->getGlobalBounds().left + bricks.at(number)->getGlobalBounds().width,
-		bricks.at(number)->getGlobalBounds().top + bricks.at(number)->getGlobalBounds().height);
+	const Vector2f LT(bricks.at(number)->getGlobalBounds().left, bricks.at(number)->getGlobalBounds().top);
+	const Vector2f RB(LT.x + bricks.at(number)->getGlobalBounds().width, LT.y + bricks.at(number)->getGlobalBounds().height);
 	return sys::DPointf(LT, RB);
 }
 
 const sys::DPointf Brick::getBrickAreaDP() {
-	FloatRect bounds = bricksArea.getGlobalBounds();
-	Vector2f LT(bounds.left, bounds.top);
-	Vector2f RB(bounds.left + bounds.width, bounds.top + bounds.height);
+	const FloatRect bounds = bricksArea.getGlobalBounds();
+	const Vector2f LT(bounds.left, bounds.top);
+	const Vector2f RB(bounds.left + bounds.width, bounds.top + bounds.height);
 	return sys::DPointf(LT, RB);
 }
 

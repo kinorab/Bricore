@@ -14,12 +14,10 @@ namespace item {
 		static void update(const sys::DPointf &playerDP);
 		static void initializeBall();
 		static void followPlayer(const sf::Vector2f &playerTopCenterPos);
-		static void ballCollided(const sf::FloatRect &bounds, const sf::Vector2f &speed);
-		static void ballCollided(const sys::DPointf &boundsDP, const sf::Vector2f &speed);
-		static bool isBallCollided(const sf::FloatRect &bounds, const sf::FloatRect &area);
-		static bool isBallCollided(const sys::DPointf &boundsDP, const sys::DPointf &areaDP);
-		static bool isBallCollided(const size_t number, const size_t brickNumber);
-		static bool isBallEnteredBrickArea(const size_t ballNumber);
+		static void ballCollided(const size_t number, const size_t blockNumber);
+		static const bool isBallCollided(const size_t number, const size_t brickNumber);
+		static const bool isBallEnteredBlocksArea(const size_t ballNumber);
+		static const bool isBallEnteredBricksArea(const size_t ballNumber);
 		static void ballDivided(const size_t numbers);
 		static const float getMainBallRadius();
 		static const sf::Vector2f & getMainBallPosition();
@@ -32,7 +30,7 @@ namespace item {
 		class BallContainer : public sf::Drawable {
 		public:
 			BallContainer();
-			void update();
+			void determineUpdate();
 			void ballMove(const sys::DPointf &);
 			void setSpeedX(const float);
 			void setSpeedY(const float);

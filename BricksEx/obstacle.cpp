@@ -2,19 +2,29 @@
 #include "define.h"
 #include "intersects.h"
 #include "ball.h"
+#include "brick.h"
+#include "player.h"
 #include <iostream>
 
 using namespace std;
 using namespace sf;
 
+RectangleShape Obstacle::blocksArea;
 std::vector <std::unique_ptr<item::Block>> Obstacle::blocks;
 
 // unity of Block-->Obstacle
-Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const vector <Vector2f> &sideLength) {
+Obstacle::Obstacle(const vector <Vector2f> &position, const vector <Vector2f> &sideLength) {
 
 	try {
-		for (size_t i = 0; i < number; ++i) {
-			blocks.push_back(unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
+		if (position.size() == sideLength.size()) {
+			for (size_t i = 0; i < position.size(); ++i) {
+				blocks.push_back(unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
+			}
+			setBlocksAreaDP(sys::DPointf(Vector2f(0.0f, item::Brick::getBrickAreaDP().dot2.y + AREAINTERVAL)
+				, Vector2f(LEVEL_WIDTH, Player::getPlayerAreaDP().dot1.y - AREAINTERVAL)));
+		}
+		else {
+			throw out_of_range("Position size not equal to side-length size.");
 		}
 	}
 	catch (out_of_range &ex) {
@@ -25,8 +35,15 @@ Obstacle::Obstacle(const size_t number, const vector <Vector2f> &position, const
 void Obstacle::update() {
 
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		blockCollision(i);
 		blocks.at(i)->update();
+		blockCollision(i);
+	}
+	for (size_t i = 0; i < item::Ball::getBallsAmount(); ++i) {
+		if (item::Ball::isBallEnteredBlocksArea(i)) {
+			for (size_t j = 0; j < blocks.size(); ++j) {
+				item::Ball::ballCollided(i, j);
+			}
+		}
 	}
 }
 
@@ -94,7 +111,12 @@ void Obstacle::setAllSpeed(const vector <Vector2f> &speed) {
 	}
 }
 
-void Obstacle::reset() {
+void Obstacle::setBlocksAreaDP(const sys::DPointf & DP) {
+	blocksArea.setSize(DP.dot2 - DP.dot1);
+	blocksArea.setPosition(DP.dot1);
+}
+
+void Obstacle::restart() {
 
 	try {
 		if (!GameState::ready) {
@@ -115,6 +137,16 @@ const Vector2f & Obstacle::getBlockSpeed(const size_t number) {
 
 const size_t Obstacle::getBlocksAmount() {
 	return blocks.size();
+}
+
+const sys::DPointf Obstacle::getDP(const size_t number) {
+	return blocks.at(number)->getDP();
+}
+
+const sys::DPointf Obstacle::getBlocksAreaDP() {
+	const Vector2f LT(blocksArea.getGlobalBounds().left, blocksArea.getGlobalBounds().top);
+	const Vector2f RB(LT.x + blocksArea.getGlobalBounds().width, LT.y + blocksArea.getGlobalBounds().height);
+	return sys::DPointf(LT, RB);
 }
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
