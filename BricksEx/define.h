@@ -1,6 +1,5 @@
 #pragma once
 
-extern unsigned int level;
 extern float MAINPLAYERSPEED;
 extern const size_t startTimeP;
 

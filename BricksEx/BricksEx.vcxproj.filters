@@ -61,6 +61,9 @@
     <ClCompile Include="game.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="levelDeploy.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -124,6 +127,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="diagonalPoint.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="levelDeploy.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

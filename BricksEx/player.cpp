@@ -8,6 +8,7 @@ using namespace sf;
 bool Player::flash = false;
 Clock Player::elapsed;
 RectangleShape Player::mainPlayer(Vector2f(240, 12));
+//RectangleShape Player::subPlayer(Vector2f(50, 50));
 RectangleShape Player::yellowRange(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
 RectangleShape Player::redRange(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
 RectangleShape Player::playerArea(Vector2f(LEVEL_WIDTH, 100.f));
