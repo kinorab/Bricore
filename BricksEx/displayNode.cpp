@@ -37,8 +37,9 @@ namespace game {
 			std::vector<EventListener> tempListeners = listeners;
 			std::for_each(tempListeners.begin(), tempListeners.end(),
 				[&](const EventListener & listener) {
-				if (!((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
-					|| (event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
+				if (event->getType() == listener.type
+					&& !((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
+						|| (event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
 					listener.callback(event);
 				}
 			});

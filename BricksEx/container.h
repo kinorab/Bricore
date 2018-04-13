@@ -22,7 +22,9 @@ namespace game {
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getChildAt(int index) const;
 		virtual int getChildIndex(const sf::Drawable * element) const;
+		virtual std::shared_ptr<DisplayNode> getChildNode(const sf::Drawable * element) const;
 		virtual int getChildrenCount() const;
+		virtual std::shared_ptr<DisplayNode> getContactNodeAtPoint(const sf::Vector2f & point);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() override;
 		virtual void initialize() override;
 		virtual void removeAllChildren();

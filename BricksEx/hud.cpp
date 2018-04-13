@@ -23,6 +23,10 @@ std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> H
 
 HUD::HUD() {
 	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3) });
+	getChildNode(interface[1].get())->addEventListener("mousemove",
+		[this](game::Event * event) {
+		interface.at(1)->setFillColor(Color::Magenta);
+	});
 }
 
 void HUD::setBackgroundColor(const sf::Color &color) {

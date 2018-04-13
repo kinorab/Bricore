@@ -10,7 +10,6 @@ namespace game {
 	}
 
 	bool RectangleShapeNode::containsPoint(const sf::Vector2f & point) const {
-		std::cout << "." << rectangleShape->getGlobalBounds().contains(point);
 		return rectangleShape->getGlobalBounds().contains(point);
 	}
 

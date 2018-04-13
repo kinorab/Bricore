@@ -56,15 +56,10 @@ namespace game {
 	}
 
 	bool Container::containsPoint(const sf::Vector2f & point) const {
-		bool contains = false;
-		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<DisplayNode> & child) {
-			if (child->containsPoint(point)) {
-				contains = true;
-			}
+		return std::any_of(children.begin(), children.end(),
+			[&](const auto & child) {
+			return child->containsPoint(point);
 		});
-
-		return contains;
 	}
 
 	std::shared_ptr<sf::Drawable> Container::getChildAt(int index) const {
@@ -78,8 +73,34 @@ namespace game {
 		}) - children.begin();
 	}
 
+	std::shared_ptr<DisplayNode> Container::getChildNode(const sf::Drawable * element) const {
+		return children[getChildIndex(element)];
+	}
+
 	int Container::getChildrenCount() const {
 		return children.size();
+	}
+
+	std::shared_ptr<DisplayNode> Container::getContactNodeAtPoint(const sf::Vector2f & point) {
+		std::shared_ptr<Container> node = shared_from_this();
+		bool found = false;
+		do {
+			for (const auto & child : node->children) {
+				if (!child->containsPoint(point)) {
+					continue;
+				}
+
+				found = true;
+				if (!dynamic_cast<Container *>(child.get())) {
+					return child;
+				}
+
+				node = std::dynamic_pointer_cast<Container>(child);
+				break;
+			}
+		} while (found);
+
+		return nullptr;
 	}
 
 	std::shared_ptr<sf::Drawable> Container::getDrawable() {

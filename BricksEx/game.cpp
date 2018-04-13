@@ -1,6 +1,5 @@
 #include "game.h"
 #include "audio.h"
-#include "stage.h"
 #include <Windows.h>
 
 using namespace sf;
@@ -14,6 +13,8 @@ thread Game::renderThread;
 Event Game::currentEvent;
 ContextSettings Game::settings;
 RenderWindow Game::window;
+shared_ptr<Stage> Game::stage;
+Vector2f Game::mousePosition;
 
 void Game::run() {
 	settleWindow();
@@ -83,7 +84,14 @@ void Game::handleKeyEvent() {
 }
 
 void Game::handleMouseEvent() {
-	if (currentEvent.type == Event::MouseButtonPressed) {
+	if (currentEvent.type == Event::MouseMoved) {
+		mousePosition = window.mapPixelToCoords((Vector2i(currentEvent.mouseMove.x,currentEvent.mouseMove.y)));
+		std::shared_ptr<game::DisplayNode> node = stage->getContactNodeAtPoint(mousePosition);
+		if (node != nullptr) {
+			node->dispatchEvent(new game::Event("mousemove", true, true));
+		}
+	}
+	else if (currentEvent.type == Event::MouseButtonPressed) {
 		if (!GameState::lock) {
 			if (currentEvent.mouseButton.button == Mouse::Left) {
 				GameState::start = true;
@@ -104,7 +112,6 @@ void Game::handleMouseEvent() {
 }
 
 void Game::renderFunc() {
-
 	Audio::initialize();
 	for (Keyboard::Key i = Keyboard::Unknown;
 		i < Keyboard::Unknown + Keyboard::KeyCount;
@@ -112,7 +119,7 @@ void Game::renderFunc() {
 		keyDown.insert({ i, false });
 	}
 
-	static shared_ptr<Stage> stage(new Stage());
+	stage.reset(new Stage());
 	stage->initialize();
 	Time elapsed = milliseconds(0);
 	Clock clock;
@@ -124,7 +131,6 @@ void Game::renderFunc() {
 			currentEvent = popEvent();
 			handleKeyEvent();
 			handleMouseEvent();
-
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;
 			}
@@ -134,7 +140,6 @@ void Game::renderFunc() {
 		elapsed = min<Time>(elapsed + clock.restart(), seconds(0.05f));
 
 		// updateSpan: milliseconds
-		Vector2f mousePosition = window.mapPixelToCoords(Mouse::getPosition(window));
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
 			stage->update(updateSpan, mousePosition);
