@@ -1,6 +1,7 @@
 #include "brick.h"
 #include "ball.h"
 #include "define.h"
+#include "levelDeploy.h"
 #include <stdexcept>
 #include <iostream>
 
@@ -198,8 +199,8 @@ void Brick::update() {
 		GameState::ready = false;
 		GameState::start = false;
 		GameState::finishLevel = true;
-		std::cout << "Finished level: " << level++ << "!!!" << std::endl;
-		reset(level);
+		std::cout << "Finished level: " << LVDeploy::level++ << "!!!" << std::endl;
+		reset(LVDeploy::level);
 		setBrickColor(sf::Color(rng() % 255, rng() % 255, rng() % 255));
 	}
 }

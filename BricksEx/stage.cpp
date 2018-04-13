@@ -1,11 +1,12 @@
 #include "stage.h"
 #include "audio.h"
+#include "levelDeploy.h"
 #include <iostream>
 
 float Stage::blockLength(100.f);
 float Stage::incre1(3.f);
 std::shared_ptr<item::Ball> Stage::ball(new item::Ball());
-std::shared_ptr<item::Brick> Stage::bricks(new item::Brick(level, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f));
+std::shared_ptr<item::Brick> Stage::bricks(new item::Brick(LVDeploy::level, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f));
 std::shared_ptr<HUD> Stage::hud(new HUD());
 std::shared_ptr<ParticleSystem> Stage::mouseLight(new ParticleSystem(2000));
 std::shared_ptr<Player> Stage::player(new Player());
@@ -62,8 +63,8 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 		for (size_t i = 0; i < SLICE; ++i) {
 			Player::playerMove(Audio::sound1, item::Ball::getMainBallPosition(), item::Ball::getMainBallRadius());
 			if (GameState::start) {
-				Obstacle::update();
 				item::Brick::update();
+				Obstacle::update();
 				item::Ball::update(Player::getMainPlayerDP());
 			}
 			else {

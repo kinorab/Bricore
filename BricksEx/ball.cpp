@@ -25,10 +25,10 @@ void Ball::update(const sys::DPointf &playerDP) {
 		if (balls.at(i)->broke) {
 			balls.erase(balls.begin() + i);
 		}
+		if (multiple) {
+			collision(i);
+		}
 	}
-	/*if (multiple) {
-		collision();
-	}*/
 }
 
 void Ball::initializeBall() {
@@ -125,8 +125,8 @@ void Ball::ballDivided(const size_t numbers) {
 		for (size_t i = 0; i < numbers; ++i) {
 			balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
 			balls.at(balls.size() - 1)->setPos(mainPos);
-			balls.at(balls.size() - 1)->setSpeedX(balls.at(0)->getSpeedX() * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
-			balls.at(balls.size() - 1)->setSpeedY(balls.at(0)->getSpeedY() * ((prng(20) % 20 + 80) * .01f * (prng(4) % 4 == 0 ? -1 : 1)));
+			balls.at(balls.size() - 1)->setSpeedX(1.f * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
+			balls.at(balls.size() - 1)->setSpeedY(1.f * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
 		}
 		ballStartC = false;
 		multiple = true;
@@ -155,30 +155,40 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 	}
 }
 
-void Ball::collision() {
+void Ball::collision(const size_t number) {
 	try {
-		for (size_t i = 0; i < balls.size() - 1; ++i) {
-			for (size_t j = i + 1; j < balls.size(); ++j) {
-				const Vector2f APos = balls.at(i)->getPos();
-				const float AR = balls.at(i)->getRad();
-				const Vector2f BPos = balls.at(j)->getPos();
-				const float BR = balls.at(j)->getRad();
-				if (ballStartC && game::ballsIntersects(APos, AR, BPos, BR)) {
-					const Vector2f avarageSpeed((abs(balls.at(i)->getSpeedX()) + abs(balls.at(j)->getSpeedX())) / 2
-						, (abs(balls.at(i)->getSpeedY()) + abs(balls.at(j)->getSpeedY())) / 2);
-					const float ASpeedX = balls.at(j)->getSpeedX() < 0 ? -abs(avarageSpeed.x) : abs(avarageSpeed.x);
-					const float ASpeedY = balls.at(j)->getSpeedY() < 0 ? -abs(avarageSpeed.y) : abs(avarageSpeed.y);
-					const float BSpeedX = balls.at(i)->getSpeedX() < 0 ? -abs(avarageSpeed.x) : abs(avarageSpeed.x);
-					const float BSpeedY = balls.at(i)->getSpeedY() < 0 ? -abs(avarageSpeed.y) : abs(avarageSpeed.y);
-
-					balls.at(i)->setSpeedX(ASpeedX);
-					balls.at(i)->setSpeedY(ASpeedY);
-					balls.at(j)->setSpeedX(BSpeedX);
-					balls.at(j)->setSpeedY(BSpeedY);
+		for (size_t j = number + 1; j < balls.size(); ++j) {
+			const Vector2f APos = balls.at(number)->getPos();
+			const float AR = balls.at(number)->getRad();
+			const Vector2f BPos = balls.at(j)->getPos();
+			const float BR = balls.at(j)->getRad();
+			if (ballStartC && game::ballsIntersects(APos, AR, BPos, BR)) {
+				const float avarageSpeedX = (abs(balls.at(number)->getSpeedX()) + abs(balls.at(j)->getSpeedX())) / 2;
+				const float ASpeedY = balls.at(number)->getSpeedY();
+				const float BSpeedY = balls.at(j)->getSpeedY();
+				if (APos.x > BPos.x) {
+					if (APos.y > BPos.y) {
+						balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), abs(ASpeedY)));
+						balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(BSpeedY)));
+					}
+					else {
+						balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(ASpeedY)));
+						balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(BSpeedY)));
+					}
 				}
-				else if (game::ballsDistance(APos, AR, BPos, BR) < 1.f) {
-					return;
+				else {
+					if (APos.y > BPos.y) {
+						balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(ASpeedY)));
+						balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(BSpeedY)));
+					}
+					else {
+						balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(ASpeedY)));
+						balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), abs(BSpeedY)));
+					}
 				}
+			}
+			else if (game::ballsDistance(APos, AR, BPos, BR) < 2.f) {
+				return;
 			}
 		}
 		if (!ballStartC) {
@@ -388,6 +398,10 @@ void Ball::BallContainer::setSpeedX(const float speedX) {
 
 void Ball::BallContainer::setSpeedY(const float speedY) {
 	ballSpeed.y = speedY;
+}
+
+void Ball::BallContainer::setSpeed(const Vector2f &speed) {
+	ballSpeed = speed;
 }
 
 void Ball::BallContainer::setPos(const Vector2f &pos) {

@@ -27,10 +27,9 @@ private:
 	static bool flash;
 	static sf::Clock elapsed;
 	static sf::RectangleShape mainPlayer;
+	//static sf::RectangleShape subPlayer;
 	static sf::RectangleShape redRange;
 	static sf::RectangleShape yellowRange;
 	static sf::RectangleShape playerArea;
-
-	//sf::RectangleShape subPlayer;
 };
 

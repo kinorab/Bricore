@@ -5,7 +5,6 @@
 #include <iostream>
 #include <iomanip>
 
-unsigned int level = 5;
 float MAINPLAYERSPEED = 6.f;
 const size_t startTimeP = static_cast<size_t>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count());
 

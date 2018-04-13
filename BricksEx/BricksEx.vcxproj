@@ -155,6 +155,7 @@
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="hud.cpp" />
+    <ClCompile Include="levelDeploy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movieClip.cpp" />
     <ClCompile Include="obstacle.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="hud.h" />
+    <ClInclude Include="levelDeploy.h" />
     <ClInclude Include="movieClip.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />

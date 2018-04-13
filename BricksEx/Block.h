@@ -18,6 +18,7 @@ namespace item {
 		void update();
 
 		const sys::DPointf getDP() const;
+		const sf::Vector2f getCenterPosition() const;
 		const sf::Vector2f & getCurrentPosition() const;
 		const sf::Vector2f & getOriginPosition() const;
 		const sf::Vector2f & getSpeed() const;

@@ -60,7 +60,6 @@ void Block::setHeight(const float height) {
 }
 
 void Block::resetPosition() {
-
 	position = oriPos;
 	setBlockVertice();
 }
@@ -97,6 +96,11 @@ void Block::update() {
 
 const sys::DPointf Block::getDP() const {
 	return sys::DPointf((*this)[0].position, (*this)[2].position);
+}
+
+const Vector2f Block::getCenterPosition() const {
+	return Vector2f(((*this)[0].position.x + (*this)[2].position.x) / 2, 
+		((*this)[0].position.y + (*this)[2].position.y) / 2);
 }
 
 const Vector2f & Block::getCurrentPosition() const {

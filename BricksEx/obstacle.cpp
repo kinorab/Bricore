@@ -45,6 +45,9 @@ void Obstacle::update() {
 			}
 		}
 	}
+	if (GameState::finishLevel) {
+	//	reset()
+	}
 }
 
 void Obstacle::setBlockColor(const size_t number, const Color &c1, const Color &c2, const Color &c3, const Color &c4) {
@@ -163,8 +166,30 @@ void Obstacle::blockCollision(const size_t number) {
 
 			if (game::INCIntersects(blocks.at(number)->getDP(), blocks.at(j)->getDP())) {
 
-				blocks.at(number)->setSpeed(blocks.at(number)->getSpeed().x * -1, blocks.at(number)->getSpeed().y * -1);
-				blocks.at(j)->setSpeed(blocks.at(j)->getSpeed().x * -1, blocks.at(j)->getSpeed().y * -1);
+				const Vector2f APos(blocks.at(number)->getCenterPosition());
+				const Vector2f BPos(blocks.at(j)->getCenterPosition());
+				const Vector2f ASpeed(blocks.at(number)->getSpeed());
+				const Vector2f BSpeed(blocks.at(j)->getSpeed());
+				if (APos.x > BPos.x) {
+					if (APos.y > BPos.y) {
+						blocks.at(number)->setSpeed(abs(ASpeed.x), abs(ASpeed.y));
+						blocks.at(j)->setSpeed(-abs(BSpeed.x), -abs(BSpeed.y));
+					}
+					else {
+						blocks.at(number)->setSpeed(abs(ASpeed.x), -abs(ASpeed.y));
+						blocks.at(j)->setSpeed(-abs(BSpeed.x), abs(BSpeed.y));
+					}
+				}
+				else {
+					if (APos.y > BPos.y) {
+						blocks.at(number)->setSpeed(-abs(ASpeed.x), abs(ASpeed.y));
+						blocks.at(j)->setSpeed(abs(BSpeed.x), -abs(BSpeed.y));
+					}
+					else {
+						blocks.at(number)->setSpeed(-abs(ASpeed.x), -abs(ASpeed.y));
+						blocks.at(j)->setSpeed(abs(BSpeed.x), abs(BSpeed.y));
+					}
+				}
 			}
 		}
 	}
@@ -172,4 +197,23 @@ void Obstacle::blockCollision(const size_t number) {
 		cout << "Exception: " << ex.what() << endl;
 	}
 
+}
+
+void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f> & sideLength) {
+	try {
+		if (position.size() == sideLength.size()) {
+			blocks.resize(position.size());
+			for (size_t i = 0; i < blocks.size(); ++i) {
+				blocks.at(i) = unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
+			}
+			setBlocksAreaDP(sys::DPointf(Vector2f(0.0f, item::Brick::getBrickAreaDP().dot2.y + AREAINTERVAL)
+				, Vector2f(LEVEL_WIDTH, Player::getPlayerAreaDP().dot1.y - AREAINTERVAL)));
+		}
+		else {
+			throw out_of_range("Position size not equal to side-length size.");
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
 }

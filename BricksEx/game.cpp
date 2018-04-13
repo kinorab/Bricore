@@ -112,7 +112,7 @@ void Game::renderFunc() {
 		keyDown.insert({ i, false });
 	}
 
-	shared_ptr<Stage> stage(new Stage());
+	static shared_ptr<Stage> stage(new Stage());
 	stage->initialize();
 	Time elapsed = milliseconds(0);
 	Clock clock;

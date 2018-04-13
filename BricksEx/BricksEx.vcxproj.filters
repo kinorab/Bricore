@@ -61,6 +61,9 @@
     <ClCompile Include="game.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="levelDeploy.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="rectangleShapeNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -139,6 +142,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="diagonalPoint.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="levelDeploy.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="rectangleShapeNode.h">
