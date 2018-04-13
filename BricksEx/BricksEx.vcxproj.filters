@@ -61,6 +61,21 @@
     <ClCompile Include="game.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="rectangleShapeNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="displayNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="circleShapeNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="vertexArrayNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="drawableNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -124,6 +139,21 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="diagonalPoint.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="rectangleShapeNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="displayNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="circleShapeNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="vertexArrayNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="drawableNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
