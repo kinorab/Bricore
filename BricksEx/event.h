@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <SFML\Window\Event.hpp>
 
 namespace game {
 	enum class EventPhase {
@@ -13,7 +14,8 @@ namespace game {
 
 	class DisplayNode;
 
-	class Event {
+	class Event
+		:public sf::Event {
 	public:
 		class DispatchHelper {
 		public:
@@ -25,8 +27,8 @@ namespace game {
 		private:
 			Event * event;
 		};
-		explicit Event(std::string type);
-		Event(std::string type, bool bubbles, bool cancelable);
+		explicit Event(sf::Event::EventType type);
+		Event(sf::Event::EventType type, bool bubbles, bool cancelable);
 		virtual ~Event();
 		virtual bool getBubbles() const;
 		virtual bool getCancelable() const;
@@ -34,7 +36,7 @@ namespace game {
 		virtual bool getDefaultPrevented() const;
 		virtual EventPhase getPhase() const;
 		virtual DisplayNode * getTarget() const;
-		virtual std::string getType() const;
+		virtual sf::Event::EventType getType() const;
 		virtual void stopPropagation();
 		virtual void preventDefault();
 	private:
@@ -45,6 +47,6 @@ namespace game {
 		EventPhase phase;
 		bool propagationStopped;
 		DisplayNode * target;
-		std::string type;
+		using sf::Event::type;
 	};
 }

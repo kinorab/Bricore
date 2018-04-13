@@ -41,14 +41,6 @@ Stage::Stage() {
 	Obstacle::setBlockSpeed(4, 3.f);
 	item::Brick::setBrickColor(sf::Color(255, 183, 197));
 	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
-	addEventListener("initialized",
-		[this](game::Event * event) {
-		std::cout << "Stage:" << event->getType() << std::endl;
-	});
-	hud->addEventListener("initialized",
-		[this](game::Event * event) {
-		std::cout << "HUD:" << event->getType() << std::endl;
-	});
 }
 
 Stage::~Stage() {

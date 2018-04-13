@@ -113,8 +113,6 @@ namespace game {
 			child->setParent(weak_from_this());
 			child->initialize();
 		});
-
-		dispatchEvent(new Event("initialized", false, false));
 	}
 
 	void Container::removeAllChildren() {

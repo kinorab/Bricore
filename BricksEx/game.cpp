@@ -88,7 +88,9 @@ void Game::handleMouseEvent() {
 		mousePosition = window.mapPixelToCoords((Vector2i(currentEvent.mouseMove.x,currentEvent.mouseMove.y)));
 		std::shared_ptr<game::DisplayNode> node = stage->getContactNodeAtPoint(mousePosition);
 		if (node != nullptr) {
-			node->dispatchEvent(new game::Event("mousemove", true, true));
+			game::Event event(currentEvent.type, true, true);
+			event.mouseMove = currentEvent.mouseMove;
+			node->dispatchEvent(&event);
 		}
 	}
 	else if (currentEvent.type == Event::MouseButtonPressed) {

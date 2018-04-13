@@ -6,11 +6,11 @@ namespace game {
 	DisplayNode::~DisplayNode() {
 	}
 
-	void DisplayNode::addEventListener(std::string type, std::function<void(Event*)> callback) {
+	void DisplayNode::addEventListener(sf::Event::EventType type, std::function<void(Event*)> callback) {
 		addEventListener(type, callback, false);
 	}
 
-	void DisplayNode::addEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
+	void DisplayNode::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
 		removeEventListener(type, callback, useCapture);
 		listeners.push_back(EventListener{ type, callback, useCapture });
 	}
@@ -68,7 +68,7 @@ namespace game {
 	void DisplayNode::initialize() {
 	}
 
-	void DisplayNode::removeEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
+	void DisplayNode::removeEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
 		listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
 			[&](EventListener & listener) {
 			return listener.type == type
