@@ -145,8 +145,11 @@
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="brick.cpp" />
+    <ClCompile Include="circleShapeNode.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="button.cpp" />
+    <ClCompile Include="displayNode.cpp" />
+    <ClCompile Include="drawableNode.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="define.cpp" />
     <ClCompile Include="ellipse.cpp" />
@@ -159,20 +162,25 @@
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="rectangleShapeNode.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIFactory.cpp" />
+    <ClCompile Include="vertexArrayNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h" />
     <ClInclude Include="ball.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
+    <ClInclude Include="circleShapeNode.h" />
     <ClInclude Include="container.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="diagonalPoint.h" />
+    <ClInclude Include="displayNode.h" />
+    <ClInclude Include="drawableNode.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
@@ -184,11 +192,13 @@
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="rectangleShapeNode.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIFactory.h" />
+    <ClInclude Include="vertexArrayNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

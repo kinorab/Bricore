@@ -2,12 +2,6 @@
 #include <algorithm>
 
 namespace game {
-	struct Container::EventListener {
-		std::string type;
-		std::function<void(Event *)> callback;
-		bool useCapture;
-	};
-
 	Container::Container() {
 
 	}
@@ -17,8 +11,8 @@ namespace game {
 
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<sf::Drawable> & child) {
-			target.draw(*child, getTransform());
+			[&](const std::shared_ptr<DisplayNode> & child) {
+			target.draw(*child->getDrawable(), getTransform());
 		});
 	}
 
@@ -27,107 +21,60 @@ namespace game {
 	}
 
 	void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, size_t index) {
-		std::for_each(elements.begin(), elements.end(),
+		std::vector<std::shared_ptr<DisplayNode>> nodes;
+		std::transform(elements.begin(), elements.end(), std::back_inserter(nodes),
 			[&](const std::shared_ptr<sf::Drawable> & element) {
-			if (Container * container = dynamic_cast<Container *>(element.get()); container) {
-				container->setParent(weak_from_this());
+			std::shared_ptr<DisplayNode> node;
+			if (dynamic_cast<Container *>(element.get())) {
+				node = std::dynamic_pointer_cast<Container>(element);
 			}
+			else if (dynamic_cast<sf::CircleShape *>(element.get())) {
+				node.reset(new CircleShapeNode(std::dynamic_pointer_cast<sf::CircleShape>(element)));
+			}
+			else if (dynamic_cast<sf::RectangleShape *>(element.get())) {
+				node.reset(new RectangleShapeNode(std::dynamic_pointer_cast<sf::RectangleShape>(element)));
+			}
+			else if (dynamic_cast<sf::VertexArray *>(element.get())) {
+				node.reset(new VertexArrayNode(std::dynamic_pointer_cast<sf::VertexArray>(element)));
+			}
+			else {
+				node.reset(new DrawableNode(element));
+			}
+
+			node->setParent(weak_from_this());
+			return node;
 		});
-		children.insert(children.begin() + index, elements.begin(), elements.end());
-	}
 
-	void Container::addEventListener(std::string type, std::function<void(Event*)> callback) {
-		addEventListener(type, callback, false);
-	}
-
-	void Container::addEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
-		removeEventListener(type, callback, useCapture);
-		listeners.push_back(EventListener{ type, callback, useCapture });
+		children.insert(children.begin() + index, nodes.begin(), nodes.end());
 	}
 
 	bool Container::contains(const sf::Drawable * element) const {
 		return std::any_of(children.begin(), children.end(),
-			[&](const std::shared_ptr<sf::Drawable> & child) {
-			return child.get() == element;
+			[&](const std::shared_ptr<DisplayNode> & child) {
+			return child->getDrawable().get() == element;
 		});
 	}
 
 	bool Container::containsPoint(const sf::Vector2f & point) const {
+		bool contains = false;
 		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<sf::Drawable> & child) {
-			if (Container * container = dynamic_cast<Container *>(child.get()); container && container->containsPoint(point)) {
-				return true;
-			}
-
-			if (sf::CircleShape * circle = dynamic_cast<sf::CircleShape *>(child.get()); circle) {
-				return false;
-			}
-
-			if (sf::RectangleShape * rectangle = dynamic_cast<sf::RectangleShape *>(child.get()); rectangle) {
-				return false;
-			}
-
-			if (sf::VertexArray * vertices = dynamic_cast<sf::VertexArray *>(child.get()); vertices) {
-				return false;
+			[&](const std::shared_ptr<DisplayNode> & child) {
+			if (child->containsPoint(point)) {
+				contains = true;
 			}
 		});
 
-		return false;
-	}
-
-	bool Container::dispatchEvent(Event * event) {
-		Event::DispatchHelper helper(event);
-		helper.setCurrentTarget(this);
-
-		if (event->getPhase() == EventPhase::NONE) {
-			helper.setTarget(this);
-			helper.setPhase(EventPhase::CAPTURING_PHASE);
-		}
-
-		if (event->getPhase() == EventPhase::CAPTURING_PHASE && !parent.expired()) {
-			parent.lock()->dispatchEvent(event);
-			helper.setCurrentTarget(this);
-		}
-
-		if (event->getCurrentTarget() == event->getTarget()) {
-			helper.setPhase(EventPhase::AT_TARGET);
-		}
-
-		if (!helper.isPropagationStopped()) {
-			std::vector<EventListener> tempListeners = listeners;
-			std::for_each(tempListeners.begin(), tempListeners.end(),
-				[&](const EventListener & listener) {
-				if (!((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
-					|| (event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
-					listener.callback(event);
-				}
-			});
-		}
-
-		if (event->getCurrentTarget() == event->getTarget()) {
-			helper.setPhase(EventPhase::BUBBLING_PHASE);
-		}
-
-		if (event->getPhase() == EventPhase::BUBBLING_PHASE && event->getBubbles() && !parent.expired()) {
-			parent.lock()->dispatchEvent(event);
-			helper.setCurrentTarget(this);
-		}
-
-		if (event->getCurrentTarget() == event->getTarget()) {
-			helper.setPhase(EventPhase::NONE);
-		}
-
-		return !event->getDefaultPrevented();
+		return contains;
 	}
 
 	std::shared_ptr<sf::Drawable> Container::getChildAt(int index) const {
-		return children[index];
+		return children[index]->getDrawable();
 	}
 
 	int Container::getChildIndex(const sf::Drawable * element) const {
 		return std::find_if(children.begin(), children.end(),
-			[&](const std::shared_ptr<sf::Drawable> & child) {
-			return child.get() == element;
+			[&](const std::shared_ptr<DisplayNode> & child) {
+			return child->getDrawable().get() == element;
 		}) - children.begin();
 	}
 
@@ -135,17 +82,15 @@ namespace game {
 		return children.size();
 	}
 
-	std::weak_ptr<Container> Container::getParent() const {
-		return parent;
+	std::shared_ptr<sf::Drawable> Container::getDrawable() {
+		return std::static_pointer_cast<sf::Drawable>(shared_from_this());
 	}
 
 	void Container::initialize() {
 		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<sf::Drawable> & child) {
-			if (Container * container = dynamic_cast<Container *>(child.get()); container) {
-				container->setParent(weak_from_this());
-				container->initialize();
-			}
+			[&](std::shared_ptr<DisplayNode> & child) {
+			child->setParent(weak_from_this());
+			child->initialize();
 		});
 
 		dispatchEvent(new Event("initialized", false, false));
@@ -169,7 +114,7 @@ namespace game {
 		std::sort(indexes.begin(), indexes.end());
 		auto indexIterator = indexes.begin();
 		children.erase(std::remove_if(children.begin(), children.end(),
-			[&](const std::shared_ptr<sf::Drawable> & child) {
+			[&](const std::shared_ptr<DisplayNode> & child) {
 			if (children[*indexIterator] == child) {
 				indexIterator += 1;
 				return true;
@@ -182,22 +127,9 @@ namespace game {
 		children.erase(children.begin() + beginIndex, children.begin() + endIndex);
 	}
 
-	void Container::removeEventListener(std::string type, std::function<void(Event *)> callback, bool useCapture) {
-		listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
-			[&](EventListener & listener) {
-			return listener.type == type
-				&& *listener.callback.target<void(Event *)>() == *callback.target<void(Event *)>()
-				&& listener.useCapture == useCapture;
-		}), listeners.end());
-	}
-
 	void Container::setChildIndex(const sf::Drawable * element, int index) {
 		auto elementIterator = children.begin() + getChildIndex(element);
 		std::move(elementIterator, elementIterator + 1, children.begin() + index);
-	}
-
-	void Container::setParent(std::weak_ptr<Container> container) {
-		parent = std::move(container);
 	}
 
 	void Container::swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB) {

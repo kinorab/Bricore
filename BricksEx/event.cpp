@@ -9,7 +9,7 @@ namespace game {
 		return event->propagationStopped;
 	}
 
-	void Event::DispatchHelper::setCurrentTarget(Container * target) {
+	void Event::DispatchHelper::setCurrentTarget(DisplayNode * target) {
 		event->currentTarget = target;
 	}
 
@@ -17,7 +17,7 @@ namespace game {
 		event->phase = phase;
 	}
 
-	void Event::DispatchHelper::setTarget(Container * target) {
+	void Event::DispatchHelper::setTarget(DisplayNode * target) {
 		event->target = target;
 	}
 
@@ -47,7 +47,7 @@ namespace game {
 		return cancelable;
 	}
 
-	Container * Event::getCurrentTarget() const {
+	DisplayNode * Event::getCurrentTarget() const {
 		return currentTarget;
 	}
 
@@ -59,7 +59,7 @@ namespace game {
 		return phase;
 	}
 
-	Container * Event::getTarget() const {
+	DisplayNode * Event::getTarget() const {
 		return target;
 	}
 
