@@ -196,11 +196,8 @@ void Brick::update() {
 		}
 	}
 	else {
-		GameState::ready = false;
-		GameState::start = false;
-		GameState::finishLevel = true;
-		std::cout << "Finished level: " << LVDeploy::level++ << "!!!" << std::endl;
-		reset(LVDeploy::level);
+		LVDeploy::finishLevel();
+		reset(LVDeploy::getLevel());
 		setBrickColor(sf::Color(rng() % 255, rng() % 255, rng() % 255));
 	}
 }

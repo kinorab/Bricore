@@ -64,6 +64,9 @@
     <ClCompile Include="levelDeploy.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="matrixIter.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -132,6 +135,12 @@
     <ClInclude Include="levelDeploy.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="matrixIter.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="標頭檔">
@@ -156,6 +165,9 @@
     </None>
     <None Include="intersects.h">
       <Filter>標頭檔</Filter>
+    </None>
+    <None Include="matrix.inl">
+      <Filter>資源檔</Filter>
     </None>
   </ItemGroup>
 </Project>
