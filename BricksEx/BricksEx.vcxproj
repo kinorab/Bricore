@@ -157,6 +157,7 @@
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="levelDeploy.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="matrixIter.cpp" />
     <ClCompile Include="movieClip.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
@@ -185,6 +186,8 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="hud.h" />
     <ClInclude Include="levelDeploy.h" />
+    <ClInclude Include="matrix.h" />
+    <ClInclude Include="matrixIter.h" />
     <ClInclude Include="movieClip.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="particleSystem.h" />
@@ -204,6 +207,7 @@
     <None Include="ClassDiagram.cd" />
     <None Include="diagonalPoint.inl" />
     <None Include="intersects.h" />
+    <None Include="matrix.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

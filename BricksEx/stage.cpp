@@ -6,7 +6,7 @@
 float Stage::blockLength(100.f);
 float Stage::incre1(3.f);
 std::shared_ptr<item::Ball> Stage::ball(new item::Ball());
-std::shared_ptr<item::Brick> Stage::bricks(new item::Brick(LVDeploy::level, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f));
+std::shared_ptr<item::Brick> Stage::bricks(new item::Brick(LVDeploy::getLevel(), 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f));
 std::shared_ptr<HUD> Stage::hud(new HUD());
 std::shared_ptr<ParticleSystem> Stage::mouseLight(new ParticleSystem(2000));
 std::shared_ptr<Player> Stage::player(new Player());

@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="audio.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="ball.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -10,16 +13,43 @@
     <ClCompile Include="brick.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="circleShapeNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="container.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="define.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="displayNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="drawableNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="ellipse.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="event.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="hud.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="levelDeploy.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="matrixIter.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="movieClip.cpp">
@@ -31,7 +61,16 @@
     <ClCompile Include="particleSystem.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="rectangleShapeNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="renderer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="stage.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="UIComponent.cpp">
@@ -40,47 +79,14 @@
     <ClCompile Include="UIFactory.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="audio.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="stage.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="button.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="container.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="event.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="game.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="levelDeploy.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="rectangleShapeNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="displayNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="circleShapeNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="vertexArrayNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="drawableNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="audio.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="ball.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -90,13 +96,46 @@
     <ClInclude Include="brick.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="circleShapeNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="container.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="define.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="diagonalPoint.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="displayNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="drawableNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="ellipse.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="hud.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="levelDeploy.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="matrixIter.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="movieClip.h">
@@ -108,7 +147,19 @@
     <ClInclude Include="particleSystem.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="rectangleShapeNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="renderer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="stage.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="UIComponent.h">
@@ -117,75 +168,36 @@
     <ClInclude Include="UIFactory.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="event.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="audio.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="stage.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="button.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="container.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="diagonalPoint.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="levelDeploy.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="rectangleShapeNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="displayNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="circleShapeNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="vertexArrayNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="drawableNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="intersects.h">
+      <Filter>標頭檔</Filter>
+    </None>
+    <None Include="diagonalPoint.inl">
+      <Filter>資源檔</Filter>
+    </None>
+    <None Include="matrix.inl">
+      <Filter>資源檔</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="來源檔案">
+      <UniqueIdentifier>{48dab6d5-1a3f-478c-a837-278b848be25f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="標頭檔">
-      <UniqueIdentifier>{0b4dd412-8da2-4de3-9d6d-086d799d127c}</UniqueIdentifier>
+      <UniqueIdentifier>{c2f42780-fb6c-4c5c-b5ed-65f1040b4b69}</UniqueIdentifier>
     </Filter>
     <Filter Include="資源檔">
-      <UniqueIdentifier>{54535d12-ef00-4bd3-8166-c015efa933a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="來源檔案">
-      <UniqueIdentifier>{35408483-1636-4a75-8285-7edc42a77a2a}</UniqueIdentifier>
+      <UniqueIdentifier>{9ee86fca-14d2-40f5-bc45-285258fb2b72}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
       <Filter>資源檔</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="diagonalPoint.inl">
-      <Filter>資源檔</Filter>
-    </None>
-    <None Include="intersects.h">
-      <Filter>標頭檔</Filter>
-    </None>
   </ItemGroup>
 </Project>

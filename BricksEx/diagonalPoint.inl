@@ -1,3 +1,4 @@
+#include "diagonalPoint.h"
 template<typename T>
 inline sys::DPoint<T>::DPoint(const sf::Vector2<T> &D1, const sf::Vector2<T> &D2) {
 	try {
