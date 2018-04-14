@@ -23,12 +23,21 @@ std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> H
 
 HUD::HUD() {
 	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3) });
-	getChildNode(interface[1].get())->addEventListener(sf::Event::EventType::MouseMoved,
+	getChildNode(interface[1].get())->addEventListener(sf::Event::EventType::MouseLeft,
 		[this](game::Event * event) {
 		interface.at(1)->setFillColor(Color(
-			static_cast<Uint8>(event->mouseMove.x % 256),
-			static_cast<Uint8>(event->mouseMove.x % 256),
-			static_cast<Uint8>(event->mouseMove.y % 256),
+			static_cast<Uint8>(0),
+			static_cast<Uint8>(0),
+			static_cast<Uint8>(0),
+			static_cast<Uint8>(255)
+		));
+	});
+	getChildNode(interface[1].get())->addEventListener(sf::Event::EventType::MouseEntered,
+		[this](game::Event * event) {
+		interface.at(1)->setFillColor(Color(
+			static_cast<Uint8>(128),
+			static_cast<Uint8>(128),
+			static_cast<Uint8>(128),
 			static_cast<Uint8>(255)
 		));
 	});

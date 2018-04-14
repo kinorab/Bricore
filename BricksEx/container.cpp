@@ -10,9 +10,10 @@ namespace game {
 	}
 
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+		states.transform = states.transform.combine(getTransform());
 		std::for_each(children.begin(), children.end(),
 			[&](const std::shared_ptr<DisplayNode> & child) {
-			target.draw(*child->getDrawable(), getTransform());
+			target.draw(*child->getDrawable(), states);
 		});
 	}
 
@@ -23,7 +24,7 @@ namespace game {
 	void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, size_t index) {
 		std::vector<std::shared_ptr<DisplayNode>> nodes;
 		std::transform(elements.begin(), elements.end(), std::back_inserter(nodes),
-			[&](const std::shared_ptr<sf::Drawable> & element) {
+			[this](const std::shared_ptr<sf::Drawable> & element) {
 			std::shared_ptr<DisplayNode> node;
 			if (dynamic_cast<Container *>(element.get())) {
 				node = std::dynamic_pointer_cast<Container>(element);
@@ -57,7 +58,7 @@ namespace game {
 
 	bool Container::containsPoint(const sf::Vector2f & point) const {
 		return std::any_of(children.begin(), children.end(),
-			[&](const auto & child) {
+			[&](const std::shared_ptr<DisplayNode> & child) {
 			return child->containsPoint(point);
 		});
 	}
@@ -109,7 +110,7 @@ namespace game {
 
 	void Container::initialize() {
 		std::for_each(children.begin(), children.end(),
-			[&](std::shared_ptr<DisplayNode> & child) {
+			[this](std::shared_ptr<DisplayNode> & child) {
 			child->setParent(weak_from_this());
 			child->initialize();
 		});
@@ -123,7 +124,7 @@ namespace game {
 	void Container::removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
 		std::vector<int> indexes;
 		std::transform(elements.begin(), elements.end(), std::back_inserter(indexes),
-			[&](const std::shared_ptr<sf::Drawable> & element) {
+			[this](const std::shared_ptr<sf::Drawable> & element) {
 			return getChildIndex(element.get());
 		});
 		removeChildAt(indexes);

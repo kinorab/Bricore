@@ -92,6 +92,7 @@
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)BricksEx\lib;$(SolutionDir)SFML\SFML-2.4.2x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
