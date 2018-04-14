@@ -11,8 +11,8 @@
 #include "obstacle.h"
 #include "UIFactory.h"
 
-class Stage :
-	public game::Container {
+class Stage
+	: public game::Container {
 public:
 	Stage();
 	virtual ~Stage();

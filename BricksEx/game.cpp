@@ -139,6 +139,13 @@ void Game::handleMouseEvent() {
 			previousContactNode->dispatchEvent(&event);
 		}
 	}
+	else if (currentEvent.type == Event::MouseButtonReleased) {
+		if (previousContactNode) {
+			game::Event event(currentEvent.type, true, true);
+			event.mouseButton = currentEvent.mouseButton;
+			previousContactNode->dispatchEvent(&event);
+		}
+	}
 	else if (currentEvent.type == Event::MouseLeft) {
 		Event event;
 		event.type = Event::MouseMoved;

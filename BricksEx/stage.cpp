@@ -41,9 +41,10 @@ Stage::Stage() {
 	Obstacle::setBlockSpeed(4, 3.f);
 	item::Brick::setBrickColor(sf::Color(255, 183, 197));
 	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
-	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, std::placeholders::_1));
-	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, std::placeholders::_1));
-	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMousePressed, this, std::placeholders::_1));
+	using namespace std::placeholders;
+	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
+	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
+	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMousePressed, this, _1));
 }
 
 Stage::~Stage() {

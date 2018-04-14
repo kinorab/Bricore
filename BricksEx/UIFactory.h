@@ -5,5 +5,5 @@
 
 class UIFactory {
 public:
-	static std::unique_ptr<Button> createButton(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption);
+	static std::unique_ptr<game::Button> createButton(const sf::Texture & up, const sf::Texture & over, const sf::Texture & down, sf::FloatRect hitArea, std::string caption);
 };

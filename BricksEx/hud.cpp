@@ -20,26 +20,28 @@ std::vector <std::shared_ptr<sf::RectangleShape>> HUD::interface = []() {
 std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel1;
 std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel2;
 std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel3;
+std::shared_ptr<game::Button> HUD::button;
 
 HUD::HUD() {
-	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3) });
+	button.reset(new game::Button());
+	button->setCaption("button");
+	button->setPosition(LEVEL_WIDTH, 400);
+	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3), button });
 	getChildNode(interface[1].get())->addEventListener(sf::Event::EventType::MouseLeft,
 		[this](game::Event * event) {
-		interface.at(1)->setFillColor(Color(
-			static_cast<Uint8>(0),
-			static_cast<Uint8>(0),
-			static_cast<Uint8>(0),
-			static_cast<Uint8>(255)
-		));
+		interface.at(1)->setFillColor(Color::Blue);
 	});
 	getChildNode(interface[1].get())->addEventListener(sf::Event::EventType::MouseEntered,
 		[this](game::Event * event) {
-		interface.at(1)->setFillColor(Color(
-			static_cast<Uint8>(128),
-			static_cast<Uint8>(128),
-			static_cast<Uint8>(128),
-			static_cast<Uint8>(255)
-		));
+		interface.at(1)->setFillColor(Color::Cyan);
+	});
+	getChildNode(interface[1].get())->addEventListener(sf::Event::EventType::MouseButtonPressed,
+		[this](game::Event * event) {
+		interface.at(1)->setFillColor(Color::Red);
+	});
+	getChildNode(interface[1].get())->addEventListener(sf::Event::EventType::MouseButtonReleased,
+		[this](game::Event * event) {
+		interface.at(1)->setFillColor(Color::Magenta);
 	});
 }
 

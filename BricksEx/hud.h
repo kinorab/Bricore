@@ -1,6 +1,6 @@
 #pragma once
 
-#include "container.h"
+#include "UIFactory.h"
 #include <SFML/Graphics.hpp>
 #include <utility>
 
@@ -14,4 +14,5 @@ private:
 	static std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel1;
 	static std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel2;
 	static std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel3;
+	static std::shared_ptr<game::Button> button;
 };
