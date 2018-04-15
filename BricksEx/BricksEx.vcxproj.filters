@@ -49,9 +49,6 @@
     <ClCompile Include="main.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="matrixIter.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="movieClip.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -133,9 +130,6 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="matrix.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="matrixIter.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="movieClip.h">

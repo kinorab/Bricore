@@ -77,14 +77,14 @@ inline sys::DPoint<T> sys::operator /(const DPoint<T>& left, const T right) {
 	return DPoint<T>(left.dot1 / right, left.dot2 / right);
 }
 
-// increase each diagonalPoint X and Y with Vector(X, Y) 
+// increase each diagonalPoint X and Y with Vector(X, Y)
 template<typename T>
 inline sys::DPoint<T>& sys::operator +=(DPoint<T>& left, const sf::Vector2<T>& right) {
 	left.dot1 += right;
 	left.dot2 += right;
 	return left;
 }
-
+// increase each diagonalPoint X and Y with value
 template<typename T>
 inline sys::DPoint<T>& sys::operator +=(DPoint<T>& left, const T right) {
 	left.dot1.x += right;
@@ -101,7 +101,7 @@ inline sys::DPoint<T>& sys::operator -=(DPoint<T>& left, const sf::Vector2<T>& r
 	left.dot2 -= right;
 	return left;
 }
-
+// decrease each diagonalPoint X and Y with value 
 template<typename T>
 inline sys::DPoint<T>& sys::operator -=(DPoint<T>& left, const T right) {
 	left.dot1.x -= right;
