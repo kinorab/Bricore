@@ -15,7 +15,7 @@ ContextSettings Game::settings;
 RenderWindow Game::window;
 shared_ptr<Stage> Game::stage;
 Vector2f Game::mousePosition;
-shared_ptr<game::DisplayNode> Game::previousContactNode(nullptr);
+shared_ptr<game::InteractiveObject> Game::previousContactNode(nullptr);
 
 void Game::run() {
 	settleWindow();
@@ -87,7 +87,7 @@ void Game::handleKeyEvent() {
 void Game::handleMouseEvent() {
 	if (currentEvent.type == Event::MouseMoved) {
 		mousePosition = window.mapPixelToCoords((Vector2i(currentEvent.mouseMove.x, currentEvent.mouseMove.y)));
-		std::shared_ptr<game::DisplayNode> contactNode;
+		std::shared_ptr<game::InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
 			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
 			contactNode = nullptr;
@@ -102,13 +102,13 @@ void Game::handleMouseEvent() {
 		}
 
 		if (contactNode != previousContactNode) {
-			vector<shared_ptr<game::DisplayNode>> previousNodes;
-			for (shared_ptr<game::DisplayNode> node = previousContactNode; node; node = node->getParent().lock()) {
+			vector<shared_ptr<game::InteractiveObject>> previousNodes;
+			for (shared_ptr<game::InteractiveObject> node = previousContactNode; node; node = node->getParent().lock()) {
 				previousNodes.push_back(node);
 			}
 
-			vector<shared_ptr<game::DisplayNode>> currentNodes;
-			for (shared_ptr<game::DisplayNode> node = contactNode; node; node = node->getParent().lock()) {
+			vector<shared_ptr<game::InteractiveObject>> currentNodes;
+			for (shared_ptr<game::InteractiveObject> node = contactNode; node; node = node->getParent().lock()) {
 				currentNodes.push_back(node);
 			}
 
@@ -118,13 +118,13 @@ void Game::handleMouseEvent() {
 			}
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
-				[](shared_ptr<game::DisplayNode> & node) {
+				[](shared_ptr<game::InteractiveObject> & node) {
 				game::Event event(Event::MouseLeft, false, true);
 				node->dispatchEvent(&event);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
-				[](shared_ptr<game::DisplayNode> & node) {
+				[](shared_ptr<game::InteractiveObject> & node) {
 				game::Event event(Event::MouseEntered, false, true);
 				node->dispatchEvent(&event);
 			});

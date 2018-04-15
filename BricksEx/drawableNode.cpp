@@ -13,7 +13,7 @@ namespace game {
 		return false;
 	}
 
-	std::shared_ptr<sf::Drawable> DrawableNode::getDrawable() {
+	std::shared_ptr<sf::Drawable> DrawableNode::getDrawable() const {
 		return drawable;
 	}
 }

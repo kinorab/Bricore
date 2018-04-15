@@ -93,6 +93,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <DisableSpecificWarnings>4458</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)BricksEx\lib;$(SolutionDir)SFML\SFML-2.4.2x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -149,7 +150,7 @@
     <ClCompile Include="circleShapeNode.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="button.cpp" />
-    <ClCompile Include="displayNode.cpp" />
+    <ClCompile Include="interactiveObject.cpp" />
     <ClCompile Include="drawableNode.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="define.cpp" />
@@ -166,8 +167,8 @@
     <ClCompile Include="rectangleShapeNode.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="stage.cpp" />
+    <ClCompile Include="textButton.cpp" />
     <ClCompile Include="UIComponent.cpp" />
-    <ClCompile Include="UIFactory.cpp" />
     <ClCompile Include="vertexArrayNode.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -180,7 +181,7 @@
     <ClInclude Include="button.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="diagonalPoint.h" />
-    <ClInclude Include="displayNode.h" />
+    <ClInclude Include="interactiveObject.h" />
     <ClInclude Include="drawableNode.h" />
     <ClInclude Include="ellipse.h" />
     <ClInclude Include="event.h" />
@@ -197,8 +198,8 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stage.h" />
+    <ClInclude Include="textButton.h" />
     <ClInclude Include="UIComponent.h" />
-    <ClInclude Include="UIFactory.h" />
     <ClInclude Include="vertexArrayNode.h" />
   </ItemGroup>
   <ItemGroup>

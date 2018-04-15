@@ -1,50 +1,60 @@
 #include "button.h"
 #include "define.h"
 #include "intersects.h"
+#include <iostream>
 
 namespace game {
-	Button::Button()
-		:text(new sf::Text()) {
-		font.loadFromFile("arial.ttf");
-		text->setFont(font);
-		/*
-		spriteUp.setTexture(up);
-		spriteOver.setTexture(over);
-		spriteDown.setTexture(down);
-		currentSprite = &spriteUp;
-		spriteUp.setPosition(location);
-		spriteOver.setPosition(location);
-		spriteDown.setPosition(location);
 
-		setCaption(caption);
-		text.setPosition(location.x + 3, location.y + 3);
-		text.setCharacterSize(14);
-		*/
-		addChild({ text });
+	Button::Button(std::shared_ptr<sf::Drawable> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject, std::shared_ptr<game::InteractiveObject> hitObject) {
+		this->upObject = upObject;
+		this->overObject = overObject;
+		this->downObject = downObject;
+		this->hitObject = hitObject;
+		using namespace std::placeholders;
+		addEventListener(sf::Event::MouseEntered, std::bind(&Button::onMouseEntered, this, _1));
+		addEventListener(sf::Event::MouseLeft, std::bind(&Button::onMouseLeft, this, _1));
+		addEventListener(sf::Event::MouseButtonPressed, std::bind(&Button::onMousePressed, this, _1));
+		addEventListener(sf::Event::MouseButtonReleased, std::bind(&Button::onMouseReleased, this, _1));
 	}
 
-	void Button::setCurrentState(ButtonState state) {
-		currentState = state;
-		if (currentState == ButtonState::UP) {
-			currentSprite = &spriteUp;
+	Button::~Button() {
+
+	}
+
+	bool Button::containsPoint(const sf::Vector2f & point) const {
+		return hitObject->containsPoint(getTransform().getInverse().transformPoint(point));
+	}
+
+	std::shared_ptr<sf::Drawable> Button::getDrawable() const {
+		switch (currentState) {
+		case game::Button::ButtonState::UP:
+			return upObject;
+			break;
+		case game::Button::ButtonState::OVER:
+			return overObject;
+			break;
+		case game::Button::ButtonState::DOWN:
+			return downObject;
+			break;
+		default:
+			return nullptr;
+			break;
 		}
-		else if (currentState == ButtonState::OVER) {
-			currentSprite = &spriteOver;
-		}
-		else if (currentState == ButtonState::DOWN) {
-			currentSprite = &spriteDown;
-		}
 	}
 
-	void Button::setCaption(std::string caption) {
-		text->setString(caption);
+	void Button::onMouseEntered(Event * event) {
+		currentState = ButtonState::OVER;
 	}
 
-	Button::ButtonState Button::getCurrentState() {
-		return currentState;
+	void Button::onMouseLeft(Event * event) {
+		currentState = ButtonState::UP;
 	}
 
-	std::string Button::getCaption() {
-		return text->getString();
+	void Button::onMousePressed(Event *) {
+		currentState = ButtonState::DOWN;
+	}
+
+	void Button::onMouseReleased(game::Event * event) {
+		currentState = ButtonState::OVER;
 	}
 }

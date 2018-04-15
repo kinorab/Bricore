@@ -4,26 +4,26 @@
 
 namespace game {
 	class Button
-		: public UIComponent {
+		: public InteractiveObject {
 	public:
-		Button();
-		void setCaption(std::string caption);
-		std::string getCaption();
+		Button(std::shared_ptr<sf::Drawable> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject, std::shared_ptr<game::InteractiveObject> hitObject);
+		virtual ~Button();
+		virtual bool containsPoint(const sf::Vector2f & point) const override;
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 	private:
 		enum class ButtonState {
 			UP,
 			OVER,
 			DOWN
 		};
-		sf::Font font;
-		sf::Sprite spriteUp;
-		sf::Sprite spriteOver;
-		sf::Sprite spriteDown;
-		sf::FloatRect hitArea;
-		sf::Sprite * currentSprite;
-		std::shared_ptr<sf::Text> text;
 		ButtonState currentState;
-		void setCurrentState(ButtonState state);
-		ButtonState getCurrentState();
+		std::shared_ptr<sf::Drawable> upObject;
+		std::shared_ptr<sf::Drawable> overObject;
+		std::shared_ptr<sf::Drawable> downObject;
+		std::shared_ptr<game::InteractiveObject> hitObject;
+		virtual void onMouseEntered(Event * event);
+		virtual void onMouseLeft(Event * event);
+		virtual void onMousePressed(Event * event);
+		virtual void onMouseReleased(game::Event * event);
 	};
 }

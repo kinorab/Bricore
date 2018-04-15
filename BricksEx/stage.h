@@ -9,7 +9,6 @@
 #include "hud.h"
 #include "particleSystem.h"
 #include "obstacle.h"
-#include "UIFactory.h"
 
 class Stage
 	: public game::Container {

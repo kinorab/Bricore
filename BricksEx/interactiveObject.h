@@ -7,18 +7,22 @@
 namespace game {
 	class Container;
 
-	class DisplayNode {
+	class InteractiveObject
+		: public sf::Drawable,
+		public sf::Transformable {
 	public:
-		virtual ~DisplayNode();
+		virtual ~InteractiveObject();
 		virtual void addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback);
 		virtual void addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture);
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
 		virtual bool dispatchEvent(Event * event);
-		virtual std::shared_ptr<sf::Drawable> getDrawable() = 0;
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
 		virtual std::weak_ptr<Container> getParent() const;
 		virtual void initialize();
 		virtual void removeEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture);
 		virtual void setParent(std::weak_ptr<Container> parent);
+	protected:
+		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:
 		struct EventListener {
 			sf::Event::EventType type;

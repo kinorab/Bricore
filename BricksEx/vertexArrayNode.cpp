@@ -13,7 +13,7 @@ namespace game {
 		return false;
 	}
 
-	std::shared_ptr<sf::Drawable> VertexArrayNode::getDrawable() {
+	std::shared_ptr<sf::Drawable> VertexArrayNode::getDrawable() const	{
 		return vertexArray;
 	}
 }

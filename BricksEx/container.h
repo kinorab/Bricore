@@ -10,9 +10,7 @@
 namespace game {
 	class Container :
 		public std::enable_shared_from_this<Container>,
-		public game::DisplayNode,
-		public sf::Drawable,
-		public sf::Transformable {
+		public game::InteractiveObject {
 	public:
 		Container();
 		virtual ~Container() override;
@@ -22,10 +20,10 @@ namespace game {
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getChildAt(int index) const;
 		virtual int getChildIndex(const sf::Drawable * element) const;
-		virtual std::shared_ptr<DisplayNode> getChildNode(const sf::Drawable * element) const;
+		virtual std::shared_ptr<InteractiveObject> getChildNode(const sf::Drawable * element) const;
 		virtual int getChildrenCount() const;
-		virtual std::shared_ptr<DisplayNode> getContactNodeAtPoint(const sf::Vector2f & point);
-		virtual std::shared_ptr<sf::Drawable> getDrawable() override;
+		virtual std::shared_ptr<InteractiveObject> getContactNodeAtPoint(const sf::Vector2f & point);
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		virtual void initialize() override;
 		virtual void removeAllChildren();
 		virtual void removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
@@ -37,6 +35,6 @@ namespace game {
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:
-		std::vector<std::shared_ptr<DisplayNode>> children;
+		std::vector<std::shared_ptr<InteractiveObject>> children;
 	};
 }

@@ -74,11 +74,11 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	mouseLight->update(updateSpan);
 }
 
-void Stage::onMouseEntered(game::Event * event) {
+void Stage::onMouseEntered(game::Event *) {
 	GameState::light = true;
 }
 
-void Stage::onMouseLeft(game::Event * event) {
+void Stage::onMouseLeft(game::Event *) {
 	GameState::light = false;
 }
 
