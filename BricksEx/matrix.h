@@ -2,15 +2,13 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <memory>
 
 namespace sys {
 	// 2D vector
 	template<typename T, typename iter = typename std::vector<std::vector<T>>::iterator
-		, typename const_iter = typename std::vector<std::vector<T>>::const_iterator
-		, typename iter_row = typename std::vector<T>::iterator
-		, typename const_iter_row = typename std::vector<T>::const_iterator>
+	, typename const_iter = typename std::vector<std::vector<T>>::const_iterator
+	, typename iter_row = typename std::vector<T>::iterator
+	, typename const_iter_row = typename std::vector<T>::const_iterator>
 	class Matrix {
 	public:
 		Matrix(const size_t row, const size_t col);

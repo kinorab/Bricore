@@ -273,7 +273,7 @@ inline iter_row sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::begi
 }
 // element's iterator of 2D vector
 template<typename T, typename iter, typename const_iter, typename iter_row, typename const_iter_row>
-inline const_iter_row sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::begin_row(const size_t index) const noexcept{
+inline const_iter_row sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::begin_row(const size_t index) const noexcept {
 	return matrix[index].begin();
 }
 // element's iterator of 2D vector
@@ -314,8 +314,8 @@ inline typename sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::Prox
 }
 
 template<typename T, typename iter, typename const_iter, typename iter_row, typename const_iter_row>
-inline sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::Proxy::Proxy(std::vector<T>& inputVector) 
-	: outputVector(inputVector){}
+inline sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::Proxy::Proxy(std::vector<T>& inputVector)
+	: outputVector(inputVector) {}
 
 template<typename T, typename iter, typename const_iter, typename iter_row, typename const_iter_row>
 inline T & sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::Proxy::operator[](const size_t col) noexcept {
