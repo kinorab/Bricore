@@ -1,21 +1,21 @@
-#include "displayNode.h"
+#include "interactiveObject.h"
 #include "container.h"
 #include <algorithm>
 
 namespace game {
-	DisplayNode::~DisplayNode() {
+	InteractiveObject::~InteractiveObject() {
 	}
 
-	void DisplayNode::addEventListener(sf::Event::EventType type, std::function<void(Event*)> callback) {
+	void InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event*)> callback) {
 		addEventListener(type, callback, false);
 	}
 
-	void DisplayNode::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
+	void InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
 		removeEventListener(type, callback, useCapture);
 		listeners.push_back(EventListener{ type, callback, useCapture });
 	}
 
-	bool DisplayNode::dispatchEvent(Event * event) {
+	bool InteractiveObject::dispatchEvent(Event * event) {
 		Event::DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 
@@ -61,14 +61,15 @@ namespace game {
 		return !event->getDefaultPrevented();
 	}
 
-	std::weak_ptr<Container> DisplayNode::getParent() const {
+	std::weak_ptr<Container> InteractiveObject::getParent() const {
 		return parent;
 	}
 
-	void DisplayNode::initialize() {
+	void InteractiveObject::initialize() {
+
 	}
 
-	void DisplayNode::removeEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
+	void InteractiveObject::removeEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
 		listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
 			[&](EventListener & listener) {
 			return listener.type == type
@@ -77,7 +78,11 @@ namespace game {
 		}), listeners.end());
 	}
 
-	void DisplayNode::setParent(std::weak_ptr<Container> container) {
+	void InteractiveObject::setParent(std::weak_ptr<Container> container) {
 		parent = std::move(container);
+	}
+
+	void InteractiveObject::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+		target.draw(*getDrawable(), states.transform.combine(getTransform()));
 	}
 }

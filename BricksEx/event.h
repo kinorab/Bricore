@@ -12,7 +12,7 @@ namespace game {
 		BUBBLING_PHASE,
 	};
 
-	class DisplayNode;
+	class InteractiveObject;
 
 	class Event
 		:public sf::Event {
@@ -21,9 +21,9 @@ namespace game {
 		public:
 			explicit DispatchHelper(Event * event);
 			virtual bool isPropagationStopped();
-			virtual void setCurrentTarget(DisplayNode * target);
+			virtual void setCurrentTarget(InteractiveObject * target);
 			virtual void setPhase(EventPhase phase);
-			virtual void setTarget(DisplayNode * target);
+			virtual void setTarget(InteractiveObject * target);
 		private:
 			Event * event;
 		};
@@ -32,21 +32,21 @@ namespace game {
 		virtual ~Event();
 		virtual bool getBubbles() const;
 		virtual bool getCancelable() const;
-		virtual DisplayNode * getCurrentTarget() const;
+		virtual InteractiveObject * getCurrentTarget() const;
 		virtual bool getDefaultPrevented() const;
 		virtual EventPhase getPhase() const;
-		virtual DisplayNode * getTarget() const;
+		virtual InteractiveObject * getTarget() const;
 		virtual sf::Event::EventType getType() const;
 		virtual void stopPropagation();
 		virtual void preventDefault();
 	private:
 		bool bubbles;
 		bool cancelable;
-		DisplayNode * currentTarget;
+		InteractiveObject * currentTarget;
 		bool defaultPrevented;
 		EventPhase phase;
 		bool propagationStopped;
-		DisplayNode * target;
+		InteractiveObject * target;
 		using sf::Event::type;
 	};
 }

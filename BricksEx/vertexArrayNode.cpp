@@ -9,11 +9,11 @@ namespace game {
 
 	}
 
-	bool VertexArrayNode::containsPoint(const sf::Vector2f & point) const {
+	bool VertexArrayNode::containsPoint(const sf::Vector2f &) const {
 		return false;
 	}
 
-	std::shared_ptr<sf::Drawable> VertexArrayNode::getDrawable() {
+	std::shared_ptr<sf::Drawable> VertexArrayNode::getDrawable() const	{
 		return vertexArray;
 	}
 }

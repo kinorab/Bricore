@@ -25,9 +25,6 @@
     <ClCompile Include="define.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="displayNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="drawableNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -73,10 +70,13 @@
     <ClCompile Include="UIComponent.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="UIFactory.cpp">
+    <ClCompile Include="vertexArrayNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="vertexArrayNode.cpp">
+    <ClCompile Include="textButton.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="interactiveObject.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
@@ -106,9 +106,6 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="diagonalPoint.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="displayNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="drawableNode.h">
@@ -159,10 +156,13 @@
     <ClInclude Include="UIComponent.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="UIFactory.h">
+    <ClInclude Include="vertexArrayNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="vertexArrayNode.h">
+    <ClInclude Include="textButton.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="interactiveObject.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

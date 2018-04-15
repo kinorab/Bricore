@@ -41,6 +41,10 @@ Stage::Stage() {
 	Obstacle::setBlockSpeed(4, 3.f);
 	item::Brick::setBrickColor(sf::Color(255, 183, 197));
 	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
+	using namespace std::placeholders;
+	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
+	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
+	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMousePressed, this, _1));
 }
 
 Stage::~Stage() {
@@ -68,4 +72,25 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 
 	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
+}
+
+void Stage::onMouseEntered(game::Event *) {
+	GameState::light = true;
+}
+
+void Stage::onMouseLeft(game::Event *) {
+	GameState::light = false;
+}
+
+void Stage::onMousePressed(game::Event * event) {
+	if (!GameState::lock) {
+		if (event->mouseButton.button == sf::Mouse::Left) {
+			GameState::start = true;
+		}
+		// debugging feature
+		else if (event->mouseButton.button == sf::Mouse::Right) {
+			GameState::start = false;
+			GameState::ready = false;
+		}
+	}
 }

@@ -15,6 +15,7 @@ ContextSettings Game::settings;
 RenderWindow Game::window;
 shared_ptr<Stage> Game::stage;
 Vector2f Game::mousePosition;
+shared_ptr<game::InteractiveObject> Game::previousContactNode(nullptr);
 
 void Game::run() {
 	settleWindow();
@@ -26,7 +27,7 @@ void Game::run() {
 	window.close();
 }
 
-void Game::pushEvent(Event & event) {
+void Game::pushEvent(const Event & event) {
 	eventQueueMutex.lock();
 	eventQueue.push(event);
 	eventQueueMutex.unlock();
@@ -85,31 +86,71 @@ void Game::handleKeyEvent() {
 
 void Game::handleMouseEvent() {
 	if (currentEvent.type == Event::MouseMoved) {
-		mousePosition = window.mapPixelToCoords((Vector2i(currentEvent.mouseMove.x,currentEvent.mouseMove.y)));
-		std::shared_ptr<game::DisplayNode> node = stage->getContactNodeAtPoint(mousePosition);
-		if (node != nullptr) {
-			game::Event event(currentEvent.type, true, true);
-			event.mouseMove = currentEvent.mouseMove;
-			node->dispatchEvent(&event);
+		mousePosition = window.mapPixelToCoords((Vector2i(currentEvent.mouseMove.x, currentEvent.mouseMove.y)));
+		std::shared_ptr<game::InteractiveObject> contactNode;
+		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
+			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
+			contactNode = nullptr;
+		}
+		else {
+			contactNode = stage->getContactNodeAtPoint(mousePosition);
+			if (contactNode) {
+				game::Event event(currentEvent.type, true, true);
+				event.mouseMove = currentEvent.mouseMove;
+				contactNode->dispatchEvent(&event);
+			}
+		}
+
+		if (contactNode != previousContactNode) {
+			vector<shared_ptr<game::InteractiveObject>> previousNodes;
+			for (shared_ptr<game::InteractiveObject> node = previousContactNode; node; node = node->getParent().lock()) {
+				previousNodes.push_back(node);
+			}
+
+			vector<shared_ptr<game::InteractiveObject>> currentNodes;
+			for (shared_ptr<game::InteractiveObject> node = contactNode; node; node = node->getParent().lock()) {
+				currentNodes.push_back(node);
+			}
+
+			int sameNodeCount = 0;
+			if (previousContactNode && contactNode) {
+				for (; *(previousNodes.rbegin() + sameNodeCount) == *(currentNodes.rbegin() + sameNodeCount); sameNodeCount += 1);
+			}
+
+			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
+				[](shared_ptr<game::InteractiveObject> & node) {
+				game::Event event(Event::MouseLeft, false, true);
+				node->dispatchEvent(&event);
+			});
+
+			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
+				[](shared_ptr<game::InteractiveObject> & node) {
+				game::Event event(Event::MouseEntered, false, true);
+				node->dispatchEvent(&event);
+			});
+
+			previousContactNode = contactNode;
 		}
 	}
 	else if (currentEvent.type == Event::MouseButtonPressed) {
-		if (!GameState::lock) {
-			if (currentEvent.mouseButton.button == Mouse::Left) {
-				GameState::start = true;
-			}
-			// debugging feature
-			else if (currentEvent.mouseButton.button == Mouse::Right) {
-				GameState::start = false;
-				GameState::ready = false;
-			}
+		if (previousContactNode) {
+			game::Event event(currentEvent.type, true, true);
+			event.mouseButton = currentEvent.mouseButton;
+			previousContactNode->dispatchEvent(&event);
 		}
 	}
-	else if (currentEvent.type == Event::MouseEntered) {
-		GameState::light = true;
+	else if (currentEvent.type == Event::MouseButtonReleased) {
+		if (previousContactNode) {
+			game::Event event(currentEvent.type, true, true);
+			event.mouseButton = currentEvent.mouseButton;
+			previousContactNode->dispatchEvent(&event);
+		}
 	}
 	else if (currentEvent.type == Event::MouseLeft) {
-		GameState::light = false;
+		Event event;
+		event.type = Event::MouseMoved;
+		event.mouseMove = { -1, -1 };
+		pushEvent(event);
 	}
 }
 

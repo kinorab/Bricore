@@ -9,11 +9,11 @@ namespace game {
 
 	}
 
-	bool DrawableNode::containsPoint(const sf::Vector2f & point) const {
+	bool DrawableNode::containsPoint(const sf::Vector2f &) const {
 		return false;
 	}
 
-	std::shared_ptr<sf::Drawable> DrawableNode::getDrawable() {
+	std::shared_ptr<sf::Drawable> DrawableNode::getDrawable() const {
 		return drawable;
 	}
 }
