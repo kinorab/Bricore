@@ -1,18 +1,25 @@
 #include "interactiveObject.h"
 #include "container.h"
 #include <algorithm>
+#include <iostream>
 
 namespace game {
+	InteractiveObject::InteractiveObject()
+		:idCount(0) {
+	}
+
 	InteractiveObject::~InteractiveObject() {
 	}
 
-	void InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event*)> callback) {
-		addEventListener(type, callback, false);
+	int InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback) {
+		return addEventListener(type, callback, false);
 	}
 
-	void InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
-		removeEventListener(type, callback, useCapture);
-		listeners.push_back(EventListener{ type, callback, useCapture });
+	int InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
+		listeners[idCount] = EventListener{ type, callback, useCapture };
+		int returnId = idCount;
+		idCount += 1;
+		return returnId;
 	}
 
 	bool InteractiveObject::dispatchEvent(Event * event) {
@@ -34,13 +41,13 @@ namespace game {
 		}
 
 		if (!helper.isPropagationStopped()) {
-			std::vector<EventListener> tempListeners = listeners;
+			std::map<int, EventListener> tempListeners = listeners;
 			std::for_each(tempListeners.begin(), tempListeners.end(),
-				[&](const EventListener & listener) {
-				if (event->getType() == listener.type
-					&& !((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.useCapture)
-						|| (event->getPhase() == EventPhase::BUBBLING_PHASE && listener.useCapture))) {
-					listener.callback(event);
+				[&](const std::pair<const int, EventListener> & listener) {
+				if (event->getType() == listener.second.type
+					&& !((event->getPhase() == EventPhase::CAPTURING_PHASE && !listener.second.useCapture)
+						|| (event->getPhase() == EventPhase::BUBBLING_PHASE && listener.second.useCapture))) {
+					listener.second.callback(event);
 				}
 			});
 		}
@@ -69,13 +76,13 @@ namespace game {
 
 	}
 
-	void InteractiveObject::removeEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
-		listeners.erase(std::remove_if(listeners.begin(), listeners.end(),
-			[&](EventListener & listener) {
-			return listener.type == type
-				&& *listener.callback.target<void(Event *)>() == *callback.target<void(Event *)>()
-				&& listener.useCapture == useCapture;
-		}), listeners.end());
+	void InteractiveObject::removeEventListener(sf::Event::EventType type, int id, bool useCapture) {
+		listeners.erase(std::find_if(listeners.begin(), listeners.end(),
+			[&](std::pair<const int, EventListener> & listener) {
+			return listener.second.type == type
+				&& listener.first == id
+				&& listener.second.useCapture == useCapture;
+		}));
 	}
 
 	void InteractiveObject::setParent(std::weak_ptr<Container> container) {

@@ -42,11 +42,11 @@ namespace game {
 		}
 	}
 
-	void Button::onMouseEntered(Event * event) {
+	void Button::onMouseEntered(Event *) {
 		currentState = ButtonState::OVER;
 	}
 
-	void Button::onMouseLeft(Event * event) {
+	void Button::onMouseLeft(Event *) {
 		currentState = ButtonState::UP;
 	}
 
@@ -54,7 +54,7 @@ namespace game {
 		currentState = ButtonState::DOWN;
 	}
 
-	void Button::onMouseReleased(game::Event * event) {
+	void Button::onMouseReleased(game::Event *) {
 		currentState = ButtonState::OVER;
 	}
 }
