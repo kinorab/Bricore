@@ -1,8 +1,261 @@
 #include "levelDeploy.h"
 #include "define.h"
+#include "brick.h"
+#include "obstacle.h"
+#include <SFML/Graphics/Color.hpp>
 #include <iostream>
 
+float LVDeploy::blockLength(100.f);
+float LVDeploy::incre1(3.f);
 size_t LVDeploy::level = 1;
+sys::Matrix<sf::Vector2f> LVDeploy::blockPositionDeploy({
+	// level 1
+	{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1 * 1.75f)
+	, sf::Vector2f((LEVEL_WIDTH - blockLength) / 2 , (LEVEL_HEIGHT - blockLength * incre1) / 2) }
+	// level 2
+	, { sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)}
+	// level 3
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)}
+	// level 4
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f((LEVEL_WIDTH - blockLength) / 2 , (LEVEL_HEIGHT - blockLength * incre1) / 2) }
+	// level 5
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f(blockLength * 2, blockLength * incre1 * 1.5f) }
+	// level 6
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 4, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1 * 1.75f)
+	, sf::Vector2f((LEVEL_WIDTH - blockLength) / 2 , (LEVEL_HEIGHT - blockLength * incre1) / 2) }
+	// level 7
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1 * 1.75f)
+	, sf::Vector2f((LEVEL_WIDTH - blockLength) / 2 , (LEVEL_HEIGHT - blockLength * incre1) / 2) }
+	// level 8
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f((LEVEL_WIDTH - blockLength) / 2 , (LEVEL_HEIGHT - blockLength * incre1) / 2) }
+	// level 9
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1 * 1.75f)
+	, sf::Vector2f((LEVEL_WIDTH - blockLength) / 2 , (LEVEL_HEIGHT - blockLength * incre1) / 2) }
+	// level 10
+	,{ sf::Vector2f(blockLength, blockLength * incre1)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.75f)
+	, sf::Vector2f(LEVEL_WIDTH - blockLength * 2, blockLength * incre1 * 1.75f)
+	, sf::Vector2f((LEVEL_WIDTH - blockLength) / 2 , (LEVEL_HEIGHT - blockLength * incre1) / 2) }
+	});
+sys::Matrix<sf::Vector2f> LVDeploy::blockSideLengthDeploy({
+	// level 1
+	{ sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.25f) }
+	// level 2
+	, { sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.2f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.2f) }
+	// level 3
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.3f) }
+	// level 4
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.7f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.6f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.25f) }
+	// level 5
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.4f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.7f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.6f) }
+	// level 6
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.1f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.3f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.f)
+	, sf::Vector2f(blockLength * 2, blockLength * incre1 * 0.5f) }
+	// level 7
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.6f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.4f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.6f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.f) }
+	// level 8
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.5f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.4f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.6f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.75f)
+ }
+	// level 9
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.23f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.45f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.65f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.7f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.f) }
+	// level 10
+	,{ sf::Vector2f(blockLength, blockLength * incre1 * 0.7f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.7f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.7f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 0.7f)
+	, sf::Vector2f(blockLength, blockLength * incre1 * 1.0f) }
+	});
+sys::Matrix<sf::Color> LVDeploy::blockColorDeploy({
+	// level 1
+	{ sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black
+	, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan
+	, sf::Color::Magenta, sf::Color::Black, sf::Color::Red, sf::Color::White
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Black }
+	// level 2
+	, { sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black
+	, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Black }
+	// level 3
+	, { sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan
+	, sf::Color::Magenta, sf::Color::Black, sf::Color::Red, sf::Color::White
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Black }
+	// level 4
+	, { sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black
+	, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Black }
+	// level 5
+	, { sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan
+	, sf::Color::Magenta, sf::Color::Black, sf::Color::Red, sf::Color::White
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Black }
+	// level 6
+	, { sf::Color::Black, sf::Color::Blue, sf::Color::Black, sf::Color::Black
+	, sf::Color::Green, sf::Color::Black, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan
+	, sf::Color::Magenta, sf::Color::Black, sf::Color::Red, sf::Color::White
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Black
+	, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, sf::Color::Black }
+	// level 7
+	, { sf::Color::Magenta, sf::Color::Blue, sf::Color::Black, sf::Color::Black
+	, sf::Color::Green, sf::Color::Magenta, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan
+	, sf::Color::Magenta, sf::Color::Black, sf::Color::Magenta, sf::Color::White
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Magenta }
+	// level 8
+	, { sf::Color::Black, sf::Color::Red, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Red, sf::Color::Black, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Magenta, sf::Color::Cyan, sf::Color::Red, sf::Color::White
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Red }
+	// level 9
+	, { sf::Color::Yellow, sf::Color::Blue, sf::Color::Black, sf::Color::Yellow
+	, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan, sf::Color::Blue
+	, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Cyan
+	, sf::Color::Magenta, sf::Color::Yellow, sf::Color::Red, sf::Color::Blue
+	, sf::Color::White, sf::Color::Black, sf::Color::White, sf::Color::Yellow }
+	// level 10
+	, { sf::Color::Black, sf::Color::Blue, sf::Color::Cyan, sf::Color::Magenta
+	, sf::Color::Green, sf::Color::Cyan, sf::Color::Cyan, sf::Color::Black
+	, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow, sf::Color::Magenta
+	, sf::Color::Magenta, sf::Color::Black, sf::Color::Red, sf::Color::White
+	, sf::Color::White, sf::Color::Cyan, sf::Color::White, sf::Color::Black }
+	});
+sys::Matrix<sf::Vector2f> LVDeploy::blockSpeedDeploy({
+	// level 1
+	{ sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(2.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	// level 2
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	// level 3
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	// level 4
+	, { sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(2.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	// level 5
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	// level 6
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(2.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) 
+	, sf::Vector2f(-3.f, 0) }
+	// level 7
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(2.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	// level 8
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(2.5f, 0)
+	, sf::Vector2f(-2.5f, 0)}
+	// level 9
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(2.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	// level 10
+	, { sf::Vector2f(1.5f, 0)
+	, sf::Vector2f(-1.5f, 0)
+	, sf::Vector2f(2.5f, 0)
+	, sf::Vector2f(-2.5f, 0)
+	, sf::Vector2f(3.f, 0) }
+	});
+sys::Matrix<sf::Color> LVDeploy::brickColorDeploy({
+	// level 1
+	{ sf::Color(255, 183, 197) }
+	// level 2
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 3
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 4
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 5
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 6
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 7
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 8
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 9
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	// level 10
+	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
+	});
+
 
 LVDeploy::LVDeploy() { }
 
@@ -15,4 +268,55 @@ void LVDeploy::finishLevel() {
 
 const size_t LVDeploy::getLevel() {
 	return level;
+}
+
+void LVDeploy::changeBrickD() noexcept {
+	item::Brick::reset(level, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f);
+	item::Brick::setBrickColor(getBrickCD().at(0));
+}
+
+void LVDeploy::changeObstacleD() noexcept {
+	Obstacle::reset(getBlockPD(), getBlockSLD());
+	Obstacle::setAllVerticeColor(getBlockCD());
+	Obstacle::setAllSpeed(getBlockSD());
+}
+
+const std::vector<sf::Vector2f> LVDeploy::getBlockSLD() noexcept {
+	std::vector<sf::Vector2f> temp;
+	std::for_each(blockSideLengthDeploy.begin_row(level - 1), blockSideLengthDeploy.end_row(level - 1), [&](const sf::Vector2f &element) {
+		temp.push_back(element);
+	});
+	return temp;
+}
+
+const std::vector<sf::Vector2f> LVDeploy::getBlockPD() noexcept {
+	std::vector<sf::Vector2f> temp;
+	std::for_each(blockPositionDeploy.begin_row(level - 1), blockPositionDeploy.end_row(level - 1), [&](const sf::Vector2f &element) {
+		temp.push_back(element);
+	});
+	return temp;
+}
+
+const std::vector<sf::Color> LVDeploy::getBlockCD() noexcept {
+	std::vector<sf::Color> temp;
+	std::for_each(blockColorDeploy.begin_row(level - 1), blockColorDeploy.end_row(level - 1), [&](const sf::Color &element) {
+		temp.push_back(element);
+	});
+	return temp;
+}
+
+const std::vector<sf::Vector2f> LVDeploy::getBlockSD() noexcept {
+	std::vector<sf::Vector2f> temp;
+	std::for_each(blockSpeedDeploy.begin_row(level - 1), blockSpeedDeploy.end_row(level - 1), [&](const sf::Vector2f &element) {
+		temp.push_back(element);
+	});
+	return temp;
+}
+
+const std::vector<sf::Color> LVDeploy::getBrickCD() noexcept {
+	std::vector<sf::Color> temp;
+	std::for_each(brickColorDeploy.begin_row(level - 1), brickColorDeploy.end_row(level - 1), [&](const sf::Color &element) {
+		temp.push_back(element);
+	});
+	return temp;
 }

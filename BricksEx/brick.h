@@ -12,9 +12,7 @@ namespace item {
 
 	public:
 
-		Brick(const size_t rowCount, const float width, const float height
-			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
-
+		Brick();
 		static void update();
 		static void loadImage(const std::string fileName);
 		static void deleteImage(const std::string fileName);

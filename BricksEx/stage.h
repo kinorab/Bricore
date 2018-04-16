@@ -16,9 +16,8 @@ public:
 	Stage();
 	virtual ~Stage();
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
+
 private:
-	static float blockLength;
-	static float incre1;
 	static std::shared_ptr<item::Ball> ball;
 	static std::shared_ptr<item::Brick> bricks;
 	static std::shared_ptr<HUD> hud;

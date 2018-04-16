@@ -1,6 +1,7 @@
 #include "obstacle.h"
 #include "define.h"
 #include "intersects.h"
+#include "levelDeploy.h"
 #include "ball.h"
 #include "brick.h"
 #include "player.h"
@@ -13,12 +14,16 @@ RectangleShape Obstacle::blocksArea;
 std::vector <std::unique_ptr<item::Block>> Obstacle::blocks;
 
 // unity of Block-->Obstacle
-Obstacle::Obstacle(const vector <Vector2f> &position, const vector <Vector2f> &sideLength) {
+Obstacle::Obstacle() { 
+	LVDeploy::changeObstacleD();
+}
 
+void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f> & sideLength) {
 	try {
 		if (position.size() == sideLength.size()) {
-			for (size_t i = 0; i < position.size(); ++i) {
-				blocks.push_back(unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y)));
+			blocks.resize(position.size());
+			for (size_t i = 0; i < blocks.size(); ++i) {
+				blocks.at(i) = unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
 			}
 			setBlocksAreaDP(sys::DPointf(Vector2f(0.0f, item::Brick::getBrickAreaDP().dot2.y + AREAINTERVAL)
 				, Vector2f(LEVEL_WIDTH, Player::getPlayerAreaDP().dot1.y - AREAINTERVAL)));
@@ -31,6 +36,7 @@ Obstacle::Obstacle(const vector <Vector2f> &position, const vector <Vector2f> &s
 		cout << "Exception: " << ex.what() << endl;
 	}
 }
+
 
 void Obstacle::update() {
 
@@ -46,7 +52,7 @@ void Obstacle::update() {
 		}
 	}
 	if (GameState::finishLevel) {
-	//	reset()
+		LVDeploy::changeObstacleD();
 	}
 }
 
@@ -75,6 +81,17 @@ void Obstacle::setAllColor(const vector<Color>& color) {
 	try {
 		for (size_t i = 0; i < blocks.size(); ++i) {
 			blocks.at(i)->setVerticeColor(color.at(i));
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Exception: " << ex.what() << endl;
+	}
+}
+
+void Obstacle::setAllVerticeColor(const std::vector<sf::Color>& vertice) {
+	try {
+		for (size_t i = 0, j = 1; i < blocks.size(); ++i, ++j) {
+			blocks.at(i)->setVerticeColor(vertice.at(4 * j - 4), vertice.at(4 * j - 3), vertice.at(4 * j - 2), vertice.at(4 * j - 1));
 		}
 	}
 	catch (out_of_range &ex) {
@@ -197,23 +214,4 @@ void Obstacle::blockCollision(const size_t number) {
 		cout << "Exception: " << ex.what() << endl;
 	}
 
-}
-
-void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f> & sideLength) {
-	try {
-		if (position.size() == sideLength.size()) {
-			blocks.resize(position.size());
-			for (size_t i = 0; i < blocks.size(); ++i) {
-				blocks.at(i) = unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
-			}
-			setBlocksAreaDP(sys::DPointf(Vector2f(0.0f, item::Brick::getBrickAreaDP().dot2.y + AREAINTERVAL)
-				, Vector2f(LEVEL_WIDTH, Player::getPlayerAreaDP().dot1.y - AREAINTERVAL)));
-		}
-		else {
-			throw out_of_range("Position size not equal to side-length size.");
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
 }

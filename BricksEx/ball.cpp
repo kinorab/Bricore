@@ -2,7 +2,6 @@
 #include "brick.h"
 #include "obstacle.h"
 #include "define.h"
-#include "matrix.h"
 #include "intersects.h"
 #include <algorithm>
 #include <iostream>
@@ -18,21 +17,6 @@ std::vector<std::unique_ptr<Ball::BallContainer>> Ball::balls;
 
 Ball::Ball() {
 	balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
-	sys::vector2D<size_t> L({ { 1, 2, 3, 4, 5, 6 }
-		, { 7, 8, 9, 10, 11, 12 }
-		, { 13, 14, 15, 16 }
-		, { 17, 18, 19 }
-		, { 20, 21, 22, 23, 24, 25 }
-		, { 26, 27 } });
-	std::cout << L << std::endl;
-	std::cout << L[2][3] << std::endl;
-	std::cout << L.at(2, 3) << std::endl;
-	L.swap_row(2, 3);
-	std::cout << L << std::endl;
-	std::cout << L.size() << std::endl;
-	sys::vector2D<size_t> M({ {1, 2}, {3, 4} });
-	L = M;
-	std::cout << L << std::endl;
 }
 
 void Ball::update(const sys::DPointf &playerDP) {
@@ -137,12 +121,13 @@ const bool Ball::isBallEnteredBricksArea(const size_t number) {
 void Ball::ballDivided(const size_t numbers) {
 
 	try {
-		const Vector2f mainPos = balls.at(0)->getPos();
+		const Vector2f mainPos(balls.at(0)->getPos());
+		const Vector2f mainSpeed(balls.at(0)->getSpeedX(), balls.at(0)->getSpeedY());
 		for (size_t i = 0; i < numbers; ++i) {
 			balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
 			balls.at(balls.size() - 1)->setPos(mainPos);
-			balls.at(balls.size() - 1)->setSpeedX(1.f * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
-			balls.at(balls.size() - 1)->setSpeedY(1.f * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
+			balls.at(balls.size() - 1)->setSpeedX(mainSpeed.x * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
+			balls.at(balls.size() - 1)->setSpeedY(mainSpeed.y * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
 		}
 		ballStartC = false;
 		multiple = true;

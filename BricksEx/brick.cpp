@@ -20,40 +20,7 @@ Vector2f Brick::whiteSpace(0.0f, 0.0f);
 bool Brick::changeEntity(false);
 RectangleShape Brick::bricksArea;
 
-Brick::Brick(const size_t rowCount, const float wid, const float hei, const Vector2f &interval, const float frameSize, const float whiteSpaceY) {
-
-	try {
-		if (wid <= 0.0f || hei <= 0.0f
-			|| interval.x < 0.0f || interval.y < 0.0f
-			|| frameSize < 0.0f || whiteSpaceY < 0.0f) {
-			throw invalid_argument("Invaild brick initialization.");
-		}
-		else {
-			sideLength = Vector2f(wid, hei);
-			this->rowCount = rowCount;
-			frame = frameSize;
-			this->interval = interval;
-			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
-			whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
-			whiteSpace.y = whiteSpaceY;
-			bricks.resize(rowCount * amount);
-
-			if (getBricksSize() == rowCount * amount) {
-				changeEntity = true;
-				settlePlace();
-			}
-			else {
-				throw out_of_range("The subscripts are out of range.");
-			}
-		}
-	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
-	}
-	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
-	}
-}
+Brick::Brick() { LVDeploy::changeBrickD(); }
 
 void Brick::loadImage(const string fileName) {
 	levelImage.emplace(fileName, new Texture());
@@ -197,8 +164,7 @@ void Brick::update() {
 	}
 	else {
 		LVDeploy::finishLevel();
-		reset(LVDeploy::getLevel());
-		setBrickColor(sf::Color(rng() % 255, rng() % 255, rng() % 255));
+		LVDeploy::changeBrickD();
 	}
 }
 
