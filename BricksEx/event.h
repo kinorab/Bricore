@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <variant>
 #include <SFML\Window\Event.hpp>
 
 namespace game {
@@ -14,8 +15,7 @@ namespace game {
 
 	class InteractiveObject;
 
-	class Event
-		:public sf::Event {
+	class Event {
 	public:
 		class DispatchHelper {
 		public:
@@ -39,6 +39,18 @@ namespace game {
 		virtual sf::Event::EventType getType() const;
 		virtual void stopPropagation();
 		virtual void preventDefault();
+		std::variant<
+			sf::Event::SizeEvent,             //< Size event parameters (Event::Resized)
+			sf::Event::KeyEvent,			  //< Key event parameters (Event::KeyPressed, Event::KeyReleased)
+			sf::Event::TextEvent,			  //< Text event parameters (Event::TextEntered)
+			sf::Event::MouseMoveEvent,		  //< Mouse move event parameters (Event::MouseMoved)
+			sf::Event::MouseButtonEvent,	  //< Mouse button event parameters (Event::MouseButtonPressed, Event::MouseButtonReleased)
+			sf::Event::MouseWheelScrollEvent, //< Mouse wheel event parameters (Event::MouseWheelScrolled)
+			sf::Event::JoystickMoveEvent,	  //< Joystick move event parameters (Event::JoystickMoved)
+			sf::Event::JoystickButtonEvent,	  //< Joystick button event parameters (Event::JoystickButtonPressed, Event::JoystickButtonReleased)
+			sf::Event::JoystickConnectEvent,  //< Joystick (dis)connect event parameters (Event::JoystickConnected, Event::JoystickDisconnected)
+			sf::Event::TouchEvent,			  //< Touch events parameters (Event::TouchBegan, Event::TouchMoved, Event::TouchEnded)
+			sf::Event::SensorEvent> data;	  //< Sensor event parameters (Event::SensorChanged)
 	private:
 		bool bubbles;
 		bool cancelable;
@@ -47,6 +59,6 @@ namespace game {
 		EventPhase phase;
 		bool propagationStopped;
 		InteractiveObject * target;
-		using sf::Event::type;
+		sf::Event::EventType type;
 	};
 }

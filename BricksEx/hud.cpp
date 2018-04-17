@@ -34,7 +34,10 @@ HUD::HUD() {
 	button->setPosition(LEVEL_WIDTH + 20, 400);
 	button->addEventListener(sf::Event::MouseButtonPressed,
 		[](game::Event * event) {
-		std::cout << "Mouse Pressed: " << event->mouseButton.button << ", x: " << event->mouseButton.x << ", y: " << event->mouseButton.y << std::endl;
+		std::cout << "Mouse Pressed: " << std::get<sf::Event::MouseButtonEvent>(event->data).button
+			<< ", x: " << std::get<sf::Event::MouseButtonEvent>(event->data).x
+			<< ", y: " << std::get<sf::Event::MouseButtonEvent>(event->data).y
+			<< std::endl;
 	});
 	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3), button });
 }

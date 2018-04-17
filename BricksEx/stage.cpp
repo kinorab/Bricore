@@ -54,7 +54,7 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 }
 
 void Stage::onKeyPressed(game::Event * event) {
-	if (event->key.code == sf::Keyboard::P) {
+	if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::P) {
 		GameState::pause = !GameState::pause;
 		GameState::lock = !GameState::lock;
 	}
@@ -63,7 +63,7 @@ void Stage::onKeyPressed(game::Event * event) {
 		return;
 	}
 	else {
-		if (event->key.code == sf::Keyboard::G) {
+		if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::G) {
 			GameState::start = true;
 		}
 	}
@@ -83,11 +83,11 @@ void Stage::onMouseLeft(game::Event *) {
 
 void Stage::onMouseButtonPressed(game::Event * event) {
 	if (!GameState::lock) {
-		if (event->mouseButton.button == sf::Mouse::Left) {
+		if (std::get<sf::Event::MouseButtonEvent>(event->data).button == sf::Mouse::Left) {
 			GameState::start = true;
 		}
 		// debugging feature
-		else if (event->mouseButton.button == sf::Mouse::Right) {
+		else if (std::get<sf::Event::MouseButtonEvent>(event->data).button == sf::Mouse::Right) {
 			GameState::start = false;
 			GameState::ready = false;
 		}

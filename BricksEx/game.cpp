@@ -71,7 +71,7 @@ void Game::handleKeyEvent() {
 	}
 
 	game::Event event(currentEvent.type, false, true);
-	event.key = currentEvent.key;
+	event.data = currentEvent.key;
 	stage->dispatchEvent(&event);
 }
 
@@ -87,7 +87,7 @@ void Game::handleMouseEvent() {
 			contactNode = stage->getObjectUnderPoint(mousePosition);
 			if (contactNode) {
 				game::Event event(currentEvent.type, true, true);
-				event.mouseMove = currentEvent.mouseMove;
+				event.data = currentEvent.mouseMove;
 				contactNode->dispatchEvent(&event);
 			}
 		}
@@ -126,14 +126,14 @@ void Game::handleMouseEvent() {
 	else if (currentEvent.type == Event::MouseButtonPressed) {
 		if (previousContactNode) {
 			game::Event event(currentEvent.type, true, true);
-			event.mouseButton = currentEvent.mouseButton;
+			event.data = currentEvent.mouseButton;
 			previousContactNode->dispatchEvent(&event);
 		}
 	}
 	else if (currentEvent.type == Event::MouseButtonReleased) {
 		if (previousContactNode) {
 			game::Event event(currentEvent.type, true, true);
-			event.mouseButton = currentEvent.mouseButton;
+			event.data = currentEvent.mouseButton;
 			previousContactNode->dispatchEvent(&event);
 		}
 	}
