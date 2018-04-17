@@ -17,7 +17,7 @@ std::shared_ptr<ParticleSystem> Stage::mouseLight(new ParticleSystem(2000));
 std::shared_ptr<Player> Stage::player(new Player());
 std::shared_ptr<Obstacle> Stage::obstacles(new Obstacle());
 
-Stage::Stage() {
+void Stage::run() {
 	HUD::setBackgroundColor(sf::Color(210, 210, 210));
 	item::Ball::followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
@@ -27,6 +27,7 @@ Stage::Stage() {
 	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
 	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
 	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
+	initialize();
 }
 
 Stage::~Stage() {

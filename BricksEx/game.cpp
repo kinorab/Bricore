@@ -1,6 +1,7 @@
 #include "game.h"
 #include "audio.h"
 #include "define.h"
+#include <iostream>
 #include <Windows.h>
 
 using namespace sf;
@@ -14,7 +15,7 @@ thread Game::renderThread;
 Event Game::currentEvent;
 ContextSettings Game::settings;
 RenderWindow Game::window;
-shared_ptr<Stage> Game::stage;
+shared_ptr<Stage> Game::stage(new Stage());
 Vector2f Game::mousePosition;
 shared_ptr<game::InteractiveObject> Game::previousContactNode(nullptr);
 
@@ -154,8 +155,7 @@ void Game::renderFunc() {
 		keyDown.insert({ i, false });
 	}
 
-	stage.reset(new Stage());
-	stage->initialize();
+	stage->run();
 	Time elapsed = milliseconds(0);
 	Clock clock;
 	bool finishing = false;
@@ -177,7 +177,7 @@ void Game::renderFunc() {
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			stage->update(updateSpan, mousePosition);
+			Stage::update(updateSpan, mousePosition);
 			elapsed -= seconds(updateSpan / 1000.0f);
 		}
 
