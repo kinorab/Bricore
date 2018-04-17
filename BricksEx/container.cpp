@@ -74,7 +74,7 @@ namespace game {
 		return children.size();
 	}
 
-	std::shared_ptr<InteractiveObject> Container::getContactNodeAtPoint(const sf::Vector2f & point) {
+	std::shared_ptr<InteractiveObject> Container::getObjectUnderPoint(const sf::Vector2f & point) {
 		std::shared_ptr<Container> node = shared_from_this();
 		bool found = false;
 		do {

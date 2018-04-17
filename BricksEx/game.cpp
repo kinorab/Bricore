@@ -64,24 +64,15 @@ void Game::handleKeyEvent() {
 	if (currentEvent.type == Event::KeyPressed) {
 		if (keyDown[currentEvent.key.code]) return;
 		keyDown[currentEvent.key.code] = true;
-		if (keyDown[Keyboard::P]) {
-			GameState::pause = !GameState::pause;
-			GameState::lock = !GameState::lock;
-		}
-
-		if (GameState::lock) {
-			return;
-		}
-		else {
-			if (keyDown[Keyboard::G]) {
-				GameState::start = true;
-			}
-		}
 	}
 	else if (currentEvent.type == Event::KeyReleased) {
 		if (!keyDown[currentEvent.key.code]) return;
 		keyDown[currentEvent.key.code] = false;
 	}
+
+	game::Event event(currentEvent.type, false, true);
+	event.key = currentEvent.key;
+	stage->dispatchEvent(&event);
 }
 
 void Game::handleMouseEvent() {
@@ -93,7 +84,7 @@ void Game::handleMouseEvent() {
 			contactNode = nullptr;
 		}
 		else {
-			contactNode = stage->getContactNodeAtPoint(mousePosition);
+			contactNode = stage->getObjectUnderPoint(mousePosition);
 			if (contactNode) {
 				game::Event event(currentEvent.type, true, true);
 				event.mouseMove = currentEvent.mouseMove;

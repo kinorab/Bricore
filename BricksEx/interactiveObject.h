@@ -20,7 +20,7 @@ namespace game {
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
 		virtual std::weak_ptr<Container> getParent() const;
 		virtual void initialize();
-		virtual void removeEventListener(sf::Event::EventType type, int id, bool useCapture);
+		virtual void removeEventListener(int id);
 		virtual void setParent(std::weak_ptr<Container> parent);
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;

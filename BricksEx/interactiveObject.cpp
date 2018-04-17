@@ -76,12 +76,10 @@ namespace game {
 
 	}
 
-	void InteractiveObject::removeEventListener(sf::Event::EventType type, int id, bool useCapture) {
+	void InteractiveObject::removeEventListener(int id) {
 		listeners.erase(std::find_if(listeners.begin(), listeners.end(),
 			[&](std::pair<const int, EventListener> & listener) {
-			return listener.second.type == type
-				&& listener.first == id
-				&& listener.second.useCapture == useCapture;
+			return listener.first == id;
 		}));
 	}
 

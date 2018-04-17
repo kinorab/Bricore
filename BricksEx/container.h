@@ -22,7 +22,7 @@ namespace game {
 		virtual int getChildIndex(const sf::Drawable * element) const;
 		virtual std::shared_ptr<InteractiveObject> getChildNode(const sf::Drawable * element) const;
 		virtual int getChildrenCount() const;
-		virtual std::shared_ptr<InteractiveObject> getContactNodeAtPoint(const sf::Vector2f & point);
+		virtual std::shared_ptr<InteractiveObject> getObjectUnderPoint(const sf::Vector2f & point);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		virtual void initialize() override;
 		virtual void removeAllChildren();

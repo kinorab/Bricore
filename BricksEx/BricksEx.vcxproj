@@ -167,6 +167,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="textButton.cpp" />
+    <ClCompile Include="textField.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="vertexArrayNode.cpp" />
   </ItemGroup>
@@ -197,6 +198,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="textButton.h" />
+    <ClInclude Include="textField.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="vertexArrayNode.h" />
   </ItemGroup>

@@ -19,9 +19,11 @@ Stage::Stage() {
 	item::Ball::followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
 	using namespace std::placeholders;
+	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
+	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
 	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
 	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
-	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMousePressed, this, _1));
+	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
 }
 
 Stage::~Stage() {
@@ -51,6 +53,26 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	mouseLight->update(updateSpan);
 }
 
+void Stage::onKeyPressed(game::Event * event) {
+	if (event->key.code == sf::Keyboard::P) {
+		GameState::pause = !GameState::pause;
+		GameState::lock = !GameState::lock;
+	}
+
+	if (GameState::lock) {
+		return;
+	}
+	else {
+		if (event->key.code == sf::Keyboard::G) {
+			GameState::start = true;
+		}
+	}
+}
+
+void Stage::onKeyReleased(game::Event * event){
+
+}
+
 void Stage::onMouseEntered(game::Event *) {
 	GameState::light = true;
 }
@@ -59,7 +81,7 @@ void Stage::onMouseLeft(game::Event *) {
 	GameState::light = false;
 }
 
-void Stage::onMousePressed(game::Event * event) {
+void Stage::onMouseButtonPressed(game::Event * event) {
 	if (!GameState::lock) {
 		if (event->mouseButton.button == sf::Mouse::Left) {
 			GameState::start = true;

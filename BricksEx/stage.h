@@ -24,7 +24,9 @@ private:
 	static std::shared_ptr<ParticleSystem> mouseLight;
 	static std::shared_ptr<Obstacle> obstacles;
 	static std::shared_ptr<Player> player;
+	virtual void onKeyPressed(game::Event * event);
+	virtual void onKeyReleased(game::Event * event);
 	virtual void onMouseEntered(game::Event * event);
 	virtual void onMouseLeft(game::Event * event);
-	virtual void onMousePressed(game::Event * event);
+	virtual void onMouseButtonPressed(game::Event * event);
 };
