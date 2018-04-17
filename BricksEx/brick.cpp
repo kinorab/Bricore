@@ -20,7 +20,9 @@ Vector2f Brick::whiteSpace(0.0f, 0.0f);
 bool Brick::changeEntity(false);
 RectangleShape Brick::bricksArea;
 
-Brick::Brick() { LVDeploy::changeBrickD(); }
+Brick::Brick() { 
+	LVDeploy::changeBrickD();
+}
 
 void Brick::loadImage(const string fileName) {
 	levelImage.emplace(fileName, new Texture());

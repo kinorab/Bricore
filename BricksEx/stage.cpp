@@ -1,5 +1,12 @@
 #include "stage.h"
+#include "define.h"
 #include "audio.h"
+#include "hud.h"
+#include "particleSystem.h"
+#include "obstacle.h"
+#include "ball.h"
+#include "player.h"
+#include "brick.h"
 #include "levelDeploy.h"
 #include <iostream>
 
@@ -11,10 +18,6 @@ std::shared_ptr<Player> Stage::player(new Player());
 std::shared_ptr<Obstacle> Stage::obstacles(new Obstacle());
 
 Stage::Stage() {
-	/*
-	Audio::bgmusic.play();
-	Audio::bgmusic.setLoop(true);
-	*/
 	HUD::setBackgroundColor(sf::Color(210, 210, 210));
 	item::Ball::followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
@@ -84,6 +87,7 @@ void Stage::onMouseLeft(game::Event *) {
 void Stage::onMouseButtonPressed(game::Event * event) {
 	if (!GameState::lock) {
 		if (std::get<sf::Event::MouseButtonEvent>(event->data).button == sf::Mouse::Left) {
+			// debugging feature
 			GameState::start = true;
 		}
 		// debugging feature

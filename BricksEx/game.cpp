@@ -1,5 +1,6 @@
 #include "game.h"
 #include "audio.h"
+#include "define.h"
 #include <Windows.h>
 
 using namespace sf;

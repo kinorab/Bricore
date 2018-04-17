@@ -1,14 +1,14 @@
 #pragma once
-
-#include "ball.h"
-#include "player.h"
-#include "brick.h"
 #include "container.h"
-#include "define.h"
-#include "ellipse.h"
-#include "hud.h"
-#include "particleSystem.h"
-#include "obstacle.h"
+
+namespace item {
+	class Ball;
+	class Brick;
+}
+class HUD;
+class ParticleSystem;
+class Obstacle;
+class Player;
 
 class Stage
 	: public game::Container {

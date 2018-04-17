@@ -79,7 +79,9 @@
     <ClCompile Include="interactiveObject.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="textField.cpp" />
+    <ClCompile Include="textField.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
