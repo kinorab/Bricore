@@ -17,10 +17,6 @@ namespace GameState {
 	bool lock = false;
 };
 
-const int rng() {
-	return rng(std::numeric_limits<int>().min(), std::numeric_limits<int>().max());
-}
-
 const int rng(const int lowerLimit, const int upperLimit) {
 	static thread_local std::mt19937 generator(static_cast<std::mt19937::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
 	const std::uniform_int_distribution<> dist(lowerLimit, upperLimit);
@@ -28,7 +24,7 @@ const int rng(const int lowerLimit, const int upperLimit) {
 }
 
 const int prng(const int lowerLimit) {
-	return rng(lowerLimit, std::numeric_limits<int>().max());
+	return rng(lowerLimit);
 }
 
 void getPlayedTime() {

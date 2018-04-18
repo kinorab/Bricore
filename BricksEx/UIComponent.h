@@ -7,5 +7,9 @@ namespace game {
 		: public game::Container {
 	public:
 		virtual ~UIComponent() {}
+		virtual bool getEnabled() const;
+		virtual void setEnabled(bool value);
+	private:
+		bool enabled;
 	};
 }
