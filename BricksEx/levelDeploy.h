@@ -30,11 +30,12 @@ private:
 	static const std::vector<sf::Color> getBlockCD() noexcept;
 	static const std::vector<sf::Vector2f> getBlockSD() noexcept;
 	static const std::vector<sf::Color> getBrickCD() noexcept;
+	static const std::vector<float> getBrickD() noexcept;
 	static sys::Matrix<sf::Vector2f> blockPositionDeploy;
 	static sys::Matrix<sf::Vector2f> blockSideLengthDeploy;
 	static sys::Matrix<sf::Color> blockColorDeploy;
 	static sys::Matrix<sf::Vector2f> blockSpeedDeploy;
 	// temp settings
-	static std::vector<item::Brick> brickDeploy;
+	static sys::Matrix<float> brickDeploy;
 	static sys::Matrix<sf::Color> brickColorDeploy;
 };

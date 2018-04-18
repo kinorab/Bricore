@@ -8,6 +8,7 @@ static sf::SoundBuffer buffer1;
 static float bufferBgVolume = 100.0f;
 static float bufferVolume1 = 50.0f;
 
+// preload all audio files
 void Audio::initialize() {
 	try {
 		// if memory violation happen, reset the lib connector of project (-d have something bug)

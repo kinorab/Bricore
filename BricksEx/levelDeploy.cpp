@@ -233,6 +233,29 @@ sys::Matrix<sf::Vector2f> LVDeploy::blockSpeedDeploy({
 	, sf::Vector2f(-2.5f, 0)
 	, sf::Vector2f(3.f, 0) }
 	});
+sys::Matrix<float> LVDeploy::brickDeploy({
+	// level 1
+	{ 1, 60.f, 25.f, 1.f, 2.f, 3.f, 5.f }
+	// level 2
+	, { 2, 50.f, 30.f, 2.f, 2.f, 5.f, 4.f }
+	// level 3
+	,{ 3, 45.f, 20.f, 1.5f, 2.5f, 4.f, 3.f }
+	// level 4
+	,{ 4, 60.f, 25.f, 1.5f, 2.1f, 3.f, 2.f }
+	// level 5
+	,{ 5, 65.f, 35.f, 1.5f, 2.2f, 4.f, 4.f }
+	// level 6
+	,{ 3, 70.f, 35.f, 3.f, 2.3f, 3.f, 3.f }
+	// level 7
+	,{ 5, 75.f, 20.f, 2.5f, 2.5f, 5.f, 6.f }
+	// level 8
+	,{ 4, 70.f, 25.f, 2.f, 2.1f, 1.5f, 10.f }
+	// level 9
+	,{ 3, 73.f, 29.f, 1.5f, 2.4f, 3.f, 2.f }
+	// level 10
+	,{ 5, 40.f, 20.f, 1.5f, 2.5f, 5.f, 6.f }
+	});
+
 sys::Matrix<sf::Color> LVDeploy::brickColorDeploy({
 	// level 1
 	{ sf::Color(255, 183, 197) }
@@ -271,7 +294,7 @@ const size_t LVDeploy::getLevel() {
 }
 
 void LVDeploy::changeBrickD() noexcept {
-	item::Brick::reset(level, 60.f, 25.f, sf::Vector2f(1.f, 2.f), 3.f, 5.f);
+	item::Brick::reset(static_cast<size_t>(getBrickD().at(0)), getBrickD().at(1), getBrickD().at(2), sf::Vector2f(getBrickD().at(3), getBrickD().at(4)), getBrickD().at(5), getBrickD().at(6));
 	item::Brick::setBrickColor(getBrickCD().at(0));
 }
 
@@ -316,6 +339,14 @@ const std::vector<sf::Vector2f> LVDeploy::getBlockSD() noexcept {
 const std::vector<sf::Color> LVDeploy::getBrickCD() noexcept {
 	std::vector<sf::Color> temp;
 	std::for_each(brickColorDeploy.begin_row(level - 1), brickColorDeploy.end_row(level - 1), [&](const sf::Color &element) {
+		temp.push_back(element);
+	});
+	return temp;
+}
+
+const std::vector<float> LVDeploy::getBrickD() noexcept {
+	std::vector<float> temp;
+	std::for_each(brickDeploy.begin_row(level - 1), brickDeploy.end_row(level - 1), [&](const float &element) {
 		temp.push_back(element);
 	});
 	return temp;

@@ -13,9 +13,9 @@ class Player;
 class Stage
 	: public game::Container {
 public:
-	Stage();
+	void run();
 	virtual ~Stage();
-	virtual void update(float updateSpan, sf::Vector2f mousePosition);
+	static void update(float updateSpan, sf::Vector2f mousePosition);
 
 private:
 	static std::shared_ptr<item::Ball> ball;
