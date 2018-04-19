@@ -24,7 +24,7 @@ Ball::Ball() {
 std::shared_ptr<Ball> item::Ball::getInstance() {
 	std::shared_ptr<Ball> ballPtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
 	if (!ballPtr) {
-		// prevent multithread get instance
+		// prevent multithread get instance concurrently
 		std::lock_guard<std::mutex> lock(mutex);
 		ballPtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
 		if (!ballPtr) {

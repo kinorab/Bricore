@@ -31,7 +31,7 @@ Player::Player() {
 std::shared_ptr<Player> Player::getInstance() {
 	std::shared_ptr<Player> playerPtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
 	if (!playerPtr) {
-		// prevent multithread get instance
+		// prevent multithread get instance concurrently
 		std::lock_guard<std::mutex> lock(mutex);
 		playerPtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
 		if (!playerPtr) {

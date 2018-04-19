@@ -18,7 +18,7 @@ std::mutex Stage::mutex;
 std::shared_ptr<Stage> Stage::getInstance() {
 	std::shared_ptr<Stage> stagePtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
 	if (!stagePtr) {
-		// prevent multithread get instance
+		// prevent multithread get instance concurrently
 		std::lock_guard<std::mutex> lock(mutex);
 		stagePtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
 		if (!stagePtr) {

@@ -47,7 +47,7 @@ HUD::HUD() {
 std::shared_ptr<HUD> HUD::getInstance() {
 	std::shared_ptr<HUD> HUDPtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
 	if (!HUDPtr) {
-		// prevent multithread get instance
+		// prevent multithread get instance concurrently
 		std::lock_guard<std::mutex> lock(mutex);
 		HUDPtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
 		if (!HUDPtr) {
