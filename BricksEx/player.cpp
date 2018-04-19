@@ -12,6 +12,8 @@ RectangleShape Player::mainPlayer(Vector2f(240, 12));
 RectangleShape Player::yellowRange(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
 RectangleShape Player::redRange(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
 RectangleShape Player::playerArea(Vector2f(LEVEL_WIDTH, 100.f));
+std::mutex Player::mutex;
+std::shared_ptr<Player> Player::instance = nullptr;
 
 Player::Player() {
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
@@ -24,6 +26,20 @@ Player::Player() {
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 	playerArea.setPosition(0.0f, LEVEL_HEIGHT - 100.f);
+}
+
+std::shared_ptr<Player> Player::getInstance() {
+	std::shared_ptr<Player> playerPtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
+	if (!playerPtr) {
+		// prevent multithread get instance
+		std::lock_guard<std::mutex> lock(mutex);
+		playerPtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
+		if (!playerPtr) {
+			playerPtr = std::shared_ptr<Player>(new Player());
+			std::atomic_store_explicit(&instance, playerPtr, std::memory_order_release);
+		}
+	}
+	return playerPtr;
 }
 
 void Player::playerMove(Sound &sound, const Vector2f ballPos, const float radius) {

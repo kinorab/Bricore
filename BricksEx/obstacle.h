@@ -3,11 +3,12 @@
 #include "block.h"
 #include <memory>
 #include <vector>
+#include <mutex>
 
 class Obstacle : public sf::Drawable {
 
 public:
-	Obstacle();
+	static std::shared_ptr<Obstacle> getInstance();
 	static void reset(const std::vector <sf::Vector2f> &position, const std::vector <sf::Vector2f> &sideLength);
 	static void update();
 	static void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
@@ -25,7 +26,12 @@ public:
 	static const sys::DPointf getDP(const size_t number);
 	static const sys::DPointf getBlocksAreaDP();
 
+protected:
+	Obstacle();
+
 private:
+	static std::shared_ptr<Obstacle> instance;
+	static std::mutex mutex;
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 	static void blockCollision(const size_t);
 

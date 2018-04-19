@@ -8,26 +8,32 @@
 #include "player.h"
 #include "brick.h"
 #include "levelDeploy.h"
+#include <atomic>
 #include <iostream>
 
-std::shared_ptr<item::Ball> Stage::ball(new item::Ball());
-std::shared_ptr<item::Brick> Stage::bricks(new item::Brick());
-std::shared_ptr<HUD> Stage::hud(new HUD());
 std::shared_ptr<ParticleSystem> Stage::mouseLight(new ParticleSystem(2000));
-std::shared_ptr<Player> Stage::player(new Player());
-std::shared_ptr<Obstacle> Stage::obstacles(new Obstacle());
+std::shared_ptr<Stage> Stage::instance = nullptr;
+std::mutex Stage::mutex;
 
-void Stage::run() {
-	HUD::setBackgroundColor(sf::Color(210, 210, 210));
-	item::Ball::followPlayer(player->getMainPlayerTopCenterPos());
-	addChild({ hud, obstacles, player, ball, bricks, mouseLight });
-	using namespace std::placeholders;
-	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
-	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
-	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
-	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
-	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
-	initialize();
+std::shared_ptr<Stage> Stage::getInstance() {
+	std::shared_ptr<Stage> stagePtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
+	if (!stagePtr) {
+		// prevent multithread get instance
+		std::lock_guard<std::mutex> lock(mutex);
+		stagePtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
+		if (!stagePtr) {
+			stagePtr = std::shared_ptr<Stage>(new Stage());
+			using namespace std::placeholders;
+			stagePtr->addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, stagePtr.get(), _1));
+			stagePtr->addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, stagePtr.get(), _1));
+			stagePtr->addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, stagePtr.get(), _1));
+			stagePtr->addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, stagePtr.get(), _1));
+			stagePtr->addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, stagePtr.get(), _1));
+			stagePtr->initialize();
+			std::atomic_store_explicit(&instance, stagePtr, std::memory_order_release);
+		}
+	}
+	return stagePtr;
 }
 
 Stage::~Stage() {
@@ -55,6 +61,12 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 
 	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
+}
+
+Stage::Stage() {
+	addChild({ HUD::getInstance(), Player::getInstance(), item::Ball::getInstance(), item::Brick::getInstance(), Obstacle::getInstance(), mouseLight });
+	HUD::setBackgroundColor(sf::Color(210, 210, 210));
+	item::Ball::followPlayer(Player::getMainPlayerTopCenterPos());
 }
 
 void Stage::onKeyPressed(game::Event * event) {

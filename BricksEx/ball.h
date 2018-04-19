@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include <mutex>
 #include "diagonalPoint.h"
 
 namespace item {
@@ -10,7 +11,7 @@ namespace item {
 	class Ball : public sf::Drawable {
 
 	public:
-		Ball();
+		static std::shared_ptr<Ball> getInstance();
 		static void update(const sys::DPointf &playerDP);
 		static void initializeBall();
 		static void followPlayer(const sf::Vector2f &playerTopCenterPos);
@@ -23,7 +24,12 @@ namespace item {
 		static const sf::Vector2f & getMainBallPosition();
 		static const size_t getBallsAmount();
 
+	protected:
+		Ball();
+
 	private:
+		static std::mutex mutex;
+		static std::shared_ptr<Ball> instance;
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		static void collision(const size_t);
 

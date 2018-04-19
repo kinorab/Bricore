@@ -1,6 +1,7 @@
 #include "game.h"
 #include "audio.h"
 #include "define.h"
+#include "stage.h"
 #include <iostream>
 #include <Windows.h>
 
@@ -15,7 +16,6 @@ thread Game::renderThread;
 Event Game::currentEvent;
 ContextSettings Game::settings;
 RenderWindow Game::window;
-shared_ptr<Stage> Game::stage(new Stage());
 Vector2f Game::mousePosition;
 shared_ptr<game::InteractiveObject> Game::previousContactNode(nullptr);
 
@@ -74,7 +74,7 @@ void Game::handleKeyEvent() {
 
 	game::Event event(currentEvent.type, false, true);
 	event.data = currentEvent.key;
-	stage->dispatchEvent(&event);
+	Stage::getInstance()->dispatchEvent(&event);
 }
 
 void Game::handleMouseEvent() {
@@ -86,7 +86,7 @@ void Game::handleMouseEvent() {
 			contactNode = nullptr;
 		}
 		else {
-			contactNode = stage->getObjectUnderPoint(mousePosition);
+			contactNode = Stage::getInstance()->getObjectUnderPoint(mousePosition);
 			if (contactNode) {
 				game::Event event(currentEvent.type, true, true);
 				event.data = currentEvent.mouseMove;
@@ -155,7 +155,6 @@ void Game::renderFunc() {
 		keyDown.insert({ i, false });
 	}
 
-	stage->run();
 	Time elapsed = milliseconds(0);
 	Clock clock;
 	bool finishing = false;
@@ -177,12 +176,12 @@ void Game::renderFunc() {
 		// updateSpan: milliseconds
 		static constexpr float updateSpan = 13.0f;
 		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			Stage::update(updateSpan, mousePosition);
+			Stage::getInstance()->update(updateSpan, mousePosition);
 			elapsed -= seconds(updateSpan / 1000.0f);
 		}
 
 		// render
-		window.draw(*stage);
+		window.draw(*Stage::getInstance());
 		window.display();
 	}
 

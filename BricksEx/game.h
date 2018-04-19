@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stage.h"
+#include "interactiveObject.h"
 #include <atomic>
 #include <queue>
 #include <map>
@@ -19,7 +19,6 @@ private:
 	static sf::Event currentEvent;
 	static sf::ContextSettings settings;
 	static sf::RenderWindow window;
-	static std::shared_ptr<Stage> stage;
 	static sf::Vector2f mousePosition;
 	static std::shared_ptr<game::InteractiveObject> previousContactNode;
 	static void pushEvent(const sf::Event & event);

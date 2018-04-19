@@ -19,6 +19,8 @@ Vector2f Brick::sideLength;
 Vector2f Brick::whiteSpace(0.0f, 0.0f);
 bool Brick::changeEntity(false);
 RectangleShape Brick::bricksArea;
+std::mutex Brick::mutex;
+std::shared_ptr<Brick> Brick::instance = nullptr;
 
 Brick::Brick() { 
 	LVDeploy::changeBrickD();
@@ -148,6 +150,20 @@ void Brick::setFrameSize(const float frameSize) {
 	catch (invalid_argument &ex) {
 		cout << "Invalid_argument: " << ex.what() << endl;
 	}
+}
+
+std::shared_ptr<Brick> item::Brick::getInstance() {
+	std::shared_ptr<Brick> brickPtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
+	if (!brickPtr) {
+		// prevent multithread get instance
+		std::lock_guard<std::mutex> lock(mutex);
+		brickPtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
+		if (!brickPtr) {
+			brickPtr = std::shared_ptr<Brick>(new Brick());
+			std::atomic_store_explicit(&instance, brickPtr, std::memory_order_release);
+		}
+	}
+	return brickPtr;
 }
 
 void Brick::update() {

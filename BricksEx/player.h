@@ -2,12 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <memory>
+#include <mutex>
 #include "diagonalPoint.h"
 
 class Player : public sf::Drawable {
 
 public:
-	explicit Player();
+	static std::shared_ptr<Player> getInstance();
 	static void playerMove(sf::Sound &sound, const sf::Vector2f ballPos, const float radius);
 
 	static const sf::Vector2f & getMainPlayerPos();
@@ -15,8 +17,12 @@ public:
 	static const sf::FloatRect getMainPlayerBounds();
 	static const sys::DPointf getMainPlayerDP();
 	static const sys::DPointf getPlayerAreaDP();
+protected:
+	Player();
 
 private:
+	static std::mutex mutex;
+	static std::shared_ptr<Player> instance;
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 	static void setFlashPosition(const sf::Vector2f &position);
 	static void setFlashPosition(const float posX, const float posY);
