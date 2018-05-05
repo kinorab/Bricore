@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
-#include <mutex>
 #include <map>
 #include "diagonalPoint.h"
 
@@ -13,6 +12,7 @@ namespace item {
 
 	public:
 		static std::shared_ptr<Brick> getInstance();
+		static bool resetInstance();
 		static void update();
 		static void loadImage(const std::string fileName);
 		static void deleteImage(const std::string fileName);
@@ -40,7 +40,6 @@ namespace item {
 		Brick();
 
 	private:
-		static std::mutex mutex;
 		static std::shared_ptr<Brick> instance;
 		static void settlePlace();
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;

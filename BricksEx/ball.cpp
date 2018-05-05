@@ -14,25 +14,25 @@ bool Ball::mainSettled(false);
 bool Ball::ballStartC(false);
 bool Ball::multiple(false);
 std::vector<std::unique_ptr<Ball::BallContainer>> Ball::balls;
-std::mutex Ball::mutex;
 std::shared_ptr<Ball> Ball::instance = nullptr;
 
 Ball::Ball() {
 	balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
 }
 
-std::shared_ptr<Ball> item::Ball::getInstance() {
-	std::shared_ptr<Ball> ballPtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
-	if (!ballPtr) {
-		// prevent multithread get instance concurrently
-		std::lock_guard<std::mutex> lock(mutex);
-		ballPtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
-		if (!ballPtr) {
-			ballPtr = std::shared_ptr<Ball>(new Ball());
-			std::atomic_store_explicit(&instance, ballPtr, std::memory_order_release);
-		}
+std::shared_ptr<Ball> Ball::getInstance() {
+	if (!instance) {
+		instance = std::shared_ptr<Ball>(new Ball());
 	}
-	return ballPtr;
+	return instance;
+}
+
+bool Ball::resetInstance() {
+	if (instance) {
+		instance.reset();
+		return true;
+	}
+	return false;
 }
 
 void Ball::update(const sys::DPointf &playerDP) {

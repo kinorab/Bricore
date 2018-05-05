@@ -1,12 +1,12 @@
 #pragma once
 #include "container.h"
-#include <mutex>
 
 class ParticleSystem;
 class Stage
 	: public game::Container {
 public:
 	static std::shared_ptr<Stage> getInstance();
+	static bool resetInstance();
 	virtual ~Stage();
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
 
@@ -15,7 +15,6 @@ protected:
 
 private:
 	static std::shared_ptr<Stage> instance;
-	static std::mutex mutex;
 	static std::shared_ptr<ParticleSystem> mouseLight;
 	virtual void onKeyPressed(game::Event * event);
 	virtual void onKeyReleased(game::Event * event);

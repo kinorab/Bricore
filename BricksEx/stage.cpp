@@ -13,27 +13,27 @@
 
 std::shared_ptr<ParticleSystem> Stage::mouseLight(new ParticleSystem(2000));
 std::shared_ptr<Stage> Stage::instance = nullptr;
-std::mutex Stage::mutex;
 
 std::shared_ptr<Stage> Stage::getInstance() {
-	std::shared_ptr<Stage> stagePtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
-	if (!stagePtr) {
-		// prevent multithread get instance concurrently
-		std::lock_guard<std::mutex> lock(mutex);
-		stagePtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
-		if (!stagePtr) {
-			stagePtr = std::shared_ptr<Stage>(new Stage());
-			using namespace std::placeholders;
-			stagePtr->addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, stagePtr.get(), _1));
-			stagePtr->addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, stagePtr.get(), _1));
-			stagePtr->addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, stagePtr.get(), _1));
-			stagePtr->addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, stagePtr.get(), _1));
-			stagePtr->addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, stagePtr.get(), _1));
-			stagePtr->initialize();
-			std::atomic_store_explicit(&instance, stagePtr, std::memory_order_release);
-		}
+	if (!instance) {
+		instance = std::shared_ptr<Stage>(new Stage());
+		using namespace std::placeholders;
+		instance->addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, instance.get(), _1));
+		instance->addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, instance.get(), _1));
+		instance->addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, instance.get(), _1));
+		instance->addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, instance.get(), _1));
+		instance->addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, instance.get(), _1));
+		instance->initialize();
 	}
-	return stagePtr;
+	return instance;
+}
+
+bool Stage::resetInstance() {
+	if (instance) {
+		instance.reset();
+		return true;
+	}
+	return false;
 }
 
 Stage::~Stage() {
@@ -85,7 +85,7 @@ void Stage::onKeyPressed(game::Event * event) {
 	}
 }
 
-void Stage::onKeyReleased(game::Event * event){
+void Stage::onKeyReleased(game::Event * event) {
 
 }
 

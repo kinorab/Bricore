@@ -13,7 +13,6 @@ using namespace sf;
 RectangleShape Obstacle::blocksArea;
 std::vector <std::unique_ptr<item::Block>> Obstacle::blocks;
 std::shared_ptr<Obstacle> Obstacle::instance = nullptr;
-std::mutex Obstacle::mutex;
 
 
 // unity of Block-->Obstacle
@@ -22,17 +21,18 @@ Obstacle::Obstacle() {
 }
 
 std::shared_ptr<Obstacle> Obstacle::getInstance() {
-	std::shared_ptr<Obstacle> obstaclePtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
-	if (!obstaclePtr) {
-		// prevent multithread get instance concurrently
-		std::lock_guard<std::mutex> lock(mutex);
-		obstaclePtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
-		if (!obstaclePtr) {
-			obstaclePtr = std::shared_ptr<Obstacle>(new Obstacle());
-			std::atomic_store_explicit(&instance, obstaclePtr, std::memory_order_release);
-		}
+	if (!instance) {
+		instance = std::shared_ptr<Obstacle>(new Obstacle());
 	}
-	return obstaclePtr;
+	return instance;
+}
+
+bool Obstacle::resetInstance() {
+	if (instance) {
+		instance.reset();
+		return true;
+	}
+	return false;
 }
 
 void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f> & sideLength) {
@@ -67,9 +67,6 @@ void Obstacle::update() {
 				item::Ball::ballCollided(i, j);
 			}
 		}
-	}
-	if (GameState::finishLevel) {
-		LVDeploy::changeObstacleD();
 	}
 }
 

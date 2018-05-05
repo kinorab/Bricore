@@ -20,7 +20,6 @@ std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> H
 std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel2;
 std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel3;
 std::shared_ptr<game::Button> HUD::button;
-std::mutex HUD::mutex;
 std::shared_ptr<HUD> HUD::instance = nullptr;
 
 HUD::HUD() {
@@ -45,17 +44,18 @@ HUD::HUD() {
 }
 
 std::shared_ptr<HUD> HUD::getInstance() {
-	std::shared_ptr<HUD> HUDPtr = std::atomic_load_explicit(&instance, std::memory_order_acquire);
-	if (!HUDPtr) {
-		// prevent multithread get instance concurrently
-		std::lock_guard<std::mutex> lock(mutex);
-		HUDPtr = std::atomic_load_explicit(&instance, std::memory_order_relaxed);
-		if (!HUDPtr) {
-			HUDPtr = std::shared_ptr<HUD>(new HUD());
-			std::atomic_store_explicit(&instance, HUDPtr, std::memory_order_release);
-		}
+	if (!instance) {
+		instance = std::shared_ptr<HUD>(new HUD());
 	}
-	return HUDPtr;
+	return instance;
+}
+
+bool HUD::resetInstance() {
+	if (instance) {
+		instance.reset();
+		return true;
+	}
+	return false;
 }
 
 void HUD::setBackgroundColor(const sf::Color &color) {

@@ -1,7 +1,9 @@
 #include "levelDeploy.h"
 #include "define.h"
 #include "brick.h"
+#include "ball.h"
 #include "obstacle.h"
+#include "player.h"
 #include <SFML/Graphics/Color.hpp>
 #include <iostream>
 
@@ -235,7 +237,7 @@ sys::Matrix<sf::Vector2f> LVDeploy::blockSpeedDeploy({
 	});
 sys::Matrix<float> LVDeploy::brickDeploy({
 	// level 1
-	{ 1, 60.f, 25.f, 1.f, 2.f, 3.f, 5.f }
+	{ 6, 60.f, 25.f, 1.f, 2.f, 3.f, 5.f }
 	// level 2
 	, { 2, 50.f, 30.f, 2.f, 2.f, 5.f, 4.f }
 	// level 3
@@ -287,6 +289,16 @@ void LVDeploy::finishLevel() {
 	GameState::start = false;
 	GameState::finishLevel = true;
 	std::cout << "Finished level: " << level++ << "!!!" << std::endl;
+	if (level > 1) {
+		std::cout << Obstacle::resetInstance();
+		std::cout << item::Brick::resetInstance();
+		std::cout << item::Ball::resetInstance();
+		std::cout << Player::resetInstance();
+	}
+	else {
+		changeBrickD();
+		changeObstacleD();
+	}
 }
 
 const size_t LVDeploy::getLevel() {
