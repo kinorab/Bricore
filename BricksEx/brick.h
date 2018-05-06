@@ -12,48 +12,50 @@ namespace item {
 
 	public:
 		static std::shared_ptr<Brick> getInstance();
+		static std::shared_ptr<Brick> getPredictInstance();
 		static bool resetInstance();
-		static void update();
-		static void loadImage(const std::string fileName);
-		static void deleteImage(const std::string fileName);
-		static void displayImage(const std::string fileName);
-		static void setBrickColor(const sf::Color&);
-		static void setFrameColor(const sf::Color&);
-		static void setSideLength(const sf::Vector2f &sideLength);
-		static void setSideLength(const float width, const float height);
-		static void setInterval(const sf::Vector2f &interval);
-		static void setInterval(const float x, const float y);
-		static void setFrameSize(const float frame);
+		void update();
+		void loadImage(const std::string fileName);
+		void deleteImage(const std::string fileName);
+		void displayImage(const std::string fileName);
+		void setBrickColor(const sf::Color&);
+		void setFrameColor(const sf::Color&);
+		void setSideLength(const sf::Vector2f &sideLength);
+		void setSideLength(const float width, const float height);
+		void setInterval(const sf::Vector2f &interval);
+		void setInterval(const float x, const float y);
+		void setFrameSize(const float frame);
 
-		static void reset(const size_t rowCount, const float width, const float height
+		void reset(const size_t rowCount, const float width, const float height
 			, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
-		static void reset(const size_t rowCount);
+		void reset(const size_t rowCount);
 
-		static const size_t getBricksSize();
-		static const sf::Vector2f & getSideLength();
-		static const sf::Vector2f & getInterval();
-		static const float getFrameSize();
-		static const sys::DPointf getDP(const size_t number);
-		static const sys::DPointf getBrickAreaDP();
+		const size_t getBricksSize() const;
+		const sf::Vector2f & getSideLength() const;
+		const sf::Vector2f & getInterval() const;
+		const float getFrameSize() const;
+		const sys::DPointf getDP(const size_t number) const;
+		const sys::DPointf getBrickAreaDP() const;
 
 	protected:
 		Brick();
 
 	private:
+		Brick & operator =(const Brick &);
 		static std::shared_ptr<Brick> instance;
-		static void settlePlace();
+		void settlePlace();
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
-		static sf::RectangleShape bricksArea;
-		static std::vector <std::unique_ptr<sf::RectangleShape>> bricks;
-		static std::map <std::string, sf::Texture *> levelImage;
+		sf::RectangleShape bricksArea;
+		std::vector <std::shared_ptr<sf::RectangleShape>> bricks;
+		std::map <std::string, sf::Texture *> levelImage;
 		// bricks on every row
-		static size_t amount;
-		static size_t rowCount;
-		static float frame;
-		static sf::Vector2f interval;
-		static sf::Vector2f sideLength;
-		static sf::Vector2f whiteSpace;
-		static bool changeEntity;
+		size_t amount;
+		size_t rowCount;
+		float frame;
+		sf::Vector2f interval;
+		sf::Vector2f sideLength;
+		sf::Vector2f whiteSpace;
+		bool changeEntity;
 	};
 }

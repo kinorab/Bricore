@@ -1,4 +1,4 @@
-#include "levelDeploy.h"
+#include "LVDeploy.h"
 #include "define.h"
 #include "brick.h"
 #include "ball.h"
@@ -289,11 +289,11 @@ void LVDeploy::finishLevel() {
 	GameState::start = false;
 	GameState::finishLevel = true;
 	std::cout << "Finished level: " << level++ << "!!!" << std::endl;
-	if (level > 1) {
-		std::cout << Obstacle::resetInstance();
-		std::cout << item::Brick::resetInstance();
-		std::cout << item::Ball::resetInstance();
-		std::cout << Player::resetInstance();
+	if (level > 10) {
+		Obstacle::resetInstance();
+		item::Brick::resetInstance();
+		item::Ball::resetInstance();
+		Player::resetInstance();
 	}
 	else {
 		changeBrickD();
@@ -306,14 +306,14 @@ const size_t LVDeploy::getLevel() {
 }
 
 void LVDeploy::changeBrickD() noexcept {
-	item::Brick::reset(static_cast<size_t>(getBrickD().at(0)), getBrickD().at(1), getBrickD().at(2), sf::Vector2f(getBrickD().at(3), getBrickD().at(4)), getBrickD().at(5), getBrickD().at(6));
-	item::Brick::setBrickColor(getBrickCD().at(0));
+	item::Brick::getInstance()->reset(static_cast<size_t>(getBrickD().at(0)), getBrickD().at(1), getBrickD().at(2), sf::Vector2f(getBrickD().at(3), getBrickD().at(4)), getBrickD().at(5), getBrickD().at(6));
+	item::Brick::getInstance()->setBrickColor(getBrickCD().at(0));
 }
 
 void LVDeploy::changeObstacleD() noexcept {
-	Obstacle::reset(getBlockPD(), getBlockSLD());
-	Obstacle::setAllVerticeColor(getBlockCD());
-	Obstacle::setAllSpeed(getBlockSD());
+	Obstacle::getInstance()->reset(getBlockPD(), getBlockSLD());
+	Obstacle::getInstance()->setAllVerticeColor(getBlockCD());
+	Obstacle::getInstance()->setAllSpeed(getBlockSD());
 }
 
 const std::vector<sf::Vector2f> LVDeploy::getBlockSLD() noexcept {

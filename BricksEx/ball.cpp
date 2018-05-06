@@ -1,5 +1,6 @@
 #include "ball.h"
 #include "brick.h"
+#include "player.h"
 #include "obstacle.h"
 #include "define.h"
 #include "intersects.h"
@@ -9,25 +10,37 @@
 using namespace sf;
 using namespace item;
 
-bool Ball::initialize(false);
 bool Ball::mainSettled(false);
-bool Ball::ballStartC(false);
-bool Ball::multiple(false);
-std::vector<std::unique_ptr<Ball::BallContainer>> Ball::balls;
+bool Ball::initialize(false);
 std::shared_ptr<Ball> Ball::instance = nullptr;
 
-Ball::Ball() {
-	balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
+Ball::Ball() :
+	multiple(false)
+	, ballStartC(false) {
+	balls.push_back(std::shared_ptr<BallContainer>(new BallContainer()));
 }
 
 std::shared_ptr<Ball> Ball::getInstance() {
 	if (!instance) {
 		instance = std::shared_ptr<Ball>(new Ball());
+		instance->followPlayer();
 	}
 	return instance;
 }
 
-bool Ball::resetInstance() {
+std::shared_ptr<Ball> item::Ball::getPredictInstance() {
+	static std::shared_ptr<Ball> preInstance;
+	static Ball predict;
+	if (instance) {
+		predict = *instance;
+		predict.update();
+		preInstance = std::make_shared<Ball>(predict);
+		return preInstance;
+	}
+	return nullptr;
+}
+
+const bool Ball::resetInstance() {
 	if (instance) {
 		instance.reset();
 		return true;
@@ -35,9 +48,9 @@ bool Ball::resetInstance() {
 	return false;
 }
 
-void Ball::update(const sys::DPointf &playerDP) {
+void Ball::update() {
 	for (size_t i = 0; i < balls.size(); ++i) {
-		balls.at(i)->ballMove(playerDP);
+		balls.at(i)->move(Player::getInstance()->getMainPlayerDP());
 		if (balls.at(i)->broke) {
 			balls.erase(balls.begin() + i);
 		}
@@ -61,17 +74,18 @@ void Ball::initializeBall() {
 	}
 }
 
-void Ball::followPlayer(const Vector2f &playerTopCenterPos) {
+void Ball::followPlayer() {
 	if (!balls.empty()) {
-		balls.at(0)->setPos(playerTopCenterPos.x, playerTopCenterPos.y - balls.at(0)->getRad() - 1.f);
+		Vector2f pos = Player::getInstance()->getMainPlayerTopCenterPos();
+		balls.at(0)->setPos(pos.x, pos.y - balls.at(0)->getRad() - 1.f);
 	}
 }
 
 void Ball::ballCollided(const size_t number, const size_t blockNumber) {
 	const float radius = balls.at(number)->getRad();
 	const Vector2f ballPos = balls.at(number)->getPos();
-	const sys::DPointf boundsDP = Obstacle::getDP(blockNumber);
-	const Vector2f speed = Obstacle::getBlockSpeed(blockNumber);
+	const sys::DPointf boundsDP = Obstacle::getInstance()->getDP(blockNumber);
+	const Vector2f speed = Obstacle::getInstance()->getBlockSpeed(blockNumber);
 	if (game::ballRectINCIntersects(ballPos, radius, boundsDP)) {
 		if (ballPos.x < boundsDP.dot1.x) {
 			balls.at(number)->left = true;
@@ -98,7 +112,7 @@ void Ball::ballCollided(const size_t number, const size_t blockNumber) {
 const bool Ball::isBallCollided(const size_t number, const size_t brickNumber) {
 	const float radius = balls.at(number)->getRad();
 	const Vector2f ballPos = balls.at(number)->getPos();
-	const sys::DPointf boundsDP(Brick::getDP(brickNumber));
+	const sys::DPointf boundsDP(Brick::getInstance()->getDP(brickNumber));
 	if (game::ballRectINCIntersects(ballPos, radius, boundsDP)) {
 		if (ballPos.x < boundsDP.dot1.x) {
 			balls.at(number)->setSpeedX(-abs(balls.at(number)->getSpeedX()));
@@ -122,16 +136,16 @@ const bool Ball::isBallCollided(const size_t number, const size_t brickNumber) {
 	return false;
 }
 
-const bool Ball::isBallEnteredBlocksArea(const size_t number) {
+const bool Ball::isBallEnteredBlocksArea(const size_t number) const {
 	const float radius = balls.at(number)->getRad();
 	const Vector2f ballPos = balls.at(number)->getPos();
-	return game::ballRectINCIntersects(ballPos, radius, Obstacle::getBlocksAreaDP());
+	return game::ballRectINCIntersects(ballPos, radius, Obstacle::getInstance()->getBlocksAreaDP());
 }
 
-const bool Ball::isBallEnteredBricksArea(const size_t number) {
+const bool Ball::isBallEnteredBricksArea(const size_t number) const {
 	const float radius = balls.at(number)->getRad();
 	const Vector2f ballPos = balls.at(number)->getPos();
-	return game::ballRectINCIntersects(ballPos, radius, Brick::getBrickAreaDP());
+	return game::ballRectINCIntersects(ballPos, radius, Brick::getInstance()->getBrickAreaDP());
 }
 
 void Ball::ballDivided(const size_t numbers) {
@@ -140,7 +154,7 @@ void Ball::ballDivided(const size_t numbers) {
 		const Vector2f mainPos(balls.at(0)->getPos());
 		const Vector2f mainSpeed(balls.at(0)->getSpeedX(), balls.at(0)->getSpeedY());
 		for (size_t i = 0; i < numbers; ++i) {
-			balls.push_back(std::unique_ptr<BallContainer>(new BallContainer()));
+			balls.push_back(std::shared_ptr<BallContainer>(new BallContainer()));
 			balls.at(balls.size() - 1)->setPos(mainPos);
 			balls.at(balls.size() - 1)->setSpeedX(mainSpeed.x * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
 			balls.at(balls.size() - 1)->setSpeedY(mainSpeed.y * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
@@ -153,17 +167,19 @@ void Ball::ballDivided(const size_t numbers) {
 	}
 }
 
-const float Ball::getMainBallRadius() {
+const float Ball::getMainBallRadius() const {
 	return balls.at(0)->getRad();
 }
 
-const Vector2f & Ball::getMainBallPosition() {
+const Vector2f & Ball::getMainBallPosition() const {
 	return balls.at(0)->getPos();
 }
 
-const size_t Ball::getBallsAmount() {
+const size_t Ball::getBallsAmount() const {
 	return balls.size();
 }
+
+Ball & item::Ball::operator =(const Ball &) = default;
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
 	states.texture = nullptr;
@@ -217,7 +233,15 @@ void Ball::collision(const size_t number) {
 	}
 }
 
-Ball::BallContainer::BallContainer() {
+Ball::BallContainer::BallContainer()
+	: left(false)
+	, right(false)
+	, bottom(false)
+	, top(false)
+	, broke(false)
+	, CD(false)
+	, active(false)
+	, main(false) {
 	ball.setFillColor(Color::White);
 	ball.setOutlineColor(Color::Black);
 	ball.setRadius(5.f);
@@ -285,7 +309,7 @@ void Ball::BallContainer::determineUpdate() {
 	bottom = false;
 }
 
-void Ball::BallContainer::ballMove(const sys::DPointf &DP) {
+void Ball::BallContainer::move(const sys::DPointf &DP) {
 
 	const Vector2f ballPos = getPos();
 	const float radius = getRad();

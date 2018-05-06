@@ -155,8 +155,12 @@ void Game::renderFunc() {
 		keyDown.insert({ i, false });
 	}
 
-	Time elapsed = milliseconds(0);
-	Clock clock;
+	static Time temp1 = milliseconds(0);
+	static Time temp2 = milliseconds(0);
+	static Time temp3 = milliseconds(0);
+	static Time updateElapsed = milliseconds(0);
+	static Time renderElapsed = milliseconds(0);
+	static Clock updateClock;
 	bool finishing = false;
 
 	while (!finishing) {
@@ -168,21 +172,32 @@ void Game::renderFunc() {
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;
 			}
+			updateClock.restart();
 		}
 
-		// maximum update span
-		elapsed = min<Time>(elapsed + clock.restart(), seconds(0.05f));
+		// display in milliseconds
+		static constexpr float updateSpan = 0.013f * 1000.f;
+		static float renderUpdateSpan = (1.f / 60.f) * 1000.f;
 
-		// updateSpan: milliseconds
-		static constexpr float updateSpan = 13.0f;
-		while (elapsed.asSeconds() * 1000.0f > updateSpan) {
-			Stage::getInstance()->update(updateSpan, mousePosition);
-			elapsed -= seconds(updateSpan / 1000.0f);
+		temp1 = updateClock.restart();
+		updateElapsed += temp1;
+		renderElapsed += temp1;
+		if (updateElapsed.asMilliseconds() >= updateSpan) {
+			Stage::getInstance()->update();
+			updateElapsed -= milliseconds(static_cast<Int32>(updateSpan));
+			updateClock.restart();
 		}
 
-		// render
-		window.draw(*Stage::getInstance());
-		window.display();
+		temp2 = updateClock.restart();
+		if (renderElapsed.asMilliseconds() > renderUpdateSpan) {
+			Stage::getInstance()->updateMouseLight(updateSpan, mousePosition);
+			window.draw(*Stage::getInstance());
+			window.display();
+			renderElapsed -= milliseconds(static_cast<Int32>(renderUpdateSpan));
+			updateClock.restart();
+		}
+		updateElapsed += temp2;
+		renderElapsed += temp2;
 	}
 
 	// finalize...

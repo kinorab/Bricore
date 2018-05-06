@@ -7,11 +7,10 @@
 #include "ball.h"
 #include "player.h"
 #include "brick.h"
-#include "levelDeploy.h"
+#include "LVDeploy.h"
 #include <atomic>
 #include <iostream>
 
-std::shared_ptr<ParticleSystem> Stage::mouseLight(new ParticleSystem(2000));
 std::shared_ptr<Stage> Stage::instance = nullptr;
 
 std::shared_ptr<Stage> Stage::getInstance() {
@@ -28,6 +27,18 @@ std::shared_ptr<Stage> Stage::getInstance() {
 	return instance;
 }
 
+std::shared_ptr<Stage> Stage::getPredictInstance() {
+	static std::shared_ptr<Stage> preInstance;
+	static Stage predict;
+	if (instance) {
+		predict = *instance;
+		predict.update();
+		preInstance = std::make_shared<Stage>(predict);
+		return preInstance;
+	}
+	return nullptr;
+}
+
 bool Stage::resetInstance() {
 	if (instance) {
 		instance.reset();
@@ -41,33 +52,38 @@ Stage::~Stage() {
 	Audio::sound1.stop();
 }
 
-void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
+void Stage::update() {
 
 	if (!GameState::pause) {
-		item::Ball::initializeBall();
+		item::Ball::getInstance()->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
-			Player::playerMove(Audio::sound1, item::Ball::getMainBallPosition(), item::Ball::getMainBallRadius());
+			Player::getInstance()->update();
 			if (GameState::start) {
-				item::Brick::update();
-				Obstacle::update();
-				item::Ball::update(Player::getMainPlayerDP());
+				item::Brick::getInstance()->update();
+				Obstacle::getInstance()->update();
+				item::Ball::getInstance()->update();
 			}
 			else {
-				item::Ball::followPlayer(Player::getMainPlayerTopCenterPos());
-				Obstacle::restart();
+				item::Ball::getInstance()->followPlayer();
+				Obstacle::getInstance()->restart();
 			}
 		}
 	}
 
+}
+
+void Stage::updateMouseLight(float updateSpan, sf::Vector2f mousePosition) {
 	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
 }
 
 Stage::Stage() {
-	addChild({ HUD::getInstance(), Player::getInstance(), item::Ball::getInstance(), item::Brick::getInstance(), Obstacle::getInstance(), mouseLight });
-	HUD::setBackgroundColor(sf::Color(210, 210, 210));
-	item::Ball::followPlayer(Player::getMainPlayerTopCenterPos());
+	addChild({ HUD::getInstance(), Player::getInstance(), item::Ball::getInstance(), item::Brick::getInstance(), Obstacle::getInstance()});
+	mouseLight = std::shared_ptr<ParticleSystem>(new ParticleSystem(2000));
+	addChild({ mouseLight });
 }
+
+Stage & Stage::operator=(const Stage &) = default;
 
 void Stage::onKeyPressed(game::Event * event) {
 	if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::P) {
@@ -110,3 +126,4 @@ void Stage::onMouseButtonPressed(game::Event * event) {
 		}
 	}
 }
+

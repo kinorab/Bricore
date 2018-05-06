@@ -2,36 +2,32 @@
 #include "define.h"
 #include <iostream>
 
-std::vector <std::shared_ptr<sf::RectangleShape>> HUD::interface = []() {
-	std::vector <std::shared_ptr<sf::RectangleShape>> inter;
-	inter.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(LEVEL_WIDTH, LEVEL_HEIGHT))));
-	inter.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 200.f))));
-	inter.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 300.f))));
-	inter.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 400.f))));
-	inter.at(1)->setFillColor(sf::Color::Blue);
-	inter.at(1)->setPosition({ LEVEL_WIDTH, 0.f });
-	inter.at(2)->setFillColor(sf::Color::Green);
-	inter.at(2)->setPosition({ LEVEL_WIDTH, 200.f });
-	inter.at(3)->setFillColor(sf::Color::Cyan);
-	inter.at(3)->setPosition({ LEVEL_WIDTH, 500.f });
-	return inter;
-}();
-std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel1;
-std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel2;
-std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> HUD::panel3;
-std::shared_ptr<game::Button> HUD::button;
 std::shared_ptr<HUD> HUD::instance = nullptr;
 
 HUD::HUD() {
+	// interface
+	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(LEVEL_WIDTH, LEVEL_HEIGHT))));
+	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 200.f))));
+	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 300.f))));
+	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 400.f))));
+	interface.at(1)->setFillColor(sf::Color::Blue);
+	interface.at(1)->setPosition({ LEVEL_WIDTH, 0.f });
+	interface.at(2)->setFillColor(sf::Color::Green);
+	interface.at(2)->setPosition({ LEVEL_WIDTH, 200.f });
+	interface.at(3)->setFillColor(sf::Color::Cyan);
+	interface.at(3)->setPosition({ LEVEL_WIDTH, 500.f });
+	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3) });
+
+	// button
 	std::shared_ptr<sf::CircleShape> up(new sf::CircleShape(50));
 	up->setFillColor(sf::Color::Black);
 	std::shared_ptr<sf::RectangleShape> over(new sf::RectangleShape(sf::Vector2f(100.f, 180.f)));
 	over->setFillColor(sf::Color::Yellow);
 	std::shared_ptr<sf::RectangleShape> down(new sf::RectangleShape(sf::Vector2f(80.f, 50.f)));
 	down->setFillColor(sf::Color::Magenta);
-	std::shared_ptr<sf::CircleShape> hit(new sf::CircleShape(50));
-	std::shared_ptr<game::CircleShapeNode> hitNode(new game::CircleShapeNode(hit));
-	button.reset(new game::Button(up, over, down, hitNode));
+	std::shared_ptr<sf::CircleShape> press(new sf::CircleShape(50));
+	std::shared_ptr<game::CircleShapeNode> pressNode(new game::CircleShapeNode(press));
+	button.reset(new game::Button(up, over, down, pressNode));
 	button->setPosition(LEVEL_WIDTH + 20, 400);
 	button->addEventListener(sf::Event::MouseButtonPressed,
 		[](game::Event * event) {
@@ -40,17 +36,18 @@ HUD::HUD() {
 			<< ", y: " << std::get<sf::Event::MouseButtonEvent>(event->data).y
 			<< std::endl;
 	});
-	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3), button });
+	addChild({ button });
 }
 
 std::shared_ptr<HUD> HUD::getInstance() {
 	if (!instance) {
 		instance = std::shared_ptr<HUD>(new HUD());
+		instance->setBackgroundColor(sf::Color(210, 210, 210));
 	}
 	return instance;
 }
 
-bool HUD::resetInstance() {
+const bool HUD::resetInstance() {
 	if (instance) {
 		instance.reset();
 		return true;

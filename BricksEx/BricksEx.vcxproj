@@ -158,7 +158,7 @@
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="hud.cpp" />
-    <ClCompile Include="levelDeploy.cpp" />
+    <ClCompile Include="LVDeploy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movieClip.cpp" />
     <ClCompile Include="obstacle.cpp" />
@@ -188,7 +188,7 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="hud.h" />
-    <ClInclude Include="levelDeploy.h" />
+    <ClInclude Include="LVDeploy.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="movieClip.h" />
     <ClInclude Include="obstacle.h" />

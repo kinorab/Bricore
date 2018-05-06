@@ -40,9 +40,6 @@
     <ClCompile Include="hud.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="levelDeploy.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -80,6 +77,9 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="textField.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="LVDeploy.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
@@ -126,9 +126,6 @@
     <ClInclude Include="hud.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="levelDeploy.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="matrix.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -169,6 +166,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="textField.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="LVDeploy.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

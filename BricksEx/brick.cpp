@@ -1,7 +1,7 @@
 #include "brick.h"
 #include "ball.h"
 #include "define.h"
-#include "levelDeploy.h"
+#include "LVDeploy.h"
 #include <stdexcept>
 #include <iostream>
 
@@ -9,20 +9,18 @@ using namespace std;
 using namespace sf;
 using namespace item;
 
-vector <unique_ptr<RectangleShape>> Brick::bricks;
-map <string, Texture *> Brick::levelImage;
-size_t Brick::amount;
-size_t Brick::rowCount;
-float Brick::frame;
-Vector2f Brick::interval;
-Vector2f Brick::sideLength;
-Vector2f Brick::whiteSpace(0.0f, 0.0f);
-bool Brick::changeEntity(false);
-RectangleShape Brick::bricksArea;
 std::shared_ptr<Brick> Brick::instance = nullptr;
 
-Brick::Brick() {
-	LVDeploy::changeBrickD();
+Brick::Brick()
+	: whiteSpace(0.0f, 0.0f)
+	, changeEntity(false) {
+	reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))
+		, LVDeploy::getBrickD().at(1)
+		, LVDeploy::getBrickD().at(2)
+		, sf::Vector2f(LVDeploy::getBrickD().at(3), LVDeploy::getBrickD().at(4))
+		, LVDeploy::getBrickD().at(5)
+		, LVDeploy::getBrickD().at(6));
+	setBrickColor(LVDeploy::getBrickCD().at(0));
 }
 
 void Brick::loadImage(const string fileName) {
@@ -158,6 +156,18 @@ std::shared_ptr<Brick> Brick::getInstance() {
 	return instance;
 }
 
+std::shared_ptr<Brick> item::Brick::getPredictInstance() {
+	static std::shared_ptr<Brick> preInstance;
+	static Brick predict;
+	if (instance) {
+		predict = *instance;
+		predict.update();
+		preInstance = std::make_shared<Brick>(predict);
+		return preInstance;
+	}
+	return nullptr;
+}
+
 bool Brick::resetInstance() {
 	if (instance) {
 		instance.reset();
@@ -169,10 +179,10 @@ bool Brick::resetInstance() {
 void Brick::update() {
 
 	if (!bricks.empty()) {
-		for (size_t i = 0; i < Ball::getBallsAmount(); ++i) {
-			if (Ball::isBallEnteredBricksArea(i)) {
+		for (size_t i = 0; i < Ball::getInstance()->getBallsAmount(); ++i) {
+			if (Ball::getInstance()->isBallEnteredBricksArea(i)) {
 				for (size_t j = 0; j < getBricksSize(); ++j) {
-					if (Ball::isBallCollided(i, j)) {
+					if (Ball::getInstance()->isBallCollided(i, j)) {
 						bricks.erase(bricks.begin() + j);
 						--j;
 					}
@@ -239,34 +249,36 @@ void Brick::reset(const size_t rowCount) {
 	}
 }
 
-const size_t Brick::getBricksSize() {
+const size_t Brick::getBricksSize() const {
 	return bricks.size();
 }
 
-const Vector2f & Brick::getSideLength() {
+const Vector2f & Brick::getSideLength() const {
 	return sideLength;
 }
 
-const Vector2f & Brick::getInterval() {
+const Vector2f & Brick::getInterval() const {
 	return interval;
 }
 
-const float Brick::getFrameSize() {
+const float Brick::getFrameSize() const {
 	return frame;
 }
 
-const sys::DPointf Brick::getDP(const size_t number) {
+const sys::DPointf Brick::getDP(const size_t number) const {
 	const Vector2f LT(bricks.at(number)->getGlobalBounds().left, bricks.at(number)->getGlobalBounds().top);
 	const Vector2f RB(LT.x + bricks.at(number)->getGlobalBounds().width, LT.y + bricks.at(number)->getGlobalBounds().height);
 	return sys::DPointf(LT, RB);
 }
 
-const sys::DPointf Brick::getBrickAreaDP() {
+const sys::DPointf Brick::getBrickAreaDP() const {
 	const FloatRect bounds = bricksArea.getGlobalBounds();
 	const Vector2f LT(bounds.left, bounds.top);
 	const Vector2f RB(bounds.left + bounds.width, bounds.top + bounds.height);
 	return sys::DPointf(LT, RB);
 }
+
+Brick & item::Brick::operator=(const Brick &) = default;
 
 void Brick::settlePlace() {
 
@@ -276,7 +288,7 @@ void Brick::settlePlace() {
 	try {
 		if (changeEntity == true) {
 			for (size_t i = 0; i < bricks.size(); ++i) {
-				bricks.at(i) = unique_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
+				bricks.at(i) = shared_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
 				if (frame > 0.0f) {
 					bricks.at(i)->setOutlineThickness(frame);
 					bricks.at(i)->setOutlineColor(Color::Black);

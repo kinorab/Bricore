@@ -1,7 +1,8 @@
 #include "obstacle.h"
 #include "define.h"
+#include "block.h"
 #include "intersects.h"
-#include "levelDeploy.h"
+#include "LVDeploy.h"
 #include "ball.h"
 #include "brick.h"
 #include "player.h"
@@ -10,14 +11,14 @@
 using namespace std;
 using namespace sf;
 
-RectangleShape Obstacle::blocksArea;
-std::vector <std::unique_ptr<item::Block>> Obstacle::blocks;
 std::shared_ptr<Obstacle> Obstacle::instance = nullptr;
 
 
 // unity of Block-->Obstacle
 Obstacle::Obstacle() { 
-	LVDeploy::changeObstacleD();
+	reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
+	setAllVerticeColor(LVDeploy::getBlockCD());
+	setAllSpeed(LVDeploy::getBlockSD());
 }
 
 std::shared_ptr<Obstacle> Obstacle::getInstance() {
@@ -25,6 +26,18 @@ std::shared_ptr<Obstacle> Obstacle::getInstance() {
 		instance = std::shared_ptr<Obstacle>(new Obstacle());
 	}
 	return instance;
+}
+
+std::shared_ptr<Obstacle> Obstacle::getPredictInstance() {
+	static std::shared_ptr<Obstacle> preInstance;
+	static Obstacle predict;
+	if (instance) {
+		predict = *instance;
+		predict.update();
+		preInstance = std::make_shared<Obstacle>(predict);
+		return preInstance;
+	}
+	return nullptr;
 }
 
 bool Obstacle::resetInstance() {
@@ -40,10 +53,10 @@ void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f>
 		if (position.size() == sideLength.size()) {
 			blocks.resize(position.size());
 			for (size_t i = 0; i < blocks.size(); ++i) {
-				blocks.at(i) = unique_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
+				blocks.at(i) = shared_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
 			}
-			setBlocksAreaDP(sys::DPointf(Vector2f(0.0f, item::Brick::getBrickAreaDP().dot2.y + AREAINTERVAL)
-				, Vector2f(LEVEL_WIDTH, Player::getPlayerAreaDP().dot1.y - AREAINTERVAL)));
+			setBlocksAreaDP(sys::DPointf(Vector2f(0.0f, item::Brick::getInstance()->getBrickAreaDP().dot2.y + AREAINTERVAL)
+				, Vector2f(LEVEL_WIDTH, Player::getInstance()->getPlayerAreaDP().dot1.y - AREAINTERVAL)));
 		}
 		else {
 			throw out_of_range("Position size not equal to side-length size.");
@@ -61,10 +74,10 @@ void Obstacle::update() {
 		blocks.at(i)->update();
 		blockCollision(i);
 	}
-	for (size_t i = 0; i < item::Ball::getBallsAmount(); ++i) {
-		if (item::Ball::isBallEnteredBlocksArea(i)) {
+	for (size_t i = 0; i < item::Ball::getInstance()->getBallsAmount(); ++i) {
+		if (item::Ball::getInstance()->isBallEnteredBlocksArea(i)) {
 			for (size_t j = 0; j < blocks.size(); ++j) {
-				item::Ball::ballCollided(i, j);
+				item::Ball::getInstance()->ballCollided(i, j);
 			}
 		}
 	}
@@ -165,23 +178,25 @@ void Obstacle::restart() {
 	}
 }
 
-const Vector2f & Obstacle::getBlockSpeed(const size_t number) {
+const Vector2f & Obstacle::getBlockSpeed(const size_t number) const {
 	return blocks.at(number)->getSpeed();
 }
 
-const size_t Obstacle::getBlocksAmount() {
+const size_t Obstacle::getBlocksAmount() const {
 	return blocks.size();
 }
 
-const sys::DPointf Obstacle::getDP(const size_t number) {
+const sys::DPointf Obstacle::getDP(const size_t number) const {
 	return blocks.at(number)->getDP();
 }
 
-const sys::DPointf Obstacle::getBlocksAreaDP() {
+const sys::DPointf Obstacle::getBlocksAreaDP() const {
 	const Vector2f LT(blocksArea.getGlobalBounds().left, blocksArea.getGlobalBounds().top);
 	const Vector2f RB(LT.x + blocksArea.getGlobalBounds().width, LT.y + blocksArea.getGlobalBounds().height);
 	return sys::DPointf(LT, RB);
 }
+
+Obstacle & Obstacle::operator =(const Obstacle &) = default;
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 	states.texture = nullptr;

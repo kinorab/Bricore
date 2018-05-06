@@ -1,20 +1,21 @@
 #include "player.h"
 #include "define.h"
+#include "audio.h"
+#include "ball.h"
 #include "intersects.h"
 #include <iostream>
 
 using namespace sf;
 
-bool Player::flash = false;
-Clock Player::elapsed;
-RectangleShape Player::mainPlayer(Vector2f(240, 12));
-//RectangleShape Player::subPlayer(Vector2f(50, 50));
-RectangleShape Player::yellowRange(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y));
-RectangleShape Player::redRange(Vector2f(yellowRange.getSize().x / 2, mainPlayer.getSize().y));
-RectangleShape Player::playerArea(Vector2f(LEVEL_WIDTH, 100.f));
 std::shared_ptr<Player> Player::instance = nullptr;
 
-Player::Player() {
+Player::Player()
+	: playerArea(RectangleShape(Vector2f(LEVEL_WIDTH, 100.f)))
+	, mainPlayer(RectangleShape(Vector2f(240, 12)))
+	, yellowRange(RectangleShape(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y)))
+	, redRange(RectangleShape(Vector2f(mainPlayer.getSize().x * 0.05f, mainPlayer.getSize().y)))
+	, flash(false) {
+
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
 	mainPlayer.setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - mainPlayer.getSize().y));
@@ -34,6 +35,18 @@ std::shared_ptr<Player> Player::getInstance() {
 	return instance;
 }
 
+std::shared_ptr<Player> Player::getPredictInstance() {
+	static std::shared_ptr<Player> preInstance;
+	static Player predict;
+	if (instance) {
+		predict = *instance;
+		predict.update();
+		preInstance = std::make_shared<Player>(predict);
+		return preInstance;
+	}
+	return nullptr;
+}
+
 bool Player::resetInstance() {
 	if (instance) {
 		instance.reset();
@@ -42,7 +55,7 @@ bool Player::resetInstance() {
 	return false;
 }
 
-void Player::playerMove(Sound &sound, const Vector2f ballPos, const float radius) {
+void Player::update() {
 	FloatRect playerBound = mainPlayer.getGlobalBounds();
 	if (playerBound.left >= 0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
@@ -57,7 +70,9 @@ void Player::playerMove(Sound &sound, const Vector2f ballPos, const float radius
 		redRange.move(Vector2f(MAINPLAYERSPEED / SLICE, 0));
 	}
 	if (GameState::start) {
-		flashRange(sound, ballPos, radius);
+		flashRange(Audio::sound1
+			, item::Ball::getInstance()->getMainBallPosition()
+			, item::Ball::getInstance()->getMainBallRadius());
 	}
 	if (flash) {
 		flashElapsed();
@@ -66,30 +81,32 @@ void Player::playerMove(Sound &sound, const Vector2f ballPos, const float radius
 	yellowRange.setPosition(mainPlayer.getPosition());
 }
 
-const Vector2f & Player::getMainPlayerPos() {
+const Vector2f & Player::getMainPlayerPos() const {
 	return mainPlayer.getPosition();
 }
 
-const Vector2f Player::getMainPlayerTopCenterPos() {
+const Vector2f Player::getMainPlayerTopCenterPos() const {
 	return Vector2f(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top);
 }
 
-const FloatRect Player::getMainPlayerBounds() {
+const FloatRect Player::getMainPlayerBounds() const {
 	return mainPlayer.getGlobalBounds();
 }
 
-const sys::DPointf Player::getMainPlayerDP() {
+const sys::DPointf Player::getMainPlayerDP() const {
 	const Vector2f LT(mainPlayer.getGlobalBounds().left, mainPlayer.getGlobalBounds().top);
 	const Vector2f RB(mainPlayer.getGlobalBounds().left + mainPlayer.getGlobalBounds().width
 		, mainPlayer.getGlobalBounds().top + mainPlayer.getGlobalBounds().height);
 	return sys::DPointf(LT, RB);
 }
 
-const sys::DPointf Player::getPlayerAreaDP() {
+const sys::DPointf Player::getPlayerAreaDP() const {
 	const Vector2f LT(playerArea.getGlobalBounds().left, playerArea.getGlobalBounds().top);
 	const Vector2f RB(LT.x + playerArea.getGlobalBounds().width, LT.y + playerArea.getGlobalBounds().height);
 	return sys::DPointf(LT, RB);
 }
+
+Player & Player::operator =(const Player &) = default;
 
 void Player::draw(RenderTarget &target, RenderStates states) const {
 	states.texture = nullptr;

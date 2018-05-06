@@ -1,40 +1,45 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include <memory>
 #include "diagonalPoint.h"
+
+namespace sf {
+	class Sound;
+}
 
 class Player : public sf::Drawable {
 
 public:
 	static std::shared_ptr<Player> getInstance();
+	static std::shared_ptr<Player> getPredictInstance();
 	static bool resetInstance();
-	static void playerMove(sf::Sound &sound, const sf::Vector2f ballPos, const float radius);
+	void update();
 
-	static const sf::Vector2f & getMainPlayerPos();
-	static const sf::Vector2f getMainPlayerTopCenterPos();
-	static const sf::FloatRect getMainPlayerBounds();
-	static const sys::DPointf getMainPlayerDP();
-	static const sys::DPointf getPlayerAreaDP();
+	const sf::Vector2f & getMainPlayerPos() const;
+	const sf::Vector2f getMainPlayerTopCenterPos() const;
+	const sf::FloatRect getMainPlayerBounds() const;
+	const sys::DPointf getMainPlayerDP() const;
+	const sys::DPointf getPlayerAreaDP() const;
 protected:
 	Player();
 
 private:
+	Player & operator =(const Player &);
 	static std::shared_ptr<Player> instance;
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-	static void setFlashPosition(const sf::Vector2f &position);
-	static void setFlashPosition(const float posX, const float posY);
-	static void setFlashFillColor(const sf::Color &color);
-	static void flashElapsed();
-	static void flashRange(sf::Sound &sound, const sf::Vector2f ballPos, const float radius);
+	void setFlashPosition(const sf::Vector2f &position);
+	void setFlashPosition(const float posX, const float posY);
+	void setFlashFillColor(const sf::Color &color);
+	void flashElapsed();
+	void flashRange(sf::Sound &sound, const sf::Vector2f ballPos, const float radius);
 
-	static bool flash;
-	static sf::Clock elapsed;
-	static sf::RectangleShape mainPlayer;
-	//static sf::RectangleShape subPlayer;
-	static sf::RectangleShape redRange;
-	static sf::RectangleShape yellowRange;
-	static sf::RectangleShape playerArea;
+	bool flash;
+	sf::Clock elapsed;
+	sf::RectangleShape mainPlayer;
+	// sf::RectangleShape subPlayer;
+	sf::RectangleShape redRange;
+	sf::RectangleShape yellowRange;
+	sf::RectangleShape playerArea;
 };
 
