@@ -55,7 +55,7 @@ y(static_cast<T>(vector.y))
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T> operator -(const Vector2<T>& right)
+inline Vector2<T> sf::operator -(const Vector2<T>& right)
 {
     return Vector2<T>(-right.x, -right.y);
 }
@@ -63,7 +63,7 @@ inline Vector2<T> operator -(const Vector2<T>& right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T>& operator +=(Vector2<T>& left, const Vector2<T>& right)
+inline Vector2<T>& sf::operator +=(Vector2<T>& left, const Vector2<T>& right)
 {
     left.x += right.x;
     left.y += right.y;
@@ -74,7 +74,7 @@ inline Vector2<T>& operator +=(Vector2<T>& left, const Vector2<T>& right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T>& operator -=(Vector2<T>& left, const Vector2<T>& right)
+inline Vector2<T>& sf::operator -=(Vector2<T>& left, const Vector2<T>& right)
 {
     left.x -= right.x;
     left.y -= right.y;
@@ -85,7 +85,7 @@ inline Vector2<T>& operator -=(Vector2<T>& left, const Vector2<T>& right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T> operator +(const Vector2<T>& left, const Vector2<T>& right)
+inline Vector2<T> sf::operator +(const Vector2<T>& left, const Vector2<T>& right)
 {
     return Vector2<T>(left.x + right.x, left.y + right.y);
 }
@@ -93,7 +93,7 @@ inline Vector2<T> operator +(const Vector2<T>& left, const Vector2<T>& right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T> operator -(const Vector2<T>& left, const Vector2<T>& right)
+inline Vector2<T> sf::operator -(const Vector2<T>& left, const Vector2<T>& right)
 {
     return Vector2<T>(left.x - right.x, left.y - right.y);
 }
@@ -101,7 +101,7 @@ inline Vector2<T> operator -(const Vector2<T>& left, const Vector2<T>& right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T> operator *(const Vector2<T>& left, T right)
+inline Vector2<T> sf::operator *(const Vector2<T>& left, T right)
 {
     return Vector2<T>(left.x * right, left.y * right);
 }
@@ -109,7 +109,7 @@ inline Vector2<T> operator *(const Vector2<T>& left, T right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T> operator *(T left, const Vector2<T>& right)
+inline Vector2<T> sf::operator *(T left, const Vector2<T>& right)
 {
     return Vector2<T>(right.x * left, right.y * left);
 }
@@ -117,7 +117,7 @@ inline Vector2<T> operator *(T left, const Vector2<T>& right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T>& operator *=(Vector2<T>& left, T right)
+inline Vector2<T>& sf::operator *=(Vector2<T>& left, T right)
 {
     left.x *= right;
     left.y *= right;
@@ -128,7 +128,7 @@ inline Vector2<T>& operator *=(Vector2<T>& left, T right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T> operator /(const Vector2<T>& left, T right)
+inline Vector2<T> sf::operator /(const Vector2<T>& left, T right)
 {
     return Vector2<T>(left.x / right, left.y / right);
 }
@@ -136,7 +136,7 @@ inline Vector2<T> operator /(const Vector2<T>& left, T right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline Vector2<T>& operator /=(Vector2<T>& left, T right)
+inline Vector2<T>& sf::operator /=(Vector2<T>& left, T right)
 {
     left.x /= right;
     left.y /= right;
@@ -147,7 +147,7 @@ inline Vector2<T>& operator /=(Vector2<T>& left, T right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline bool operator ==(const Vector2<T>& left, const Vector2<T>& right)
+inline bool sf::operator ==(const Vector2<T>& left, const Vector2<T>& right)
 {
     return (left.x == right.x) && (left.y == right.y);
 }
@@ -155,7 +155,7 @@ inline bool operator ==(const Vector2<T>& left, const Vector2<T>& right)
 
 ////////////////////////////////////////////////////////////
 template <typename T>
-inline bool operator !=(const Vector2<T>& left, const Vector2<T>& right)
+inline bool sf::operator !=(const Vector2<T>& left, const Vector2<T>& right)
 {
     return (left.x != right.x) || (left.y != right.y);
 }

@@ -15,7 +15,7 @@ namespace game {
 		return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
 	}
 
-	int TextField::getLength() const {
+	size_t TextField::getLength() const {
 		return content.size();
 	}
 

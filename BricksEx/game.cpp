@@ -14,8 +14,9 @@ mutex Game::eventQueueMutex;
 map<Keyboard::Key, bool> Game::keyDown;
 thread Game::renderThread;
 Event Game::currentEvent;
-ContextSettings Game::settings;
-RenderWindow Game::window;
+ContextSettings Game::settings(24, 8, 6, 4, 1);
+RenderWindow Game::window(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
+	, "BricksEx", Style::Close, settings);
 Vector2f Game::mousePosition;
 shared_ptr<game::InteractiveObject> Game::previousContactNode(nullptr);
 
@@ -36,12 +37,6 @@ void Game::pushEvent(const Event & event) {
 }
 
 void Game::settleWindow() {
-	settings.depthBits = 24;
-	settings.stencilBits = 8;
-	settings.antialiasingLevel = 6;
-	settings.majorVersion = 4;
-	settings.minorVersion = 1;
-	window.create(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)), "BricksEx", Style::Close, settings);
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
 	window.setPosition(Vector2i(window.getPosition().x, 20));
@@ -183,6 +178,8 @@ void Game::renderFunc() {
 		updateElapsed += temp1;
 		renderElapsed += temp1;
 		if (updateElapsed.asMilliseconds() >= updateSpan) {
+			window.draw(*Stage::getPreInstance());
+			window.display();
 			Stage::getInstance()->update();
 			updateElapsed -= milliseconds(static_cast<Int32>(updateSpan));
 			updateClock.restart();

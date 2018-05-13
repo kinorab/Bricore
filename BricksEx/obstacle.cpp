@@ -4,15 +4,10 @@
 #include "intersects.h"
 #include "LVDeploy.h"
 #include "ball.h"
-#include "brick.h"
-#include "player.h"
 #include <iostream>
 
 using namespace std;
 using namespace sf;
-
-std::shared_ptr<Obstacle> Obstacle::instance = nullptr;
-
 
 // unity of Block-->Obstacle
 Obstacle::Obstacle() { 
@@ -21,31 +16,12 @@ Obstacle::Obstacle() {
 	setAllSpeed(LVDeploy::getBlockSD());
 }
 
-std::shared_ptr<Obstacle> Obstacle::getInstance() {
-	if (!instance) {
-		instance = std::shared_ptr<Obstacle>(new Obstacle());
-	}
-	return instance;
-}
-
-std::shared_ptr<Obstacle> Obstacle::getPredictInstance() {
-	static std::shared_ptr<Obstacle> preInstance;
-	static Obstacle predict;
-	if (instance) {
-		predict = *instance;
-		predict.update();
-		preInstance = std::make_shared<Obstacle>(predict);
-		return preInstance;
-	}
-	return nullptr;
-}
-
-bool Obstacle::resetInstance() {
-	if (instance) {
-		instance.reset();
-		return true;
-	}
-	return false;
+Obstacle::Obstacle(const Obstacle & copy) {
+	blocks.clear();
+	std::for_each(copy.blocks.begin(), copy.blocks.end()
+		, [&](const std::shared_ptr<item::Block> element) {
+		blocks.push_back(std::make_shared<item::Block>(*element));
+	});
 }
 
 void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f> & sideLength) {
@@ -55,29 +31,48 @@ void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f>
 			for (size_t i = 0; i < blocks.size(); ++i) {
 				blocks.at(i) = shared_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
 			}
-			setBlocksAreaDP(sys::DPointf(Vector2f(0.0f, item::Brick::getInstance()->getBrickAreaDP().dot2.y + AREAINTERVAL)
-				, Vector2f(LEVEL_WIDTH, Player::getInstance()->getPlayerAreaDP().dot1.y - AREAINTERVAL)));
+			GameState::obstacleArea = RectangleShape(Vector2f(LEVEL_WIDTH
+				, LEVEL_HEIGHT - (GameState::playerArea.getSize().y + GameState::bricksArea.getSize().y + 2 * AREAINTERVAL)));
+			GameState::obstacleArea.setPosition(Vector2f(0.0f, GameState::bricksArea.getSize().y + AREAINTERVAL));
 		}
 		else {
 			throw out_of_range("Position size not equal to side-length size.");
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::reset(): " << ex.what() << endl;
 	}
 }
 
 
-void Obstacle::update() {
-
+void Obstacle::update(item::Ball &ball) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blocks.at(i)->update();
-		blockCollision(i);
+		blocksCollision(i);
 	}
-	for (size_t i = 0; i < item::Ball::getInstance()->getBallsAmount(); ++i) {
-		if (item::Ball::getInstance()->isBallEnteredBlocksArea(i)) {
-			for (size_t j = 0; j < blocks.size(); ++j) {
-				item::Ball::getInstance()->ballCollided(i, j);
+	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
+		if (ball.isBallEnteredObstacleArea(ballN)) {
+			for (size_t blocksN = 0; blocksN < blocks.size(); ++blocksN) {
+				ball.ballCollidedObstacle(ballN, blocksN, getDP(blocksN), getSpeed(blocksN));
+			}
+		}
+	}
+	if (GameState::finishLevel) {
+		reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
+		setAllVerticeColor(LVDeploy::getBlockCD());
+		setAllSpeed(LVDeploy::getBlockSD());
+	}
+}
+
+void Obstacle::preUpdate(item::Ball & ball) {
+	for (size_t i = 0; i < blocks.size(); ++i) {
+		blocks.at(i)->update();
+		blocksCollision(i);
+	}
+	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
+		if (ball.isBallEnteredObstacleArea(ballN)) {
+			for (size_t blocksN = 0; blocksN < blocks.size(); ++blocksN) {
+				ball.ballCollidedObstaclePre(ballN, blocksN, getDP(blocksN), getSpeed(blocksN));
 			}
 		}
 	}
@@ -89,7 +84,7 @@ void Obstacle::setBlockColor(const size_t number, const Color &c1, const Color &
 		blocks.at(number)->setVerticeColor(c1, c2, c3, c4);
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::setBlockColor(): " << ex.what() << endl;
 	}
 }
 
@@ -99,7 +94,7 @@ void Obstacle::setBlockColor(const size_t number, const Color &color) {
 		blocks.at(number)->setVerticeColor(color);
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::setBlockColor(): " << ex.what() << endl;
 	}
 }
 
@@ -111,7 +106,7 @@ void Obstacle::setAllColor(const vector<Color>& color) {
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::setAllColor(): " << ex.what() << endl;
 	}
 }
 
@@ -122,7 +117,7 @@ void Obstacle::setAllVerticeColor(const std::vector<sf::Color>& vertice) {
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::setAllVerticeColor(): " << ex.what() << endl;
 	}
 }
 
@@ -132,7 +127,7 @@ void Obstacle::setBlockSpeed(const size_t number, const float speedX, const floa
 		blocks.at(number)->setSpeed(speedX, speedY);
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::setBlockSpeed(): " << ex.what() << endl;
 	}
 }
 
@@ -142,7 +137,7 @@ void Obstacle::setBlockSpeed(const size_t number, const Vector2f & speed) {
 		blocks.at(number)->setSpeed(speed);
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::setBlockSpeed(): " << ex.what() << endl;
 	}
 }
 
@@ -154,13 +149,8 @@ void Obstacle::setAllSpeed(const vector <Vector2f> &speed) {
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::setAllSpeed(): " << ex.what() << endl;
 	}
-}
-
-void Obstacle::setBlocksAreaDP(const sys::DPointf & DP) {
-	blocksArea.setSize(DP.dot2 - DP.dot1);
-	blocksArea.setPosition(DP.dot1);
 }
 
 void Obstacle::restart() {
@@ -174,11 +164,11 @@ void Obstacle::restart() {
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::restart(): " << ex.what() << endl;
 	}
 }
 
-const Vector2f & Obstacle::getBlockSpeed(const size_t number) const {
+const Vector2f & Obstacle::getSpeed(const size_t number) const {
 	return blocks.at(number)->getSpeed();
 }
 
@@ -190,13 +180,7 @@ const sys::DPointf Obstacle::getDP(const size_t number) const {
 	return blocks.at(number)->getDP();
 }
 
-const sys::DPointf Obstacle::getBlocksAreaDP() const {
-	const Vector2f LT(blocksArea.getGlobalBounds().left, blocksArea.getGlobalBounds().top);
-	const Vector2f RB(LT.x + blocksArea.getGlobalBounds().width, LT.y + blocksArea.getGlobalBounds().height);
-	return sys::DPointf(LT, RB);
-}
-
-Obstacle & Obstacle::operator =(const Obstacle &) = default;
+Obstacle & Obstacle::operator=(const Obstacle &) = default;
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 	states.texture = nullptr;
@@ -205,7 +189,7 @@ void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 	}
 }
 
-void Obstacle::blockCollision(const size_t number) {
+void Obstacle::blocksCollision(const size_t number) {
 
 	try {
 		for (size_t j = number + 1; j < blocks.size(); ++j) {
@@ -240,7 +224,7 @@ void Obstacle::blockCollision(const size_t number) {
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Obstacle::blockCollision(): " << ex.what() << endl;
 	}
 
 }

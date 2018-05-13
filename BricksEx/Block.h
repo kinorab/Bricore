@@ -7,7 +7,8 @@ namespace item {
 	class Block : public sf::VertexArray {
 
 	public:
-		Block(const sf::Vector2f &position, const float width, const float height);
+		explicit Block(const sf::Vector2f &position, const float width, const float height);
+		explicit Block(const Block &copy);
 		void setVerticeColor(const sf::Color &);
 		void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
 		void setWidth(const float width);
@@ -18,15 +19,13 @@ namespace item {
 		void update();
 
 		const sys::DPointf getDP() const;
+		const sf::Color & getVerticeColor(const size_t index) const;
 		const sf::Vector2f getCenterPosition() const;
 		const sf::Vector2f & getCurrentPosition() const;
 		const sf::Vector2f & getOriginPosition() const;
 		const sf::Vector2f & getSpeed() const;
 		const float getWidth() const;
 		const float getHeight() const;
-
-	protected:
-		Block();
 
 	private:
 		void setBlockVertice();

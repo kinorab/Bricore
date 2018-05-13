@@ -9,11 +9,10 @@ using namespace std;
 using namespace sf;
 using namespace item;
 
-std::shared_ptr<Brick> Brick::instance = nullptr;
-
 Brick::Brick()
 	: whiteSpace(0.0f, 0.0f)
-	, changeEntity(false) {
+	, changeEntity(false)
+	, frameColor(Color::Black) {
 	reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))
 		, LVDeploy::getBrickD().at(1)
 		, LVDeploy::getBrickD().at(2)
@@ -23,9 +22,64 @@ Brick::Brick()
 	setBrickColor(LVDeploy::getBrickCD().at(0));
 }
 
+Brick::Brick(const Brick & copy) {
+	bricks.clear();
+	std::for_each(copy.bricks.begin(), copy.bricks.end()
+		, [&](const std::shared_ptr<RectangleShape> element) {
+		bricks.push_back(std::make_shared<RectangleShape>(*element));
+	});
+	setBrickColor(copy.bricksColor);
+	setFrameColor(copy.frameColor);
+}
+
+void Brick::update(Ball &ball) {
+	if (!bricks.empty()) {
+		for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
+			if (ball.isBallEnteredBricksArea(ballN)) {
+				for (size_t brickN = 0; brickN < getBricksSize(); ++brickN) {
+					if (ball.isBallCollidedBrick(ballN, brickN, getDP(brickN))) {
+						bricks.erase(bricks.begin() + brickN);
+						--brickN;
+					}
+				}
+			}
+		}
+	}
+	else {
+		LVDeploy::finishLevel();
+		reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))
+			, LVDeploy::getBrickD().at(1)
+			, LVDeploy::getBrickD().at(2)
+			, sf::Vector2f(LVDeploy::getBrickD().at(3), LVDeploy::getBrickD().at(4))
+			, LVDeploy::getBrickD().at(5)
+			, LVDeploy::getBrickD().at(6));
+		setBrickColor(LVDeploy::getBrickCD().at(0));
+	}
+}
+
+void Brick::preUpdate(Ball & ball) {
+	if (!bricks.empty()) {
+		for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
+			if (ball.isBallEnteredBricksArea(ballN)) {
+				for (size_t brickN = 0; brickN < getBricksSize(); ++brickN) {
+					if (ball.isBallCollidedBrickPre(ballN, brickN, getDP(brickN))) {
+						bricks.erase(bricks.begin() + brickN);
+						--brickN;
+					}
+				}
+			}
+		}
+	}
+}
+
 void Brick::loadImage(const string fileName) {
-	levelImage.emplace(fileName, new Texture());
-	levelImage.at(fileName)->loadFromFile(fileName);
+	try {
+		levelImage.emplace(fileName, new Texture());
+		levelImage.at(fileName)->loadFromFile(fileName);
+	}
+	catch (out_of_range &ex) {
+		cout << "Out_of_range in Brick::loadImage(): " << ex.what() << endl;
+	}
 }
 
 void Brick::deleteImage(const string fileName) {
@@ -39,25 +93,37 @@ void Brick::deleteImage(const string fileName) {
 		}
 	}
 	catch (domain_error &ex) {
-		cout << "Domain_error: " << ex.what() << endl;
+		cout << "Domain_error in Brick::delete(): " << ex.what() << endl;
 	}
 }
 
 void Brick::displayImage(const string fileName) {
-	for (size_t i = 0; i < getBricksSize(); ++i) {
-		bricks.at(i)->setTexture(levelImage.at(fileName));
+	try {
+		for (size_t i = 0; i < getBricksSize(); ++i) {
+			bricks.at(i)->setTexture(levelImage.at(fileName));
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Out_of_range in Brick::displayImage(): " << ex.what() << endl;
 	}
 }
 
 void Brick::setBrickColor(const Color &color) {
-	for (size_t i = 0; i < getBricksSize(); ++i) {
-		bricks.at(i)->setFillColor(color);
+	try {
+		bricksColor = color;
+		for (size_t i = 0; i < getBricksSize(); ++i) {
+			bricks.at(i)->setFillColor(color);
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Out_of_range in Brick::setBrickColor(): " << ex.what() << endl;
 	}
 }
 
 void Brick::setFrameColor(const Color &color) {
 	try {
 		if (frame > 0.0f) {
+			frameColor = color;
 			for (size_t i = 0; i < getBricksSize(); ++i) {
 				bricks.at(i)->setOutlineColor(color);
 			}
@@ -67,7 +133,10 @@ void Brick::setFrameColor(const Color &color) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Brick::setFrameColor(): " << ex.what() << endl;
+	}
+	catch (out_of_range &ex) {
+		cout << "Out_of_range in Brick::setFrameColor(): " << ex.what() << endl;
 	}
 }
 
@@ -83,7 +152,7 @@ void Brick::setSideLength(const Vector2f & sideLength) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Brick::setSideLength(): " << ex.what() << endl;
 	}
 }
 
@@ -99,7 +168,7 @@ void Brick::setSideLength(const float wid, const float hei) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Brick::setSideLength(): " << ex.what() << endl;
 	}
 }
 
@@ -114,7 +183,7 @@ void Brick::setInterval(const Vector2f &interval) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Brick::setInterval(): " << ex.what() << endl;
 	}
 }
 
@@ -129,7 +198,7 @@ void Brick::setInterval(const float x, const float y) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Brick::setInterval(): " << ex.what() << endl;
 	}
 }
 
@@ -145,53 +214,7 @@ void Brick::setFrameSize(const float frameSize) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
-	}
-}
-
-std::shared_ptr<Brick> Brick::getInstance() {
-	if (!instance) {
-		instance = std::shared_ptr<Brick>(new Brick());
-	}
-	return instance;
-}
-
-std::shared_ptr<Brick> item::Brick::getPredictInstance() {
-	static std::shared_ptr<Brick> preInstance;
-	static Brick predict;
-	if (instance) {
-		predict = *instance;
-		predict.update();
-		preInstance = std::make_shared<Brick>(predict);
-		return preInstance;
-	}
-	return nullptr;
-}
-
-bool Brick::resetInstance() {
-	if (instance) {
-		instance.reset();
-		return true;
-	}
-	return false;
-}
-
-void Brick::update() {
-
-	if (!bricks.empty()) {
-		for (size_t i = 0; i < Ball::getInstance()->getBallsAmount(); ++i) {
-			if (Ball::getInstance()->isBallEnteredBricksArea(i)) {
-				for (size_t j = 0; j < getBricksSize(); ++j) {
-					if (Ball::getInstance()->isBallCollided(i, j)) {
-						bricks.erase(bricks.begin() + j);
-						--j;
-					}
-				}
-			}
-		}
-	}
-	else {
-		LVDeploy::finishLevel();
+		cout << "Invalid_argument in Brick::setFrameSize(): " << ex.what() << endl;
 	}
 }
 
@@ -206,15 +229,15 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 		}
 		else {
 			sideLength = Vector2f(wid, hei);
-			Brick::rowCount = rowCount;
+			this->rowCount = rowCount;
 			frame = frameSize;
-			Brick::interval = interval;
+			this->interval = interval;
 			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
-			whiteSpace.x = (LEVEL_WIDTH - ((Brick::interval.x + sideLength.x + frame * 2) * amount - Brick::interval.x)) / 2;
+			whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
 			whiteSpace.y = whiteSpaceY;
-			bricks.resize(rowCount * amount);
+			bricks.resize(this->rowCount * amount);
 
-			if (getBricksSize() == rowCount * amount) {
+			if (getBricksSize() == this->rowCount * amount) {
 				changeEntity = true;
 				settlePlace();
 			}
@@ -224,19 +247,19 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Brick::reset(): " << ex.what() << endl;
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Brick::reset(): " << ex.what() << endl;
 	}
 }
 
 void Brick::reset(const size_t rowCount) {
 	try {
-		Brick::rowCount = rowCount;
-		bricks.resize(Brick::rowCount * amount);
+		this->rowCount = rowCount;
+		bricks.resize(this->rowCount * amount);
 
-		if (getBricksSize() == Brick::rowCount * amount) {
+		if (getBricksSize() == this->rowCount * amount) {
 			changeEntity = true;
 			settlePlace();
 		}
@@ -245,7 +268,7 @@ void Brick::reset(const size_t rowCount) {
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Brick::reset(): " << ex.what() << endl;
 	}
 }
 
@@ -266,19 +289,25 @@ const float Brick::getFrameSize() const {
 }
 
 const sys::DPointf Brick::getDP(const size_t number) const {
-	const Vector2f LT(bricks.at(number)->getGlobalBounds().left, bricks.at(number)->getGlobalBounds().top);
-	const Vector2f RB(LT.x + bricks.at(number)->getGlobalBounds().width, LT.y + bricks.at(number)->getGlobalBounds().height);
-	return sys::DPointf(LT, RB);
+	return sys::DPointf(bricks.at(number)->getGlobalBounds());
 }
 
-const sys::DPointf Brick::getBrickAreaDP() const {
-	const FloatRect bounds = bricksArea.getGlobalBounds();
-	const Vector2f LT(bounds.left, bounds.top);
-	const Vector2f RB(bounds.left + bounds.width, bounds.top + bounds.height);
-	return sys::DPointf(LT, RB);
+const sf::Color Brick::getBricksColor() const {
+	return bricksColor;
 }
 
-Brick & item::Brick::operator=(const Brick &) = default;
+Brick::~Brick() { }
+
+Brick & Brick::operator=(const Brick &right) {
+	bricks.clear();
+	std::for_each(right.bricks.begin(), right.bricks.end()
+		, [&](const std::shared_ptr<RectangleShape> element) {
+		bricks.push_back(std::make_shared<RectangleShape>(*element));
+	});
+	setBrickColor(right.bricksColor);
+	setFrameColor(right.frameColor);
+	return *this;
+}
 
 void Brick::settlePlace() {
 
@@ -296,7 +325,7 @@ void Brick::settlePlace() {
 				// center origin position in every brick
 				bricks.at(i)->setOrigin(Vector2f(bricks.at(i)->getSize().x / 2, bricks.at(i)->getSize().y / 2));
 			}
-			bricksArea.setSize(Vector2f(LEVEL_WIDTH, height));
+			GameState::bricksArea.setSize(Vector2f(LEVEL_WIDTH, height));
 			changeEntity = false;
 		}
 
@@ -322,15 +351,14 @@ void Brick::settlePlace() {
 		}
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Brick::settlePlace(): " << ex.what() << endl;
 	}
 	catch (domain_error &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Domain_error in Brick::settlePlace(): " << ex.what() << endl;
 	}
 }
 
 void Brick::draw(RenderTarget &target, RenderStates states) const {
-
 	for (size_t i = 0; i < getBricksSize(); ++i) {
 		states.texture = bricks.at(i)->getTexture();
 		target.draw(*bricks.at(i), states);

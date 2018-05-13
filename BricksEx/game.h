@@ -11,6 +11,12 @@ class Game {
 public:
 	static void run();
 private:
+	static void pushEvent(const sf::Event & event);
+	static void settleWindow();
+	static sf::Event popEvent();
+	static void handleKeyEvent();
+	static void handleMouseEvent();
+	static void renderFunc();
 	static std::atomic<bool> finished;
 	static std::queue<sf::Event> eventQueue;
 	static std::mutex eventQueueMutex;
@@ -21,10 +27,4 @@ private:
 	static sf::RenderWindow window;
 	static sf::Vector2f mousePosition;
 	static std::shared_ptr<game::InteractiveObject> previousContactNode;
-	static void pushEvent(const sf::Event & event);
-	static void settleWindow();
-	static sf::Event popEvent();
-	static void handleKeyEvent();
-	static void handleMouseEvent();
-	static void renderFunc();
 };

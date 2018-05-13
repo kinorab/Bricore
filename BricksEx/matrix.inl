@@ -69,7 +69,7 @@ template<typename T, typename iter, typename const_iter, typename iter_row, type
 inline void sys::Matrix<T, iter, const_iter, iter_row, const_iter_row>::shrink_to_fit() {
 	std::for_each(matrix.begin(), matrix.end(), [](std::vector<T> & colVector) {
 		colVector.shrink_to_fit();
-	})
+	});
 }
 // front row
 template<typename T, typename iter, typename const_iter, typename iter_row, typename const_iter_row>

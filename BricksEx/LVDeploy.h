@@ -13,13 +13,7 @@ namespace sf {
 
 class LVDeploy {
 public:
-	LVDeploy();
-	static void finishLevel();
-	static const size_t getLevel();
-	// obstacles deployment
-	static void changeObstacleD() noexcept;
-	// bricks deployment
-	static void changeBrickD() noexcept;
+	static void finishLevel() noexcept;
 	// deployment component
 	static const std::vector<sf::Vector2f> getBlockSLD() noexcept;
 	static const std::vector<sf::Vector2f> getBlockPD() noexcept;
@@ -27,6 +21,9 @@ public:
 	static const std::vector<sf::Vector2f> getBlockSD() noexcept;
 	static const std::vector<sf::Color> getBrickCD() noexcept;
 	static const std::vector<float> getBrickD() noexcept;
+
+protected:
+	LVDeploy();
 
 private:
 	static float blockLength;

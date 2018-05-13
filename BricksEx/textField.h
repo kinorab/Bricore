@@ -11,7 +11,7 @@ namespace game {
 		virtual ~TextField();
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
-		virtual int getLength() const;
+		virtual size_t getLength() const;
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:

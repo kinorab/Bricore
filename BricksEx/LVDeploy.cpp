@@ -284,36 +284,11 @@ sys::Matrix<sf::Color> LVDeploy::brickColorDeploy({
 
 LVDeploy::LVDeploy() { }
 
-void LVDeploy::finishLevel() {
+void LVDeploy::finishLevel() noexcept {
 	GameState::ready = false;
 	GameState::start = false;
 	GameState::finishLevel = true;
 	std::cout << "Finished level: " << level++ << "!!!" << std::endl;
-	if (level > 10) {
-		Obstacle::resetInstance();
-		item::Brick::resetInstance();
-		item::Ball::resetInstance();
-		Player::resetInstance();
-	}
-	else {
-		changeBrickD();
-		changeObstacleD();
-	}
-}
-
-const size_t LVDeploy::getLevel() {
-	return level;
-}
-
-void LVDeploy::changeBrickD() noexcept {
-	item::Brick::getInstance()->reset(static_cast<size_t>(getBrickD().at(0)), getBrickD().at(1), getBrickD().at(2), sf::Vector2f(getBrickD().at(3), getBrickD().at(4)), getBrickD().at(5), getBrickD().at(6));
-	item::Brick::getInstance()->setBrickColor(getBrickCD().at(0));
-}
-
-void LVDeploy::changeObstacleD() noexcept {
-	Obstacle::getInstance()->reset(getBlockPD(), getBlockSLD());
-	Obstacle::getInstance()->setAllVerticeColor(getBlockCD());
-	Obstacle::getInstance()->setAllSpeed(getBlockSD());
 }
 
 const std::vector<sf::Vector2f> LVDeploy::getBlockSLD() noexcept {

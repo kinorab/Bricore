@@ -2,7 +2,6 @@
 #include "define.h"
 #include <iostream>
 #include <stdexcept>
-#include <algorithm>
 
 using namespace std;
 using namespace sf;
@@ -13,16 +12,30 @@ Block::Block(const Vector2f & position, const float width, const float height)
 	setBlockVertice();
 }
 
+Block::Block(const Block & copy)
+	: VertexArray(copy.getPrimitiveType(), copy.getVertexCount())
+	, position(copy.position)
+	, oriPos(copy.oriPos)
+	, speed(copy.speed)
+	, width(copy.width)
+	, height(copy.height) {
+	setVerticeColor(copy.getVerticeColor(0), copy.getVerticeColor(1)
+		, copy.getVerticeColor(2), copy.getVerticeColor(3));
+	setBlockVertice();
+}
+
 void Block::setVerticeColor(const Color & color) {
-
-	for (size_t i = 0; i < getVertexCount(); ++i) {
-
-		(*this)[i].color = color;
+	try {
+		for (size_t i = 0; i < getVertexCount(); ++i) {
+			(*this)[i].color = color;
+		}
+	}
+	catch (out_of_range &ex) {
+		cout << "Out_of_range in Block::setVerticeColor(): " << ex.what() << endl;
 	}
 }
 
 void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3, const Color & c4) {
-
 	(*this)[0].color = c1;
 	(*this)[1].color = c2;
 	(*this)[2].color = c3;
@@ -40,7 +53,7 @@ void Block::setWidth(const float width) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Block::setWidth(): " << ex.what() << endl;
 	}
 }
 
@@ -55,7 +68,7 @@ void Block::setHeight(const float height) {
 		}
 	}
 	catch (invalid_argument &ex) {
-		cout << "Invalid_argument: " << ex.what() << endl;
+		cout << "Invalid_argument in Block::setHeight(): " << ex.what() << endl;
 	}
 }
 
@@ -98,8 +111,12 @@ const sys::DPointf Block::getDP() const {
 	return sys::DPointf((*this)[0].position, (*this)[2].position);
 }
 
+const sf::Color & item::Block::getVerticeColor(const size_t index) const {
+	return (*this)[index].color;
+}
+
 const Vector2f Block::getCenterPosition() const {
-	return Vector2f(((*this)[0].position.x + (*this)[2].position.x) / 2, 
+	return Vector2f(((*this)[0].position.x + (*this)[2].position.x) / 2,
 		((*this)[0].position.y + (*this)[2].position.y) / 2);
 }
 
@@ -123,8 +140,6 @@ const float Block::getHeight() const {
 	return height;
 }
 
-Block::Block() {};
-
 void Block::setBlockVertice() {
 
 	try {
@@ -143,7 +158,7 @@ void Block::setBlockVertice() {
 		}
 	}
 	catch (domain_error & ex) {
-		cout << "Domain_error: " << ex.what() << endl;
+		cout << "Domain_error in Block::setBlockVertice(): " << ex.what() << endl;
 	}
 }
 
@@ -156,6 +171,6 @@ void Block::moveEntity() {
 		position = (*this)[0].position;// mark new position in [0]
 	}
 	catch (out_of_range &ex) {
-		cout << "Exception: " << ex.what() << endl;
+		cout << "Out_of_range in Block::moveEntity(): " << ex.what() << endl;
 	}
 }

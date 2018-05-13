@@ -4,7 +4,7 @@ A breakout game written in C++.
 
 ## Platform
 
-Windows 7/8/vista/10 - x86/x64.
+Windows 7/8/10 - x86/x64.
 
 ## Tools
 

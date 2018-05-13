@@ -2,14 +2,13 @@
 #include "define.h"
 #include <iostream>
 
-std::shared_ptr<HUD> HUD::instance = nullptr;
-
 HUD::HUD() {
 	// interface
 	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(LEVEL_WIDTH, LEVEL_HEIGHT))));
 	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 200.f))));
 	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 300.f))));
 	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 400.f))));
+	interface.at(0)->setFillColor(sf::Color(180, 180, 180));
 	interface.at(1)->setFillColor(sf::Color::Blue);
 	interface.at(1)->setPosition({ LEVEL_WIDTH, 0.f });
 	interface.at(2)->setFillColor(sf::Color::Green);
@@ -37,22 +36,6 @@ HUD::HUD() {
 			<< std::endl;
 	});
 	addChild({ button });
-}
-
-std::shared_ptr<HUD> HUD::getInstance() {
-	if (!instance) {
-		instance = std::shared_ptr<HUD>(new HUD());
-		instance->setBackgroundColor(sf::Color(210, 210, 210));
-	}
-	return instance;
-}
-
-const bool HUD::resetInstance() {
-	if (instance) {
-		instance.reset();
-		return true;
-	}
-	return false;
 }
 
 void HUD::setBackgroundColor(const sf::Color &color) {

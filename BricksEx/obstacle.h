@@ -7,40 +7,34 @@
 
 namespace item {
 	class Block;
+	class Ball;
 }
 
 class Obstacle : public sf::Drawable {
 
 public:
-	static std::shared_ptr<Obstacle> getInstance();
-	static std::shared_ptr<Obstacle> getPredictInstance();
-	static bool resetInstance();
-	void reset(const std::vector <sf::Vector2f> &position, const std::vector <sf::Vector2f> &sideLength);
-	void update();
-	void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
-	void setBlockColor(const size_t number, const sf::Color &all);
-	void setAllColor(const std::vector <sf::Color> &color);
-	void setAllVerticeColor(const std::vector <sf::Color> &vertice);
-	void setBlockSpeed(const size_t, const float speedX, const float speedY = 0.0f);
-	void setBlockSpeed(const size_t, const sf::Vector2f &speed);
-	void setAllSpeed(const std::vector <sf::Vector2f> &speed);
-	void setBlocksAreaDP(const sys::DPointf &DP);
-	void restart();
-
-	const sf::Vector2f & getBlockSpeed(const size_t number) const;
-	const size_t getBlocksAmount() const;
-	const sys::DPointf getDP(const size_t number) const;
-	const sys::DPointf getBlocksAreaDP() const;
-
-protected:
 	Obstacle();
+	explicit Obstacle(const Obstacle &copy);
+	virtual void reset(const std::vector <sf::Vector2f> &position, const std::vector <sf::Vector2f> &sideLength);
+	virtual void update(item::Ball &ball);
+	virtual void preUpdate(item::Ball &ball);
+	virtual void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
+	virtual void setBlockColor(const size_t number, const sf::Color &all);
+	virtual void setAllColor(const std::vector <sf::Color> &color);
+	virtual void setAllVerticeColor(const std::vector <sf::Color> &vertice);
+	virtual void setBlockSpeed(const size_t, const float speedX, const float speedY = 0.0f);
+	virtual void setBlockSpeed(const size_t, const sf::Vector2f &speed);
+	virtual void setAllSpeed(const std::vector <sf::Vector2f> &speed);
+	virtual void restart();
+
+	virtual const sf::Vector2f & getSpeed(const size_t number) const;
+	virtual const sys::DPointf getDP(const size_t number) const;
+	virtual const size_t getBlocksAmount() const;
+	Obstacle & operator =(const Obstacle &);
 
 private:
-	Obstacle & operator =(const Obstacle &);
-	static std::shared_ptr<Obstacle> instance;
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-	void blockCollision(const size_t);
+	virtual void blocksCollision(const size_t);
 
-	sf::RectangleShape blocksArea;
 	std::vector <std::shared_ptr<item::Block>> blocks;
 };

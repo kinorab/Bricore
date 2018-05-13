@@ -1,20 +1,17 @@
 #include "player.h"
 #include "define.h"
 #include "audio.h"
-#include "ball.h"
 #include "intersects.h"
 #include <iostream>
 
 using namespace sf;
 
-std::shared_ptr<Player> Player::instance = nullptr;
-
 Player::Player()
-	: playerArea(RectangleShape(Vector2f(LEVEL_WIDTH, 100.f)))
-	, mainPlayer(RectangleShape(Vector2f(240, 12)))
+	: mainPlayer(RectangleShape(Vector2f(240, 12)))
 	, yellowRange(RectangleShape(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y)))
 	, redRange(RectangleShape(Vector2f(mainPlayer.getSize().x * 0.05f, mainPlayer.getSize().y)))
-	, flash(false) {
+	, flash(false)
+	, flashCD(false) {
 
 	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
 	mainPlayer.setFillColor(Color::Green);
@@ -25,38 +22,23 @@ Player::Player()
 	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
 	redRange.setPosition(mainPlayer.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
-	playerArea.setPosition(0.0f, LEVEL_HEIGHT - 100.f);
+	GameState::playerArea.setSize(Vector2f(LEVEL_WIDTH, 100.f));
+	GameState::playerArea.setPosition(0.0f, LEVEL_HEIGHT - 100.f);
 }
 
-std::shared_ptr<Player> Player::getInstance() {
-	if (!instance) {
-		instance = std::shared_ptr<Player>(new Player());
-	}
-	return instance;
+Player::Player(const Player & copy)
+	: flash(copy.flash)
+	, flashCD(copy.flash)
+	, CDTime(copy.CDTime)
+	, elapsed(copy.elapsed)
+	, mainPlayer(copy.mainPlayer)
+	, redRange(copy.redRange)
+	, yellowRange(copy.yellowRange) {
+
 }
 
-std::shared_ptr<Player> Player::getPredictInstance() {
-	static std::shared_ptr<Player> preInstance;
-	static Player predict;
-	if (instance) {
-		predict = *instance;
-		predict.update();
-		preInstance = std::make_shared<Player>(predict);
-		return preInstance;
-	}
-	return nullptr;
-}
-
-bool Player::resetInstance() {
-	if (instance) {
-		instance.reset();
-		return true;
-	}
-	return false;
-}
-
-void Player::update() {
-	FloatRect playerBound = mainPlayer.getGlobalBounds();
+void Player::update(const Vector2f &ballPos, const float ballRadius) {
+	const FloatRect playerBound = mainPlayer.getGlobalBounds();
 	if (playerBound.left >= 0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
 		) {
@@ -70,9 +52,7 @@ void Player::update() {
 		redRange.move(Vector2f(MAINPLAYERSPEED / SLICE, 0));
 	}
 	if (GameState::start) {
-		flashRange(Audio::sound1
-			, item::Ball::getInstance()->getMainBallPosition()
-			, item::Ball::getInstance()->getMainBallRadius());
+		flashRange(Audio::sound1, ballPos, ballRadius);
 	}
 	if (flash) {
 		flashElapsed();
@@ -94,19 +74,21 @@ const FloatRect Player::getMainPlayerBounds() const {
 }
 
 const sys::DPointf Player::getMainPlayerDP() const {
-	const Vector2f LT(mainPlayer.getGlobalBounds().left, mainPlayer.getGlobalBounds().top);
-	const Vector2f RB(mainPlayer.getGlobalBounds().left + mainPlayer.getGlobalBounds().width
-		, mainPlayer.getGlobalBounds().top + mainPlayer.getGlobalBounds().height);
-	return sys::DPointf(LT, RB);
+	return sys::DPointf(mainPlayer.getGlobalBounds());
 }
 
-const sys::DPointf Player::getPlayerAreaDP() const {
-	const Vector2f LT(playerArea.getGlobalBounds().left, playerArea.getGlobalBounds().top);
-	const Vector2f RB(LT.x + playerArea.getGlobalBounds().width, LT.y + playerArea.getGlobalBounds().height);
-	return sys::DPointf(LT, RB);
-}
+Player::~Player(){ }
 
-Player & Player::operator =(const Player &) = default;
+Player & Player::operator=(const Player &right) {
+	flash = right.flash;
+	flashCD = right.flashCD;
+	CDTime = right.CDTime;
+	elapsed = right.elapsed;
+	mainPlayer = right.mainPlayer;
+	redRange = right.redRange;
+	yellowRange = right.yellowRange;
+	return *this;
+}
 
 void Player::draw(RenderTarget &target, RenderStates states) const {
 	states.texture = nullptr;
@@ -128,7 +110,7 @@ void Player::setFlashFillColor(const sf::Color & color) {
 }
 
 void Player::flashElapsed() {
-	float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
+	const float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
 	if (time <= 1500.f) {
 		float rate = (1.f - time / 1500.f);
 		setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
@@ -139,11 +121,9 @@ void Player::flashElapsed() {
 }
 
 void Player::flashRange(Sound & sound, const Vector2f ballPos, const float radius) {
-	FloatRect playerBounds = getMainPlayerBounds();
-	FloatRect rangeBounds = redRange.getGlobalBounds();
-	Vector2f pos1P = getMainPlayerPos();
-	static Clock CDTime;
-	static bool flashCD = false;
+	const FloatRect playerBounds = getMainPlayerBounds();
+	const FloatRect rangeBounds = redRange.getGlobalBounds();
+	const Vector2f pos1P = getMainPlayerPos();
 
 	if (!flashCD) {
 		if (game::ballRectINCIntersects(ballPos, radius, playerBounds)) {

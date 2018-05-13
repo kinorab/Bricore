@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <iostream>
 
 namespace sys {
@@ -8,7 +9,8 @@ namespace sys {
 	template<typename T>
 	class DPoint {
 	public:
-		DPoint(const sf::Vector2<T> &D1, const sf::Vector2<T> &D2);
+		explicit DPoint(const sf::Vector2<T> &D1, const sf::Vector2<T> &D2);
+		explicit DPoint(const sf::Rect<T> &rect);
 
 		template<typename U>
 		explicit DPoint(const DPoint<U> &vector);

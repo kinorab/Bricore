@@ -15,6 +15,9 @@ namespace GameState {
 	bool finishLevel = false;
 	bool pause = false;
 	bool lock = false;
+	sf::RectangleShape bricksArea;
+	sf::RectangleShape obstacleArea;
+	sf::RectangleShape playerArea;
 };
 
 const int rng(const int lowerLimit, const int upperLimit) {

@@ -9,42 +9,43 @@ namespace item {
 	class Ball : public sf::Drawable {
 
 	public:
-		static std::shared_ptr<Ball> getInstance();
-		static std::shared_ptr<Ball> getPredictInstance();
-		static const bool resetInstance();
-		void update();
-		void initializeBall();
-		void followPlayer();
-		void ballCollided(const size_t number, const size_t blockNumber);
-		const bool isBallCollided(const size_t number, const size_t brickNumber);
-		const bool isBallEnteredBlocksArea(const size_t ballNumber) const;
-		const bool isBallEnteredBricksArea(const size_t ballNumber) const;
-		void ballDivided(const size_t numbers);
-
-		const float getMainBallRadius() const;
-		const sf::Vector2f & getMainBallPosition() const;
-		const size_t getBallsAmount() const;
-
-	protected:
 		Ball();
+		explicit Ball(const Ball &copy);
+		virtual void update(const sys::DPointf &playerDP);
+		virtual void preUpdate(const sys::DPointf &playerDP);
+		virtual void initializeBall();
+		virtual void followPlayer(const sf::Vector2f &pos);
+		virtual void ballCollidedObstacle(const size_t number, const size_t blockNumber, const sys::DPointf boundsDP, const sf::Vector2f &speed);
+		virtual void ballCollidedObstaclePre(const size_t number, const size_t blockNumber, const sys::DPointf boundsDP, const sf::Vector2f &speed);
+		virtual const bool isBallCollidedBrick(const size_t number, const size_t brickNumber, const sys::DPointf boundsDP);
+		virtual const bool isBallCollidedBrickPre(const size_t number, const size_t brickNumber, const sys::DPointf boundsDP);
+		virtual const bool isBallEnteredObstacleArea(const size_t ballNumber) const;
+		virtual const bool isBallEnteredBricksArea(const size_t ballNumber) const;
+		virtual void ballDivided(const size_t numbers);
+
+		virtual const float getMainBallRadius() const;
+		virtual const sf::Vector2f & getMainBallPosition() const;
+		virtual const size_t getBallsAmount() const;
+		virtual Ball &operator =(const Ball &copy);
+		virtual ~Ball();
 
 	private:
-		Ball & operator =(const Ball &);
-		static std::shared_ptr<Ball> instance;
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		void collision(const size_t);
+		virtual void ballsCollision(const size_t);
 
 		class BallContainer : public sf::Drawable {
 		public:
-			BallContainer();
-			void determineUpdate();
-			void move(const sys::DPointf &);
+			explicit BallContainer(bool &);
+			explicit BallContainer(const BallContainer &);
+			void move(const sys::DPointf &, bool &);
+			void predictMove(const sys::DPointf &);
 			void setSpeedX(const float);
 			void setSpeedY(const float);
 			void setSpeed(const sf::Vector2f &);
 			void setPos(const sf::Vector2f &);
 			void setPos(const float, const float);
 			void setRadius(const float);
+			void setColor(const sf::Color &);
 			virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 			const bool isMain() const;
@@ -60,22 +61,23 @@ namespace item {
 			bool broke;
 			bool CD;
 			bool active;
+			sf::Clock countTime;
 
 		private:
-			void setColor(const sf::Color &);
+			void hitByPlayer(const sys::DPointf &);
+			void determineUpdate(bool &);
 			void resetBall();
 			bool main;
 			sf::Vector2f ballSpeed;
 			sf::Vector2f oriSpeed;
-			sf::Clock countTime;
 			sf::Clock CDTime;
 			sf::CircleShape ball;
 		};
 
 		bool multiple;
 		bool ballStartC;
-		static bool mainSettled;
-		static bool initialize;
+		bool mainSettled;
+		bool initialized;
 		std::vector<std::shared_ptr<BallContainer>> balls;
 	};
 }

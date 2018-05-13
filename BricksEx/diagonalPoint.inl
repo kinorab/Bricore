@@ -11,14 +11,20 @@ inline sys::DPoint<T>::DPoint(const sf::Vector2<T> &D1, const sf::Vector2<T> &D2
 		}
 	}
 	catch (std::invalid_argument &ex) {
-		std::cout << "Invalid_argument: " << ex.what() << std::endl;
+		std::cout << "Invalid_argument in DPoint constructor: " << ex.what() << std::endl;
 	}
+}
+
+template<typename T>
+inline sys::DPoint<T>::DPoint(const sf::Rect<T>& rect)
+	: dot1(rect.left, rect.top)
+	, dot2(rect.left + rect.width, rect.top + rect.height) {
 }
 
 template<typename T>
 template<typename U>
 inline sys::DPoint<T>::DPoint(const DPoint<U>& vector)
-	:dot1(static_cast<T>(vector.dot1)), dot2(static_cast<T>(vector.dot2)) {
+	:dot1(sf::Vector2<T>(vector.dot1)), dot2(sf::Vector2<T>(vector.dot2)) {
 }
 
 // display each point

@@ -7,9 +7,6 @@
 #include "ball.h"
 #include "player.h"
 #include "brick.h"
-#include "LVDeploy.h"
-#include <atomic>
-#include <iostream>
 
 std::shared_ptr<Stage> Stage::instance = nullptr;
 
@@ -26,17 +23,13 @@ std::shared_ptr<Stage> Stage::getInstance() {
 	}
 	return instance;
 }
-
-std::shared_ptr<Stage> Stage::getPredictInstance() {
-	static std::shared_ptr<Stage> preInstance;
-	static Stage predict;
+// use getInstance() prevent return nullptr
+std::shared_ptr<Stage> Stage::getPreInstance() {
 	if (instance) {
-		predict = *instance;
-		predict.update();
-		preInstance = std::make_shared<Stage>(predict);
-		return preInstance;
+		getInstance()->setPredict();
+		getInstance()->predictUpdate();
 	}
-	return nullptr;
+	return getInstance();
 }
 
 bool Stage::resetInstance() {
@@ -53,23 +46,26 @@ Stage::~Stage() {
 }
 
 void Stage::update() {
-
-	if (!GameState::pause) {
-		item::Ball::getInstance()->initializeBall();
-		for (size_t i = 0; i < SLICE; ++i) {
-			Player::getInstance()->update();
-			if (GameState::start) {
-				item::Brick::getInstance()->update();
-				Obstacle::getInstance()->update();
-				item::Ball::getInstance()->update();
-			}
-			else {
-				item::Ball::getInstance()->followPlayer();
-				Obstacle::getInstance()->restart();
+	try {
+		if (!GameState::pause) {
+			ball->initializeBall();
+			for (size_t i = 0; i < SLICE; ++i) {
+				player->update(ball->getMainBallPosition(), ball->getMainBallRadius());
+				if (GameState::start) {
+					brick->update(*ball);
+					obstacle->update(*ball);
+					ball->update(player->getMainPlayerDP());
+				}
+				else {
+					ball->followPlayer(player->getMainPlayerTopCenterPos());
+					obstacle->restart();
+				}
 			}
 		}
 	}
-
+	catch (std::exception &ex) {
+		std::cout << "Exception in Stage::update(): " << ex.what() << std::endl;
+	}
 }
 
 void Stage::updateMouseLight(float updateSpan, sf::Vector2f mousePosition) {
@@ -77,13 +73,56 @@ void Stage::updateMouseLight(float updateSpan, sf::Vector2f mousePosition) {
 	mouseLight->update(updateSpan);
 }
 
-Stage::Stage() {
-	addChild({ HUD::getInstance(), Player::getInstance(), item::Ball::getInstance(), item::Brick::getInstance(), Obstacle::getInstance()});
-	mouseLight = std::shared_ptr<ParticleSystem>(new ParticleSystem(2000));
-	addChild({ mouseLight });
+Stage::Stage()
+	: HUDs(new HUD())
+	, player(new Player())
+	, ball(new item::Ball())
+	, brick(new item::Brick())
+	, obstacle(new Obstacle())
+	, mouseLight(new ParticleSystem(2000))
+	, playerPredict(nullptr)
+	, ballPredict(nullptr)
+	, brickPredict(nullptr)
+	, obstaclePredict(nullptr) {
+	// presettle mainBall's position
+	ball->followPlayer(player->getMainPlayerTopCenterPos());
+	addChild({ HUDs, player, ball, brick, obstacle, mouseLight });
 }
 
-Stage & Stage::operator=(const Stage &) = default;
+void Stage::setPredict() {
+	try {
+		removeChild({ playerPredict, ballPredict, brickPredict, obstaclePredict });
+		playerPredict.reset(new Player(*player));
+		ballPredict.reset(new item::Ball(*ball));
+		brickPredict.reset(new item::Brick(*brick));
+		obstaclePredict.reset(new Obstacle(*obstacle));
+		addChildAt({ playerPredict }, getChildIndex(player.get()) + 1);
+		addChildAt({ ballPredict }, getChildIndex(ball.get()) + 1);
+		addChildAt({ brickPredict }, getChildIndex(brick.get()) + 1);
+		addChildAt({ obstaclePredict }, getChildIndex(obstacle.get()) + 1);
+	}
+	catch (std::out_of_range &ex) {
+		std::cout << "Out_of_range in Stage::setPredict():" << ex.what() << std::endl;
+	}
+}
+
+void Stage::predictUpdate() {
+	try {
+		if (!GameState::pause) {
+			for (size_t i = 0; i < SLICE; ++i) {
+				playerPredict->update(ballPredict->getMainBallPosition(), ballPredict->getMainBallRadius());
+				if (GameState::start) {
+					brickPredict->preUpdate(*ballPredict);
+					obstaclePredict->preUpdate(*ballPredict);
+					ballPredict->preUpdate(playerPredict->getMainPlayerDP());
+				}
+			}
+		}
+	}
+	catch (std::exception &ex) {
+		std::cout << "Exception in Stage::predictUpdate(): " << ex.what() << std::endl;
+	}
+}
 
 void Stage::onKeyPressed(game::Event * event) {
 	if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::P) {

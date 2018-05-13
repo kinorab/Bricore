@@ -22,6 +22,6 @@ void Audio::initialize() {
 		Audio::sound1.setVolume(bufferVolume1);
 	}
 	catch (std::runtime_error &ex) {
-		std::cout << "Runtime_error: " << ex.what() << std::endl;
+		std::cout << "Runtime_error in Audio::initialize(): " << ex.what() << std::endl;
 	}
 }
