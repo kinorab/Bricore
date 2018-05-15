@@ -14,9 +14,9 @@ mutex Game::eventQueueMutex;
 map<Keyboard::Key, bool> Game::keyDown;
 thread Game::renderThread;
 Event Game::currentEvent;
-ContextSettings Game::settings(24, 8, 6, 4, 1);
+Graphics Game::graph;
 RenderWindow Game::window(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
-	, "BricksEx", Style::Close, settings);
+	, "BricksEx", Style::Close, graph.getSettings());
 Vector2f Game::mousePosition;
 shared_ptr<game::InteractiveObject> Game::previousContactNode(nullptr);
 
@@ -41,6 +41,8 @@ void Game::settleWindow() {
 	window.setVerticalSyncEnabled(true);
 	window.setPosition(Vector2i(window.getPosition().x, 20));
 	ImmAssociateContext(window.getSystemHandle(), 0);
+	sf::Uint8 a[] = { 255, 255, 255, 255,	 0, 0, 0, 255 };
+	window.setIcon(2, 1, a);
 	window.setActive(false);
 }
 
@@ -142,6 +144,10 @@ void Game::handleMouseEvent() {
 	}
 }
 
+void Game::handleFrameEvent() {
+	//window.create(window.getSystemHandle(), settings);
+}
+
 void Game::renderFunc() {
 	Audio::initialize();
 	for (Keyboard::Key i = Keyboard::Unknown;
@@ -149,54 +155,40 @@ void Game::renderFunc() {
 		i = static_cast<Keyboard::Key>(i + 1)) {
 		keyDown.insert({ i, false });
 	}
-
-	static Time temp1 = milliseconds(0);
-	static Time temp2 = milliseconds(0);
-	static Time temp3 = milliseconds(0);
-	static Time updateElapsed = milliseconds(0);
-	static Time renderElapsed = milliseconds(0);
-	static Clock updateClock;
+	// display in milliseconds
+	constexpr float updateSpan = 0.013f * 1000.f;
+	Time elapsed = milliseconds(0);
+	Time renderElapsed = milliseconds(0);
+	Time distribute = milliseconds(0);
+	Clock clock;
 	bool finishing = false;
 
 	while (!finishing) {
-
+		distribute = clock.restart();
+		elapsed += distribute;
+		renderElapsed += distribute;
 		while (!eventQueue.empty()) {
 			currentEvent = popEvent();
 			handleKeyEvent();
 			handleMouseEvent();
+			handleFrameEvent();
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;
 			}
-			updateClock.restart();
 		}
+		// max fixed at 1.5x current fps
+		renderElapsed = min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 
-		// display in milliseconds
-		static constexpr float updateSpan = 0.013f * 1000.f;
-		static float renderUpdateSpan = (1.f / 60.f) * 1000.f;
-
-		temp1 = updateClock.restart();
-		updateElapsed += temp1;
-		renderElapsed += temp1;
-		if (updateElapsed.asMilliseconds() >= updateSpan) {
-			window.draw(*Stage::getPreInstance());
+		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
+			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
+			window.draw(*Stage::getPreInstance(elapsed.asMilliseconds() / updateSpan));
+			Stage::getInstance()->update(updateSpan, mousePosition);
+		}
+		if (renderElapsed.asMicroseconds() >= graph.getFrameSpan() * 1000.f) {
 			window.display();
-			Stage::getInstance()->update();
-			updateElapsed -= milliseconds(static_cast<Int32>(updateSpan));
-			updateClock.restart();
+			renderElapsed -= milliseconds(static_cast<Int32>(graph.getFrameSpan()));
 		}
-
-		temp2 = updateClock.restart();
-		if (renderElapsed.asMilliseconds() > renderUpdateSpan) {
-			Stage::getInstance()->updateMouseLight(updateSpan, mousePosition);
-			window.draw(*Stage::getInstance());
-			window.display();
-			renderElapsed -= milliseconds(static_cast<Int32>(renderUpdateSpan));
-			updateClock.restart();
-		}
-		updateElapsed += temp2;
-		renderElapsed += temp2;
 	}
-
 	// finalize...
 	window.setActive(false);
 	finished = true;

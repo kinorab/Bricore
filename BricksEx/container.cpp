@@ -142,8 +142,7 @@ namespace game {
 		children.clear();
 		children.shrink_to_fit();
 	}
-	// remove certain children and return their indexes
-	// once any element no found return -1
+
 	std::vector<int> Container::removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
 		std::vector<int> indexes;
 		try {
@@ -208,7 +207,7 @@ namespace game {
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 		states.transform = states.transform.combine(getTransform());
 		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<sf::Drawable> & child) {
+			[&](const std::shared_ptr<InteractiveObject> & child) {
 			target.draw(*child, states);
 		});
 	}

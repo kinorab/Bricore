@@ -82,6 +82,9 @@
     <ClCompile Include="LVDeploy.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="graphics.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
@@ -169,6 +172,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="LVDeploy.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

@@ -64,9 +64,9 @@ void Obstacle::update(item::Ball &ball) {
 	}
 }
 
-void Obstacle::preUpdate(item::Ball & ball) {
+void Obstacle::preUpdate(item::Ball & ball, const float intervalTime) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		blocks.at(i)->update();
+		blocks.at(i)->preUpdate(intervalTime);
 		blocksCollision(i);
 	}
 	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {

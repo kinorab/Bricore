@@ -24,10 +24,10 @@ std::shared_ptr<Stage> Stage::getInstance() {
 	return instance;
 }
 // use getInstance() prevent return nullptr
-std::shared_ptr<Stage> Stage::getPreInstance() {
+std::shared_ptr<Stage> Stage::getPreInstance(const float intervalTime) {
 	if (instance) {
 		getInstance()->setPredict();
-		getInstance()->predictUpdate();
+		getInstance()->predictUpdate(intervalTime);
 	}
 	return getInstance();
 }
@@ -45,7 +45,7 @@ Stage::~Stage() {
 	Audio::sound1.stop();
 }
 
-void Stage::update() {
+void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	try {
 		if (!GameState::pause) {
 			ball->initializeBall();
@@ -62,15 +62,30 @@ void Stage::update() {
 				}
 			}
 		}
+		mouseLight->setEmitPosition(mousePosition);
+		mouseLight->update(updateSpan);
 	}
 	catch (std::exception &ex) {
 		std::cout << "Exception in Stage::update(): " << ex.what() << std::endl;
 	}
 }
 
-void Stage::updateMouseLight(float updateSpan, sf::Vector2f mousePosition) {
-	mouseLight->setEmitPosition(mousePosition);
-	mouseLight->update(updateSpan);
+void Stage::predictUpdate(const float intervalTime) {
+	try {
+		if (!GameState::pause) {
+			for (size_t i = 0; i < SLICE; ++i) {
+				playerPredict->preUpdate(ballPredict->getMainBallPosition(), ballPredict->getMainBallRadius(), intervalTime);
+				if (GameState::start) {
+					brickPredict->preUpdate(*ballPredict, intervalTime);
+					obstaclePredict->preUpdate(*ballPredict, intervalTime);
+					ballPredict->preUpdate(playerPredict->getMainPlayerDP(), intervalTime);
+				}
+			}
+		}
+	}
+	catch (std::exception &ex) {
+		std::cout << "Exception in Stage::predictUpdate(): " << ex.what() << std::endl;
+	}
 }
 
 Stage::Stage()
@@ -86,41 +101,25 @@ Stage::Stage()
 	, obstaclePredict(nullptr) {
 	// presettle mainBall's position
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
-	addChild({ HUDs, player, ball, brick, obstacle, mouseLight });
+	addChild({ HUDs, mouseLight });
 }
 
 void Stage::setPredict() {
 	try {
-		removeChild({ playerPredict, ballPredict, brickPredict, obstaclePredict });
+		if (playerPredict && ballPredict && brickPredict && obstaclePredict) {
+			removeChild({ playerPredict, ballPredict, brickPredict, obstaclePredict });
+		}
 		playerPredict.reset(new Player(*player));
 		ballPredict.reset(new item::Ball(*ball));
 		brickPredict.reset(new item::Brick(*brick));
 		obstaclePredict.reset(new Obstacle(*obstacle));
-		addChildAt({ playerPredict }, getChildIndex(player.get()) + 1);
-		addChildAt({ ballPredict }, getChildIndex(ball.get()) + 1);
-		addChildAt({ brickPredict }, getChildIndex(brick.get()) + 1);
-		addChildAt({ obstaclePredict }, getChildIndex(obstacle.get()) + 1);
+		addChildAt({ playerPredict }, getChildIndex({HUDs.get()}) + 1);
+		addChildAt({ ballPredict }, getChildIndex({ HUDs.get() }) + 2);
+		addChildAt({ brickPredict }, getChildIndex({ HUDs.get() }) + 3);
+		addChildAt({ obstaclePredict }, getChildIndex({ HUDs.get() }) + 4);
 	}
 	catch (std::out_of_range &ex) {
 		std::cout << "Out_of_range in Stage::setPredict():" << ex.what() << std::endl;
-	}
-}
-
-void Stage::predictUpdate() {
-	try {
-		if (!GameState::pause) {
-			for (size_t i = 0; i < SLICE; ++i) {
-				playerPredict->update(ballPredict->getMainBallPosition(), ballPredict->getMainBallRadius());
-				if (GameState::start) {
-					brickPredict->preUpdate(*ballPredict);
-					obstaclePredict->preUpdate(*ballPredict);
-					ballPredict->preUpdate(playerPredict->getMainPlayerDP());
-				}
-			}
-		}
-	}
-	catch (std::exception &ex) {
-		std::cout << "Exception in Stage::predictUpdate(): " << ex.what() << std::endl;
 	}
 }
 

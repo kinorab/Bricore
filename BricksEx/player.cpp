@@ -61,6 +61,30 @@ void Player::update(const Vector2f &ballPos, const float ballRadius) {
 	yellowRange.setPosition(mainPlayer.getPosition());
 }
 
+void Player::preUpdate(const sf::Vector2f & ballPos, const float ballRadius, const float intervalTime) {
+	const FloatRect playerBound = mainPlayer.getGlobalBounds();
+	if (playerBound.left >= 0
+		&& (Keyboard::isKeyPressed(Keyboard::Left))
+		) {
+		mainPlayer.move(Vector2f((-MAINPLAYERSPEED / SLICE) * intervalTime, 0));
+		redRange.move(Vector2f((-MAINPLAYERSPEED / SLICE) * intervalTime, 0));
+	}
+	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
+		&& (Keyboard::isKeyPressed(Keyboard::Right))
+		) {
+		mainPlayer.move(Vector2f((MAINPLAYERSPEED / SLICE) * intervalTime, 0));
+		redRange.move(Vector2f((MAINPLAYERSPEED / SLICE) * intervalTime, 0));
+	}
+	if (GameState::start) {
+		flashRange(Audio::sound1, ballPos, ballRadius);
+	}
+	if (flash) {
+		flashElapsed();
+	}
+
+	yellowRange.setPosition(mainPlayer.getPosition());
+}
+
 const Vector2f & Player::getMainPlayerPos() const {
 	return mainPlayer.getPosition();
 }
@@ -112,7 +136,7 @@ void Player::setFlashFillColor(const sf::Color & color) {
 void Player::flashElapsed() {
 	const float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
 	if (time <= 1500.f) {
-		float rate = (1.f - time / 1500.f);
+		const float rate = (1.f - time / 1500.f);
 		setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
 	}
 	else {

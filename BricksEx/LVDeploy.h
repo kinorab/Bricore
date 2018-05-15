@@ -22,9 +22,6 @@ public:
 	static const std::vector<sf::Color> getBrickCD() noexcept;
 	static const std::vector<float> getBrickD() noexcept;
 
-protected:
-	LVDeploy();
-
 private:
 	static float blockLength;
 	static float incre1;

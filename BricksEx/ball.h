@@ -12,7 +12,7 @@ namespace item {
 		Ball();
 		explicit Ball(const Ball &copy);
 		virtual void update(const sys::DPointf &playerDP);
-		virtual void preUpdate(const sys::DPointf &playerDP);
+		virtual void preUpdate(const sys::DPointf &playerDP, const float intervalTime);
 		virtual void initializeBall();
 		virtual void followPlayer(const sf::Vector2f &pos);
 		virtual void ballCollidedObstacle(const size_t number, const size_t blockNumber, const sys::DPointf boundsDP, const sf::Vector2f &speed);
@@ -38,7 +38,7 @@ namespace item {
 			explicit BallContainer(bool &);
 			explicit BallContainer(const BallContainer &);
 			void move(const sys::DPointf &, bool &);
-			void predictMove(const sys::DPointf &);
+			void predictMove(const sys::DPointf &, const float);
 			void setSpeedX(const float);
 			void setSpeedY(const float);
 			void setSpeed(const sf::Vector2f &);

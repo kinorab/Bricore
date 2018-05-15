@@ -15,23 +15,22 @@ class Stage
 	: public game::Container {
 public:
 	static std::shared_ptr<Stage> getInstance();
-	static std::shared_ptr<Stage> getPreInstance();
+	static std::shared_ptr<Stage> getPreInstance(const float intervalTime);
 	static bool resetInstance();
-	virtual void update();
-	virtual void updateMouseLight(float updateSpan, sf::Vector2f mousePosition);
+	virtual void update(float updateSpan, sf::Vector2f mousePosition);
 	virtual ~Stage();
 
 protected:
 	Stage();
 	virtual void setPredict();
-	virtual void predictUpdate();
+	virtual void predictUpdate(const float);
 
 private:
-	virtual void onKeyPressed(game::Event * event);
-	virtual void onKeyReleased(game::Event * event);
-	virtual void onMouseEntered(game::Event * event);
-	virtual void onMouseLeft(game::Event * event);
-	virtual void onMouseButtonPressed(game::Event * event);
+	virtual void onKeyPressed(game::Event *);
+	virtual void onKeyReleased(game::Event *);
+	virtual void onMouseEntered(game::Event *);
+	virtual void onMouseLeft(game::Event *);
+	virtual void onMouseButtonPressed(game::Event *);
 
 	static std::shared_ptr<Stage> instance;
 	std::shared_ptr<HUD> HUDs;

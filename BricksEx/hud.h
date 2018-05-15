@@ -16,4 +16,5 @@ private:
 	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel2;
 	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel3;
 	std::shared_ptr<game::Button> button;
+
 };

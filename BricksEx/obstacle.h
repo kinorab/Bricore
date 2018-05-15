@@ -17,7 +17,7 @@ public:
 	explicit Obstacle(const Obstacle &copy);
 	virtual void reset(const std::vector <sf::Vector2f> &position, const std::vector <sf::Vector2f> &sideLength);
 	virtual void update(item::Ball &ball);
-	virtual void preUpdate(item::Ball &ball);
+	virtual void preUpdate(item::Ball &ball, const float intervalTime);
 	virtual void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
 	virtual void setBlockColor(const size_t number, const sf::Color &all);
 	virtual void setAllColor(const std::vector <sf::Color> &color);

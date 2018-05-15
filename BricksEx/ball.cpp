@@ -37,9 +37,9 @@ void Ball::update(const sys::DPointf &playerDP) {
 	}
 }
 
-void Ball::preUpdate(const sys::DPointf & playerDP) {
+void Ball::preUpdate(const sys::DPointf & playerDP, const float intervalTime) {
 	for (size_t i = 0; i < balls.size(); ++i) {
-		balls.at(i)->predictMove(playerDP);
+		balls.at(i)->predictMove(playerDP, intervalTime);
 		if (multiple) {
 			ballsCollision(i);
 		}
@@ -206,7 +206,7 @@ const size_t Ball::getBallsAmount() const {
 
 item::Ball::~Ball() { }
 
-Ball & item::Ball::operator=(const Ball &right) {
+Ball & item::Ball::operator =(const Ball &right) {
 	multiple = right.multiple;
 	ballStartC = right.ballStartC;
 	balls.clear();
@@ -304,9 +304,6 @@ void Ball::BallContainer::setColor(const Color &color) {
 void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized) {
 	const Vector2f ballPos = getPos();
 	const float radius = getRad();
-	const Vector2f LT(DP.dot1);
-	const Vector2f RB(DP.dot2);
-	const float width = RB.x - LT.x;
 	if (!active) {
 		oriSpeed.x = ballSpeed.x;
 		oriSpeed.y = ballSpeed.y;
@@ -367,16 +364,13 @@ void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized) {
 			}
 		}
 	}
-	ball.move(ballSpeed.x / SLICE, ballSpeed.y / SLICE);
 	determineUpdate(initialized);
+	ball.move(ballSpeed.x / SLICE, ballSpeed.y / SLICE);
 }
 
-void Ball::BallContainer::predictMove(const sys::DPointf &DP) {
+void Ball::BallContainer::predictMove(const sys::DPointf &DP, const float intervalTime) {
 	const Vector2f ballPos = getPos();
 	const float radius = getRad();
-	const Vector2f LT(DP.dot1);
-	const Vector2f RB(DP.dot2);
-	const float width = RB.x - LT.x;
 	// window's right bound
 	if (ballPos.x + radius >= LEVEL_WIDTH) {
 		ballSpeed.x = -abs(ballSpeed.x);
@@ -402,7 +396,7 @@ void Ball::BallContainer::predictMove(const sys::DPointf &DP) {
 			ballSpeed.x = MAXSPEED;
 		}
 	}
-	ball.move(ballSpeed.x / SLICE, ballSpeed.y / SLICE);
+	ball.move(Vector2f(ballSpeed.x / SLICE, ballSpeed.y / SLICE) * intervalTime);
 }
 
 void Ball::BallContainer::hitByPlayer(const sys::DPointf &DP) {
@@ -483,9 +477,6 @@ void Ball::BallContainer::determineUpdate(bool &initialized) {
 			broke = true;
 		}
 		else if (top && ballPos.y + radius > LEVEL_HEIGHT) {
-			broke = true;
-		}
-		else if (bottom && ballPos.y - radius < 0.0f) {
 			broke = true;
 		}
 	}

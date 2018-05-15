@@ -57,7 +57,7 @@ void Brick::update(Ball &ball) {
 	}
 }
 
-void Brick::preUpdate(Ball & ball) {
+void Brick::preUpdate(Ball & ball, const float intervalTime) {
 	if (!bricks.empty()) {
 		for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
 			if (ball.isBallEnteredBricksArea(ballN)) {
@@ -93,7 +93,7 @@ void Brick::deleteImage(const string fileName) {
 		}
 	}
 	catch (domain_error &ex) {
-		cout << "Domain_error in Brick::delete(): " << ex.what() << endl;
+		cout << "Domain_error in Brick::deleteImage(): " << ex.what() << endl;
 	}
 }
 

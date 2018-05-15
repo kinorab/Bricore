@@ -209,7 +209,7 @@ sys::Matrix<sf::Vector2f> LVDeploy::blockSpeedDeploy({
 	, sf::Vector2f(-1.5f, 0)
 	, sf::Vector2f(2.5f, 0)
 	, sf::Vector2f(-2.5f, 0)
-	, sf::Vector2f(3.f, 0) 
+	, sf::Vector2f(3.f, 0)
 	, sf::Vector2f(-3.f, 0) }
 	// level 7
 	, { sf::Vector2f(1.5f, 0)
@@ -280,9 +280,6 @@ sys::Matrix<sf::Color> LVDeploy::brickColorDeploy({
 	// level 10
 	, { sf::Color(rng() % 256, rng() % 256, rng() % 256) }
 	});
-
-
-LVDeploy::LVDeploy() { }
 
 void LVDeploy::finishLevel() noexcept {
 	GameState::ready = false;

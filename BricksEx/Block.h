@@ -17,6 +17,7 @@ namespace item {
 		void setSpeed(const float speedX, const float speedY = 0.0f);
 		void setSpeed(const sf::Vector2f &speed);
 		void update();
+		void preUpdate(const float intervalTime);
 
 		const sys::DPointf getDP() const;
 		const sf::Color & getVerticeColor(const size_t index) const;
@@ -29,7 +30,7 @@ namespace item {
 
 	private:
 		void setBlockVertice();
-		void moveEntity();
+		void moveEntity(const float = 1);
 
 		sf::Vector2f position;
 		const sf::Vector2f oriPos;

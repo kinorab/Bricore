@@ -15,7 +15,7 @@ namespace item {
 		Brick();
 		explicit Brick(const Brick &copy);
 		virtual void update(Ball &ball);
-		virtual void preUpdate(Ball &ball);
+		virtual void preUpdate(Ball &ball, const float intervalTime);
 		virtual void loadImage(const std::string fileName);
 		virtual void deleteImage(const std::string fileName);
 		virtual void displayImage(const std::string fileName);

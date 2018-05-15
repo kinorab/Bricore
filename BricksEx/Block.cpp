@@ -107,6 +107,26 @@ void Block::update() {
 	moveEntity();
 }
 
+void Block::preUpdate(const float intervalTime) {
+
+	const Vector2f posLT = (*this)[0].position;
+	const Vector2f posRB = (*this)[2].position;
+
+	if (posLT.x <= 0.0f) {
+		speed.x = abs(speed.x);
+	}
+	else if (posRB.x >= LEVEL_WIDTH) {
+		speed.x = -abs(speed.x);
+	}
+	if (posLT.y <= 0.0f) {
+		speed.y = abs(speed.y);
+	}
+	else if (posRB.y >= LEVEL_HEIGHT) {
+		speed.y = -abs(speed.y);
+	}
+	moveEntity(intervalTime);
+}
+
 const sys::DPointf Block::getDP() const {
 	return sys::DPointf((*this)[0].position, (*this)[2].position);
 }
@@ -162,11 +182,11 @@ void Block::setBlockVertice() {
 	}
 }
 
-void Block::moveEntity() {
+void Block::moveEntity(const float intervalTime) {
 
 	try {
 		for (size_t i = 0; i < getVertexCount(); ++i) {
-			(*this)[i].position += speed / static_cast<float>(SLICE);
+			(*this)[i].position += (speed / static_cast<float>(SLICE)) * intervalTime;
 		}
 		position = (*this)[0].position;// mark new position in [0]
 	}
