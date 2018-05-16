@@ -41,8 +41,7 @@ void Game::settleWindow() {
 	window.setVerticalSyncEnabled(true);
 	window.setPosition(Vector2i(window.getPosition().x, 20));
 	ImmAssociateContext(window.getSystemHandle(), 0);
-	sf::Uint8 a[] = { 255, 255, 255, 255,	 0, 0, 0, 255 };
-	window.setIcon(2, 1, a);
+	//window.setIcon(graph.getIconSize().x, graph.getIconSize().y, graph.getIcon());
 	window.setActive(false);
 }
 
@@ -144,7 +143,7 @@ void Game::handleMouseEvent() {
 	}
 }
 
-void Game::handleFrameEvent() {
+void Game::handleGraphicsEvent() {
 	//window.create(window.getSystemHandle(), settings);
 }
 
@@ -171,7 +170,7 @@ void Game::renderFunc() {
 			currentEvent = popEvent();
 			handleKeyEvent();
 			handleMouseEvent();
-			handleFrameEvent();
+			handleGraphicsEvent();
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;
 			}

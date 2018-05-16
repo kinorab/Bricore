@@ -1,12 +1,13 @@
 #include "graphics.h"
 
-Graphics::Graphics(FrameRate Fps, Resolution Dpi)
+Graphics::Graphics(const FrameRate Fps, const Resolution Dpi)
 	:currentFps(Fps), currentDpi(Dpi) {
+	//icon.loadFromFile("");
 	setFrameRate();
 	setResolution();
 }
 
-void Graphics::handleSettle(FrameRate Fps, Resolution Dpi) {
+void Graphics::handleSettle(const FrameRate Fps, const Resolution Dpi) {
 	handleFps(Fps);
 	handleDpi(Dpi);
 }
@@ -19,7 +20,15 @@ const float & Graphics::getFrameSpan() const {
 	return frameSpan;
 }
 
-void Graphics::handleFps(FrameRate Fps) {
+const sf::Uint8 * Graphics::getIcon() const {
+	return icon.getPixelsPtr();
+}
+
+const sf::Vector2u Graphics::getIconSize() const {
+	return icon.getSize();
+}
+
+void Graphics::handleFps(const FrameRate Fps) {
 	if (Fps == currentFps) {
 		return;
 	}
@@ -27,7 +36,7 @@ void Graphics::handleFps(FrameRate Fps) {
 	setFrameRate();
 }
 
-void Graphics::handleDpi(Resolution Dpi) {
+void Graphics::handleDpi(const Resolution Dpi) {
 	if (Dpi == currentDpi) {
 		return;
 	}

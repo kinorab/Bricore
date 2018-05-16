@@ -30,7 +30,7 @@ namespace item {
 
 	private:
 		void setBlockVertice();
-		void moveEntity(const float = 1);
+		void moveEntity(const float = 1.f);
 
 		sf::Vector2f position;
 		const sf::Vector2f oriPos;

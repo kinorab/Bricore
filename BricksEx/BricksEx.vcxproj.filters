@@ -85,6 +85,24 @@
     <ClCompile Include="graphics.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="area.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="skill.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="ballSkill.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="playerSkill.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="subPlayerSkill.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
@@ -175,6 +193,24 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="graphics.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="skill.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="area.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="playerSkill.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ballSkill.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="subPlayerSkill.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

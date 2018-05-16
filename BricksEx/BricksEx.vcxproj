@@ -173,13 +173,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="area.cpp" />
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="ball.cpp" />
+    <ClCompile Include="ballSkill.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="brick.cpp" />
     <ClCompile Include="circleShapeNode.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="button.cpp" />
+    <ClCompile Include="effect.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="interactiveObject.cpp" />
     <ClCompile Include="drawableNode.cpp" />
@@ -194,17 +197,22 @@
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerSkill.cpp" />
     <ClCompile Include="rectangleShapeNode.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="skill.cpp" />
     <ClCompile Include="stage.cpp" />
+    <ClCompile Include="subPlayerSkill.cpp" />
     <ClCompile Include="textButton.cpp" />
     <ClCompile Include="textField.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="vertexArrayNode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="area.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="ball.h" />
+    <ClInclude Include="ballSkill.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="brick.h" />
     <ClInclude Include="circleShapeNode.h" />
@@ -212,7 +220,11 @@
     <ClInclude Include="button.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="diagonalPoint.h" />
+    <ClInclude Include="effect.h" />
+    <ClInclude Include="playerSkill.h" />
+    <ClInclude Include="subPlayerSkill.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="skill.h" />
     <ClInclude Include="interactiveObject.h" />
     <ClInclude Include="drawableNode.h" />
     <ClInclude Include="ellipse.h" />

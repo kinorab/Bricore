@@ -4,9 +4,11 @@
 #include <vector>
 #include <memory>
 #include "diagonalPoint.h"
+#include "ballSkill.h"
 
 namespace item {
-	class Ball : public sf::Drawable {
+	class Ball :
+		public sf::Drawable {
 
 	public:
 		Ball();

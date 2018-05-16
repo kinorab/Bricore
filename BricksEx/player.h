@@ -3,12 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "diagonalPoint.h"
+#include "playerSkill.h"
 
 namespace sf {
 	class Sound;
 }
 
-class Player : public sf::Drawable {
+class Player : 
+	public sf::Drawable {
 
 public:
 	Player();
@@ -35,7 +37,6 @@ private:
 	sf::Clock CDTime;
 	sf::Clock elapsed;
 	sf::RectangleShape mainPlayer;
-	// sf::RectangleShape subPlayer;
 	sf::RectangleShape redRange;
 	sf::RectangleShape yellowRange;
 };

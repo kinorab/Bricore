@@ -18,7 +18,7 @@ private:
 	static sf::Event popEvent();
 	static void handleKeyEvent();
 	static void handleMouseEvent();
-	static void handleFrameEvent();
+	static void handleGraphicsEvent();
 	static void renderFunc();
 
 	static std::atomic<bool> finished;
