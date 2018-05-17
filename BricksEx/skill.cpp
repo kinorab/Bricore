@@ -1,11 +1,11 @@
 #include "skill.h"
 #include "effect.h"
 
-const bool & game::Skill::isExist() const {
+bool game::Skill::isExist() const {
 	return exist;
 }
 
-const bool & game::Skill::isEnable() const {
+bool game::Skill::isEnable() const {
 	return enable;
 }
 

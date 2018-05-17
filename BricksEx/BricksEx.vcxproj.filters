@@ -1,10 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="vertexArrayNode.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="area.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="audio.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="ball.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="ballSkill.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="block.cpp">
@@ -28,6 +37,9 @@
     <ClCompile Include="drawableNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="ellipse.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -37,7 +49,16 @@
     <ClCompile Include="game.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="graphics.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="hud.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="interactiveObject.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="LVDeploy.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
@@ -55,72 +76,36 @@
     <ClCompile Include="player.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="playerSkill.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
     <ClCompile Include="rectangleShapeNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="renderer.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="stage.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="UIComponent.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="vertexArrayNode.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="textButton.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="interactiveObject.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="textField.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="LVDeploy.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="area.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="effect.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="skill.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="ballSkill.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="playerSkill.cpp">
+    <ClCompile Include="stage.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="subPlayerSkill.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="textButton.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="textField.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="UIComponent.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="audio.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="ball.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="block.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="brick.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="button.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="circleShapeNode.h">
+    <ClInclude Include="vertexArrayNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="container.h">
@@ -135,6 +120,9 @@
     <ClInclude Include="drawableNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="ellipse.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -144,7 +132,16 @@
     <ClInclude Include="game.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="graphics.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="hud.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="interactiveObject.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="LVDeploy.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="matrix.h">
@@ -162,6 +159,9 @@
     <ClInclude Include="player.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="playerSkill.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
     <ClInclude Include="rectangleShapeNode.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -171,59 +171,59 @@
     <ClInclude Include="resource.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="stage.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="UIComponent.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="vertexArrayNode.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="textButton.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="interactiveObject.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="textField.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="LVDeploy.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="skill.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="effect.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="area.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="playerSkill.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="ballSkill.h">
+    <ClInclude Include="stage.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="subPlayerSkill.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="textButton.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="textField.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="area.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="audio.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ball.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ballSkill.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="block.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="brick.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="circleShapeNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="intersects.h">
-      <Filter>標頭檔</Filter>
-    </None>
     <None Include="diagonalPoint.inl">
       <Filter>資源檔</Filter>
     </None>
     <None Include="matrix.inl">
       <Filter>資源檔</Filter>
+    </None>
+    <None Include="intersects.h">
+      <Filter>標頭檔</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

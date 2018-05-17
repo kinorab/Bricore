@@ -34,11 +34,13 @@ namespace game {
 		};
 		virtual void useSkill() = 0;
 		virtual void upgradeSkill() = 0;
-		virtual const bool & isExist() const;
-		virtual const bool & isEnable() const;
+		virtual void loadSkillPicture(const sf::Texture &picture) = 0;
+		virtual bool isExist() const;
+		virtual bool isEnable() const;
 		virtual ~Skill();
 
 	protected:
+		virtual void handleSkill() = 0;
 		virtual void setEnable(const bool);
 		sf::Time duration;
 		size_t skillLevel;
