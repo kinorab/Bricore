@@ -28,7 +28,8 @@ void game::Effect::handleEffect(const Skill & skill) {
 	}
 }
 
-game::Effect::Effect() {
+game::Effect::Effect()
+	: exist(true) {
 }
 
 const bool & game::Effect::isExist() const {

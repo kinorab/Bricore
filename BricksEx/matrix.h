@@ -5,16 +5,21 @@
 #include <algorithm>
 
 namespace sys {
+	template<typename T>
 	// 2D vector
-	template<typename T, typename iter = typename std::vector<std::vector<T>>::iterator
-	, typename const_iter = typename std::vector<std::vector<T>>::const_iterator
-	, typename iter_row = typename std::vector<T>::iterator
-	, typename const_iter_row = typename std::vector<T>::const_iterator>
 	class Matrix {
 	public:
-		Matrix(const size_t row, const size_t col);
-		Matrix(const std::vector<std::vector<T>>& matrix);
-		Matrix(const Matrix<T>& vector2D);
+		using iter = typename std::vector<std::vector<T>>::iterator;
+		using const_iter = typename std::vector<std::vector<T>>::const_iterator;
+		using iter_row = typename std::vector<T>::iterator;
+		using const_iter_row = typename std::vector<T>::const_iterator;
+		using inputIter = iter;
+		using inputIter_row = iter_row;
+
+		Matrix();
+		explicit Matrix(const size_t row, const size_t col);
+		explicit Matrix(const std::vector<std::vector<T>>& matrix);
+		explicit Matrix(const Matrix<T>& vector2D);
 
 		void swap(Matrix<T>& vector2D);
 		void resize(const size_t row, const size_t col);
@@ -25,7 +30,6 @@ namespace sys {
 		void erase(const_iter first, const_iter last);
 		void clear() noexcept;
 		void assign(const size_t n, const std::vector<T> & val);
-		template<typename inputIter = typename iter>
 		void assign(inputIter first, inputIter last);
 		void shrink_to_fit();
 		std::vector<T> & front();
@@ -35,8 +39,7 @@ namespace sys {
 		T & at(const size_t rowIndex, const size_t colIndex);
 		const T &at(const size_t rowIndex, const size_t colIndex) const;
 		iter insert(const_iter pos, const std::vector<T>& val, const size_t n = 0);
-		template<typename InputIter = typename iter>
-		iter insert(const_iter pos, InputIter first, InputIter last);
+		iter insert(const_iter pos, inputIter first, inputIter last);
 
 		iter begin() noexcept;
 		const_iter begin() const noexcept;
@@ -61,7 +64,6 @@ namespace sys {
 		void erase_row(const size_t index, const_iter_row first, const_iter_row last);
 		void clear_row(const size_t index) noexcept;
 		void assign_row(const size_t index, const size_t n, const T & val);
-		template<typename inputIter_row = typename iter_row>
 		void assign_row(const size_t index, inputIter_row first, inputIter_row last);
 		void shrink_to_fit_row(const size_t index);
 		T & front_row(const size_t index);
@@ -69,9 +71,8 @@ namespace sys {
 		T & back_row(const size_t index);
 		const T & back_row(const size_t index) const;
 		iter_row insert_index_row(const size_t index, const_iter_row pos, const T & val, const size_t n = 0);
-		template<typename InputIter_row = typename iter_row>
-		iter_row insert_index_row(const size_t index, const_iter_row pos, InputIter_row first_row, InputIter_row last_row);
-		
+		iter_row insert_index_row(const size_t index, const_iter_row pos, inputIter_row first_row, inputIter_row last_row);
+
 		iter_row begin_row(const size_t index) noexcept;
 		const_iter_row begin_row(const size_t index) const noexcept;
 		iter_row end_row(const size_t index) noexcept;
