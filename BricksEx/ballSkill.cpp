@@ -11,11 +11,9 @@ game::BallSkill::BallSkill(const Ball skillName, const sf::Time & duration, cons
 }
 
 void game::BallSkill::loadFrame(const std::map<size_t, std::string> &fileNames) {
-	auto iter = fileNames.begin();
-	std::for_each(frames.begin(), frames.end(), [&](std::pair<size_t, std::shared_ptr<sf::Texture>> &frame) {
-		frame.first = iter->first;
-		frame.second->loadFromFile(iter->second);
-		++iter;
+	std::for_each(fileNames.begin(), fileNames.end(), [&](const std::pair<size_t, std::string> &file) {
+		frames.emplace(file.first, std::shared_ptr<sf::Texture>(new sf::Texture()));
+		frames.at(file.first)->loadFromFile(file.second);
 	});
 }
 

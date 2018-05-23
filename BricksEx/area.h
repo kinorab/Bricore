@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <memory>
 #include <vector>
 #include <map>
