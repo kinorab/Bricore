@@ -34,6 +34,9 @@ namespace game {
 					else if (dynamic_cast<sf::RectangleShape *>(element.get())) {
 						node.reset(new RectangleShapeNode(std::dynamic_pointer_cast<sf::RectangleShape>(element)));
 					}
+					else if (dynamic_cast<sf::Sprite *>(element.get())) {
+						node.reset(new SpriteNode(std::dynamic_pointer_cast<sf::Sprite>(element)));
+					}
 					else if (dynamic_cast<sf::VertexArray *>(element.get())) {
 						node.reset(new VertexArrayNode(std::dynamic_pointer_cast<sf::VertexArray>(element)));
 					}

@@ -3,6 +3,7 @@
 #include "circleShapeNode.h"
 #include "drawableNode.h"
 #include "rectangleShapeNode.h"
+#include "spriteNode.h"
 #include "vertexArrayNode.h"
 #include <vector>
 #include <memory>

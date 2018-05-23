@@ -201,6 +201,7 @@
     <ClCompile Include="rectangleShapeNode.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="skill.cpp" />
+    <ClCompile Include="spriteNode.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="subPlayerSkill.cpp" />
     <ClCompile Include="textButton.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="diagonalPoint.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="playerSkill.h" />
+    <ClInclude Include="spriteNode.h" />
     <ClInclude Include="subPlayerSkill.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="skill.h" />
