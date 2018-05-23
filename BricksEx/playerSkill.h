@@ -6,20 +6,21 @@
 #include "skill.h"
 
 namespace game {
-	class PlayerSkill : public Skill {
+	class PlayerSkill :
+		public Skill
+		, public sf::Sprite {
 	public:
 		explicit PlayerSkill(const Player skillName, const sf::Time &duration, const bool autoUse = false);
 		virtual void useSkill() override;
 		virtual void upgradeSkill() override;
 		virtual void gainSkill(const Player skillName);
+		virtual void loadSkillPicture(const std::vector<std::string> &fileName) override;
+
 		virtual Player getSkillName() const;
-		virtual const sf::Sprite & getSkill() const;
 		virtual ~PlayerSkill();
 
-	protected:
-		virtual void handleSkill() override;
-
 	private:
+		virtual void handleSkill() override;
 		enum class SkillState {
 			None,			// no appear on stage
 			OnMiniField,	// on player skill smaller field
@@ -30,6 +31,5 @@ namespace game {
 		SkillState currentState;
 		Player skillName;
 		std::map<SkillState, sf::Texture> skillPicture;
-		sf::Sprite skill;
 	};
 }

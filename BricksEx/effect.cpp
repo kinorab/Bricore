@@ -19,17 +19,12 @@ void game::Effect::handleEffect(const float elapsed) {
 	}
 }
 
-void game::Effect::handleEffect(const Skill & skill) {
-	if (skill.isEnable()) {
-		exist = true;
-	}
-	else {
-		return;
-	}
-}
-
 game::Effect::Effect()
 	: exist(true) {
+}
+
+void game::Effect::handleEffect(Skill & skill) {
+	skill.isExist();
 }
 
 const bool & game::Effect::isExist() const {

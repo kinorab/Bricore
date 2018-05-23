@@ -6,20 +6,21 @@
 #include "skill.h"
 
 namespace game {
-	class SubPlayerSkill : public Skill {
+	class SubPlayerSkill :
+		public Skill
+		, public sf::Sprite {
 	public:
 		explicit SubPlayerSkill(const SubPlayer skillName, const sf::Time &duration, const bool autoUse = false);
 		virtual void useSkill() override;
 		virtual void upgradeSkill() override;
 		virtual void gainSkill(const SubPlayer skillName);
+		virtual void loadSkillPicture(const std::vector<std::string> &fileName) override;
+
 		virtual SubPlayer getSkillName() const;
-		virtual const sf::Sprite & getSkill() const;
 		virtual ~SubPlayerSkill();
 
-	protected:
-		virtual void handleSkill() override;
-
 	private:
+		virtual void handleSkill() override;
 		enum class SkillState {
 			None,			// no appear on stage
 			OnField,		// on player skill field
@@ -29,6 +30,5 @@ namespace game {
 		SkillState currentState;
 		SubPlayer skillName;
 		std::map<SkillState, sf::Texture> skillPicture;
-		sf::Sprite skill;
 	};
 }

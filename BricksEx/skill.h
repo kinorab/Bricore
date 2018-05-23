@@ -14,13 +14,18 @@ namespace game {
 		};
 		enum class SubPlayer {
 			None,
+			ForceField,
+			ForceShield,
+			InfinitePower,
+
 		};
 		enum class Ball {
 			None,
-			Multiple,
-			Shield,
-			Iron,
-			Hugify
+			MultipleAttack,
+			ShieldGuard,
+			IronPower,
+			HugeBody,
+			ShuttleSpace
 		};
 		// for stable version release
 		enum class Attribute {
@@ -32,11 +37,14 @@ namespace game {
 			Light,
 			Darkness
 		};
+		Skill();
 		virtual void useSkill() = 0;
 		virtual void upgradeSkill() = 0;
-		virtual void loadSkillPicture(const sf::Texture &picture) = 0;
+		virtual void loadSkillPicture(const std::vector<std::string> &fileName) = 0;
 		virtual bool isExist() const;
 		virtual bool isEnable() const;
+		virtual const sf::Time & getDuration() const;
+		virtual const size_t getSkillLevel() const;
 		virtual ~Skill();
 
 	protected:
