@@ -18,12 +18,12 @@ void game::PlayerSkill::gainSkill(const Player playerSkill) {
 
 }
 
-game::Skill::Player game::PlayerSkill::getSkillName() const {
-	return skillName;
+void game::PlayerSkill::loadSkillPicture(const std::vector<std::string>& fileName)
+{
 }
 
-const sf::Sprite & game::PlayerSkill::getSkill() const {
-	return skill;
+game::Skill::Player game::PlayerSkill::getSkillName() const {
+	return skillName;
 }
 
 game::PlayerSkill::~PlayerSkill() {

@@ -18,12 +18,12 @@ void game::SubPlayerSkill::upgradeSkill()
 void game::SubPlayerSkill::gainSkill(const SubPlayer skillName) {
 }
 
-game::Skill::SubPlayer game::SubPlayerSkill::getSkillName() const {
-	return skillName;
+void game::SubPlayerSkill::loadSkillPicture(const std::vector<std::string>& fileName) {
+
 }
 
-const sf::Sprite & game::SubPlayerSkill::getSkill() const {
-	return skill;
+game::Skill::SubPlayer game::SubPlayerSkill::getSkillName() const {
+	return skillName;
 }
 
 game::SubPlayerSkill::~SubPlayerSkill() {
