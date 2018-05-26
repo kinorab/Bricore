@@ -9,7 +9,7 @@ using namespace std;
 using namespace sf;
 
 // unity of Block-->Obstacle
-Obstacle::Obstacle() { 
+Obstacle::Obstacle() {
 	reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
 	setAllVerticeColor(LVDeploy::getBlockCD());
 	setAllSpeed(LVDeploy::getBlockSD());
@@ -24,23 +24,19 @@ Obstacle::Obstacle(const Obstacle & copy) {
 }
 
 void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f> & sideLength) {
-	try {
-		if (position.size() == sideLength.size()) {
-			blocks.resize(position.size());
-			for (size_t i = 0; i < blocks.size(); ++i) {
-				blocks.at(i) = shared_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
-			}
-			GameState::obstacleArea = RectangleShape(Vector2f(LEVEL_WIDTH
-				, LEVEL_HEIGHT - (GameState::playerArea.getSize().y + GameState::bricksArea.getSize().y + 2 * AREAINTERVAL)));
-			GameState::obstacleArea.setPosition(Vector2f(0.0f, GameState::bricksArea.getSize().y + AREAINTERVAL));
-		}
-		else {
-			throw out_of_range("Position size not equal to side-length size.");
-		}
+
+	if (position.size() != sideLength.size()) {
+		throw out_of_range("Position size not equal to side-length size.");
 	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::reset(): " << ex.what() << endl;
+
+	blocks.resize(position.size());
+	for (size_t i = 0; i < blocks.size(); ++i) {
+		blocks.at(i) = shared_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
 	}
+
+	GameState::obstacleArea = RectangleShape(Vector2f(LEVEL_WIDTH
+		, LEVEL_HEIGHT - (GameState::playerArea.getSize().y + GameState::bricksArea.getSize().y + 2 * AREAINTERVAL)));
+	GameState::obstacleArea.setPosition(Vector2f(0.0f, GameState::bricksArea.getSize().y + AREAINTERVAL));
 }
 
 

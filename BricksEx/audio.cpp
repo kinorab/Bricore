@@ -10,18 +10,13 @@ static float bufferVolume1 = 50.0f;
 
 // preload all audio files
 void Audio::initialize() {
-	try {
-		// if memory violation happen, reset the lib connector of project (-d have something bug)
-		if (!buffer1.loadFromFile("s1.wav")) {
-			throw std::runtime_error("Cannot get the sound file.");
-		}
-		if (!Audio::bgmusic.openFromFile("bg.wav")) {
-			throw std::runtime_error("Cannot get the music file.");
-		}
-		Audio::sound1.setBuffer(buffer1);
-		Audio::sound1.setVolume(bufferVolume1);
+	// if memory violation happen, reset the lib connector of project (-d have something bug)
+	if (!buffer1.loadFromFile("s1.wav")) {
+		std::cout << "Cannot get the sound file." << std::endl;
 	}
-	catch (std::runtime_error &ex) {
-		std::cout << "Runtime_error in Audio::initialize(): " << ex.what() << std::endl;
+	if (!Audio::bgmusic.openFromFile("bg.wav")) {
+		std::cout << "Cannot get the music file." << std::endl;
 	}
+	Audio::sound1.setBuffer(buffer1);
+	Audio::sound1.setVolume(bufferVolume1);
 }

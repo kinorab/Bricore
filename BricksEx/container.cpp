@@ -16,41 +16,36 @@ namespace game {
 	}
 
 	void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, const size_t index) {
-		try {
-			if (index > children.size()) {
-				throw std::out_of_range("Index exceeds the size of children.");
+		if (index > children.size()) {
+			throw std::out_of_range("Index exceeds the size of children.");
+		}
+		std::vector<std::shared_ptr<InteractiveObject>> nodes;
+		std::transform(elements.begin(), elements.end(), std::back_inserter(nodes),
+			[this](const std::shared_ptr<sf::Drawable> & element) {
+			std::shared_ptr<InteractiveObject> node;
+			if (dynamic_cast<InteractiveObject *>(element.get())) {
+				node = std::dynamic_pointer_cast<InteractiveObject>(element);
 			}
-			std::vector<std::shared_ptr<InteractiveObject>> nodes;
-			std::transform(elements.begin(), elements.end(), std::back_inserter(nodes),
-				[this](const std::shared_ptr<sf::Drawable> & element) {
-				std::shared_ptr<InteractiveObject> node;
-				if (dynamic_cast<InteractiveObject *>(element.get())) {
-					node = std::dynamic_pointer_cast<InteractiveObject>(element);
-				}
-				else if (dynamic_cast<sf::CircleShape *>(element.get())) {
-					node.reset(new CircleShapeNode(std::dynamic_pointer_cast<sf::CircleShape>(element)));
-				}
-				else if (dynamic_cast<sf::RectangleShape *>(element.get())) {
-					node.reset(new RectangleShapeNode(std::dynamic_pointer_cast<sf::RectangleShape>(element)));
-				}
-				else if (dynamic_cast<sf::Sprite *>(element.get())) {
-					node.reset(new SpriteNode(std::dynamic_pointer_cast<sf::Sprite>(element)));
-				}
-				else if (dynamic_cast<sf::VertexArray *>(element.get())) {
-					node.reset(new VertexArrayNode(std::dynamic_pointer_cast<sf::VertexArray>(element)));
-				}
-				else {
-					node.reset(new DrawableNode(element));
-				}
+			else if (dynamic_cast<sf::CircleShape *>(element.get())) {
+				node.reset(new CircleShapeNode(std::dynamic_pointer_cast<sf::CircleShape>(element)));
+			}
+			else if (dynamic_cast<sf::RectangleShape *>(element.get())) {
+				node.reset(new RectangleShapeNode(std::dynamic_pointer_cast<sf::RectangleShape>(element)));
+			}
+			else if (dynamic_cast<sf::Sprite *>(element.get())) {
+				node.reset(new SpriteNode(std::dynamic_pointer_cast<sf::Sprite>(element)));
+			}
+			else if (dynamic_cast<sf::VertexArray *>(element.get())) {
+				node.reset(new VertexArrayNode(std::dynamic_pointer_cast<sf::VertexArray>(element)));
+			}
+			else {
+				node.reset(new DrawableNode(element));
+			}
 
-				node->setParent(weak_from_this());
-				return node;
-			});
-			children.insert(children.begin() + index, nodes.begin(), nodes.end());
-		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::addChildAt(): " << ex.what() << std::endl;
-		}
+			node->setParent(weak_from_this());
+			return node;
+		});
+		children.insert(children.begin() + index, nodes.begin(), nodes.end());
 	}
 
 	bool Container::contains(const sf::Drawable * element) const {

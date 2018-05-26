@@ -220,55 +220,40 @@ void Brick::setFrameSize(const float frameSize) {
 void Brick::reset(const size_t rowCount, const float wid, const float hei
 	, const Vector2f &interval, const float frameSize, const float whiteSpaceY) {
 
-	try {
-		if (wid <= 0.0f || hei <= 0.0f
-			|| interval.x < 0.0f || interval.y < 0.0f
-			|| frameSize < 0.0f || whiteSpaceY < 0.0f) {
-			throw invalid_argument("Invaild brick initialization.");
-		}
-		else {
-			sideLength = Vector2f(wid, hei);
-			this->rowCount = rowCount;
-			frame = frameSize;
-			this->interval = interval;
-			amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
-			whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
-			whiteSpace.y = whiteSpaceY;
-			bricks.resize(this->rowCount * amount);
+	if (wid <= 0.0f || hei <= 0.0f
+		|| interval.x < 0.0f || interval.y < 0.0f
+		|| frameSize < 0.0f || whiteSpaceY < 0.0f) {
+		throw invalid_argument("Invaild brick initialization.");
+	}
 
-			if (getBricksSize() == this->rowCount * amount) {
-				changeEntity = true;
-				settlePlace();
-			}
-			else {
-				throw out_of_range("The subscripts are out of range.");
-			}
-		}
+	sideLength = Vector2f(wid, hei);
+	this->rowCount = rowCount;
+	frame = frameSize;
+	this->interval = interval;
+	amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
+	whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
+	whiteSpace.y = whiteSpaceY;
+	bricks.resize(this->rowCount * amount);
+
+	if (getBricksSize() != this->rowCount * amount) {
+		throw out_of_range("The subscripts are out of range.");
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Brick::reset(): " << ex.what() << endl;
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Brick::reset(): " << ex.what() << endl;
-	}
+
+	changeEntity = true;
+	settlePlace();
 }
 
 void Brick::reset(const size_t rowCount) {
-	try {
-		this->rowCount = rowCount;
-		bricks.resize(this->rowCount * amount);
 
-		if (getBricksSize() == this->rowCount * amount) {
-			changeEntity = true;
-			settlePlace();
-		}
-		else {
-			throw out_of_range("The subscripts are out of range.");
-		}
+	this->rowCount = rowCount;
+	bricks.resize(this->rowCount * amount);
+
+	if (getBricksSize() != this->rowCount * amount) {
+		throw out_of_range("The subscripts are out of range.");
 	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Brick::reset(): " << ex.what() << endl;
-	}
+
+	changeEntity = true;
+	settlePlace();
 }
 
 const size_t Brick::getBricksSize() const {
@@ -329,24 +314,23 @@ void Brick::settlePlace() {
 		}
 
 		// ensure that total with the intervals should not be out of screen
-		if (whiteSpace.x >= 0.0f) {
-			// start placing bricks array
-			size_t tempCount = 1;
-			for (size_t i = 0; i < bricks.size(); ++i) {
-				const FloatRect bounds = bricks.at(i)->getGlobalBounds();
-				bricks.at(i)->setPosition(tempPos);
-				if (tempCount < amount) {
-					tempPos += Vector2f(interval.x + bounds.width, 0);
-					++tempCount;
-				}
-				else {
-					tempPos = Vector2f(initialPos.x, tempPos.y + bounds.height + interval.y);
-					tempCount = 1;
-				}
-			}
-		}
-		else {
+		if (whiteSpace.x < 0.0f) {
 			throw domain_error("Intervals are too large to place.");
+		}
+
+		// start placing bricks array
+		size_t tempCount = 1;
+		for (size_t i = 0; i < bricks.size(); ++i) {
+			const FloatRect bounds = bricks.at(i)->getGlobalBounds();
+			bricks.at(i)->setPosition(tempPos);
+			if (tempCount < amount) {
+				tempPos += Vector2f(interval.x + bounds.width, 0);
+				++tempCount;
+			}
+			else {
+				tempPos = Vector2f(initialPos.x, tempPos.y + bounds.height + interval.y);
+				tempCount = 1;
+			}
 		}
 	}
 	catch (out_of_range &ex) {

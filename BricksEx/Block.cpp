@@ -42,32 +42,22 @@ void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3
 }
 
 void Block::setWidth(const float width) {
-	try {
-		if (width > 0) {
-			this->width = width;
-			setBlockVertice();
-		}
-		else {
-			throw invalid_argument("Invalid width cannot be negetive.");
-		}
+	if (width > 0) {
+		this->width = width;
+		setBlockVertice();
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Block::setWidth(): " << ex.what() << endl;
+	else {
+		throw invalid_argument("Invalid width cannot be negetive.");
 	}
 }
 
 void Block::setHeight(const float height) {
-	try {
-		if (height > 0) {
-			this->height = height;
-			setBlockVertice();
-		}
-		else {
-			throw invalid_argument("Invalid height cannot be negative.");
-		}
+	if (height > 0) {
+		this->height = height;
+		setBlockVertice();
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Block::setHeight(): " << ex.what() << endl;
+	else {
+		throw invalid_argument("Invalid height cannot be negative.");
 	}
 }
 
@@ -161,24 +151,17 @@ const float Block::getHeight() const {
 
 void Block::setBlockVertice() {
 
-	try {
-		if (width > 0 && height > 0) {
-
-			for (size_t i = 0; i < getVertexCount(); ++i) {
-				(*this)[i].position = position;
-			}
-
-			(*this)[1].position += Vector2f(width, 0.0f);
-			(*this)[2].position += Vector2f(width, height);
-			(*this)[3].position += Vector2f(0.0f, height);
-		}
-		else {
-			throw domain_error("Invalid side-length for block.");
-		}
+	if (width <= 0 && height <= 0) {
+		throw domain_error("Invalid side-length for block.");
 	}
-	catch (domain_error & ex) {
-		cout << "Domain_error in Block::setBlockVertice(): " << ex.what() << endl;
+
+	for (size_t i = 0; i < getVertexCount(); ++i) {
+		(*this)[i].position = position;
 	}
+
+	(*this)[1].position += Vector2f(width, 0.0f);
+	(*this)[2].position += Vector2f(width, height);
+	(*this)[3].position += Vector2f(0.0f, height);
 }
 
 void Block::moveEntity(const float intervalTime) {

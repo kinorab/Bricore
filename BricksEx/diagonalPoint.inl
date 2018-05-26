@@ -1,18 +1,12 @@
 #include "diagonalPoint.h"
 template<typename T>
 inline sys::DPoint<T>::DPoint(const sf::Vector2<T> &D1, const sf::Vector2<T> &D2) {
-	try {
-		if (D1 != D2) {
-			dot1 = D1;
-			dot2 = D2;
-		}
-		else {
-			throw std::invalid_argument("Two points are not diagonal points");
-		}
+	if (D1 == D2) {
+		throw std::invalid_argument("Two points are not diagonal points");
 	}
-	catch (std::invalid_argument &ex) {
-		std::cout << "Invalid_argument in DPoint constructor: " << ex.what() << std::endl;
-	}
+
+	dot1 = D1;
+	dot2 = D2;
 }
 
 template<typename T>
