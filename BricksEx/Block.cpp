@@ -24,13 +24,8 @@ Block::Block(const Block & copy)
 }
 
 void Block::setVerticeColor(const Color & color) {
-	try {
-		for (size_t i = 0; i < getVertexCount(); ++i) {
-			(*this)[i].color = color;
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Block::setVerticeColor(): " << ex.what() << endl;
+	for (size_t i = 0; i < getVertexCount(); ++i) {
+		(*this)[i].color = color;
 	}
 }
 
@@ -166,13 +161,8 @@ void Block::setBlockVertice() {
 
 void Block::moveEntity(const float intervalTime) {
 
-	try {
-		for (size_t i = 0; i < getVertexCount(); ++i) {
-			(*this)[i].position += (speed / static_cast<float>(SLICE)) * intervalTime;
-		}
-		position = (*this)[0].position;// mark new position in [0]
+	for (size_t i = 0; i < getVertexCount(); ++i) {
+		(*this)[i].position += (speed / static_cast<float>(SLICE)) * intervalTime;
 	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Block::moveEntity(): " << ex.what() << endl;
-	}
+	position = (*this)[0].position;// mark new position in [0]
 }

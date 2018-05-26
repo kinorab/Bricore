@@ -19,6 +19,7 @@ namespace game {
 		if (index > children.size()) {
 			throw std::out_of_range("Index exceeds the size of children.");
 		}
+
 		std::vector<std::shared_ptr<InteractiveObject>> nodes;
 		std::transform(elements.begin(), elements.end(), std::back_inserter(nodes),
 			[this](const std::shared_ptr<sf::Drawable> & element) {
@@ -63,13 +64,7 @@ namespace game {
 	}
 
 	std::shared_ptr<sf::Drawable> Container::getChildAt(int index) const {
-		try {
-			return children.at(index)->getDrawable();
-		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::getChildAt(): " << ex.what() << std::endl;
-			return nullptr;
-		}
+		return children.at(index)->getDrawable();
 	}
 
 	size_t Container::getChildIndex(const sf::Drawable * element) const {
@@ -79,17 +74,11 @@ namespace game {
 			}
 		}
 
-		throw std::out_of_range("Child not found.");
+		throw std::invalid_argument("Child doesn't exist.");
 	}
 
 	std::shared_ptr<InteractiveObject> Container::getChildNode(const sf::Drawable * element) const {
-		try {
-			return children.at(getChildIndex(element));
-		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::getChildNode(): " << ex.what() << std::endl;
-			return nullptr;
-		}
+		return children.at(getChildIndex(element));
 	}
 
 	size_t Container::getChildrenCount() const {
@@ -137,17 +126,16 @@ namespace game {
 
 	std::vector<int> Container::removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
 		std::vector<int> indexes;
-		try {
-			std::transform(elements.begin(), elements.end(), std::back_inserter(indexes),
-				[this](const std::shared_ptr<sf::Drawable> & element) {
-				return static_cast<int>(getChildIndex(element.get()));
-			});
-			removeChildAt(indexes);
-		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::removeChild(): " << ex.what() << std::endl;
-		}
-
+		std::for_each(elements.begin(), elements.end(),
+			[&](const std::shared_ptr<sf::Drawable> & element) {
+			try {
+				indexes.push_back(static_cast<int>(getChildIndex(element.get())));
+			}
+			catch (std::invalid_argument &ex) {
+				std::cout << "Invalid_argument: " << ex.what() << " in Container::removeChild(): " << std::endl;
+			}
+		});
+		removeChildAt(indexes);
 		return indexes;
 	}
 
@@ -169,31 +157,16 @@ namespace game {
 	}
 
 	void Container::setChildIndex(const sf::Drawable * element, const int index) {
-		try {
-			auto elementIterator = children.begin() + getChildIndex(element);
-			std::move(elementIterator, elementIterator + 1, children.begin() + index);
-		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::setChildIndex(): " << ex.what() << std::endl;
-		}
+		auto elementIterator = children.begin() + getChildIndex(element);
+		std::move(elementIterator, elementIterator + 1, children.begin() + index);
 	}
 
 	void Container::swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB) {
-		try {
-			std::swap(children.at(getChildIndex(elementA)), children.at(getChildIndex(elementB)));
-		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::swapChildren(): " << ex.what() << std::endl;
-		}
+		std::swap(children.at(getChildIndex(elementA)), children.at(getChildIndex(elementB)));
 	}
 
 	void Container::swapChildrenAt(const int indexA, const int indexB) {
-		try {
-			std::swap(children.at(indexA), children.at(indexB));
-		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::swapChildrenAt(): " << ex.what() << std::endl;
-		}
+		std::swap(children.at(indexA), children.at(indexB));
 	}
 
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {

@@ -72,149 +72,84 @@ void Brick::preUpdate(Ball & ball, const float intervalTime) {
 }
 
 void Brick::loadImage(const string fileName) {
-	try {
-		levelImage.emplace(fileName, new Texture());
-		levelImage.at(fileName)->loadFromFile(fileName);
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Brick::loadImage(): " << ex.what() << endl;
-	}
+	levelImage.emplace(fileName, new Texture());
+	levelImage.at(fileName)->loadFromFile(fileName);
 }
 
 void Brick::deleteImage(const string fileName) {
 	const auto image = levelImage.find(fileName);
-	try {
-		if (image != levelImage.end()) {
-			levelImage.erase(image);
-		}
-		else {
-			domain_error("Image not found.");
-		}
+	if (image != levelImage.end()) {
+		levelImage.erase(image);
 	}
-	catch (domain_error &ex) {
-		cout << "Domain_error in Brick::deleteImage(): " << ex.what() << endl;
+	else {
+		throw domain_error("Image not found.");
 	}
 }
 
 void Brick::displayImage(const string fileName) {
-	try {
-		for (size_t i = 0; i < getBricksSize(); ++i) {
-			bricks.at(i)->setTexture(levelImage.at(fileName));
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Brick::displayImage(): " << ex.what() << endl;
+	for (size_t i = 0; i < getBricksSize(); ++i) {
+		bricks.at(i)->setTexture(levelImage.at(fileName));
 	}
 }
 
 void Brick::setBrickColor(const Color &color) {
-	try {
-		bricksColor = color;
-		for (size_t i = 0; i < getBricksSize(); ++i) {
-			bricks.at(i)->setFillColor(color);
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Brick::setBrickColor(): " << ex.what() << endl;
+	bricksColor = color;
+	for (size_t i = 0; i < getBricksSize(); ++i) {
+		bricks.at(i)->setFillColor(color);
 	}
 }
 
 void Brick::setFrameColor(const Color &color) {
-	try {
-		if (frame > 0.0f) {
-			frameColor = color;
-			for (size_t i = 0; i < getBricksSize(); ++i) {
-				bricks.at(i)->setOutlineColor(color);
-			}
-		}
-		else {
-			invalid_argument("Brick frames do not exist.");
-		}
+	if (frame <= 0.0f) {
+		throw invalid_argument("Brick frames do not exist.");
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Brick::setFrameColor(): " << ex.what() << endl;
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Brick::setFrameColor(): " << ex.what() << endl;
+	frameColor = color;
+	for (size_t i = 0; i < getBricksSize(); ++i) {
+		bricks.at(i)->setOutlineColor(color);
 	}
 }
 
 void Brick::setSideLength(const Vector2f & sideLength) {
-	try {
-		if (sideLength.x > 0 && sideLength.y > 0) {
-			Brick::sideLength = sideLength;
-			changeEntity = true;
-			settlePlace();
-		}
-		else {
-			invalid_argument("Side-length cannot be negative.");
-		}
+	if (sideLength.x <= 0 || sideLength.y <= 0) {
+		throw invalid_argument("Side-length cannot be negative.");
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Brick::setSideLength(): " << ex.what() << endl;
-	}
+	Brick::sideLength = sideLength;
+	changeEntity = true;
+	settlePlace();
 }
 
 void Brick::setSideLength(const float wid, const float hei) {
-	try {
-		if (wid > 0 && hei > 0) {
-			sideLength = Vector2f(wid, hei);
-			changeEntity = true;
-			settlePlace();
-		}
-		else {
-			invalid_argument("Side-length cannot be negative.");
-		}
+	if (wid <= 0 || hei <= 0) {
+		throw invalid_argument("Side-length cannot be negative.");
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Brick::setSideLength(): " << ex.what() << endl;
-	}
+	sideLength = Vector2f(wid, hei);
+	changeEntity = true;
+	settlePlace();
 }
 
 void Brick::setInterval(const Vector2f &interval) {
-	try {
-		if (interval.x >= 0.0f && interval.y >= 0.0f) {
-			Brick::interval = interval;
-			settlePlace();
-		}
-		else {
-			invalid_argument("Interval cannot be negative.");
-		}
+	if (interval.x < 0.0f || interval.y < 0.0f) {
+		throw invalid_argument("Interval cannot be negative.");
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Brick::setInterval(): " << ex.what() << endl;
-	}
+	Brick::interval = interval;
+	settlePlace();
 }
 
 void Brick::setInterval(const float x, const float y) {
-	try {
-		if (x >= 0.0f && y >= 0.0f) {
-			interval = Vector2f(x, y);
-			settlePlace();
-		}
-		else {
-			invalid_argument("Interval cannot be negative.");
-		}
+	if (x < 0.0f && y < 0.0f) {
+		throw invalid_argument("Interval cannot be negative.");
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Brick::setInterval(): " << ex.what() << endl;
-	}
+	interval = Vector2f(x, y);
+	settlePlace();
 }
 
 void Brick::setFrameSize(const float frameSize) {
-	try {
-		if (frameSize >= 0.0f) {
-			frame = frameSize;
-			changeEntity = true;
-			settlePlace();
-		}
-		else {
-			invalid_argument("Frame size cannot be negative.");
-		}
+	if (frameSize < 0.0f) {
+		throw invalid_argument("Frame size cannot be negative.");
 	}
-	catch (invalid_argument &ex) {
-		cout << "Invalid_argument in Brick::setFrameSize(): " << ex.what() << endl;
-	}
+	frame = frameSize;
+	changeEntity = true;
+	settlePlace();
 }
 
 void Brick::reset(const size_t rowCount, const float wid, const float hei
@@ -298,43 +233,38 @@ void Brick::settlePlace() {
 	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frame, interval.y + frame + sideLength.y / 2);
 	Vector2f tempPos = Vector2f(initialPos.x, initialPos.y + whiteSpace.y);
 	const float height = rowCount * (sideLength.y + frame * 2 + interval.y) + interval.y + whiteSpace.y;
-	try {
-		if (changeEntity == true) {
-			for (size_t i = 0; i < bricks.size(); ++i) {
-				bricks.at(i) = shared_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
-				if (frame > 0.0f) {
-					bricks.at(i)->setOutlineThickness(frame);
-					bricks.at(i)->setOutlineColor(Color::Black);
-				}
-				// center origin position in every brick
-				bricks.at(i)->setOrigin(Vector2f(bricks.at(i)->getSize().x / 2, bricks.at(i)->getSize().y / 2));
-			}
-			GameState::bricksArea.setSize(Vector2f(LEVEL_WIDTH, height));
-			changeEntity = false;
-		}
-
-		// ensure that total with the intervals should not be out of screen
-		if (whiteSpace.x < 0.0f) {
-			throw domain_error("Intervals are too large to place.");
-		}
-
-		// start placing bricks array
-		size_t tempCount = 1;
+	if (changeEntity == true) {
 		for (size_t i = 0; i < bricks.size(); ++i) {
-			const FloatRect bounds = bricks.at(i)->getGlobalBounds();
-			bricks.at(i)->setPosition(tempPos);
-			if (tempCount < amount) {
-				tempPos += Vector2f(interval.x + bounds.width, 0);
-				++tempCount;
+			bricks.at(i) = shared_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
+			if (frame > 0.0f) {
+				bricks.at(i)->setOutlineThickness(frame);
+				bricks.at(i)->setOutlineColor(Color::Black);
 			}
-			else {
-				tempPos = Vector2f(initialPos.x, tempPos.y + bounds.height + interval.y);
-				tempCount = 1;
-			}
+			// center origin position in every brick
+			bricks.at(i)->setOrigin(Vector2f(bricks.at(i)->getSize().x / 2, bricks.at(i)->getSize().y / 2));
 		}
+		GameState::bricksArea.setSize(Vector2f(LEVEL_WIDTH, height));
+		changeEntity = false;
 	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Brick::settlePlace(): " << ex.what() << endl;
+
+	// ensure that total with the intervals should not be out of screen
+	if (whiteSpace.x < 0.0f) {
+		throw domain_error("Intervals are too large to place.");
+	}
+
+	// start placing bricks array
+	size_t tempCount = 1;
+	for (size_t i = 0; i < bricks.size(); ++i) {
+		const FloatRect bounds = bricks.at(i)->getGlobalBounds();
+		bricks.at(i)->setPosition(tempPos);
+		if (tempCount < amount) {
+			tempPos += Vector2f(interval.x + bounds.width, 0);
+			++tempCount;
+		}
+		else {
+			tempPos = Vector2f(initialPos.x, tempPos.y + bounds.height + interval.y);
+			tempCount = 1;
+		}
 	}
 }
 

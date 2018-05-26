@@ -74,92 +74,45 @@ void Obstacle::preUpdate(item::Ball & ball, const float intervalTime) {
 }
 
 void Obstacle::setBlockColor(const size_t number, const Color &c1, const Color &c2, const Color &c3, const Color &c4) {
-
-	try {
-		blocks.at(number)->setVerticeColor(c1, c2, c3, c4);
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::setBlockColor(): " << ex.what() << endl;
-	}
+	blocks.at(number)->setVerticeColor(c1, c2, c3, c4);
 }
 
 void Obstacle::setBlockColor(const size_t number, const Color &color) {
-
-	try {
-		blocks.at(number)->setVerticeColor(color);
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::setBlockColor(): " << ex.what() << endl;
-	}
+	blocks.at(number)->setVerticeColor(color);
 }
 
 void Obstacle::setAllColor(const vector<Color>& color) {
-
-	try {
-		for (size_t i = 0; i < blocks.size(); ++i) {
-			blocks.at(i)->setVerticeColor(color.at(i));
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::setAllColor(): " << ex.what() << endl;
+	for (size_t i = 0; i < blocks.size(); ++i) {
+		blocks.at(i)->setVerticeColor(color.at(i));
 	}
 }
 
 void Obstacle::setAllVerticeColor(const std::vector<sf::Color>& vertice) {
-	try {
-		for (size_t i = 0, j = 1; i < blocks.size(); ++i, ++j) {
-			blocks.at(i)->setVerticeColor(vertice.at(4 * j - 4), vertice.at(4 * j - 3), vertice.at(4 * j - 2), vertice.at(4 * j - 1));
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::setAllVerticeColor(): " << ex.what() << endl;
+	for (size_t i = 0, j = 1; i < blocks.size(); ++i, ++j) {
+		blocks.at(i)->setVerticeColor(vertice.at(4 * j - 4), vertice.at(4 * j - 3), vertice.at(4 * j - 2), vertice.at(4 * j - 1));
 	}
 }
 
 void Obstacle::setBlockSpeed(const size_t number, const float speedX, const float speedY) {
-
-	try {
-		blocks.at(number)->setSpeed(speedX, speedY);
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::setBlockSpeed(): " << ex.what() << endl;
-	}
+	blocks.at(number)->setSpeed(speedX, speedY);
 }
 
 void Obstacle::setBlockSpeed(const size_t number, const Vector2f & speed) {
-
-	try {
-		blocks.at(number)->setSpeed(speed);
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::setBlockSpeed(): " << ex.what() << endl;
-	}
+	blocks.at(number)->setSpeed(speed);
 }
 
 void Obstacle::setAllSpeed(const vector <Vector2f> &speed) {
-
-	try {
-		for (size_t i = 0; i < blocks.size(); ++i) {
-			blocks.at(i)->setSpeed(speed.at(i));
-		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::setAllSpeed(): " << ex.what() << endl;
+	for (size_t i = 0; i < blocks.size(); ++i) {
+		blocks.at(i)->setSpeed(speed.at(i));
 	}
 }
 
 void Obstacle::restart() {
-
-	try {
-		if (!GameState::ready) {
-			for (size_t i = 0; i < blocks.size(); ++i) {
-				blocks.at(i)->resetPosition();
-			}
-			GameState::ready = true;
+	if (!GameState::ready) {
+		for (size_t i = 0; i < blocks.size(); ++i) {
+			blocks.at(i)->resetPosition();
 		}
-	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::restart(): " << ex.what() << endl;
+		GameState::ready = true;
 	}
 }
 
@@ -186,40 +139,34 @@ void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 
 void Obstacle::blocksCollision(const size_t number) {
 
-	try {
-		for (size_t j = number + 1; j < blocks.size(); ++j) {
+	for (size_t j = number + 1; j < blocks.size(); ++j) {
 
-			if (game::INCIntersects(blocks.at(number)->getDP(), blocks.at(j)->getDP())) {
+		if (game::INCIntersects(blocks.at(number)->getDP(), blocks.at(j)->getDP())) {
 
-				const Vector2f APos(blocks.at(number)->getCenterPosition());
-				const Vector2f BPos(blocks.at(j)->getCenterPosition());
-				const Vector2f ASpeed(blocks.at(number)->getSpeed());
-				const Vector2f BSpeed(blocks.at(j)->getSpeed());
-				if (APos.x > BPos.x) {
-					if (APos.y > BPos.y) {
-						blocks.at(number)->setSpeed(abs(ASpeed.x), abs(ASpeed.y));
-						blocks.at(j)->setSpeed(-abs(BSpeed.x), -abs(BSpeed.y));
-					}
-					else {
-						blocks.at(number)->setSpeed(abs(ASpeed.x), -abs(ASpeed.y));
-						blocks.at(j)->setSpeed(-abs(BSpeed.x), abs(BSpeed.y));
-					}
+			const Vector2f APos(blocks.at(number)->getCenterPosition());
+			const Vector2f BPos(blocks.at(j)->getCenterPosition());
+			const Vector2f ASpeed(blocks.at(number)->getSpeed());
+			const Vector2f BSpeed(blocks.at(j)->getSpeed());
+			if (APos.x > BPos.x) {
+				if (APos.y > BPos.y) {
+					blocks.at(number)->setSpeed(abs(ASpeed.x), abs(ASpeed.y));
+					blocks.at(j)->setSpeed(-abs(BSpeed.x), -abs(BSpeed.y));
 				}
 				else {
-					if (APos.y > BPos.y) {
-						blocks.at(number)->setSpeed(-abs(ASpeed.x), abs(ASpeed.y));
-						blocks.at(j)->setSpeed(abs(BSpeed.x), -abs(BSpeed.y));
-					}
-					else {
-						blocks.at(number)->setSpeed(-abs(ASpeed.x), -abs(ASpeed.y));
-						blocks.at(j)->setSpeed(abs(BSpeed.x), abs(BSpeed.y));
-					}
+					blocks.at(number)->setSpeed(abs(ASpeed.x), -abs(ASpeed.y));
+					blocks.at(j)->setSpeed(-abs(BSpeed.x), abs(BSpeed.y));
+				}
+			}
+			else {
+				if (APos.y > BPos.y) {
+					blocks.at(number)->setSpeed(-abs(ASpeed.x), abs(ASpeed.y));
+					blocks.at(j)->setSpeed(abs(BSpeed.x), -abs(BSpeed.y));
+				}
+				else {
+					blocks.at(number)->setSpeed(-abs(ASpeed.x), -abs(ASpeed.y));
+					blocks.at(j)->setSpeed(abs(BSpeed.x), abs(BSpeed.y));
 				}
 			}
 		}
 	}
-	catch (out_of_range &ex) {
-		cout << "Out_of_range in Obstacle::blockCollision(): " << ex.what() << endl;
-	}
-
 }

@@ -174,21 +174,16 @@ const bool Ball::isBallEnteredBricksArea(const size_t number) const {
 }
 
 void Ball::ballDivided(const size_t numbers) {
-	try {
-		const Vector2f mainPos(balls.at(0)->getPos());
-		const Vector2f mainSpeed(balls.at(0)->getSpeedX(), balls.at(0)->getSpeedY());
-		for (size_t i = 0; i < numbers; ++i) {
-			balls.push_back(std::shared_ptr<BallContainer>(new BallContainer(mainSettled)));
-			balls.at(balls.size() - 1)->setPos(mainPos);
-			balls.at(balls.size() - 1)->setSpeedX(mainSpeed.x * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
-			balls.at(balls.size() - 1)->setSpeedY(mainSpeed.y * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
-		}
-		ballStartC = false;
-		multiple = true;
+	const Vector2f mainPos(balls.at(0)->getPos());
+	const Vector2f mainSpeed(balls.at(0)->getSpeedX(), balls.at(0)->getSpeedY());
+	for (size_t i = 0; i < numbers; ++i) {
+		balls.push_back(std::shared_ptr<BallContainer>(new BallContainer(mainSettled)));
+		balls.at(balls.size() - 1)->setPos(mainPos);
+		balls.at(balls.size() - 1)->setSpeedX(mainSpeed.x * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
+		balls.at(balls.size() - 1)->setSpeedY(mainSpeed.y * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
 	}
-	catch (std::out_of_range &ex) {
-		std::cout << "Out_of_range in Ball::ballDivided(): " << ex.what() << std::endl;
-	}
+	ballStartC = false;
+	multiple = true;
 }
 
 const float Ball::getMainBallRadius() const {
@@ -224,49 +219,44 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 }
 
 void Ball::ballsCollision(const size_t number) {
-	try {
-		for (size_t j = number + 1; j < balls.size(); ++j) {
-			const Vector2f APos = balls.at(number)->getPos();
-			const float AR = balls.at(number)->getRad();
-			const Vector2f BPos = balls.at(j)->getPos();
-			const float BR = balls.at(j)->getRad();
-			if (ballStartC && game::ballsIntersects(APos, AR, BPos, BR)) {
-				const float avarageSpeedX = (abs(balls.at(number)->getSpeedX()) + abs(balls.at(j)->getSpeedX())) / 2;
-				const float ASpeedY = balls.at(number)->getSpeedY();
-				const float BSpeedY = balls.at(j)->getSpeedY();
-				balls.at(number)->countTime.restart();
-				balls.at(j)->countTime.restart();
-				if (APos.x > BPos.x) {
-					if (APos.y > BPos.y) {
-						balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), abs(ASpeedY)));
-						balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(BSpeedY)));
-					}
-					else {
-						balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(ASpeedY)));
-						balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(BSpeedY)));
-					}
+	for (size_t j = number + 1; j < balls.size(); ++j) {
+		const Vector2f APos = balls.at(number)->getPos();
+		const float AR = balls.at(number)->getRad();
+		const Vector2f BPos = balls.at(j)->getPos();
+		const float BR = balls.at(j)->getRad();
+		if (ballStartC && game::ballsIntersects(APos, AR, BPos, BR)) {
+			const float avarageSpeedX = (abs(balls.at(number)->getSpeedX()) + abs(balls.at(j)->getSpeedX())) / 2;
+			const float ASpeedY = balls.at(number)->getSpeedY();
+			const float BSpeedY = balls.at(j)->getSpeedY();
+			balls.at(number)->countTime.restart();
+			balls.at(j)->countTime.restart();
+			if (APos.x > BPos.x) {
+				if (APos.y > BPos.y) {
+					balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), abs(ASpeedY)));
+					balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(BSpeedY)));
 				}
 				else {
-					if (APos.y > BPos.y) {
-						balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(ASpeedY)));
-						balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(BSpeedY)));
-					}
-					else {
-						balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(ASpeedY)));
-						balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), abs(BSpeedY)));
-					}
+					balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(ASpeedY)));
+					balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(BSpeedY)));
 				}
 			}
-			else if (game::ballsDistance(APos, AR, BPos, BR) < 2.f) {
-				return;
+			else {
+				if (APos.y > BPos.y) {
+					balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(ASpeedY)));
+					balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(BSpeedY)));
+				}
+				else {
+					balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(ASpeedY)));
+					balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), abs(BSpeedY)));
+				}
 			}
 		}
-		if (!ballStartC) {
-			ballStartC = true;
+		else if (game::ballsDistance(APos, AR, BPos, BR) < 2.f) {
+			return;
 		}
 	}
-	catch (std::out_of_range &ex) {
-		std::cout << "Out_of_range in Ball::ballsCollision(): " << ex.what() << std::endl;
+	if (!ballStartC) {
+		ballStartC = true;
 	}
 }
 
