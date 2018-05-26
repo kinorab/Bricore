@@ -27,6 +27,7 @@ Brick::Brick(const Brick & copy) {
 		, [&](const std::shared_ptr<RectangleShape> element) {
 		bricks.push_back(std::make_shared<RectangleShape>(*element));
 	});
+	frame = copy.frame;
 	setBrickColor(copy.bricksColor);
 	setFrameColor(copy.frameColor);
 }
@@ -223,6 +224,7 @@ Brick & Brick::operator=(const Brick &right) {
 		, [&](const std::shared_ptr<RectangleShape> element) {
 		bricks.push_back(std::make_shared<RectangleShape>(*element));
 	});
+	frame = right.frame;
 	setBrickColor(right.bricksColor);
 	setFrameColor(right.frameColor);
 	return *this;
