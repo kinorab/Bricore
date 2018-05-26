@@ -1,7 +1,7 @@
 #include "container.h"
 #include <algorithm>
+#include "utility.h"
 #include <stdexcept>
-#include <iostream>
 
 namespace game {
 	Container::Container() {
@@ -20,35 +20,33 @@ namespace game {
 			if (index > children.size()) {
 				throw std::out_of_range("Index exceeds the size of children.");
 			}
-			else {
-				std::vector<std::shared_ptr<InteractiveObject>> nodes;
-				std::transform(elements.begin(), elements.end(), std::back_inserter(nodes),
-					[this](const std::shared_ptr<sf::Drawable> & element) {
-					std::shared_ptr<InteractiveObject> node;
-					if (dynamic_cast<InteractiveObject *>(element.get())) {
-						node = std::dynamic_pointer_cast<InteractiveObject>(element);
-					}
-					else if (dynamic_cast<sf::CircleShape *>(element.get())) {
-						node.reset(new CircleShapeNode(std::dynamic_pointer_cast<sf::CircleShape>(element)));
-					}
-					else if (dynamic_cast<sf::RectangleShape *>(element.get())) {
-						node.reset(new RectangleShapeNode(std::dynamic_pointer_cast<sf::RectangleShape>(element)));
-					}
-					else if (dynamic_cast<sf::Sprite *>(element.get())) {
-						node.reset(new SpriteNode(std::dynamic_pointer_cast<sf::Sprite>(element)));
-					}
-					else if (dynamic_cast<sf::VertexArray *>(element.get())) {
-						node.reset(new VertexArrayNode(std::dynamic_pointer_cast<sf::VertexArray>(element)));
-					}
-					else {
-						node.reset(new DrawableNode(element));
-					}
+			std::vector<std::shared_ptr<InteractiveObject>> nodes;
+			std::transform(elements.begin(), elements.end(), std::back_inserter(nodes),
+				[this](const std::shared_ptr<sf::Drawable> & element) {
+				std::shared_ptr<InteractiveObject> node;
+				if (dynamic_cast<InteractiveObject *>(element.get())) {
+					node = std::dynamic_pointer_cast<InteractiveObject>(element);
+				}
+				else if (dynamic_cast<sf::CircleShape *>(element.get())) {
+					node.reset(new CircleShapeNode(std::dynamic_pointer_cast<sf::CircleShape>(element)));
+				}
+				else if (dynamic_cast<sf::RectangleShape *>(element.get())) {
+					node.reset(new RectangleShapeNode(std::dynamic_pointer_cast<sf::RectangleShape>(element)));
+				}
+				else if (dynamic_cast<sf::Sprite *>(element.get())) {
+					node.reset(new SpriteNode(std::dynamic_pointer_cast<sf::Sprite>(element)));
+				}
+				else if (dynamic_cast<sf::VertexArray *>(element.get())) {
+					node.reset(new VertexArrayNode(std::dynamic_pointer_cast<sf::VertexArray>(element)));
+				}
+				else {
+					node.reset(new DrawableNode(element));
+				}
 
-					node->setParent(weak_from_this());
-					return node;
-				});
-				children.insert(children.begin() + index, nodes.begin(), nodes.end());
-			}
+				node->setParent(weak_from_this());
+				return node;
+			});
+			children.insert(children.begin() + index, nodes.begin(), nodes.end());
 		}
 		catch (std::out_of_range &ex) {
 			std::cout << "Out_of_range in Container::addChildAt(): " << ex.what() << std::endl;
@@ -80,17 +78,13 @@ namespace game {
 	}
 
 	size_t Container::getChildIndex(const sf::Drawable * element) const {
-		try {
-			for (size_t index = 0; index < children.size(); ++index) {
-				if (children.at(index)->getDrawable().get() == element) {
-					return index;
-				}
+		for (size_t index = 0; index < children.size(); ++index) {
+			if (children.at(index)->getDrawable().get() == element) {
+				return index;
 			}
 		}
-		catch (std::out_of_range &ex) {
-			std::cout << "Out_of_range in Container::getChildIndex(): " << ex.what() << std::endl;
-		}
-		throw std::out_of_range("ChildIndex no found.");
+
+		throw std::out_of_range("Child not found.");
 	}
 
 	std::shared_ptr<InteractiveObject> Container::getChildNode(const sf::Drawable * element) const {
@@ -154,12 +148,12 @@ namespace game {
 				return static_cast<int>(getChildIndex(element.get()));
 			});
 			removeChildAt(indexes);
-			return indexes;
 		}
 		catch (std::out_of_range &ex) {
 			std::cout << "Out_of_range in Container::removeChild(): " << ex.what() << std::endl;
-			return { -1 };
 		}
+
+		return indexes;
 	}
 
 	void Container::removeChildAt(std::vector<int> indexes) {

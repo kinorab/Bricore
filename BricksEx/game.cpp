@@ -2,7 +2,6 @@
 #include "audio.h"
 #include "define.h"
 #include "stage.h"
-#include <iostream>
 #include <Windows.h>
 
 using namespace sf;

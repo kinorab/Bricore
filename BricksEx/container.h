@@ -28,7 +28,6 @@ namespace game {
 		virtual void initialize() override;
 		virtual void removeAllChildren();
 		// remove certain children and return their indexes
-		// once any element no found return {-1}
 		virtual std::vector<int> removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
 		virtual void removeChildAt(std::vector<int> indexes);
 		virtual void removeChildren(const int beginIndex, const int endIndex);

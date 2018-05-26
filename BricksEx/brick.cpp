@@ -3,7 +3,6 @@
 #include "define.h"
 #include "LVDeploy.h"
 #include <stdexcept>
-#include <iostream>
 
 using namespace std;
 using namespace sf;

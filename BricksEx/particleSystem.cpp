@@ -4,6 +4,8 @@
 
 using namespace sf;
 
+constexpr float LIFETIME = 1500.f;
+
 ParticleSystem::ParticleSystem(const unsigned int count)
 	:particles(count),
 	vertices(new VertexArray(Points, count)),

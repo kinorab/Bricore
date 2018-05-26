@@ -4,7 +4,6 @@
 #include "intersects.h"
 #include "LVDeploy.h"
 #include "ball.h"
-#include <iostream>
 
 using namespace std;
 using namespace sf;

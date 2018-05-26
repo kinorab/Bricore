@@ -1,6 +1,5 @@
 #include "hud.h"
 #include "define.h"
-#include <iostream>
 #include "area.h"
 
 HUD::HUD() {

@@ -2,7 +2,6 @@
 #include "define.h"
 #include "intersects.h"
 #include <algorithm>
-#include <iostream>
 
 using namespace sf;
 using namespace item;

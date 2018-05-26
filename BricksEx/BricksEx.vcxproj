@@ -207,6 +207,7 @@
     <ClCompile Include="textButton.cpp" />
     <ClCompile Include="textField.cpp" />
     <ClCompile Include="UIComponent.cpp" />
+    <ClCompile Include="utility.cpp" />
     <ClCompile Include="vertexArrayNode.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +247,7 @@
     <ClInclude Include="textButton.h" />
     <ClInclude Include="textField.h" />
     <ClInclude Include="UIComponent.h" />
+    <ClInclude Include="utility.h" />
     <ClInclude Include="vertexArrayNode.h" />
   </ItemGroup>
   <ItemGroup>

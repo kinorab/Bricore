@@ -1,6 +1,5 @@
 #include "block.h"
 #include "define.h"
-#include <iostream>
 #include <stdexcept>
 
 using namespace std;

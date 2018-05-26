@@ -1,36 +1,21 @@
 #include "ellipse.h"
 #include "define.h"
-#include <iostream>
 #include <stdexcept>
 
 using namespace std;
 using namespace sf;
 
 EllipseShape::EllipseShape(const Vector2f &radius = Vector2f(0, 0)) {
-	try {
-		if (radius.x < 0.0f && radius.y < 0.0f) {
-			throw domain_error("Radius of ellipse can't be negative.");
-		}
-
-		m_radius = radius;
-		update();
-	}
-	catch (domain_error &ex) {
-		cout << "Domain_error in EllipseShape constructor: " << ex.what() << endl;
-	}
+	setRadius(radius);
 }
 
 void EllipseShape::setRadius(const Vector2f &radius) {
-	try {
-		if (radius.x < 0.0f && radius.y < 0.0f) {
-			throw domain_error("Radius of ellipse can't be negative.");
-		}
-		m_radius = radius;
-		update();
+	if (radius.x < 0.0f && radius.y < 0.0f) {
+		throw domain_error("Radius of ellipse can't be negative.");
 	}
-	catch (domain_error &ex) {
-		cout << "Domain_error in EllipseShape::setRadius(): " << ex.what() << endl;
-	}
+
+	m_radius = radius;
+	update();
 }
 
 void EllipseShape::setPointCount(size_t count) {

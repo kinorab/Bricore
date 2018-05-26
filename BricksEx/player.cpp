@@ -2,7 +2,6 @@
 #include "define.h"
 #include "audio.h"
 #include "intersects.h"
-#include <iostream>
 
 using namespace sf;
 

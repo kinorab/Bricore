@@ -5,7 +5,6 @@
 #include "obstacle.h"
 #include "player.h"
 #include <SFML/Graphics/Color.hpp>
-#include <iostream>
 
 float LVDeploy::blockLength(100.f);
 float LVDeploy::incre1(3.f);

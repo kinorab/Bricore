@@ -106,6 +106,9 @@
     <ClCompile Include="spriteNode.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vertexArrayNode.h">
@@ -217,6 +220,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="spriteNode.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

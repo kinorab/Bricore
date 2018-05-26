@@ -1,7 +1,6 @@
 #include "button.h"
-#include "define.h"
+#include "utility.h"
 #include "intersects.h"
-#include <iostream>
 
 namespace game {
 
