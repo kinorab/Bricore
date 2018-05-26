@@ -336,9 +336,6 @@ void Brick::settlePlace() {
 	catch (out_of_range &ex) {
 		cout << "Out_of_range in Brick::settlePlace(): " << ex.what() << endl;
 	}
-	catch (domain_error &ex) {
-		cout << "Domain_error in Brick::settlePlace(): " << ex.what() << endl;
-	}
 }
 
 void Brick::draw(RenderTarget &target, RenderStates states) const {
