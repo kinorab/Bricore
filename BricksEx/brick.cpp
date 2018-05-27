@@ -2,7 +2,6 @@
 #include "ball.h"
 #include "define.h"
 #include "LVDeploy.h"
-#include <stdexcept>
 
 using namespace std;
 using namespace sf;

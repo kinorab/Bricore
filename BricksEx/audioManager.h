@@ -2,7 +2,7 @@
 
 #include <SFML/Audio.hpp>
 
-class Audio {
+class AudioManager {
 public:
 	static sf::Sound sound1;
 	static sf::Music bgmusic;

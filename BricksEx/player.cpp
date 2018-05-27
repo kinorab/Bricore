@@ -1,6 +1,6 @@
 #include "player.h"
 #include "define.h"
-#include "audio.h"
+#include "audioManager.h"
 #include "intersects.h"
 
 using namespace sf;
@@ -51,7 +51,7 @@ void Player::update(const Vector2f &ballPos, const float ballRadius) {
 		redRange.move(Vector2f(MAINPLAYERSPEED / SLICE, 0));
 	}
 	if (GameState::start) {
-		flashRange(Audio::sound1, ballPos, ballRadius);
+		flashRange(AudioManager::sound1, ballPos, ballRadius);
 	}
 	if (flash) {
 		flashElapsed();
@@ -75,7 +75,7 @@ void Player::preUpdate(const sf::Vector2f & ballPos, const float ballRadius, con
 		redRange.move(Vector2f((MAINPLAYERSPEED / SLICE) * intervalTime, 0));
 	}
 	if (GameState::start) {
-		flashRange(Audio::sound1, ballPos, ballRadius);
+		flashRange(AudioManager::sound1, ballPos, ballRadius);
 	}
 	if (flash) {
 		flashElapsed();

@@ -1,7 +1,7 @@
 #include "interactiveObject.h"
 #include "container.h"
+#include "utility.h"
 #include <algorithm>
-#include <iostream>
 
 namespace game {
 	InteractiveObject::InteractiveObject()

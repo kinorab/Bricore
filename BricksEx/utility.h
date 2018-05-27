@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <limits>
+#include <stdexcept>
 
 extern const size_t startTimeP;
 

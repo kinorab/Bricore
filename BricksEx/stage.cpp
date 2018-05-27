@@ -1,6 +1,6 @@
 #include "stage.h"
 #include "define.h"
-#include "audio.h"
+#include "audioManager.h"
 #include "hud.h"
 #include "particleSystem.h"
 #include "obstacle.h"
@@ -41,8 +41,8 @@ bool Stage::resetInstance() {
 }
 
 Stage::~Stage() {
-	Audio::bgmusic.stop();
-	Audio::sound1.stop();
+	AudioManager::bgmusic.stop();
+	AudioManager::sound1.stop();
 }
 
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {

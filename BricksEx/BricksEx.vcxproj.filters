@@ -7,9 +7,6 @@
     <ClCompile Include="area.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="audio.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="ball.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -109,6 +106,12 @@
     <ClCompile Include="utility.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="audioManager.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="imageManager.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vertexArrayNode.h">
@@ -198,9 +201,6 @@
     <ClInclude Include="area.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="audio.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="ball.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -223,6 +223,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="utility.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="audioManager.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="imageManager.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
