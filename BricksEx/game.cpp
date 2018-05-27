@@ -162,7 +162,7 @@ void Game::renderFunc() {
 	bool finishing = false;
 
 	while (!finishing) {
-		distribute = clock.restart();
+		distribute = min<Time>(clock.restart(), milliseconds(500));
 		elapsed += distribute;
 		renderElapsed += distribute;
 		while (!eventQueue.empty()) {

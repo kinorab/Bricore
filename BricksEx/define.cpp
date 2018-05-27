@@ -2,7 +2,7 @@
 #include <chrono>
 
 float MAINPLAYERSPEED = 6.f;
-const size_t startTimeP = static_cast<size_t>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count());
+static const size_t startTimeP = static_cast<size_t>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count());
 
 namespace GameState {
 	bool start = false;

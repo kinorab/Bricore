@@ -7,7 +7,7 @@ sf::Music AudioManager::bgmusic;
 static sf::SoundBuffer buffer1;
 static float bufferBgVolume = 100.0f;
 static float bufferVolume1 = 50.0f;
-std::vector<std::string> fileNames = { "s1.wav", "bg.wav" };
+static std::vector<std::string> fileNames = { "s1.wav", "bg.wav" };
 
 void AudioManager::initialize() {
 	// if memory violation happen, reset the lib connector of project (-d have something bug)
