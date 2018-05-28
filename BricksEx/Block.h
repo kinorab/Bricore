@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "diagonalPoint.h"
+#include <SFML/Graphics.hpp>
 
 namespace item {
 	class Block : public sf::VertexArray {

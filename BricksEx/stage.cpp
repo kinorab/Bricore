@@ -1,6 +1,6 @@
 #include "stage.h"
 #include "define.h"
-#include "audio.h"
+#include "audioManager.h"
 #include "hud.h"
 #include "particleSystem.h"
 #include "obstacle.h"
@@ -13,13 +13,6 @@ std::shared_ptr<Stage> Stage::instance = nullptr;
 std::shared_ptr<Stage> Stage::getInstance() {
 	if (!instance) {
 		instance = std::shared_ptr<Stage>(new Stage());
-		using namespace std::placeholders;
-		instance->addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, instance.get(), _1));
-		instance->addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, instance.get(), _1));
-		instance->addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, instance.get(), _1));
-		instance->addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, instance.get(), _1));
-		instance->addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, instance.get(), _1));
-		instance->initialize();
 	}
 	return instance;
 }
@@ -41,8 +34,8 @@ bool Stage::resetInstance() {
 }
 
 Stage::~Stage() {
-	Audio::bgmusic.stop();
-	Audio::sound1.stop();
+	AudioManager::getInstance()->bgmusic.stop();
+	AudioManager::getInstance()->sound1.stop();
 }
 
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
@@ -92,6 +85,13 @@ Stage::Stage()
 	// presettle mainBall's position
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ HUDs, mouseLight });
+	using namespace std::placeholders;
+	initialize();
+	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
+	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
+	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
+	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
+	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
 }
 
 void Stage::setPredict() {

@@ -1,9 +1,9 @@
 #pragma once
 
+#include "diagonalPoint.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
-#include "diagonalPoint.h"
 
 namespace item {
 	class Block;

@@ -1,5 +1,5 @@
 #include "game.h"
-#include "audio.h"
+#include "audioManager.h"
 #include "define.h"
 #include "stage.h"
 #include <Windows.h>
@@ -147,7 +147,7 @@ void Game::handleGraphicsEvent() {
 }
 
 void Game::renderFunc() {
-	Audio::initialize();
+	AudioManager::getInstance()->initialize();
 	for (Keyboard::Key i = Keyboard::Unknown;
 		i < Keyboard::Unknown + Keyboard::KeyCount;
 		i = static_cast<Keyboard::Key>(i + 1)) {
@@ -162,7 +162,7 @@ void Game::renderFunc() {
 	bool finishing = false;
 
 	while (!finishing) {
-		distribute = clock.restart();
+		distribute = min<Time>(clock.restart(), milliseconds(500));
 		elapsed += distribute;
 		renderElapsed += distribute;
 		while (!eventQueue.empty()) {

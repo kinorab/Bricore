@@ -1,4 +1,5 @@
 #pragma once
+
 #include "matrix.h"
 #include "SFML/System/Vector2.hpp"
 

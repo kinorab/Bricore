@@ -1,12 +1,12 @@
 #pragma once
 
+#include "graphics.h"
+#include "interactiveObject.h"
+#include <SFML/Graphics.hpp>
 #include <atomic>
 #include <queue>
 #include <map>
 #include <mutex>
-#include <SFML/Graphics.hpp>
-#include "interactiveObject.h"
-#include "graphics.h"
 
 class Game {
 public:

@@ -1,7 +1,7 @@
 #pragma once
+#include "skill.h"
 #include <SFML/Graphics/Sprite.hpp>
 #include <map>
-#include "skill.h"
 
 namespace sf {
 	class RenderTarget;

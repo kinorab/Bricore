@@ -1,7 +1,6 @@
 #include "container.h"
-#include <algorithm>
 #include "utility.h"
-#include <stdexcept>
+#include <algorithm>
 
 namespace game {
 	Container::Container() {

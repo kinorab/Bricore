@@ -1,8 +1,8 @@
 #pragma once
 
+#include "utility.h"
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include <iostream>
 
 namespace sys {
 

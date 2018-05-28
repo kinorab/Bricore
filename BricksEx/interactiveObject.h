@@ -1,8 +1,8 @@
 #pragma once
 
 #include "event.h"
-#include <functional>
 #include <SFML/Graphics.hpp>
+#include <functional>
 
 namespace game {
 	class Container;

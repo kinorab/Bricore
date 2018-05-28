@@ -1,4 +1,5 @@
 #pragma once
+
 #include "diagonalPoint.h"
 
 namespace game {

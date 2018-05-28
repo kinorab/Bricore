@@ -174,7 +174,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="area.cpp" />
-    <ClCompile Include="audio.cpp" />
+    <ClCompile Include="audioManager.cpp" />
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="ballSkill.cpp" />
     <ClCompile Include="block.cpp" />
@@ -184,6 +184,7 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="graphics.cpp" />
+    <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="interactiveObject.cpp" />
     <ClCompile Include="drawableNode.cpp" />
     <ClCompile Include="event.cpp" />
@@ -199,7 +200,6 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerSkill.cpp" />
     <ClCompile Include="rectangleShapeNode.cpp" />
-    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="spriteNode.cpp" />
     <ClCompile Include="stage.cpp" />
@@ -212,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="area.h" />
-    <ClInclude Include="audio.h" />
+    <ClInclude Include="audioManager.h" />
     <ClInclude Include="ball.h" />
     <ClInclude Include="ballSkill.h" />
     <ClInclude Include="block.h" />
@@ -223,6 +223,7 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="diagonalPoint.h" />
     <ClInclude Include="effect.h" />
+    <ClInclude Include="imageManager.h" />
     <ClInclude Include="playerSkill.h" />
     <ClInclude Include="spriteNode.h" />
     <ClInclude Include="subPlayerSkill.h" />
@@ -241,7 +242,6 @@
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="rectangleShapeNode.h" />
-    <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="textButton.h" />

@@ -3,7 +3,6 @@
 #include "intersects.h"
 
 namespace game {
-
 	Button::Button(std::shared_ptr<sf::Drawable> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject, std::shared_ptr<game::InteractiveObject> hitObject) {
 		this->upObject = upObject;
 		this->overObject = overObject;
