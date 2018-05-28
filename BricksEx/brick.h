@@ -42,7 +42,6 @@ namespace item {
 		virtual void settlePlace();
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
-		std::map <std::string, sf::Texture *> levelImage;
 		std::vector <std::shared_ptr<sf::RectangleShape>> bricks;
 		// bricks on every row
 		size_t amount;
