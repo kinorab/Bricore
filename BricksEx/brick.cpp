@@ -21,13 +21,13 @@ Brick::Brick()
 	setBrickColor(LVDeploy::getBrickCD().at(0));
 }
 
-Brick::Brick(const Brick & copy) {
+Brick::Brick(const Brick & copy) 
+	: frameSize(copy.frameSize) {
 	bricks.clear();
 	std::for_each(copy.bricks.begin(), copy.bricks.end()
 		, [&](const std::shared_ptr<RectangleShape> element) {
 		bricks.push_back(std::make_shared<RectangleShape>(*element));
 	});
-	frame = copy.frame;
 	setBrickColor(copy.bricksColor);
 	setFrameColor(copy.frameColor);
 }
@@ -101,7 +101,7 @@ void Brick::setBrickColor(const Color &color) {
 }
 
 void Brick::setFrameColor(const Color &color) {
-	if (frame <= 0.0f) {
+	if (frameSize <= 0.0f) {
 		throw invalid_argument("Brick frames do not exist.");
 	}
 	frameColor = color;
@@ -114,7 +114,7 @@ void Brick::setSideLength(const Vector2f & sideLength) {
 	if (sideLength.x <= 0 || sideLength.y <= 0) {
 		throw invalid_argument("Side-length cannot be negative.");
 	}
-	Brick::sideLength = sideLength;
+	this->sideLength = sideLength;
 	changeEntity = true;
 	settlePlace();
 }
@@ -148,7 +148,7 @@ void Brick::setFrameSize(const float frameSize) {
 	if (frameSize < 0.0f) {
 		throw invalid_argument("Frame size cannot be negative.");
 	}
-	frame = frameSize;
+	this->frameSize = frameSize;
 	changeEntity = true;
 	settlePlace();
 }
@@ -164,10 +164,10 @@ void Brick::reset(const size_t rowCount, const float wid, const float hei
 
 	sideLength = Vector2f(wid, hei);
 	this->rowCount = rowCount;
-	frame = frameSize;
+	this->frameSize = frameSize;
 	this->interval = interval;
-	amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + frame * 2));
-	whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + frame * 2) * amount - this->interval.x)) / 2;
+	amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + getSideLength().x + this->frameSize * 2));
+	whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + this->frameSize * 2) * amount - this->interval.x)) / 2;
 	whiteSpace.y = whiteSpaceY;
 	bricks.resize(this->rowCount * amount);
 
@@ -205,7 +205,7 @@ const Vector2f & Brick::getInterval() const {
 }
 
 const float Brick::getFrameSize() const {
-	return frame;
+	return frameSize;
 }
 
 const sys::DPointf Brick::getDP(const size_t number) const {
@@ -224,7 +224,7 @@ Brick & Brick::operator=(const Brick &right) {
 		, [&](const std::shared_ptr<RectangleShape> element) {
 		bricks.push_back(std::make_shared<RectangleShape>(*element));
 	});
-	frame = right.frame;
+	frameSize = right.frameSize;
 	setBrickColor(right.bricksColor);
 	setFrameColor(right.frameColor);
 	return *this;
@@ -232,14 +232,14 @@ Brick & Brick::operator=(const Brick &right) {
 
 void Brick::settlePlace() {
 
-	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frame, interval.y + frame + sideLength.y / 2);
+	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frameSize, interval.y + frameSize + sideLength.y / 2);
 	Vector2f tempPos = Vector2f(initialPos.x, initialPos.y + whiteSpace.y);
-	const float height = rowCount * (sideLength.y + frame * 2 + interval.y) + interval.y + whiteSpace.y;
+	const float height = rowCount * (sideLength.y + frameSize * 2 + interval.y) + interval.y + whiteSpace.y;
 	if (changeEntity == true) {
 		for (size_t i = 0; i < bricks.size(); ++i) {
 			bricks.at(i) = shared_ptr<RectangleShape>(new RectangleShape(Vector2f(sideLength.x, sideLength.y)));
-			if (frame > 0.0f) {
-				bricks.at(i)->setOutlineThickness(frame);
+			if (frameSize > 0.0f) {
+				bricks.at(i)->setOutlineThickness(frameSize);
 				bricks.at(i)->setOutlineColor(Color::Black);
 			}
 			// center origin position in every brick

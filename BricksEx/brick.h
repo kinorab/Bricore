@@ -49,7 +49,7 @@ namespace item {
 		// bricks on every row
 		size_t amount;
 		size_t rowCount;
-		float frame;
+		float frameSize;
 		sf::Color bricksColor;
 		sf::Color frameColor;
 		sf::Vector2f interval;
