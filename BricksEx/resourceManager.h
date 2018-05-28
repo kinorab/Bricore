@@ -1,6 +1,6 @@
 #pragma once
+/*
 
-#include <SFML/Graphics/Image.hpp>
 #include <memory>
 #include <map>
 
@@ -17,3 +17,4 @@ private:
 	static std::shared_ptr<ImageManager> instance;
 	std::map<std::string, std::shared_ptr<sf::Image>> resources;
 };
+*/

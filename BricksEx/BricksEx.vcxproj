@@ -200,12 +200,14 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerSkill.cpp" />
     <ClCompile Include="rectangleShapeNode.cpp" />
+    <ClCompile Include="resourceManager.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="spriteNode.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="subPlayerSkill.cpp" />
     <ClCompile Include="textButton.cpp" />
     <ClCompile Include="textField.cpp" />
+    <ClCompile Include="textureManager.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="utility.cpp" />
     <ClCompile Include="vertexArrayNode.cpp" />
@@ -225,6 +227,7 @@
     <ClInclude Include="effect.h" />
     <ClInclude Include="imageManager.h" />
     <ClInclude Include="playerSkill.h" />
+    <ClInclude Include="resourceManager.h" />
     <ClInclude Include="spriteNode.h" />
     <ClInclude Include="subPlayerSkill.h" />
     <ClInclude Include="graphics.h" />
@@ -246,6 +249,7 @@
     <ClInclude Include="stage.h" />
     <ClInclude Include="textButton.h" />
     <ClInclude Include="textField.h" />
+    <ClInclude Include="textureManager.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="utility.h" />
     <ClInclude Include="vertexArrayNode.h" />

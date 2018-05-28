@@ -1,6 +1,7 @@
 #include "brick.h"
 #include "ball.h"
 #include "define.h"
+#include "textureManager.h"
 #include "LVDeploy.h"
 
 using namespace std;
@@ -71,24 +72,9 @@ void Brick::preUpdate(Ball & ball, const float intervalTime) {
 	}
 }
 
-void Brick::loadImage(const string fileName) {
-	levelImage.emplace(fileName, new Texture());
-	levelImage.at(fileName)->loadFromFile(fileName);
-}
-
-void Brick::deleteImage(const string fileName) {
-	const auto image = levelImage.find(fileName);
-	if (image != levelImage.end()) {
-		levelImage.erase(image);
-	}
-	else {
-		throw domain_error("Image not found.");
-	}
-}
-
 void Brick::displayImage(const string fileName) {
 	for (size_t i = 0; i < getBricksSize(); ++i) {
-		bricks.at(i)->setTexture(levelImage.at(fileName));
+		bricks.at(i)->setTexture(TextureManager::getInstance()->get(fileName));
 	}
 }
 
