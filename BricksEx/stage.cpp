@@ -12,8 +12,10 @@ std::shared_ptr<Stage> Stage::instance = nullptr;
 
 std::shared_ptr<Stage> Stage::getInstance() {
 	if (!instance) {
-		instance = std::shared_ptr<Stage>(new Stage());
+		instance.reset(new Stage());
+		instance->initialize();
 	}
+
 	return instance;
 }
 // use getInstance() prevent return nullptr
@@ -22,6 +24,7 @@ std::shared_ptr<Stage> Stage::getPreInstance(const float intervalTime) {
 		getInstance()->setPredict();
 		getInstance()->predictUpdate(intervalTime);
 	}
+	
 	return getInstance();
 }
 
@@ -72,7 +75,7 @@ void Stage::predictUpdate(const float intervalTime) {
 }
 
 Stage::Stage()
-	: HUDs(new HUD())
+	: hud(new HUD())
 	, player(new Player())
 	, ball(new item::Ball())
 	, brick(new item::Brick())
@@ -84,9 +87,8 @@ Stage::Stage()
 	, obstaclePredict(nullptr) {
 	// presettle mainBall's position
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
-	addChild({ HUDs, mouseLight });
+	addChild({ hud, mouseLight });
 	using namespace std::placeholders;
-	initialize();
 	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
 	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
 	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
@@ -102,10 +104,10 @@ void Stage::setPredict() {
 	ballPredict.reset(new item::Ball(*ball));
 	brickPredict.reset(new item::Brick(*brick));
 	obstaclePredict.reset(new Obstacle(*obstacle));
-	addChildAt({ playerPredict }, getChildIndex({ HUDs.get() }) + 1);
-	addChildAt({ ballPredict }, getChildIndex({ HUDs.get() }) + 2);
-	addChildAt({ brickPredict }, getChildIndex({ HUDs.get() }) + 3);
-	addChildAt({ obstaclePredict }, getChildIndex({ HUDs.get() }) + 4);
+	addChildAt({ playerPredict }, getChildIndex({ hud.get() }) + 1);
+	addChildAt({ ballPredict }, getChildIndex({ hud.get() }) + 2);
+	addChildAt({ brickPredict }, getChildIndex({ hud.get() }) + 3);
+	addChildAt({ obstaclePredict }, getChildIndex({ hud.get() }) + 4);
 }
 
 void Stage::onKeyPressed(game::Event * event) {

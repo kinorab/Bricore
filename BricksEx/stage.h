@@ -34,7 +34,7 @@ private:
 	virtual void onMouseButtonPressed(game::Event *);
 
 	static std::shared_ptr<Stage> instance;
-	std::shared_ptr<HUD> HUDs;
+	std::shared_ptr<HUD> hud;
 	std::shared_ptr<ParticleSystem> mouseLight;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<item::Ball> ball;

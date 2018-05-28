@@ -6,7 +6,7 @@ std::shared_ptr<AudioManager> AudioManager::instance = nullptr;
 
 std::shared_ptr<AudioManager> AudioManager::getInstance() {
 	if (!instance) {
-		instance = std::shared_ptr<AudioManager>(new AudioManager());
+		instance.reset(new AudioManager());
 	}
 
 	return instance;

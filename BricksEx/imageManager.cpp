@@ -7,7 +7,7 @@ static const std::vector<std::string> fileList = { "s1.wav", "bg.wav" };
 
 std::shared_ptr<ImageManager> ImageManager::getInstance() {
 	if (!instance) {
-		instance = std::shared_ptr<ImageManager>(new ImageManager());
+		instance.reset(new ImageManager());
 	}
 
 	return instance;
