@@ -34,8 +34,8 @@ bool Stage::resetInstance() {
 }
 
 Stage::~Stage() {
-	AudioManager::bgmusic.stop();
-	AudioManager::sound1.stop();
+	AudioManager::getInstance()->bgmusic.stop();
+	AudioManager::getInstance()->sound1.stop();
 }
 
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
@@ -86,12 +86,12 @@ Stage::Stage()
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ HUDs, mouseLight });
 	using namespace std::placeholders;
-	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, instance.get(), _1));
-	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, instance.get(), _1));
-	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, instance.get(), _1));
-	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, instance.get(), _1));
-	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, instance.get(), _1));
 	initialize();
+	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
+	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
+	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
+	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
+	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
 }
 
 void Stage::setPredict() {

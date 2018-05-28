@@ -147,7 +147,7 @@ void Game::handleGraphicsEvent() {
 }
 
 void Game::renderFunc() {
-	AudioManager::initialize();
+	AudioManager::getInstance()->initialize();
 	for (Keyboard::Key i = Keyboard::Unknown;
 		i < Keyboard::Unknown + Keyboard::KeyCount;
 		i = static_cast<Keyboard::Key>(i + 1)) {
