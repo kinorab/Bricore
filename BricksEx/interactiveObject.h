@@ -18,8 +18,7 @@ namespace game {
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
 		virtual bool dispatchEvent(Event * event);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
-		virtual std::weak_ptr<Container> getParent();
-		virtual void initialize();
+		virtual Container * getParent();
 		virtual void removeEventListener(int id);
 		virtual void setParent(Container * parent);
 	protected:
@@ -31,8 +30,7 @@ namespace game {
 			bool useCapture;
 		};
 		std::map<int, EventListener> listeners;
-		Container * parentRaw;
-		std::weak_ptr<Container> parent;
+		Container * parent;
 		int idCount;
 	};
 }

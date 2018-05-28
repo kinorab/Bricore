@@ -8,6 +8,10 @@ namespace game {
 	}
 
 	Container::~Container() {
+		std::for_each(children.begin(), children.end(),
+			[&](const std::shared_ptr<InteractiveObject> & child) {
+			child->setParent(nullptr);
+		});
 	}
 
 	void Container::addChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
@@ -42,8 +46,8 @@ namespace game {
 				node.reset(new DrawableNode(element));
 			}
 
-			if (!node->getParent().expired()) {
-				node->getParent().lock()->removeChild({ node });
+			if (node->getParent() != nullptr) {
+				node->getParent()->removeChild({ node });
 			}
 
 			node->setParent(this);
@@ -112,14 +116,6 @@ namespace game {
 
 	std::shared_ptr<sf::Drawable> Container::getDrawable() const {
 		return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
-	}
-
-	void Container::initialize() {
-		std::for_each(children.begin(), children.end(),
-			[this](std::shared_ptr<InteractiveObject> & child) {
-			child->setParent(this);
-			child->initialize();
-		});
 	}
 
 	void Container::removeAllChildren() {

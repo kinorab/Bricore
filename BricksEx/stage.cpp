@@ -13,7 +13,6 @@ std::shared_ptr<Stage> Stage::instance = nullptr;
 std::shared_ptr<Stage> Stage::getInstance() {
 	if (!instance) {
 		instance.reset(new Stage());
-		instance->initialize();
 	}
 
 	return instance;

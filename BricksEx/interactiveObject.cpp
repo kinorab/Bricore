@@ -31,8 +31,8 @@ namespace game {
 			helper.setPhase(EventPhase::CAPTURING_PHASE);
 		}
 
-		if (event->getPhase() == EventPhase::CAPTURING_PHASE && !getParent().expired()) {
-			getParent().lock()->dispatchEvent(event);
+		if (event->getPhase() == EventPhase::CAPTURING_PHASE && parent != nullptr) {
+			parent->dispatchEvent(event);
 			helper.setCurrentTarget(this);
 		}
 
@@ -56,8 +56,8 @@ namespace game {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}
 
-		if (event->getPhase() == EventPhase::BUBBLING_PHASE && event->getBubbles() && !getParent().expired()) {
-			getParent().lock()->dispatchEvent(event);
+		if (event->getPhase() == EventPhase::BUBBLING_PHASE && event->getBubbles() && parent != nullptr) {
+			parent->dispatchEvent(event);
 			helper.setCurrentTarget(this);
 		}
 
@@ -68,17 +68,8 @@ namespace game {
 		return !event->getDefaultPrevented();
 	}
 
-	std::weak_ptr<Container> InteractiveObject::getParent() {
-		if (parent.expired() && parentRaw != nullptr) {
-			parent = parentRaw->weak_from_this();
-			parentRaw = nullptr;
-		}
-
+	Container * InteractiveObject::getParent() {
 		return parent;
-	}
-
-	void InteractiveObject::initialize() {
-
 	}
 
 	void InteractiveObject::removeEventListener(int id) {
@@ -89,18 +80,7 @@ namespace game {
 	}
 
 	void InteractiveObject::setParent(Container * container) {
-		if (container == nullptr) {
-			parentRaw = nullptr;
-			return;
-		}
-
-		parent = std::move(container->weak_from_this());
-		if (parent.expired()) {
-			parentRaw = container;
-		}
-		else {
-			parentRaw = nullptr;
-		}
+		parent = container;
 	}
 
 	void InteractiveObject::draw(sf::RenderTarget & target, sf::RenderStates states) const {

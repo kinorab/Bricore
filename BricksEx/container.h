@@ -25,7 +25,6 @@ namespace game {
 		virtual size_t getChildrenCount() const;
 		virtual std::shared_ptr<InteractiveObject> getObjectUnderPoint(const sf::Vector2f & point);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
-		virtual void initialize() override;
 		virtual void removeAllChildren();
 		// remove certain children and return their indexes
 		virtual std::vector<int> removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);

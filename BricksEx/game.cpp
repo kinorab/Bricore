@@ -91,13 +91,27 @@ void Game::handleMouseEvent() {
 
 		if (contactNode != previousContactNode) {
 			vector<shared_ptr<game::InteractiveObject>> previousNodes;
-			for (shared_ptr<game::InteractiveObject> node = previousContactNode; node; node = node->getParent().lock()) {
+			for (shared_ptr<game::InteractiveObject> node = previousContactNode; node;) {
 				previousNodes.push_back(node);
+				game::Container * parent = node->getParent();
+				if (parent) {
+					node = parent->shared_from_this();
+				}
+				else {
+					node = nullptr;
+				}
 			}
 
 			vector<shared_ptr<game::InteractiveObject>> currentNodes;
-			for (shared_ptr<game::InteractiveObject> node = contactNode; node; node = node->getParent().lock()) {
+			for (shared_ptr<game::InteractiveObject> node = contactNode; node;) {
 				currentNodes.push_back(node);
+				game::Container * parent = node->getParent();
+				if (parent) {
+					node = parent->shared_from_this();
+				}
+				else {
+					node = nullptr;
+				}
 			}
 
 			int sameNodeCount = 0;
