@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <random>
 
+static const size_t startTimeP = static_cast<size_t>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count());
+
 const int rng(const int lowerLimit, const int upperLimit) {
 	static thread_local std::mt19937 generator(static_cast<std::mt19937::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
 	const std::uniform_int_distribution<> dist(lowerLimit, upperLimit);

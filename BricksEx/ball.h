@@ -1,10 +1,10 @@
 #pragma once
 
+#include "diagonalPoint.h"
+#include "ballSkill.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
-#include "diagonalPoint.h"
-#include "ballSkill.h"
 
 namespace item {
 	class Ball :

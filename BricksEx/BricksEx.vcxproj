@@ -200,7 +200,6 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerSkill.cpp" />
     <ClCompile Include="rectangleShapeNode.cpp" />
-    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="spriteNode.cpp" />
     <ClCompile Include="stage.cpp" />
@@ -243,7 +242,6 @@
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="rectangleShapeNode.h" />
-    <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="textButton.h" />

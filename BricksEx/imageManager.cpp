@@ -2,7 +2,8 @@
 #include "utility.h"
 #include <string>
 
-static std::vector<std::string> fileNames = { "s1.wav", "bg.wav" };
+std::shared_ptr<ImageManager> ImageManager::instance = nullptr;
+static std::vector<std::string> fileList = { "s1.wav", "bg.wav" };
 
 void ImageManager::initialize() {
 

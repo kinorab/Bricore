@@ -1,9 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <memory>
 #include "diagonalPoint.h"
 #include "playerSkill.h"
+#include <SFML/Graphics.hpp>
+#include <memory>
 
 namespace sf {
 	class Sound;
