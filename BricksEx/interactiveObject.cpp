@@ -71,6 +71,7 @@ namespace game {
 	std::weak_ptr<Container> InteractiveObject::getParent() {
 		if (parent.expired() && parentRaw != nullptr) {
 			parent = parentRaw->weak_from_this();
+			parentRaw = nullptr;
 		}
 
 		return parent;
