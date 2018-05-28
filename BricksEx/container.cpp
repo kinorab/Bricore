@@ -16,7 +16,7 @@ namespace game {
 
 	void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, const size_t index) {
 		if (index > children.size()) {
-			throw std::out_of_range("Index exceeds the size of children.");
+			throw std::out_of_range("Index not in the range of children.");
 		}
 
 		std::vector<std::shared_ptr<InteractiveObject>> nodes;
@@ -42,7 +42,11 @@ namespace game {
 				node.reset(new DrawableNode(element));
 			}
 
-			node->setParent(weak_from_this());
+			if (!node->getParent().expired()) {
+				node->getParent().lock()->removeChild({ node });
+			}
+
+			node->setParent(this);
 			return node;
 		});
 		children.insert(children.begin() + index, nodes.begin(), nodes.end());
@@ -113,12 +117,16 @@ namespace game {
 	void Container::initialize() {
 		std::for_each(children.begin(), children.end(),
 			[this](std::shared_ptr<InteractiveObject> & child) {
-			child->setParent(weak_from_this());
+			child->setParent(this);
 			child->initialize();
 		});
 	}
 
 	void Container::removeAllChildren() {
+		std::for_each(children.begin(), children.end(),
+			[&](const std::shared_ptr<InteractiveObject> & child) {
+			child->setParent(nullptr);
+		});
 		children.clear();
 		children.shrink_to_fit();
 	}
@@ -144,14 +152,20 @@ namespace game {
 		children.erase(std::remove_if(children.begin(), children.end(),
 			[&](const std::shared_ptr<InteractiveObject> & child) {
 			if (indexIterator != indexes.end() && children[*indexIterator] == child) {
+				child->setParent(nullptr);
 				++indexIterator;
 				return true;
 			}
+
 			return false;
 		}), children.end());
 	}
 
 	void Container::removeChildren(const int beginIndex, const int endIndex) {
+		std::for_each(children.begin() + beginIndex, children.begin() + endIndex,
+			[&](const std::shared_ptr<InteractiveObject> & child) {
+			child->setParent(nullptr);
+		});
 		children.erase(children.begin() + beginIndex, children.begin() + endIndex);
 	}
 
