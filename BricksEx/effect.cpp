@@ -1,42 +1,62 @@
 #include "effect.h"
 #include "skill.h"
+#include "ballSkill.h"
+#include "playerSkill.h"
+#include "subPlayerSkill.h"
 
-game::Effect::Effect(const Normal effect, const bool isSkill, const sf::Time duration)
-	: exist(true) {
-	if (isSkill) {
-		currentNormalE = effect;
-	}
-	else {
-		currentNormalE = effect;
-		this->duration = duration;
-	}
+using namespace game;
+
+Effect::Effect(const Normal effect, const sf::Time duration)
+	: exist(true)
+	, isBelongToSkill(false)
+	, normalEffect(effect)
+	, duration(duration) {
 }
 
-void game::Effect::handleEffect(const float elapsed) {
+Effect::Effect(const Normal effect, const Skill * skill) {
+	if (auto ballSkill = dynamic_cast<const BallSkill *>(skill)) {
+
+	}
+	else if (auto playerSkill = dynamic_cast<const PlayerSkill *>(skill)) {
+
+	}
+	else if (auto subPlayerSkill = dynamic_cast<const SubPlayerSkill *>(skill)) {
+
+	}
+	else {
+		throw std::invalid_argument("Skill not exist.");
+	}
+	duration = skill->getDuration();
+	normalEffect = effect;
+	exist = true;
+	isBelongToSkill = true;
+}
+
+void Effect::handleEffect(const float elapsed) {
 	duration -= sf::seconds(elapsed);
 	if (duration.asSeconds() <= 0.0f) {
 		exist = false;
 	}
 }
 
-game::Effect::Effect()
+Effect::Effect()
 	: exist(true) {
 }
 
-void game::Effect::handleEffect(Skill & skill) {
-	skill.isExist();
+void Effect::handleEffect(Skill * skill) {
+	skill->isExist();
 }
 
-const bool & game::Effect::isExist() const {
+const bool & Effect::isExist() const {
 	return exist;
 }
 
-const game::NormalE & game::Effect::getNormalEffect() const {
-	return currentNormalE;
+const NormalEffect & Effect::getNormalEffect() const {
+	return normalEffect;
 }
 
-const sf::Time & game::Effect::getDuration() const {
+const sf::Time & Effect::getDuration() const {
 	return duration;
 }
 
-game::Effect::~Effect() { }
+Effect::~Effect() { }

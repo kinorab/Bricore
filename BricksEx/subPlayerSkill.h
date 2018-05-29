@@ -1,35 +1,47 @@
 #pragma once
-
 #include "skill.h"
-#include <SFML/Graphics/Image.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+#include "effect.h"
 #include <map>
+
+namespace sf {
+	class RenderTarget;
+	class RenderStates;
+	class Texture;
+	class Sprite;
+}
 
 namespace game {
 	class SubPlayerSkill :
 		public Skill
-		, public sf::Sprite {
+		, public sf::Drawable
+		, public sf::Transformable {
 	public:
-		explicit SubPlayerSkill(const SubPlayer skillName, const sf::Time &duration, const bool autoUse = false);
+		enum class SkillState {
+			None,			// no appear on stage
+			OnField,		// on subPlayer skill field
+			Using,			// when using it
+			Locked			// may be locked by outside effect(stage area, boss skill etc...), cannot be used or swapped
+		};
+		explicit SubPlayerSkill(const SubPlayer skillName, const std::vector<NormalEffect> &normalEffects, const sf::Time &duration, const bool autoUse = false);
+		virtual void swapSkill(SubPlayerSkill &other);
 		virtual void useSkill() override;
 		virtual void upgradeSkill() override;
-		virtual void gainSkill(const SubPlayer skillName);
-		virtual void loadSkillPicture(const std::vector<std::string> &fileName) override;
+		virtual void loadSkillPicture(const std::map<SkillState, std::string> &fileName, const bool isSmooth = false);
+		virtual void setState(const SkillState state);
 
+		virtual SkillState getState() const;
 		virtual SubPlayer getSkillName() const;
 		virtual ~SubPlayerSkill();
 
 	private:
+		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		virtual void handleSkill() override;
-		enum class SkillState {
-			None,			// no appear on stage
-			OnField,		// on player skill field
-			Using,			// when using it
-			Locked			// may be locked by outside effect(stage area, boss skill etc...), cannot be used or swapped
+
+		std::map<SkillState, std::shared_ptr<sf::Texture>> statePreviews;
+		struct Picture {
+			SkillState currentState;
+			std::shared_ptr<sf::Sprite> context;
 		};
-		SkillState currentState;
-		SubPlayer skillName;
-		std::map<SkillState, sf::Texture> skillPicture;
+		std::pair<SubPlayer, Picture> skill;
 	};
 }

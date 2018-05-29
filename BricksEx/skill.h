@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 #include <SFML/System/Time.hpp>
 #include <memory>
 #include <vector>
@@ -12,36 +13,40 @@ namespace game {
 	public:
 		enum class Player {
 			None,
+			AmbitGuard,
+			DropRateUp,
+			EnergyRush,
 		};
+		// skill difference with subPlayer's type
 		enum class SubPlayer {
 			None,
 			ForceField,
 			ForceShield,
+			EnergyRush,
 			InfinitePower,
-
+			MagicalField,
+			MagicalShield,
 		};
 		enum class Ball {
 			None,
+			HugeBody,
+			IronBody,
 			MultipleAttack,
 			ShieldGuard,
-			IronPower,
-			HugeBody,
 			ShuttleSpace
 		};
 		// for stable version release
 		enum class Attribute {
 			None,
-			Poison,
+			Darkness,
 			Flame,
 			Ice,
-			Thunder,
 			Light,
-			Darkness
+			Poison,
+			Thunder
 		};
-		Skill();
 		virtual void useSkill() = 0;
 		virtual void upgradeSkill() = 0;
-		virtual void loadSkillPicture(const std::vector<std::string> &fileName) = 0;
 		virtual bool isExist() const;
 		virtual bool isEnable() const;
 		virtual const sf::Time & getDuration() const;
@@ -49,8 +54,10 @@ namespace game {
 		virtual ~Skill();
 
 	protected:
+		Skill();
 		virtual void handleSkill() = 0;
 		virtual void setEnable(const bool);
+		virtual void exhausted(Skill *);
 		sf::Time duration;
 		size_t skillLevel;
 		std::vector<std::shared_ptr<Effect>> skillEffects;

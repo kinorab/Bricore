@@ -16,6 +16,7 @@ namespace game {
 			Invisible,
 			Invulnerable,
 			Magnetic,
+			NoCD,
 			Penetrate,
 			SlowDown,
 			SpeedUp,
@@ -31,7 +32,9 @@ namespace game {
 			Paralysis,			// thunder
 			Poisoning,			// poison
 		};
-		explicit Effect(const Normal effect, const bool isSkill, const sf::Time duration);
+		// one effect, one normal/attribute effect
+		explicit Effect(const Normal effect, const sf::Time duration);
+		explicit Effect(const Normal effect, const Skill * skill);
 		virtual void handleEffect(const float elapsed);
 		virtual const bool & isExist() const;
 		virtual const sf::Time & getDuration() const;
@@ -40,14 +43,15 @@ namespace game {
 
 	protected:
 		Effect();
-		virtual void handleEffect(Skill &);
+		virtual void handleEffect(Skill *);
 
 	private:
 		sf::Time duration;
-		Normal currentNormalE;
-		Attribute currentAttributeE;
+		Normal normalEffect;
+		Attribute attributeEffect;
 		bool exist;
+		bool isBelongToSkill;
 	};
-	typedef Effect::Normal NormalE;
-	typedef Effect::Attribute AttributeE;
+	typedef Effect::Normal NormalEffect;
+	typedef Effect::Attribute AttributeEffect;
 }

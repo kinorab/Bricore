@@ -1,5 +1,10 @@
 #include "skill.h"
+#include "ballSkill.h"
+#include "subPlayerSkill.h"
+#include "playerSkill.h"
 #include "effect.h"
+
+using namespace game;
 
 game::Skill::Skill()
 	: exist(true) {
@@ -26,5 +31,21 @@ game::Skill::~Skill() {
 
 void game::Skill::setEnable(const bool enable) {
 	this->enable = enable;
+}
+
+void game::Skill::exhausted(Skill *skill) {
+	if (auto ballSkill = dynamic_cast<BallSkill *>(skill)) {
+		ballSkill->setState(BallSkill::SkillState::None);
+	}
+	else if (auto playerSkill = dynamic_cast<PlayerSkill *>(skill)) {
+		playerSkill->setState(PlayerSkill::SkillState::None);
+	}
+	else if (auto subPlayerSkill = dynamic_cast<SubPlayerSkill *>(skill)) {
+		subPlayerSkill->setState(SubPlayerSkill::SkillState::None);
+	}
+	else {
+		std::invalid_argument("Skill not exist.");
+	}
+	enable = false;
 }
 

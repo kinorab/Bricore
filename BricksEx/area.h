@@ -11,7 +11,9 @@ namespace game {
 	class Area {
 	public:
 		enum class Item {
+			AttackCore,
 			BallLifeCore,
+			DefendCore,
 			HealCore,
 			SkillCDCore,
 			ReviveCore

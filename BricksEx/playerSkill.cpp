@@ -1,34 +1,56 @@
 #include "playerSkill.h"
+#include <SFML/Graphics.hpp>
 
-game::PlayerSkill::PlayerSkill(const Player skillName, const sf::Time & duration, const bool autoUse)
-	: skillName(skillName) {
+using namespace game;
+
+PlayerSkill::PlayerSkill(const Player skillName, const std::vector<NormalEffect> &normalEffects, const sf::Time & duration, const bool autoUse)
+	: skill(skillName, Picture()) {
 	this->duration = duration;
 	setEnable(autoUse);
+	skill.second.currentState = SkillState::None;
+	std::for_each(normalEffects.begin(), normalEffects.end(), [&](const NormalEffect normalEffect) {
+		skillEffects.push_back(std::shared_ptr<Effect>(new Effect(normalEffect, this)));
+	});
 }
 
-void game::PlayerSkill::useSkill()
-{
+void PlayerSkill::swapSkill(PlayerSkill & other) {
+	skill.swap(other.skill);
+	statePreviews.swap(other.statePreviews);
 }
 
-void game::PlayerSkill::upgradeSkill()
-{
+void PlayerSkill::useSkill() {
 }
 
-void game::PlayerSkill::gainSkill(const Player playerSkill) {
-
+void PlayerSkill::upgradeSkill() {
 }
 
-void game::PlayerSkill::loadSkillPicture(const std::vector<std::string>& fileName)
-{
+void PlayerSkill::loadSkillPicture(const std::map<SkillState, std::string> &fileNames, const bool isSmooth) {
+	std::for_each(fileNames.begin(), fileNames.end(), [&](const std::pair<SkillState, std::string> &fileName) {
+		statePreviews.at(fileName.first)->loadFromFile(fileName.second);
+		statePreviews.at(fileName.first)->setSmooth(isSmooth);
+	});
 }
 
-game::Skill::Player game::PlayerSkill::getSkillName() const {
-	return skillName;
+void PlayerSkill::setState(const SkillState state) {
+	skill.second.currentState = state;
+	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
 }
 
-game::PlayerSkill::~PlayerSkill() {
+PlayerSkill::SkillState PlayerSkill::getState() const {
+	return skill.second.currentState;
 }
 
-void game::PlayerSkill::handleSkill()
-{
+Skill::Player PlayerSkill::getSkillName() const {
+	return skill.first;
+}
+
+PlayerSkill::~PlayerSkill() {
+}
+
+void PlayerSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+	states.transform *= getTransform();
+	target.draw(*skill.second.context, states);
+}
+
+void PlayerSkill::handleSkill() {
 }
