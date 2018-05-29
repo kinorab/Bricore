@@ -1,6 +1,7 @@
 #include "container.h"
 #include "utility.h"
 #include <algorithm>
+#include <map>
 
 namespace game {
 	Container::Container() {
@@ -9,7 +10,7 @@ namespace game {
 
 	Container::~Container() {
 		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<InteractiveObject> & child) {
+			[](const std::shared_ptr<InteractiveObject> & child) {
 			child->setParent(nullptr);
 		});
 	}
@@ -120,7 +121,7 @@ namespace game {
 
 	void Container::removeAllChildren() {
 		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<InteractiveObject> & child) {
+			[](const std::shared_ptr<InteractiveObject> & child) {
 			child->setParent(nullptr);
 		});
 		children.clear();
@@ -159,10 +160,23 @@ namespace game {
 
 	void Container::removeChildren(const int beginIndex, const int endIndex) {
 		std::for_each(children.begin() + beginIndex, children.begin() + endIndex,
-			[&](const std::shared_ptr<InteractiveObject> & child) {
+			[](const std::shared_ptr<InteractiveObject> & child) {
 			child->setParent(nullptr);
 		});
 		children.erase(children.begin() + beginIndex, children.begin() + endIndex);
+	}
+
+	void Container::replaceChild(const std::vector<std::shared_ptr<sf::Drawable>>& elements, const std::vector<int> indexes) {
+		std::map<int, std::shared_ptr<sf::Drawable>> elementMap;
+		std::transform(indexes.begin(), indexes.end(), elements.begin(), std::inserter(elementMap, elementMap.end()),
+			[](const int index, const std::shared_ptr<sf::Drawable> element) {
+			return std::make_pair(index, element);
+		});
+		removeChildAt(indexes);
+		std::for_each(indexes.begin(), indexes.end(),
+			[&](const int index) {
+			addChildAt({ elementMap[index] }, index);
+		});
 	}
 
 	void Container::setChildIndex(const sf::Drawable * element, const int index) {

@@ -30,6 +30,7 @@ namespace game {
 		virtual std::vector<int> removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
 		virtual void removeChildAt(std::vector<int> indexes);
 		virtual void removeChildren(const int beginIndex, const int endIndex);
+		virtual void replaceChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements, const std::vector<int> indexes);
 		virtual void setChildIndex(const sf::Drawable * element, const int index);
 		virtual void swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB);
 		virtual void swapChildrenAt(const int indexA, const int indexB);
