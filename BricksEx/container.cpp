@@ -1,6 +1,7 @@
 #include "container.h"
 #include "utility.h"
 #include <algorithm>
+#include <map>
 
 namespace game {
 	Container::Container() {
@@ -8,6 +9,10 @@ namespace game {
 	}
 
 	Container::~Container() {
+		std::for_each(children.begin(), children.end(),
+			[](const std::shared_ptr<InteractiveObject> & child) {
+			child->setParent(nullptr);
+		});
 	}
 
 	void Container::addChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements) {
@@ -16,7 +21,7 @@ namespace game {
 
 	void Container::addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, const size_t index) {
 		if (index > children.size()) {
-			throw std::out_of_range("Index exceeds the size of children.");
+			throw std::out_of_range("Index not in the range of children.");
 		}
 
 		std::vector<std::shared_ptr<InteractiveObject>> nodes;
@@ -42,7 +47,11 @@ namespace game {
 				node.reset(new DrawableNode(element));
 			}
 
-			node->setParent(weak_from_this());
+			if (node->getParent() != nullptr) {
+				node->getParent()->removeChild({ node });
+			}
+
+			node->setParent(this);
 			return node;
 		});
 		children.insert(children.begin() + index, nodes.begin(), nodes.end());
@@ -110,15 +119,11 @@ namespace game {
 		return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
 	}
 
-	void Container::initialize() {
-		std::for_each(children.begin(), children.end(),
-			[this](std::shared_ptr<InteractiveObject> & child) {
-			child->setParent(weak_from_this());
-			child->initialize();
-		});
-	}
-
 	void Container::removeAllChildren() {
+		std::for_each(children.begin(), children.end(),
+			[](const std::shared_ptr<InteractiveObject> & child) {
+			child->setParent(nullptr);
+		});
 		children.clear();
 		children.shrink_to_fit();
 	}
@@ -144,15 +149,34 @@ namespace game {
 		children.erase(std::remove_if(children.begin(), children.end(),
 			[&](const std::shared_ptr<InteractiveObject> & child) {
 			if (indexIterator != indexes.end() && children[*indexIterator] == child) {
+				child->setParent(nullptr);
 				++indexIterator;
 				return true;
 			}
+
 			return false;
 		}), children.end());
 	}
 
 	void Container::removeChildren(const int beginIndex, const int endIndex) {
+		std::for_each(children.begin() + beginIndex, children.begin() + endIndex,
+			[](const std::shared_ptr<InteractiveObject> & child) {
+			child->setParent(nullptr);
+		});
 		children.erase(children.begin() + beginIndex, children.begin() + endIndex);
+	}
+
+	void Container::replaceChild(const std::vector<std::shared_ptr<sf::Drawable>>& elements, const std::vector<int> indexes) {
+		std::map<int, std::shared_ptr<sf::Drawable>> elementMap;
+		std::transform(indexes.begin(), indexes.end(), elements.begin(), std::inserter(elementMap, elementMap.end()),
+			[](const int index, const std::shared_ptr<sf::Drawable> element) {
+			return std::make_pair(index, element);
+		});
+		removeChildAt(indexes);
+		std::for_each(indexes.begin(), indexes.end(),
+			[&](const int index) {
+			addChildAt({ elementMap[index] }, index);
+		});
 	}
 
 	void Container::setChildIndex(const sf::Drawable * element, const int index) {

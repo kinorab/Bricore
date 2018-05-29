@@ -17,8 +17,7 @@ TextureManager::~TextureManager() {
 }
 
 sf::Texture * TextureManager::get(const std::string key) {
-	auto iterator = resources.find(key);
-	if (iterator == resources.end()) {
+	if (resources.find(key) == resources.end()) {
 		load(key);
 	}
 

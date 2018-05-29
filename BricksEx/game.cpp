@@ -91,13 +91,27 @@ void Game::handleMouseEvent() {
 
 		if (contactNode != previousContactNode) {
 			vector<shared_ptr<game::InteractiveObject>> previousNodes;
-			for (shared_ptr<game::InteractiveObject> node = previousContactNode; node; node = node->getParent().lock()) {
+			for (shared_ptr<game::InteractiveObject> node = previousContactNode; node;) {
 				previousNodes.push_back(node);
+				game::Container * parent = node->getParent();
+				if (parent) {
+					node = parent->shared_from_this();
+				}
+				else {
+					node = nullptr;
+				}
 			}
 
 			vector<shared_ptr<game::InteractiveObject>> currentNodes;
-			for (shared_ptr<game::InteractiveObject> node = contactNode; node; node = node->getParent().lock()) {
+			for (shared_ptr<game::InteractiveObject> node = contactNode; node;) {
 				currentNodes.push_back(node);
+				game::Container * parent = node->getParent();
+				if (parent) {
+					node = parent->shared_from_this();
+				}
+				else {
+					node = nullptr;
+				}
 			}
 
 			int sameNodeCount = 0;
@@ -178,11 +192,13 @@ void Game::renderFunc() {
 		renderElapsed = min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 
 		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
-			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
-			window.draw(*Stage::getPreInstance(elapsed.asMilliseconds() / updateSpan));
 			Stage::getInstance()->update(updateSpan, mousePosition);
+			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
 		}
+
 		if (renderElapsed.asMicroseconds() >= graph.getFrameSpan() * 1000.f) {
+			Stage::getInstance()->predictUpdate(elapsed.asMilliseconds() / updateSpan);
+			window.draw(*Stage::getInstance());
 			window.display();
 			renderElapsed -= milliseconds(static_cast<Int32>(graph.getFrameSpan()));
 		}
