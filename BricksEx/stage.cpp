@@ -17,15 +17,6 @@ std::shared_ptr<Stage> Stage::getInstance() {
 
 	return instance;
 }
-// use getInstance() prevent return nullptr
-std::shared_ptr<Stage> Stage::getPreInstance(const float intervalTime) {
-	if (instance) {
-		getInstance()->setPredict();
-		getInstance()->predictUpdate(intervalTime);
-	}
-	
-	return getInstance();
-}
 
 bool Stage::resetInstance() {
 	if (instance) {
@@ -33,6 +24,27 @@ bool Stage::resetInstance() {
 		return true;
 	}
 	return false;
+}
+
+void Stage::predictUpdate(const float intervalTime) {
+	if (playerPredict && ballPredict && brickPredict && obstaclePredict) {
+		removeChild({ playerPredict, ballPredict, brickPredict, obstaclePredict });
+	}
+	playerPredict.reset(new Player(*player));
+	ballPredict.reset(new item::Ball(*ball));
+	brickPredict.reset(new item::Brick(*brick));
+	obstaclePredict.reset(new Obstacle(*obstacle));
+	addChildAt({ playerPredict, ballPredict, brickPredict, obstaclePredict }, getChildIndex(hud.get()) + 1);
+	if (!GameState::pause) {
+		for (size_t i = 0; i < SLICE; ++i) {
+			playerPredict->preUpdate(ballPredict->getMainBallPosition(), ballPredict->getMainBallRadius(), intervalTime);
+			if (GameState::start) {
+				brickPredict->preUpdate(*ballPredict, intervalTime);
+				obstaclePredict->preUpdate(*ballPredict, intervalTime);
+				ballPredict->preUpdate(playerPredict->getMainPlayerDP(), intervalTime);
+			}
+		}
+	}
 }
 
 Stage::~Stage() {
@@ -60,19 +72,6 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	mouseLight->update(updateSpan);
 }
 
-void Stage::predictUpdate(const float intervalTime) {
-	if (!GameState::pause) {
-		for (size_t i = 0; i < SLICE; ++i) {
-			playerPredict->preUpdate(ballPredict->getMainBallPosition(), ballPredict->getMainBallRadius(), intervalTime);
-			if (GameState::start) {
-				brickPredict->preUpdate(*ballPredict, intervalTime);
-				obstaclePredict->preUpdate(*ballPredict, intervalTime);
-				ballPredict->preUpdate(playerPredict->getMainPlayerDP(), intervalTime);
-			}
-		}
-	}
-}
-
 Stage::Stage()
 	: hud(new HUD())
 	, player(new Player())
@@ -93,20 +92,6 @@ Stage::Stage()
 	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
 	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
 	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
-}
-
-void Stage::setPredict() {
-	if (playerPredict && ballPredict && brickPredict && obstaclePredict) {
-		removeChild({ playerPredict, ballPredict, brickPredict, obstaclePredict });
-	}
-	playerPredict.reset(new Player(*player));
-	ballPredict.reset(new item::Ball(*ball));
-	brickPredict.reset(new item::Brick(*brick));
-	obstaclePredict.reset(new Obstacle(*obstacle));
-	addChildAt({ playerPredict }, getChildIndex({ hud.get() }) + 1);
-	addChildAt({ ballPredict }, getChildIndex({ hud.get() }) + 2);
-	addChildAt({ brickPredict }, getChildIndex({ hud.get() }) + 3);
-	addChildAt({ obstaclePredict }, getChildIndex({ hud.get() }) + 4);
 }
 
 void Stage::onKeyPressed(game::Event * event) {

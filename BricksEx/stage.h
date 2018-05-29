@@ -16,15 +16,13 @@ class Stage
 	: public game::Container {
 public:
 	static std::shared_ptr<Stage> getInstance();
-	static std::shared_ptr<Stage> getPreInstance(const float intervalTime);
 	static bool resetInstance();
+	virtual void predictUpdate(const float intervalTime);
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
 	virtual ~Stage();
 
 protected:
 	Stage();
-	virtual void setPredict();
-	virtual void predictUpdate(const float);
 
 private:
 	virtual void onKeyPressed(game::Event *);
