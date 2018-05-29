@@ -193,10 +193,10 @@ void Game::renderFunc() {
 
 		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
 			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
-			window.draw(*Stage::getPreInstance(elapsed.asMilliseconds() / updateSpan));
 			Stage::getInstance()->update(updateSpan, mousePosition);
 		}
 		if (renderElapsed.asMicroseconds() >= graph.getFrameSpan() * 1000.f) {
+			window.draw(*Stage::getPreInstance(elapsed.asMilliseconds() / updateSpan));
 			window.display();
 			renderElapsed -= milliseconds(static_cast<Int32>(graph.getFrameSpan()));
 		}
