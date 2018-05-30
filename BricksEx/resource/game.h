@@ -8,6 +8,8 @@
 #include <map>
 #include <mutex>
 
+class Stage;
+
 class Game {
 public:
 	Game();
