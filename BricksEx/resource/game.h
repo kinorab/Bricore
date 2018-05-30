@@ -10,25 +10,29 @@
 
 class Game {
 public:
-	static void run();
+	Game();
+	virtual ~Game();
+	virtual void run();
 
 private:
-	static void pushEvent(const sf::Event &);
-	static void settleWindow();
-	static sf::Event popEvent();
-	static void handleKeyEvent();
-	static void handleMouseEvent();
-	static void handleGraphicsEvent();
-	static void renderFunc();
+	static bool instantiated;
+	virtual void pushEvent(const sf::Event &);
+	virtual void settleWindow();
+	virtual sf::Event popEvent();
+	virtual void handleKeyEvent();
+	virtual void handleMouseEvent();
+	virtual void handleGraphicsEvent();
+	virtual void renderFunc();
 
-	static std::atomic<bool> finished;
-	static std::queue<sf::Event> eventQueue;
-	static std::mutex eventQueueMutex;
-	static std::map<sf::Keyboard::Key, bool> keyDown;
-	static std::thread renderThread;
-	static sf::Event currentEvent;
-	static sf::RenderWindow window;
-	static sf::Vector2f mousePosition;
-	static std::shared_ptr<game::InteractiveObject> previousContactNode;
-	static Graphics graph;
+	std::atomic<bool> finished;
+	std::queue<sf::Event> eventQueue;
+	std::mutex eventQueueMutex;
+	std::map<sf::Keyboard::Key, bool> keyDown;
+	std::thread renderThread;
+	sf::Event currentEvent;
+	std::shared_ptr<sf::RenderWindow> window;
+	sf::Vector2f mousePosition;
+	std::shared_ptr<game::InteractiveObject> previousContactNode;
+	std::shared_ptr<Stage> stage;
+	Graphics graph;
 };

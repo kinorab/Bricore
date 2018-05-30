@@ -15,23 +15,19 @@ class HUD;
 class Stage
 	: public game::Container {
 public:
-	static std::shared_ptr<Stage> getInstance();
-	static bool resetInstance();
+	Stage();
+	virtual ~Stage();
 	virtual void predictUpdate(const float intervalTime);
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
-	virtual ~Stage();
-
-protected:
-	Stage();
-
 private:
+	static bool instantiated;
+
 	virtual void onKeyPressed(game::Event *);
 	virtual void onKeyReleased(game::Event *);
 	virtual void onMouseEntered(game::Event *);
 	virtual void onMouseLeft(game::Event *);
 	virtual void onMouseButtonPressed(game::Event *);
 
-	static std::shared_ptr<Stage> instance;
 	std::shared_ptr<HUD> hud;
 	std::shared_ptr<ParticleSystem> mouseLight;
 	std::shared_ptr<Player> player;

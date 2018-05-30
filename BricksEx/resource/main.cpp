@@ -1,8 +1,8 @@
 #include "game.h"
 
 int main() {
-
-	Game::run();
+	Game game;
+	game.run();
 	// finalize...
 	system("pause");
 	return 0;
