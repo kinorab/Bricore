@@ -7,26 +7,32 @@
 using namespace sf;
 using namespace std;
 
-atomic<bool> Game::finished(false);
-queue<Event> Game::eventQueue;
-mutex Game::eventQueueMutex;
-map<Keyboard::Key, bool> Game::keyDown;
-thread Game::renderThread;
-Event Game::currentEvent;
-Graphics Game::graph;
-RenderWindow Game::window(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
-	, "BricksEx", Style::Close, graph.getSettings());
-Vector2f Game::mousePosition;
-shared_ptr<game::InteractiveObject> Game::previousContactNode(nullptr);
+bool Game::instantiated;
+
+Game::Game()
+	: finished(false)
+	, stage(new Stage()) {
+	if (instantiated) {
+		throw std::invalid_argument("This class can only be instantiated once!");
+	}
+
+	window.reset(new RenderWindow(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
+		, "BricksEx", Style::Close, graph.getSettings()));
+	instantiated = true;
+}
+
+Game::~Game() {
+	instantiated = false;
+}
 
 void Game::run() {
 	settleWindow();
-	renderThread = thread(renderFunc);
+	renderThread = thread(std::bind(&Game::renderFunc, this));
 	Event nextEvent;
-	while (!finished && window.waitEvent(nextEvent)) {
+	while (!finished && window->waitEvent(nextEvent)) {
 		pushEvent(nextEvent);
 	}
-	window.close();
+	window->close();
 }
 
 void Game::pushEvent(const Event & event) {
@@ -36,12 +42,12 @@ void Game::pushEvent(const Event & event) {
 }
 
 void Game::settleWindow() {
-	window.setMouseCursorVisible(false);
-	window.setVerticalSyncEnabled(true);
-	window.setPosition(Vector2i(window.getPosition().x, 20));
-	ImmAssociateContext(window.getSystemHandle(), 0);
+	window->setMouseCursorVisible(false);
+	window->setVerticalSyncEnabled(true);
+	window->setPosition(Vector2i(window->getPosition().x, 20));
+	ImmAssociateContext(window->getSystemHandle(), 0);
 	//window.setIcon(graph.getIconSize().x, graph.getIconSize().y, graph.getIcon());
-	window.setActive(false);
+	window->setActive(false);
 }
 
 Event Game::popEvent() {
@@ -69,19 +75,19 @@ void Game::handleKeyEvent() {
 
 	game::Event event(currentEvent.type, false, true);
 	event.data = currentEvent.key;
-	Stage::getInstance()->dispatchEvent(&event);
+	stage->dispatchEvent(&event);
 }
 
 void Game::handleMouseEvent() {
 	if (currentEvent.type == Event::MouseMoved) {
-		mousePosition = window.mapPixelToCoords((Vector2i(currentEvent.mouseMove.x, currentEvent.mouseMove.y)));
+		mousePosition = window->mapPixelToCoords((Vector2i(currentEvent.mouseMove.x, currentEvent.mouseMove.y)));
 		std::shared_ptr<game::InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
 			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
 			contactNode = nullptr;
 		}
 		else {
-			contactNode = Stage::getInstance()->getObjectUnderPoint(mousePosition);
+			contactNode = stage->getObjectUnderPoint(mousePosition);
 			if (contactNode) {
 				game::Event event(currentEvent.type, true, true);
 				event.data = currentEvent.mouseMove;
@@ -192,18 +198,18 @@ void Game::renderFunc() {
 		renderElapsed = min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 
 		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
-			Stage::getInstance()->update(updateSpan, mousePosition);
+			stage->update(updateSpan, mousePosition);
 			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
 		}
 
 		if (renderElapsed.asMicroseconds() >= graph.getFrameSpan() * 1000.f) {
-			Stage::getInstance()->predictUpdate(elapsed.asMilliseconds() / updateSpan);
-			window.draw(*Stage::getInstance());
-			window.display();
+			stage->predictUpdate(elapsed.asMilliseconds() / updateSpan);
+			window->draw(*stage);
+			window->display();
 			renderElapsed -= milliseconds(static_cast<Int32>(graph.getFrameSpan()));
 		}
 	}
 	// finalize...
-	window.setActive(false);
+	window->setActive(false);
 	finished = true;
 }

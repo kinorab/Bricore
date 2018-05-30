@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/Image.hpp>
 #include <memory>
-#include <map>
+#include <unordered_map>
 
 class ImageManager {
 public:
@@ -15,5 +15,5 @@ protected:
 	ImageManager();
 private:
 	static std::shared_ptr<ImageManager> instance;
-	std::map<std::string, std::shared_ptr<sf::Image>> resources;
+	std::unordered_map<std::string, std::shared_ptr<sf::Image>> resources;
 };

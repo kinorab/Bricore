@@ -8,22 +8,39 @@
 #include "player.h"
 #include "brick.h"
 
-std::shared_ptr<Stage> Stage::instance = nullptr;
+bool Stage::instantiated = false;
 
-std::shared_ptr<Stage> Stage::getInstance() {
-	if (!instance) {
-		instance.reset(new Stage());
+Stage::Stage()
+	: hud(new HUD())
+	, player(new Player())
+	, ball(new item::Ball())
+	, brick(new item::Brick())
+	, obstacle(new Obstacle())
+	, mouseLight(new ParticleSystem(2000))
+	, playerPredict(nullptr)
+	, ballPredict(nullptr)
+	, brickPredict(nullptr)
+	, obstaclePredict(nullptr) {
+	// presettle mainBall's position
+	if (instantiated) {
+		throw std::invalid_argument("This class can only be instantiated once!");
 	}
 
-	return instance;
+	ball->followPlayer(player->getMainPlayerTopCenterPos());
+	addChild({ hud, mouseLight });
+	using namespace std::placeholders;
+	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
+	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
+	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
+	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
+	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
+	instantiated = true;
 }
 
-bool Stage::resetInstance() {
-	if (instance) {
-		instance.reset();
-		return true;
-	}
-	return false;
+Stage::~Stage() {
+	AudioManager::getInstance()->bgmusic.stop();
+	AudioManager::getInstance()->sound1.stop();
+	instantiated = false;
 }
 
 void Stage::predictUpdate(const float intervalTime) {
@@ -47,11 +64,6 @@ void Stage::predictUpdate(const float intervalTime) {
 	}
 }
 
-Stage::~Stage() {
-	AudioManager::getInstance()->bgmusic.stop();
-	AudioManager::getInstance()->sound1.stop();
-}
-
 void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	if (!GameState::pause) {
 		ball->initializeBall();
@@ -70,28 +82,6 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	}
 	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
-}
-
-Stage::Stage()
-	: hud(new HUD())
-	, player(new Player())
-	, ball(new item::Ball())
-	, brick(new item::Brick())
-	, obstacle(new Obstacle())
-	, mouseLight(new ParticleSystem(2000))
-	, playerPredict(nullptr)
-	, ballPredict(nullptr)
-	, brickPredict(nullptr)
-	, obstaclePredict(nullptr) {
-	// presettle mainBall's position
-	ball->followPlayer(player->getMainPlayerTopCenterPos());
-	addChild({ hud, mouseLight });
-	using namespace std::placeholders;
-	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
-	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
-	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
-	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
-	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
 }
 
 void Stage::onKeyPressed(game::Event * event) {

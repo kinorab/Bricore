@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <memory>
-#include <map>
+#include <unordered_map>
 
 class TextureManager {
 public:
@@ -15,5 +15,5 @@ protected:
 	TextureManager();
 private:
 	static std::shared_ptr<TextureManager> instance;
-	std::map<std::string, std::shared_ptr<sf::Texture>> resources;
+	std::unordered_map<std::string, std::shared_ptr<sf::Texture>> resources;
 };

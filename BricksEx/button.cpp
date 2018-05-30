@@ -15,6 +15,13 @@ namespace game {
 		addEventListener(sf::Event::MouseButtonReleased, std::bind(&Button::onMouseReleased, this, _1));
 	}
 
+	Button::Button(std::shared_ptr<sf::Drawable> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject) {
+		this->upObject = upObject;
+		this->overObject = overObject;
+		this->downObject = downObject;
+		this->hitObject.reset(new DrawableNode(upObject));
+	}
+
 	Button::~Button() {
 
 	}
