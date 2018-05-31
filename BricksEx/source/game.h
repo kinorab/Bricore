@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UI/graphics.h"
-#include "interactiveObject.h"
+#include "interact/interactiveObject.h"
 #include <SFML/Graphics.hpp>
 #include <atomic>
 #include <queue>
