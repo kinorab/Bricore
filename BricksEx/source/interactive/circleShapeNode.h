@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../interactiveObject.h"
+#include "interactiveObject.h"
 
 namespace game {
-	class SpriteNode
+	class CircleShapeNode
 		: public InteractiveObject {
 	public:
-		explicit SpriteNode(std::shared_ptr<sf::Sprite> sprite);
-		virtual ~SpriteNode();
+		explicit CircleShapeNode(std::shared_ptr<sf::CircleShape> circleShape);
+		virtual ~CircleShapeNode();
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 	private:
-		std::shared_ptr<sf::Sprite> sprite;
+		std::shared_ptr<sf::CircleShape> circleShape;
 	};
 }

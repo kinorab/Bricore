@@ -1,95 +1,106 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="resource\container.cpp" />
-    <ClCompile Include="resource\event.cpp" />
-    <ClCompile Include="resource\game.cpp" />
-    <ClCompile Include="resource\interactiveObject.cpp" />
-    <ClCompile Include="resource\main.cpp" />
-    <ClCompile Include="resource\stage.cpp" />
-    <ClCompile Include="resource\definition\define.cpp" />
-    <ClCompile Include="resource\definition\utility.cpp" />
-    <ClCompile Include="resource\gameSys\effect\effect.cpp" />
-    <ClCompile Include="resource\gameSys\skill\ballSkill.cpp" />
-    <ClCompile Include="resource\gameSys\skill\playerSkill.cpp" />
-    <ClCompile Include="resource\gameSys\skill\subPlayerSkill.cpp" />
-    <ClCompile Include="resource\gameSys\area.cpp" />
-    <ClCompile Include="resource\gameSys\LVDeploy.cpp" />
-    <ClCompile Include="resource\gameSys\system.cpp" />
-    <ClCompile Include="resource\manager\audioManager.cpp" />
-    <ClCompile Include="resource\manager\imageManager.cpp" />
-    <ClCompile Include="resource\manager\resourceManager.cpp" />
-    <ClCompile Include="resource\manager\textureManager.cpp" />
-    <ClCompile Include="resource\node\circleShapeNode.cpp" />
-    <ClCompile Include="resource\node\drawableNode.cpp" />
-    <ClCompile Include="resource\node\rectangleShapeNode.cpp" />
-    <ClCompile Include="resource\node\spriteNode.cpp" />
-    <ClCompile Include="resource\node\vertexArrayNode.cpp" />
-    <ClCompile Include="resource\UI\button.cpp" />
-    <ClCompile Include="resource\UI\graphics.cpp" />
-    <ClCompile Include="resource\UI\movieClip.cpp" />
-    <ClCompile Include="resource\UI\textButton.cpp" />
-    <ClCompile Include="resource\UI\textField.cpp" />
-    <ClCompile Include="resource\particleSystem.cpp" />
-    <ClCompile Include="resource\stuff\ball.cpp" />
-    <ClCompile Include="resource\stuff\block.cpp" />
-    <ClCompile Include="resource\stuff\brick.cpp" />
-    <ClCompile Include="resource\stuff\ellipse.cpp" />
-    <ClCompile Include="resource\stuff\obstacle.cpp" />
-    <ClCompile Include="resource\stuff\player.cpp" />
-    <ClCompile Include="resource\gameSys\skill\skillSystem.cpp" />
-    <ClCompile Include="resource\UI\UIComponent.cpp" />
-    <ClCompile Include="resource\hud.cpp" />
+    <Filter Include="來源檔案">
+      <UniqueIdentifier>{48dab6d5-1a3f-478c-a837-278b848be25f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{c2f42780-fb6c-4c5c-b5ed-65f1040b4b69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{9ee86fca-14d2-40f5-bc45-285258fb2b72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource\container.h" />
-    <ClInclude Include="resource\event.h" />
-    <ClInclude Include="resource\game.h" />
-    <ClInclude Include="resource\interactiveObject.h" />
-    <ClInclude Include="resource\stage.h" />
-    <ClInclude Include="resource\definition\define.h" />
-    <ClInclude Include="resource\definition\diagonalPoint.h" />
-    <ClInclude Include="resource\definition\intersects.h" />
-    <ClInclude Include="resource\definition\matrix.h" />
-    <ClInclude Include="resource\definition\utility.h" />
-    <ClInclude Include="resource\gameSys\effect\effect.h" />
-    <ClInclude Include="resource\gameSys\skill\ballSkill.h" />
-    <ClInclude Include="resource\gameSys\skill\playerSkill.h" />
-    <ClInclude Include="resource\gameSys\skill\subPlayerSkill.h" />
-    <ClInclude Include="resource\gameSys\area.h" />
-    <ClInclude Include="resource\gameSys\LVDeploy.h" />
-    <ClInclude Include="resource\gameSys\system.h" />
-    <ClInclude Include="resource\manager\audioManager.h" />
-    <ClInclude Include="resource\manager\imageManager.h" />
-    <ClInclude Include="resource\manager\resourceManager.h" />
-    <ClInclude Include="resource\manager\textureManager.h" />
-    <ClInclude Include="resource\node\circleShapeNode.h" />
-    <ClInclude Include="resource\node\drawableNode.h" />
-    <ClInclude Include="resource\node\rectangleShapeNode.h" />
-    <ClInclude Include="resource\node\spriteNode.h" />
-    <ClInclude Include="resource\node\vertexArrayNode.h" />
-    <ClInclude Include="resource\UI\button.h" />
-    <ClInclude Include="resource\UI\graphics.h" />
-    <ClInclude Include="resource\UI\movieClip.h" />
-    <ClInclude Include="resource\UI\textButton.h" />
-    <ClInclude Include="resource\UI\textField.h" />
-    <ClInclude Include="resource\sourceFile\resource.h" />
-    <ClInclude Include="resource\particleSystem.h" />
-    <ClInclude Include="resource\stuff\ball.h" />
-    <ClInclude Include="resource\stuff\block.h" />
-    <ClInclude Include="resource\stuff\brick.h" />
-    <ClInclude Include="resource\stuff\ellipse.h" />
-    <ClInclude Include="resource\stuff\obstacle.h" />
-    <ClInclude Include="resource\stuff\player.h" />
-    <ClInclude Include="resource\gameSys\skill\skillSystem.h" />
-    <ClInclude Include="resource\UI\UIComponent.h" />
-    <ClInclude Include="resource\hud.h" />
+    <ClCompile Include="source\definition\define.cpp" />
+    <ClCompile Include="source\definition\utility.cpp" />
+    <ClCompile Include="source\gameSys\effect\effect.cpp" />
+    <ClCompile Include="source\gameSys\skill\ballSkill.cpp" />
+    <ClCompile Include="source\gameSys\skill\playerSkill.cpp" />
+    <ClCompile Include="source\gameSys\skill\skillSystem.cpp" />
+    <ClCompile Include="source\gameSys\skill\subPlayerSkill.cpp" />
+    <ClCompile Include="source\gameSys\area.cpp" />
+    <ClCompile Include="source\gameSys\LVDeploy.cpp" />
+    <ClCompile Include="source\gameSys\system.cpp" />
+    <ClCompile Include="source\manager\audioManager.cpp" />
+    <ClCompile Include="source\manager\imageManager.cpp" />
+    <ClCompile Include="source\manager\resourceManager.cpp" />
+    <ClCompile Include="source\manager\textureManager.cpp" />
+    <ClCompile Include="source\stuff\ball.cpp" />
+    <ClCompile Include="source\stuff\block.cpp" />
+    <ClCompile Include="source\stuff\brick.cpp" />
+    <ClCompile Include="source\stuff\ellipse.cpp" />
+    <ClCompile Include="source\stuff\obstacle.cpp" />
+    <ClCompile Include="source\stuff\player.cpp" />
+    <ClCompile Include="source\UI\button.cpp" />
+    <ClCompile Include="source\UI\graphics.cpp" />
+    <ClCompile Include="source\UI\movieClip.cpp" />
+    <ClCompile Include="source\UI\textButton.cpp" />
+    <ClCompile Include="source\UI\textField.cpp" />
+    <ClCompile Include="source\UI\UIComponent.cpp" />
+    <ClCompile Include="source\event.cpp" />
+    <ClCompile Include="source\game.cpp" />
+    <ClCompile Include="source\hud.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\particleSystem.cpp" />
+    <ClCompile Include="source\stage.cpp" />
+    <ClCompile Include="source\interactive\circleShapeNode.cpp" />
+    <ClCompile Include="source\interactive\container.cpp" />
+    <ClCompile Include="source\interactive\drawableNode.cpp" />
+    <ClCompile Include="source\interactive\interactiveObject.cpp" />
+    <ClCompile Include="source\interactive\rectangleShapeNode.cpp" />
+    <ClCompile Include="source\interactive\spriteNode.cpp" />
+    <ClCompile Include="source\interactive\vertexArrayNode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resource\definition\diagonalPoint.inl" />
-    <None Include="resource\definition\matrix.inl" />
+    <ClInclude Include="source\definition\define.h" />
+    <ClInclude Include="source\definition\diagonalPoint.h" />
+    <ClInclude Include="source\definition\intersects.h" />
+    <ClInclude Include="source\definition\matrix.h" />
+    <ClInclude Include="source\definition\utility.h" />
+    <ClInclude Include="source\gameSys\effect\effect.h" />
+    <ClInclude Include="source\gameSys\skill\ballSkill.h" />
+    <ClInclude Include="source\gameSys\skill\playerSkill.h" />
+    <ClInclude Include="source\gameSys\skill\skillSystem.h" />
+    <ClInclude Include="source\gameSys\skill\subPlayerSkill.h" />
+    <ClInclude Include="source\gameSys\area.h" />
+    <ClInclude Include="source\gameSys\LVDeploy.h" />
+    <ClInclude Include="source\gameSys\system.h" />
+    <ClInclude Include="source\manager\audioManager.h" />
+    <ClInclude Include="source\manager\imageManager.h" />
+    <ClInclude Include="source\manager\resourceManager.h" />
+    <ClInclude Include="source\manager\textureManager.h" />
+    <ClInclude Include="source\stuff\ball.h" />
+    <ClInclude Include="source\stuff\block.h" />
+    <ClInclude Include="source\stuff\brick.h" />
+    <ClInclude Include="source\stuff\ellipse.h" />
+    <ClInclude Include="source\stuff\obstacle.h" />
+    <ClInclude Include="source\stuff\player.h" />
+    <ClInclude Include="source\UI\button.h" />
+    <ClInclude Include="source\UI\graphics.h" />
+    <ClInclude Include="source\UI\movieClip.h" />
+    <ClInclude Include="source\UI\textButton.h" />
+    <ClInclude Include="source\UI\textField.h" />
+    <ClInclude Include="source\UI\UIComponent.h" />
+    <ClInclude Include="source\event.h" />
+    <ClInclude Include="source\game.h" />
+    <ClInclude Include="source\hud.h" />
+    <ClInclude Include="source\particleSystem.h" />
+    <ClInclude Include="source\stage.h" />
+    <ClInclude Include="source\resource\resource.h" />
+    <ClInclude Include="source\interactive\circleShapeNode.h" />
+    <ClInclude Include="source\interactive\container.h" />
+    <ClInclude Include="source\interactive\drawableNode.h" />
+    <ClInclude Include="source\interactive\interactiveObject.h" />
+    <ClInclude Include="source\interactive\rectangleShapeNode.h" />
+    <ClInclude Include="source\interactive\spriteNode.h" />
+    <ClInclude Include="source\interactive\vertexArrayNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource\sourceFile\Resource.rc" />
+    <None Include="source\definition\diagonalPoint.inl" />
+    <None Include="source\definition\matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="source\resource\Resource.rc" />
   </ItemGroup>
 </Project>

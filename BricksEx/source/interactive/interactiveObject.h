@@ -1,6 +1,6 @@
 #pragma once
 
-#include "event.h"
+#include "../event.h"
 #include <SFML/Graphics.hpp>
 #include <functional>
 

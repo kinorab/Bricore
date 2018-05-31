@@ -1,10 +1,10 @@
 #pragma once
 
-#include "node/circleShapeNode.h"
-#include "node/drawableNode.h"
-#include "node/rectangleShapeNode.h"
-#include "node/spriteNode.h"
-#include "node/vertexArrayNode.h"
+#include "circleShapeNode.h"
+#include "drawableNode.h"
+#include "rectangleShapeNode.h"
+#include "spriteNode.h"
+#include "vertexArrayNode.h"
 #include <vector>
 #include <memory>
 
