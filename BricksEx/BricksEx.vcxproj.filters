@@ -87,7 +87,6 @@
     <ClInclude Include="source\hud.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\stage.h" />
-    <ClInclude Include="source\resource\resource.h" />
     <ClInclude Include="source\interactive\circleShapeNode.h" />
     <ClInclude Include="source\interactive\container.h" />
     <ClInclude Include="source\interactive\drawableNode.h" />
@@ -95,12 +94,13 @@
     <ClInclude Include="source\interactive\rectangleShapeNode.h" />
     <ClInclude Include="source\interactive\spriteNode.h" />
     <ClInclude Include="source\interactive\vertexArrayNode.h" />
+    <ClInclude Include="resource\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />
     <None Include="source\definition\matrix.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="source\resource\Resource.rc" />
+    <ResourceCompile Include="resource\Resource.rc" />
   </ItemGroup>
 </Project>
