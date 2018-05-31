@@ -1,4 +1,5 @@
 #include "textField.h"
+#include <SFML/Graphics.hpp>
 
 namespace game {
 	game::TextField::TextField(std::string text) {

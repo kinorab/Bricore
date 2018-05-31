@@ -1,16 +1,26 @@
 #pragma once
 
 #include "../definition/diagonalPoint.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <vector>
 #include <memory>
 #include <map>
+
+namespace sf {
+	class RenderTarget;
+	class RenderStates;
+	class RectangleShape;
+}
 
 namespace item {
 	class Ball;
 
 	class Brick :
-		public sf::Drawable {
+		public sf::Drawable
+		, public sf::Transformable {
 	public:
 		Brick();
 		explicit Brick(const Brick &copy);

@@ -2,6 +2,10 @@
 
 #include "interactiveObject.h"
 
+namespace sf {
+	class VertexArray;
+}
+
 namespace game {
 	class VertexArrayNode
 		: public InteractiveObject {

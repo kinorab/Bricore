@@ -29,8 +29,8 @@ namespace game {
 		static void loadFrame(const std::map<size_t, std::string> &fileNames);
 		virtual void swapSkill(BallSkill &other);
 		virtual void useSkill() override;
-		virtual void upgradeSkill() override;
-		virtual void loadSkillPicture(const std::map<SkillState, std::string> &fileName, const bool isSmooth = false);
+		virtual size_t upgradeSkill() override;
+		virtual void loadPreviewFile(const std::map<SkillState, std::string> &fileName, const bool isSmooth = false);
 		virtual void setState(const SkillState state);
 
 		virtual SkillState getState() const;

@@ -4,6 +4,7 @@
 #include "../gameSys/LVDeploy.h"
 #include "../definition/define.h"
 #include "../definition/intersects.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 using namespace sf;

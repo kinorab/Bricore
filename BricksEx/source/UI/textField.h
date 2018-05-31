@@ -2,6 +2,10 @@
 
 #include "UIComponent.h"
 
+namespace sf {
+	class Text;
+}
+
 namespace game {
 	class TextField
 		: public std::enable_shared_from_this<Container>,

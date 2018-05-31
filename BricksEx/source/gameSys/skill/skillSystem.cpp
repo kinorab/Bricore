@@ -30,7 +30,12 @@ game::SkillSystem::~SkillSystem() {
 }
 
 void game::SkillSystem::setEnable(const bool enable) {
-	this->enable = enable;
+	if (exist) {
+		this->enable = enable;
+	}
+	else {
+		throw std::invalid_argument("Skill not exist.");
+	}
 }
 
 void game::SkillSystem::exhausted(SkillSystem *skill) {
@@ -44,7 +49,7 @@ void game::SkillSystem::exhausted(SkillSystem *skill) {
 		subPlayerSkill->setState(SubPlayerSkill::SkillState::None);
 	}
 	else {
-		std::invalid_argument("Skill not exist.");
+		std::invalid_argument("Cannot find the skill.");
 	}
 	enable = false;
 }

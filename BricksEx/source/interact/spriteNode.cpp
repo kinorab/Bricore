@@ -1,4 +1,5 @@
 #include "spriteNode.h"
+#include <SFML/Graphics.hpp>
 
 namespace game {
 	SpriteNode::SpriteNode(std::shared_ptr<sf::Sprite> sprite) {

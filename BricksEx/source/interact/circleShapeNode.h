@@ -2,6 +2,10 @@
 
 #include "interactiveObject.h"
 
+namespace sf {
+	class CircleShape;
+}
+
 namespace game {
 	class CircleShapeNode
 		: public InteractiveObject {

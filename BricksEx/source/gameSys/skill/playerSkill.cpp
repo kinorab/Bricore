@@ -21,10 +21,11 @@ void PlayerSkill::swapSkill(PlayerSkill & other) {
 void PlayerSkill::useSkill() {
 }
 
-void PlayerSkill::upgradeSkill() {
+size_t PlayerSkill::upgradeSkill() {
+	return skillLevel++;
 }
 
-void PlayerSkill::loadSkillPicture(const std::map<SkillState, std::string> &fileNames, const bool isSmooth) {
+void PlayerSkill::loadPreviewFile(const std::map<SkillState, std::string> &fileNames, const bool isSmooth) {
 	std::for_each(fileNames.begin(), fileNames.end(), [&](const std::pair<SkillState, std::string> &fileName) {
 		statePreviews.at(fileName.first)->loadFromFile(fileName.second);
 		statePreviews.at(fileName.first)->setSmooth(isSmooth);

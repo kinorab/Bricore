@@ -1,10 +1,14 @@
 #pragma once
 
 #include "UI/button.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace game {
 	class Area;
+}
+namespace sf {
+	class Color;
+	class RectangleShape;
 }
 
 class HUD :

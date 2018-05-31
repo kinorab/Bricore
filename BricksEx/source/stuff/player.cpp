@@ -2,6 +2,7 @@
 #include "../definition/define.h"
 #include "../definition/intersects.h"
 #include "../manager/audioManager.h"
+#include <SFML/Graphics.hpp>
 
 using namespace sf;
 
@@ -114,7 +115,7 @@ Player & Player::operator=(const Player &right) {
 }
 
 void Player::draw(RenderTarget &target, RenderStates states) const {
-	states.texture = nullptr;
+	states.transform *= getTransform();
 	target.draw(mainPlayer, states);
 	target.draw(yellowRange, states);
 	target.draw(redRange, states);

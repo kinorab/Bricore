@@ -2,6 +2,7 @@
 #include "manager/audioManager.h"
 #include "definition/define.h"
 #include "stage.h"
+#include <SFML/Graphics.hpp>
 #include <Windows.h>
 
 using namespace sf;

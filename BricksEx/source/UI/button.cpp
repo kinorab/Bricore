@@ -1,6 +1,7 @@
 #include "button.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
+#include <SFML/Graphics.hpp>
 
 namespace game {
 	Button::Button(std::shared_ptr<sf::Sprite> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject)
