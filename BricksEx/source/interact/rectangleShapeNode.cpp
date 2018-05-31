@@ -1,4 +1,5 @@
 #include "rectangleShapeNode.h"
+#include <SFML/Graphics.hpp>
 
 namespace game {
 	RectangleShapeNode::RectangleShapeNode(std::shared_ptr<sf::RectangleShape> rectangleShape) {

@@ -1,16 +1,24 @@
 #pragma once
 
 #include "../definition/diagonalPoint.h"
-#include "../gameSys/skill/playerSkill.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Clock.hpp>
 #include <memory>
 
 namespace sf {
 	class Sound;
+	class RenderTarget;
+	class RenderStates;
+	class Color;
 }
 
-class Player : 
-	public sf::Drawable {
+class Player :
+	public sf::Drawable
+	, public sf::Transformable {
 
 public:
 	Player();

@@ -2,6 +2,7 @@
 #include "../event/event.h"
 #include "container.h"
 #include "../definition/utility.h"
+#include <SFML/Graphics.hpp>
 #include <algorithm>
 
 namespace game {

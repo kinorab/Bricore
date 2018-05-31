@@ -1,8 +1,17 @@
 #pragma once
 
 #include "../event/eventType.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <functional>
+#include <map>
+
+namespace sf {
+	class RenderTarget;
+	class RenderStates;
+}
 
 namespace game {
 	class Container;

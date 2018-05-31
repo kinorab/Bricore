@@ -1,4 +1,5 @@
 #include "circleShapeNode.h"
+#include <SFML/Graphics.hpp>
 
 namespace game {
 	CircleShapeNode::CircleShapeNode(std::shared_ptr<sf::CircleShape> circleShape) {

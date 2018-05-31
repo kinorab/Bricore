@@ -34,7 +34,7 @@ namespace game {
 			IronBody,
 			MultipleAttack,
 			ShieldGuard,
-			ShuttleSpace
+			ShuttleSpace,
 		};
 		// for stable version release
 		enum class Attribute {
@@ -47,7 +47,8 @@ namespace game {
 			Thunder
 		};
 		virtual void useSkill() = 0;
-		virtual void upgradeSkill() = 0;
+		// return level before upgraded
+		virtual size_t upgradeSkill() = 0;
 		virtual bool isExist() const;
 		virtual bool isEnable() const;
 		virtual const sf::Time & getDuration() const;

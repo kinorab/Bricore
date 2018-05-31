@@ -30,10 +30,11 @@ void BallSkill::swapSkill(BallSkill & other) {
 void BallSkill::useSkill() {
 }
 
-void BallSkill::upgradeSkill() {
+size_t BallSkill::upgradeSkill() {
+	return skillLevel++;
 }
 
-void BallSkill::loadSkillPicture(const std::map<SkillState, std::string> &fileNames, const bool isSmooth) {
+void BallSkill::loadPreviewFile(const std::map<SkillState, std::string> &fileNames, const bool isSmooth) {
 	std::for_each(fileNames.begin(), fileNames.end(), [&](const std::pair<SkillState, std::string> &fileName) {
 		statePreviews.at(fileName.first)->loadFromFile(fileName.second);
 		statePreviews.at(fileName.first)->setSmooth(isSmooth);

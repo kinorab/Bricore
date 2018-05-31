@@ -1,6 +1,7 @@
 #include "ball.h"
 #include "../definition/define.h"
 #include "../definition/intersects.h"
+#include <SFML/Graphics.hpp>
 #include <algorithm>
 
 using namespace sf;
@@ -212,7 +213,7 @@ Ball & item::Ball::operator =(const Ball &right) {
 };
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
-	states.texture = nullptr;
+	states.transform *= getTransform();
 	for (size_t i = 0; i < balls.size(); ++i) {
 		balls.at(i)->draw(target, states);
 	}
@@ -288,6 +289,10 @@ Ball::BallContainer::BallContainer(const BallContainer &copy)
 
 void Ball::BallContainer::setColor(const Color &color) {
 	ball.setFillColor(color);
+}
+
+void Ball::BallContainer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+	target.draw(ball, states);
 }
 
 void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized) {
@@ -503,10 +508,6 @@ void Ball::BallContainer::setPos(const float posX, const float posY) {
 
 void Ball::BallContainer::setRadius(const float radius) {
 	ball.setRadius(radius);
-}
-
-void Ball::BallContainer::draw(RenderTarget &target, RenderStates states) const {
-	target.draw(ball, states);
 }
 
 const bool Ball::BallContainer::isMain() const {

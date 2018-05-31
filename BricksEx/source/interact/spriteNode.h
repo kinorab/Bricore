@@ -2,6 +2,10 @@
 
 #include "interactiveObject.h"
 
+namespace sf {
+	class Sprite;
+}
+
 namespace game {
 	class SpriteNode
 		: public InteractiveObject {

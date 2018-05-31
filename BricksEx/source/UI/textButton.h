@@ -1,6 +1,12 @@
 #pragma once
 
 #include "UIComponent.h"
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
+namespace sf {
+	class Text;
+}
 
 namespace game {
 	class TextButton

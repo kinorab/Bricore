@@ -1,4 +1,5 @@
 #include "vertexArrayNode.h"
+#include <SFML/Graphics.hpp>
 
 namespace game {
 	VertexArrayNode::VertexArrayNode(std::shared_ptr<sf::VertexArray> vertexArray) {

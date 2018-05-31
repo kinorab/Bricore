@@ -1,14 +1,24 @@
 #pragma once
 
 #include "../definition/diagonalPoint.h"
-#include "../gameSys/skill/ballSkill.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Clock.hpp>
 #include <vector>
 #include <memory>
 
+namespace sf {
+	class RenderTarget;
+	class RenderStates;
+	class Color;
+}
+
 namespace item {
 	class Ball :
-		public sf::Drawable {
+		public sf::Drawable
+		, public sf::Transformable {
 
 	public:
 		Ball();
@@ -35,7 +45,9 @@ namespace item {
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		virtual void ballsCollision(const size_t);
 
-		class BallContainer : public sf::Drawable {
+		class BallContainer :
+			public sf::Drawable
+			, public sf::Transformable {
 		public:
 			explicit BallContainer(bool &);
 			explicit BallContainer(const BallContainer &);

@@ -24,7 +24,7 @@ Effect::Effect(const Normal effect, const SkillSystem * skill) {
 
 	}
 	else {
-		throw std::invalid_argument("Skill not exist.");
+		throw std::invalid_argument("In effects establishing: skill not exist.");
 	}
 	duration = skill->getDuration();
 	normalEffect = effect;

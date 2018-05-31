@@ -2,13 +2,19 @@
 
 #include "UI/graphics.h"
 #include "interact/interactiveObject.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Export.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <atomic>
 #include <queue>
 #include <map>
 #include <mutex>
 
 class Stage;
+
+namespace sf {
+	class RenderWindow;
+}
 
 class Game {
 public:

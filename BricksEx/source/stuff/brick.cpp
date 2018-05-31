@@ -3,6 +3,7 @@
 #include "../definition/define.h"
 #include "../manager/textureManager.h"
 #include "../gameSys/LVDeploy.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 using namespace sf;
@@ -256,6 +257,7 @@ void Brick::settlePlace() {
 }
 
 void Brick::draw(RenderTarget &target, RenderStates states) const {
+	states.transform *= getTransform();
 	for (size_t i = 0; i < getBricksSize(); ++i) {
 		states.texture = bricks.at(i)->getTexture();
 		target.draw(*bricks.at(i), states);
