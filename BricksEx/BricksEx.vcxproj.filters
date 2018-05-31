@@ -44,13 +44,13 @@
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\particleSystem.cpp" />
     <ClCompile Include="source\stage.cpp" />
-    <ClCompile Include="source\interactive\circleShapeNode.cpp" />
-    <ClCompile Include="source\interactive\container.cpp" />
-    <ClCompile Include="source\interactive\drawableNode.cpp" />
-    <ClCompile Include="source\interactive\interactiveObject.cpp" />
-    <ClCompile Include="source\interactive\rectangleShapeNode.cpp" />
-    <ClCompile Include="source\interactive\spriteNode.cpp" />
-    <ClCompile Include="source\interactive\vertexArrayNode.cpp" />
+    <ClCompile Include="source\interact\circleShapeNode.cpp" />
+    <ClCompile Include="source\interact\container.cpp" />
+    <ClCompile Include="source\interact\drawableNode.cpp" />
+    <ClCompile Include="source\interact\interactiveObject.cpp" />
+    <ClCompile Include="source\interact\rectangleShapeNode.cpp" />
+    <ClCompile Include="source\interact\spriteNode.cpp" />
+    <ClCompile Include="source\interact\vertexArrayNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\definition\define.h" />
@@ -87,14 +87,14 @@
     <ClInclude Include="source\hud.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\stage.h" />
-    <ClInclude Include="source\interactive\circleShapeNode.h" />
-    <ClInclude Include="source\interactive\container.h" />
-    <ClInclude Include="source\interactive\drawableNode.h" />
-    <ClInclude Include="source\interactive\interactiveObject.h" />
-    <ClInclude Include="source\interactive\rectangleShapeNode.h" />
-    <ClInclude Include="source\interactive\spriteNode.h" />
-    <ClInclude Include="source\interactive\vertexArrayNode.h" />
-    <ClInclude Include="resource\resource.h" />
+    <ClInclude Include="source\resource\resource.h" />
+    <ClInclude Include="source\interact\circleShapeNode.h" />
+    <ClInclude Include="source\interact\container.h" />
+    <ClInclude Include="source\interact\drawableNode.h" />
+    <ClInclude Include="source\interact\interactiveObject.h" />
+    <ClInclude Include="source\interact\rectangleShapeNode.h" />
+    <ClInclude Include="source\interact\spriteNode.h" />
+    <ClInclude Include="source\interact\vertexArrayNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />
