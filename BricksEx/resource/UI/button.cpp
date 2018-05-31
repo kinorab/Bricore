@@ -3,23 +3,16 @@
 #include "../definition/intersects.h"
 
 namespace game {
-	Button::Button(std::shared_ptr<sf::Drawable> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject, std::shared_ptr<game::InteractiveObject> hitObject) {
-		this->upObject = upObject;
-		this->overObject = overObject;
-		this->downObject = downObject;
-		this->hitObject = hitObject;
+	Button::Button(std::shared_ptr<sf::Sprite> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject)
+		: upObject(upObject)
+		, overObject(overObject)
+		, downObject(downObject)
+		, hitObject(new SpriteNode(upObject)) {
 		using namespace std::placeholders;
 		addEventListener(sf::Event::MouseEntered, std::bind(&Button::onMouseEntered, this, _1));
 		addEventListener(sf::Event::MouseLeft, std::bind(&Button::onMouseLeft, this, _1));
 		addEventListener(sf::Event::MouseButtonPressed, std::bind(&Button::onMousePressed, this, _1));
 		addEventListener(sf::Event::MouseButtonReleased, std::bind(&Button::onMouseReleased, this, _1));
-	}
-
-	Button::Button(std::shared_ptr<sf::Sprite> upObject, std::shared_ptr<sf::Drawable> overObject, std::shared_ptr<sf::Drawable> downObject) {
-		this->upObject = upObject;
-		this->overObject = overObject;
-		this->downObject = downObject;
-		this->hitObject.reset(new SpriteNode(upObject));
 	}
 
 	Button::~Button() {
