@@ -21,11 +21,11 @@ namespace game {
 		event->target = target;
 	}
 
-	Event::Event(sf::Event::EventType type) :
-		Event(type, true, true){
+	Event::Event(EventType type) :
+		Event(type, true, true) {
 	}
 
-	Event::Event(sf::Event::EventType type, bool bubbles, bool cancelable) :
+	Event::Event(EventType type, bool bubbles, bool cancelable) :
 		bubbles(bubbles),
 		cancelable(cancelable),
 		defaultPrevented(false),
@@ -62,7 +62,7 @@ namespace game {
 		return target;
 	}
 
-	sf::Event::EventType Event::getType() const {
+	EventType Event::getType() const {
 		return type;
 	}
 
