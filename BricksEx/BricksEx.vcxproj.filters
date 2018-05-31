@@ -101,6 +101,6 @@
     <None Include="source\definition\matrix.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="source\resource\Resource.rc" />
+    <ResourceCompile Include="resource\Resource.rc" />
   </ItemGroup>
 </Project>
