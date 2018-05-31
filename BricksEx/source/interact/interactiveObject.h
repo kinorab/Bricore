@@ -3,8 +3,6 @@
 #include "../event/eventType.h"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <functional>
 #include <map>
 

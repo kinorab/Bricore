@@ -4,7 +4,6 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <vector>
 #include <memory>
 #include <map>
