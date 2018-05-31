@@ -26,7 +26,7 @@
     <ClCompile Include="source\definition\define.cpp" />
     <ClCompile Include="source\definition\utility.cpp" />
     <ClCompile Include="source\stuff\ellipse.cpp" />
-    <ClCompile Include="source\event.cpp" />
+    <ClCompile Include="source\event\event.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\gameSys\area.cpp" />
     <ClCompile Include="source\gameSys\effect\effect.cpp" />
@@ -60,6 +60,7 @@
     <ClCompile Include="source\UI\textField.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\event\eventType.h" />
     <ClInclude Include="source\stuff\ball.h" />
     <ClInclude Include="source\stuff\block.h" />
     <ClInclude Include="source\stuff\brick.h" />
@@ -70,7 +71,7 @@
     <ClInclude Include="source\definition\matrix.h" />
     <ClInclude Include="source\definition\utility.h" />
     <ClInclude Include="source\stuff\ellipse.h" />
-    <ClInclude Include="source\event.h" />
+    <ClInclude Include="source\event\event.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\gameSys\area.h" />
     <ClInclude Include="source\gameSys\effect\effect.h" />

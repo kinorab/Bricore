@@ -1,6 +1,7 @@
 #include "stage.h"
 #include "hud.h"
 #include "particleSystem.h"
+#include "event/event.h"
 #include "definition/define.h"
 #include "manager/audioManager.h"
 #include "stuff/obstacle.h"
@@ -10,17 +11,17 @@
 
 bool Stage::instantiated = false;
 
-Stage::Stage()
-	: hud(new HUD())
-	, player(new Player())
-	, ball(new item::Ball())
-	, brick(new item::Brick())
-	, obstacle(new Obstacle())
-	, mouseLight(new ParticleSystem(2000))
-	, playerPredict(nullptr)
-	, ballPredict(nullptr)
-	, brickPredict(nullptr)
-	, obstaclePredict(nullptr) {
+Stage::Stage() : 
+	hud(new HUD()),
+	player(new Player()),
+	ball(new item::Ball()),
+	brick(new item::Brick()),
+	obstacle(new Obstacle()),
+	mouseLight(new ParticleSystem(2000)),
+	playerPredict(nullptr),
+	ballPredict(nullptr),
+	brickPredict(nullptr),
+	obstaclePredict(nullptr) {
 	// presettle mainBall's position
 	if (instantiated) {
 		throw std::invalid_argument("This class can only be instantiated once!");
@@ -29,11 +30,11 @@ Stage::Stage()
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, mouseLight });
 	using namespace std::placeholders;
-	addEventListener(sf::Event::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
-	addEventListener(sf::Event::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
-	addEventListener(sf::Event::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
-	addEventListener(sf::Event::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
-	addEventListener(sf::Event::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
+	addEventListener(game::EventType::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
+	addEventListener(game::EventType::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
+	addEventListener(game::EventType::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
+	addEventListener(game::EventType::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
+	addEventListener(game::EventType::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
 	instantiated = true;
 }
 

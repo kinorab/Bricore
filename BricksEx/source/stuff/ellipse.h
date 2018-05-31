@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics/Shape.hpp>
-#include <SFML/System/Vector2.hpp>
 
 class EllipseShape :
 	public sf::Shape {

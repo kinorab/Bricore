@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../event.h"
+#include "../event/eventType.h"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <functional>
 #include <map>
 
@@ -15,6 +13,7 @@ namespace sf {
 
 namespace game {
 	class Container;
+	class Event;
 
 	class InteractiveObject
 		: public sf::Drawable,
@@ -22,8 +21,8 @@ namespace game {
 	public:
 		InteractiveObject();
 		virtual ~InteractiveObject();
-		virtual int addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback);
-		virtual int addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture);
+		virtual int addEventListener(EventType type, std::function<void(Event *)> callback);
+		virtual int addEventListener(EventType type, std::function<void(Event *)> callback, bool useCapture);
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
 		virtual bool dispatchEvent(Event * event);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
@@ -34,7 +33,7 @@ namespace game {
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:
 		struct EventListener {
-			sf::Event::EventType type;
+			EventType type;
 			std::function<void(Event *)> callback;
 			bool useCapture;
 		};

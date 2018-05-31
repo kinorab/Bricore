@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UI/button.h"
-#include <SFML/System/Vector2.hpp>
 
 namespace game {
 	class Area;

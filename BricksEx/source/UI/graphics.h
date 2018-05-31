@@ -3,7 +3,6 @@
 #include <SFML/Config.hpp>
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Graphics/Image.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <vector>
 
 class Graphics {

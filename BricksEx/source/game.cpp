@@ -1,4 +1,5 @@
 #include "game.h"
+#include "event/event.h"
 #include "manager/audioManager.h"
 #include "definition/define.h"
 #include "stage.h"
@@ -10,9 +11,9 @@ using namespace std;
 
 bool Game::instantiated;
 
-Game::Game()
-	: finished(false)
-	, stage(new Stage()) {
+Game::Game() :
+	finished(false),
+	stage(new Stage()) {
 	if (instantiated) {
 		throw std::invalid_argument("This class can only be instantiated once!");
 	}
@@ -65,16 +66,19 @@ void Game::handleKeyEvent() {
 		return;
 	}
 
+	game::EventType eventType;
 	if (currentEvent.type == Event::KeyPressed) {
 		if (keyDown[currentEvent.key.code]) return;
 		keyDown[currentEvent.key.code] = true;
+		eventType = game::EventType::KeyPressed;
 	}
 	else if (currentEvent.type == Event::KeyReleased) {
 		if (!keyDown[currentEvent.key.code]) return;
 		keyDown[currentEvent.key.code] = false;
+		eventType = game::EventType::KeyReleased;
 	}
 
-	game::Event event(currentEvent.type, false, true);
+	game::Event event(eventType, false, true);
 	event.data = currentEvent.key;
 	stage->dispatchEvent(&event);
 }
@@ -90,7 +94,7 @@ void Game::handleMouseEvent() {
 		else {
 			contactNode = stage->getObjectUnderPoint(mousePosition);
 			if (contactNode) {
-				game::Event event(currentEvent.type, true, true);
+				game::Event event(game::EventType::MouseMoved, true, true);
 				event.data = currentEvent.mouseMove;
 				contactNode->dispatchEvent(&event);
 			}
@@ -128,13 +132,13 @@ void Game::handleMouseEvent() {
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
 				[](shared_ptr<game::InteractiveObject> & node) {
-				game::Event event(Event::MouseLeft, false, true);
+				game::Event event(game::EventType::MouseLeft, false, true);
 				node->dispatchEvent(&event);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
 				[](shared_ptr<game::InteractiveObject> & node) {
-				game::Event event(Event::MouseEntered, false, true);
+				game::Event event(game::EventType::MouseEntered, false, true);
 				node->dispatchEvent(&event);
 			});
 
@@ -143,14 +147,14 @@ void Game::handleMouseEvent() {
 	}
 	else if (currentEvent.type == Event::MouseButtonPressed) {
 		if (previousContactNode) {
-			game::Event event(currentEvent.type, true, true);
+			game::Event event(game::EventType::MouseButtonPressed, true, true);
 			event.data = currentEvent.mouseButton;
 			previousContactNode->dispatchEvent(&event);
 		}
 	}
 	else if (currentEvent.type == Event::MouseButtonReleased) {
 		if (previousContactNode) {
-			game::Event event(currentEvent.type, true, true);
+			game::Event event(game::EventType::MouseButtonReleased, true, true);
 			event.data = currentEvent.mouseButton;
 			previousContactNode->dispatchEvent(&event);
 		}

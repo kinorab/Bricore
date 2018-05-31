@@ -1,4 +1,5 @@
 #include "interactiveObject.h"
+#include "../event/event.h"
 #include "container.h"
 #include "../definition/utility.h"
 #include <SFML/Graphics.hpp>
@@ -12,11 +13,11 @@ namespace game {
 	InteractiveObject::~InteractiveObject() {
 	}
 
-	int InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback) {
+	int InteractiveObject::addEventListener(EventType type, std::function<void(Event *)> callback) {
 		return addEventListener(type, callback, false);
 	}
 
-	int InteractiveObject::addEventListener(sf::Event::EventType type, std::function<void(Event *)> callback, bool useCapture) {
+	int InteractiveObject::addEventListener(EventType type, std::function<void(Event *)> callback, bool useCapture) {
 		listeners[idCount] = EventListener{ type, callback, useCapture };
 		int returnId = idCount;
 		idCount += 1;

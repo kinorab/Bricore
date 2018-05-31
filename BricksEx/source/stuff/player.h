@@ -5,7 +5,6 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <SFML/System/Clock.hpp>
 #include <memory>
 

@@ -4,7 +4,6 @@
 #include "interact/interactiveObject.h"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Export.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <atomic>
 #include <queue>
 #include <map>
