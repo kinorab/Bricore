@@ -23,7 +23,7 @@ Stage::Stage() :
 	brickPredict(nullptr),
 	obstaclePredict(nullptr) {
 	// presettle mainBall's position
-	if (instantiated) {
+	if (getInstantiated()) {
 		throw std::invalid_argument("This class can only be instantiated once!");
 	}
 
@@ -35,19 +35,20 @@ Stage::Stage() :
 	addEventListener(game::EventType::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
 	addEventListener(game::EventType::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
 	addEventListener(game::EventType::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
-	instantiated = true;
+	setInstantiated(true);
 }
 
 Stage::~Stage() {
 	AudioManager::getInstance()->bgmusic.stop();
 	AudioManager::getInstance()->sound1.stop();
-	instantiated = false;
+	setInstantiated(false);
 }
 
 void Stage::predictUpdate(const float intervalTime) {
 	if (playerPredict && ballPredict && brickPredict && obstaclePredict) {
 		removeChild({ playerPredict, ballPredict, brickPredict, obstaclePredict });
 	}
+
 	playerPredict.reset(new Player(*player));
 	ballPredict.reset(new item::Ball(*ball));
 	brickPredict.reset(new item::Brick(*brick));
@@ -86,6 +87,14 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 	}
 	mouseLight->setEmitPosition(mousePosition);
 	mouseLight->update(updateSpan);
+}
+
+bool Stage::getInstantiated() const {
+	return Stage::instantiated;
+}
+
+void Stage::setInstantiated(bool value) {
+	Stage::instantiated = value;
 }
 
 void Stage::onKeyPressed(game::Event * event) {

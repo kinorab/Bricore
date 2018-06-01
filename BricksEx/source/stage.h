@@ -21,7 +21,8 @@ public:
 	virtual void update(float updateSpan, sf::Vector2f mousePosition);
 private:
 	static bool instantiated;
-
+	virtual bool getInstantiated() const;
+	virtual void setInstantiated(bool value);
 	virtual void onKeyPressed(game::Event *);
 	virtual void onKeyReleased(game::Event *);
 	virtual void onMouseEntered(game::Event *);

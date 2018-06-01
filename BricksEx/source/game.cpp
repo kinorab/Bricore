@@ -14,17 +14,17 @@ bool Game::instantiated;
 Game::Game() :
 	finished(false),
 	stage(new Stage()) {
-	if (instantiated) {
+	if (getInstantiated()) {
 		throw std::invalid_argument("This class can only be instantiated once!");
 	}
 
 	window.reset(new RenderWindow(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
 		, "BricksEx", Style::Close, graph.getSettings()));
-	instantiated = true;
+	setInstantiated(true);
 }
 
 Game::~Game() {
-	instantiated = false;
+	setInstantiated(false);
 }
 
 void Game::run() {
@@ -35,6 +35,14 @@ void Game::run() {
 		pushEvent(nextEvent);
 	}
 	window->close();
+}
+
+bool Game::getInstantiated() const {
+	return Game::instantiated;
+}
+
+void Game::setInstantiated(bool value) {
+	Game::instantiated = value;
 }
 
 void Game::pushEvent(const Event & event) {

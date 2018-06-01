@@ -23,6 +23,8 @@ public:
 
 private:
 	static bool instantiated;
+	virtual bool getInstantiated() const;
+	virtual void setInstantiated(bool value);
 	virtual void pushEvent(const sf::Event &);
 	virtual void settleWindow();
 	virtual sf::Event popEvent();
@@ -37,7 +39,7 @@ private:
 	std::map<sf::Keyboard::Key, bool> keyDown;
 	std::thread renderThread;
 	sf::Event currentEvent;
-	std::shared_ptr<sf::RenderWindow> window;
+	std::unique_ptr<sf::RenderWindow> window;
 	sf::Vector2f mousePosition;
 	std::shared_ptr<game::InteractiveObject> previousContactNode;
 	std::shared_ptr<Stage> stage;
