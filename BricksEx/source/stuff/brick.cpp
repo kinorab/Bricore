@@ -75,7 +75,7 @@ void Brick::preUpdate(Ball & ball, const float intervalTime) {
 
 void Brick::displayImage(const string fileName) {
 	for (size_t i = 0; i < getBricksSize(); ++i) {
-		bricks.at(i)->setTexture(TextureManager::getInstance()->get(fileName));
+		bricks.at(i)->setTexture(TextureManager::getInstance().get(fileName));
 	}
 }
 

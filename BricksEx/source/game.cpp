@@ -8,22 +8,14 @@
 
 using namespace sf;
 
-bool Game::instantiated;
-
 Game::Game() :
 	finished(false),
 	stage(new Stage()) {
-	if (getInstantiated()) {
-		throw std::invalid_argument("This class can only be instantiated once!");
-	}
-
 	window.reset(new RenderWindow(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
 		, "BricksEx", Style::Close, graph.getSettings()));
-	setInstantiated(true);
 }
 
 Game::~Game() {
-	setInstantiated(false);
 }
 
 void Game::run() {
@@ -34,14 +26,6 @@ void Game::run() {
 		pushEvent(nextEvent);
 	}
 	window->close();
-}
-
-bool Game::getInstantiated() const {
-	return Game::instantiated;
-}
-
-void Game::setInstantiated(bool value) {
-	Game::instantiated = value;
 }
 
 void Game::pushEvent(const Event & event) {
@@ -134,7 +118,9 @@ void Game::handleMouseEvent() {
 
 			int sameNodeCount = 0;
 			if (previousContactNode && contactNode) {
-				for (; *(previousNodes.rbegin() + sameNodeCount) == *(currentNodes.rbegin() + sameNodeCount); sameNodeCount += 1);
+				while (*(previousNodes.rbegin() + sameNodeCount) == *(currentNodes.rbegin() + sameNodeCount)) {
+					sameNodeCount += 1;
+				}
 			}
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
@@ -175,7 +161,7 @@ void Game::handleGraphicsEvent() {
 }
 
 void Game::renderFunc() {
-	AudioManager::getInstance()->initialize();
+	AudioManager::getInstance().initialize();
 	for (Keyboard::Key i = Keyboard::Unknown;
 		i < Keyboard::Unknown + Keyboard::KeyCount;
 		i = static_cast<Keyboard::Key>(i + 1)) {

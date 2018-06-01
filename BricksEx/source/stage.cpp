@@ -40,8 +40,8 @@ Stage::Stage() :
 }
 
 Stage::~Stage() {
-	AudioManager::getInstance()->bgmusic.stop();
-	AudioManager::getInstance()->sound1.stop();
+	AudioManager::getInstance().bgmusic.stop();
+	AudioManager::getInstance().sound1.stop();
 	setInstantiated(false);
 }
 

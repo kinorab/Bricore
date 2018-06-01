@@ -1,18 +1,19 @@
 #pragma once
 
+#include "../singleton.h"
 #include <SFML/Audio.hpp>
 #include <memory>
 
-class AudioManager {
+class AudioManager : 
+	public Singleton<AudioManager> {
+	friend class Singleton<AudioManager>;
 public:
-	static std::shared_ptr<AudioManager> getInstance();
-	virtual ~AudioManager();
 	sf::Sound sound1;
 	sf::Music bgmusic;
-	void initialize();
+	virtual ~AudioManager();
+	virtual void initialize();
 protected:
 	AudioManager();
 private:
-	static std::shared_ptr<AudioManager> instance;
 	sf::SoundBuffer buffer1;
 };

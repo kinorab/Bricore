@@ -2,16 +2,6 @@
 #include "../definition/utility.h"
 #include <string>
 
-std::shared_ptr<ImageManager> ImageManager::instance = nullptr;
-
-std::shared_ptr<ImageManager> ImageManager::getInstance() {
-	if (!instance) {
-		instance.reset(new ImageManager());
-	}
-
-	return instance;
-}
-
 ImageManager::~ImageManager() {
 
 }

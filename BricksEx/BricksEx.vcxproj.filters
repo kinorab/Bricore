@@ -85,6 +85,7 @@
     <ClInclude Include="source\UI\textButton.h" />
     <ClInclude Include="source\UI\textField.h" />
     <ClInclude Include="source\resource.h" />
+    <ClInclude Include="source\singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

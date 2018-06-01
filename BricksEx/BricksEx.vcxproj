@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
+    <ClInclude Include="source\singleton.h" />
     <ClInclude Include="source\stuff\ball.h" />
     <ClInclude Include="source\stuff\block.h" />
     <ClInclude Include="source\stuff\brick.h" />

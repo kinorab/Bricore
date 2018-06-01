@@ -22,9 +22,6 @@ public:
 	virtual void run();
 
 private:
-	static bool instantiated;
-	virtual bool getInstantiated() const;
-	virtual void setInstantiated(bool value);
 	virtual void pushEvent(const sf::Event &);
 	virtual void settleWindow();
 	virtual sf::Event popEvent();

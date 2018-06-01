@@ -2,16 +2,6 @@
 #include "../definition/utility.h"
 #include <string>
 
-std::shared_ptr<AudioManager> AudioManager::instance = nullptr;
-
-std::shared_ptr<AudioManager> AudioManager::getInstance() {
-	if (!instance) {
-		instance.reset(new AudioManager());
-	}
-
-	return instance;
-}
-
 AudioManager::~AudioManager() {
 
 }

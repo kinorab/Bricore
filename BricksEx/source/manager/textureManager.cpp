@@ -2,16 +2,6 @@
 #include "../definition/utility.h"
 #include <string>
 
-std::shared_ptr<TextureManager> TextureManager::instance = nullptr;
-
-std::shared_ptr<TextureManager> TextureManager::getInstance() {
-	if (!instance) {
-		instance.reset(new TextureManager());
-	}
-
-	return instance;
-}
-
 TextureManager::~TextureManager() {
 
 }
