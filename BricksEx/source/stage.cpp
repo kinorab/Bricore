@@ -34,6 +34,7 @@ Stage::Stage() :
 	addEventListener(game::EventType::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
 	addEventListener(game::EventType::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
 	addEventListener(game::EventType::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
+	addEventListener(game::EventType::MouseMoved, std::bind(&Stage::onMouseMoved, this, _1));
 	addEventListener(game::EventType::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
 	setInstantiated(true);
 }
@@ -44,7 +45,7 @@ Stage::~Stage() {
 	setInstantiated(false);
 }
 
-void Stage::predictUpdate(const float intervalTime) {
+void Stage::predictUpdate(const float updateSpan) {
 	if (playerPredict && ballPredict && brickPredict && obstaclePredict) {
 		removeChild({ playerPredict, ballPredict, brickPredict, obstaclePredict });
 	}
@@ -56,11 +57,11 @@ void Stage::predictUpdate(const float intervalTime) {
 	addChildAt({ playerPredict, ballPredict, brickPredict, obstaclePredict }, getChildIndex(hud.get()) + 1);
 	if (!GameState::pause) {
 		for (size_t i = 0; i < SLICE; ++i) {
-			playerPredict->preUpdate(ballPredict->getMainBallPosition(), ballPredict->getMainBallRadius(), intervalTime);
+			playerPredict->preUpdate(ballPredict->getMainBallPosition(), ballPredict->getMainBallRadius(), updateSpan);
 			if (GameState::start) {
-				brickPredict->preUpdate(*ballPredict, intervalTime);
-				obstaclePredict->preUpdate(*ballPredict, intervalTime);
-				ballPredict->preUpdate(playerPredict->getMainPlayerDP(), intervalTime);
+				brickPredict->preUpdate(*ballPredict, updateSpan);
+				obstaclePredict->preUpdate(*ballPredict, updateSpan);
+				ballPredict->preUpdate(playerPredict->getMainPlayerDP(), updateSpan);
 			}
 			else {
 				ballPredict->followPlayer(playerPredict->getMainPlayerTopCenterPos());
@@ -69,7 +70,7 @@ void Stage::predictUpdate(const float intervalTime) {
 	}
 }
 
-void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
+void Stage::update(const float updateSpan) {
 	if (!GameState::pause) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
@@ -85,7 +86,7 @@ void Stage::update(float updateSpan, sf::Vector2f mousePosition) {
 			}
 		}
 	}
-	mouseLight->setEmitPosition(mousePosition);
+
 	mouseLight->update(updateSpan);
 }
 
@@ -123,6 +124,11 @@ void Stage::onMouseEntered(game::Event *) {
 
 void Stage::onMouseLeft(game::Event *) {
 	GameState::light = false;
+}
+
+void Stage::onMouseMoved(game::Event * event) {
+	auto moveEvent = std::get<sf::Event::MouseMoveEvent>(event->data);
+	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(moveEvent.x), static_cast<float>(moveEvent.y)));
 }
 
 void Stage::onMouseButtonPressed(game::Event * event) {

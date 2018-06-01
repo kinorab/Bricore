@@ -211,7 +211,7 @@ void Game::renderFunc() {
 		renderElapsed = min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 
 		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
-			stage->update(updateSpan, mousePosition);
+			stage->update(updateSpan);
 			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
 		}
 

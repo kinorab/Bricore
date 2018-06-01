@@ -85,6 +85,9 @@ namespace game {
 		parent = container;
 	}
 
+	void InteractiveObject::update(const float) {
+	}
+
 	void InteractiveObject::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 		target.draw(*getDrawable(), states.transform.combine(getTransform()));
 	}

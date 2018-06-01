@@ -29,6 +29,7 @@ namespace game {
 		virtual Container * getParent();
 		virtual void removeEventListener(int id);
 		virtual void setParent(Container * parent);
+		virtual void update(const float updateSpan);
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:

@@ -17,17 +17,18 @@ class Stage
 public:
 	Stage();
 	virtual ~Stage();
-	virtual void predictUpdate(const float intervalTime);
-	virtual void update(float updateSpan, sf::Vector2f mousePosition);
+	virtual void predictUpdate(const float updateSpan);
+	virtual void update(const float updateSpan) override;
 private:
 	static bool instantiated;
 	virtual bool getInstantiated() const;
 	virtual void setInstantiated(bool value);
-	virtual void onKeyPressed(game::Event *);
-	virtual void onKeyReleased(game::Event *);
-	virtual void onMouseEntered(game::Event *);
-	virtual void onMouseLeft(game::Event *);
-	virtual void onMouseButtonPressed(game::Event *);
+	virtual void onKeyPressed(game::Event * event);
+	virtual void onKeyReleased(game::Event * event);
+	virtual void onMouseEntered(game::Event * event);
+	virtual void onMouseLeft(game::Event * event);
+	virtual void onMouseMoved(game::Event * event);
+	virtual void onMouseButtonPressed(game::Event * event);
 
 	std::shared_ptr<HUD> hud;
 	std::shared_ptr<ParticleSystem> mouseLight;

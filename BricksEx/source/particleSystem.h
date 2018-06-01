@@ -7,7 +7,7 @@ class ParticleSystem :
 public:
 	explicit ParticleSystem(const unsigned int count);
 	void setEmitPosition(const sf::Vector2f & position);
-	void update(const float & timeSpan);
+	void update(const float updateSpan) override;
 private:
 	struct Particle {
 		sf::Vector2f velocity;

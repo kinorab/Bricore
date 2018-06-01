@@ -18,10 +18,10 @@ void ParticleSystem::setEmitPosition(const Vector2f & position) {
 	emitPosition = position;
 }
 
-void ParticleSystem::update(const float & timeSpan) {
+void ParticleSystem::update(const float updateSpan) {
 	for (size_t i = 0; i < particles.size(); ++i) {
 		if (particles[i].lifeTime > 0.0f) {
-			particles[i].lifeTime -= timeSpan;
+			particles[i].lifeTime -= updateSpan;
 		}
 		else {
 			if (GameState::light) {
@@ -32,7 +32,7 @@ void ParticleSystem::update(const float & timeSpan) {
 			}
 		}
 
-		(*vertices)[i].position += particles[i].velocity * timeSpan;
+		(*vertices)[i].position += particles[i].velocity * updateSpan;
 		float ratio = particles[i].lifeTime / maxLifeTime;
 		(*vertices)[i].color = Color(
 			static_cast<Uint8>(rng() % 256),
