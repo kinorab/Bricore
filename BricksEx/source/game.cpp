@@ -7,7 +7,6 @@
 #include <Windows.h>
 
 using namespace sf;
-using namespace std;
 
 bool Game::instantiated;
 
@@ -29,7 +28,7 @@ Game::~Game() {
 
 void Game::run() {
 	settleWindow();
-	renderThread = thread(std::bind(&Game::renderFunc, this));
+	renderThread = std::thread(std::bind(&Game::renderFunc, this));
 	Event nextEvent;
 	while (!finished && window->waitEvent(nextEvent)) {
 		pushEvent(nextEvent);
@@ -109,8 +108,8 @@ void Game::handleMouseEvent() {
 		}
 
 		if (contactNode != previousContactNode) {
-			vector<shared_ptr<game::InteractiveObject>> previousNodes;
-			for (shared_ptr<game::InteractiveObject> node = previousContactNode; node;) {
+			std::vector<std::shared_ptr<game::InteractiveObject>> previousNodes;
+			for (std::shared_ptr<game::InteractiveObject> node = previousContactNode; node;) {
 				previousNodes.push_back(node);
 				game::Container * parent = node->getParent();
 				if (parent) {
@@ -121,8 +120,8 @@ void Game::handleMouseEvent() {
 				}
 			}
 
-			vector<shared_ptr<game::InteractiveObject>> currentNodes;
-			for (shared_ptr<game::InteractiveObject> node = contactNode; node;) {
+			std::vector<std::shared_ptr<game::InteractiveObject>> currentNodes;
+			for (std::shared_ptr<game::InteractiveObject> node = contactNode; node;) {
 				currentNodes.push_back(node);
 				game::Container * parent = node->getParent();
 				if (parent) {
@@ -139,13 +138,13 @@ void Game::handleMouseEvent() {
 			}
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
-				[](shared_ptr<game::InteractiveObject> & node) {
+				[](std::shared_ptr<game::InteractiveObject> & node) {
 				game::Event event(game::EventType::MouseLeft, false, true);
 				node->dispatchEvent(&event);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
-				[](shared_ptr<game::InteractiveObject> & node) {
+				[](std::shared_ptr<game::InteractiveObject> & node) {
 				game::Event event(game::EventType::MouseEntered, false, true);
 				node->dispatchEvent(&event);
 			});
@@ -153,19 +152,15 @@ void Game::handleMouseEvent() {
 			previousContactNode = contactNode;
 		}
 	}
-	else if (currentEvent.type == Event::MouseButtonPressed) {
-		if (previousContactNode) {
-			game::Event event(game::EventType::MouseButtonPressed, true, true);
-			event.data = currentEvent.mouseButton;
-			previousContactNode->dispatchEvent(&event);
-		}
+	else if (currentEvent.type == Event::MouseButtonPressed && previousContactNode) {
+		game::Event event(game::EventType::MouseButtonPressed, true, true);
+		event.data = currentEvent.mouseButton;
+		previousContactNode->dispatchEvent(&event);
 	}
-	else if (currentEvent.type == Event::MouseButtonReleased) {
-		if (previousContactNode) {
-			game::Event event(game::EventType::MouseButtonReleased, true, true);
-			event.data = currentEvent.mouseButton;
-			previousContactNode->dispatchEvent(&event);
-		}
+	else if (currentEvent.type == Event::MouseButtonReleased && previousContactNode) {
+		game::Event event(game::EventType::MouseButtonReleased, true, true);
+		event.data = currentEvent.mouseButton;
+		previousContactNode->dispatchEvent(&event);
 	}
 	else if (currentEvent.type == Event::MouseLeft) {
 		Event event;
@@ -195,7 +190,7 @@ void Game::renderFunc() {
 	bool finishing = false;
 
 	while (!finishing) {
-		distribute = min<Time>(clock.restart(), milliseconds(500));
+		distribute = std::min<Time>(clock.restart(), milliseconds(500));
 		elapsed += distribute;
 		renderElapsed += distribute;
 		while (!eventQueue.empty()) {
@@ -208,7 +203,7 @@ void Game::renderFunc() {
 			}
 		}
 		// max fixed at 1.5x current fps
-		renderElapsed = min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
+		renderElapsed = std::min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 
 		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
 			stage->update(updateSpan);

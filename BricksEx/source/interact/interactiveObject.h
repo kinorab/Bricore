@@ -39,6 +39,7 @@ namespace game {
 			bool useCapture;
 		};
 		std::map<int, EventListener> listeners;
+		bool enabled;
 		Container * parent;
 		int idCount;
 	};

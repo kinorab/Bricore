@@ -6,8 +6,9 @@
 #include <algorithm>
 
 namespace game {
-	InteractiveObject::InteractiveObject()
-		:idCount(0) {
+	InteractiveObject::InteractiveObject() : 
+		idCount(0),
+		enabled(true) {
 	}
 
 	InteractiveObject::~InteractiveObject() {
