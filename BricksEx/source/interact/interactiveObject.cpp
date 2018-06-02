@@ -1,5 +1,6 @@
 #include "interactiveObject.h"
 #include "../event/event.h"
+#include "../event/dispatchHelper.h"
 #include "container.h"
 #include "../definition/utility.h"
 #include <SFML/Graphics.hpp>
@@ -26,7 +27,7 @@ namespace game {
 	}
 
 	bool InteractiveObject::dispatchEvent(Event * event) {
-		Event::DispatchHelper helper(event);
+		DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 
 		if (event->getPhase() == EventPhase::NONE) {
