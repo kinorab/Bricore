@@ -26,8 +26,12 @@ namespace game {
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
 		virtual bool dispatchEvent(Event * event);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
+		virtual bool getEnabled() const;
 		virtual Container * getParent();
+		virtual void onDisabled();
+		virtual void onEnabled();
 		virtual void removeEventListener(int id);
+		virtual void setEnabled(bool value);
 		virtual void setParent(Container * parent);
 		virtual void update(const float updateSpan);
 	protected:

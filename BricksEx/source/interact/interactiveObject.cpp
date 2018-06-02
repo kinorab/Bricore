@@ -7,7 +7,7 @@
 #include <algorithm>
 
 namespace game {
-	InteractiveObject::InteractiveObject() : 
+	InteractiveObject::InteractiveObject() :
 		idCount(0),
 		enabled(true) {
 	}
@@ -72,8 +72,18 @@ namespace game {
 		return !event->getDefaultPrevented();
 	}
 
+	bool InteractiveObject::getEnabled() const {
+		return enabled;
+	}
+
 	Container * InteractiveObject::getParent() {
 		return parent;
+	}
+
+	void InteractiveObject::onDisabled() {
+	}
+
+	void InteractiveObject::onEnabled() {
 	}
 
 	void InteractiveObject::removeEventListener(int id) {
@@ -81,6 +91,21 @@ namespace game {
 			[&](std::pair<const int, EventListener> & listener) {
 			return listener.first == id;
 		}));
+	}
+
+	void InteractiveObject::setEnabled(bool value) {
+		if (value == enabled) {
+			return;
+		}
+
+		if (value) {
+			onEnabled();
+		}
+		else {
+			onDisabled();
+		}
+
+		enabled = value;
 	}
 
 	void InteractiveObject::setParent(Container * container) {
