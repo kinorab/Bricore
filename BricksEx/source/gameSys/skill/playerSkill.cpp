@@ -1,28 +1,53 @@
 #include "playerSkill.h"
+#include "../effect/normalEffect.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
 
-PlayerSkill::PlayerSkill(const Player skillName, const std::vector<NormalEffect> &normalEffects, const sf::Time & duration, const bool autoUse)
-	: skill(skillName, Picture()) {
-	this->duration = duration;
-	setEnable(autoUse);
+size_t PlayerSkill::maximumCarry(3);
+size_t PlayerSkill::currentCarry(0);
+
+PlayerSkill::PlayerSkill(const Player skillName, const std::vector<Normal> &normalEffects, const sf::Time & duration, const bool autoUse)
+	: skill(skillName, Picture())
+	, SkillSystem(duration, autoUse) {
 	skill.second.currentState = SkillState::None;
-	std::for_each(normalEffects.begin(), normalEffects.end(), [&](const NormalEffect normalEffect) {
-		skillEffects.push_back(std::shared_ptr<Effect>(new Effect(normalEffect, this)));
+	std::for_each(normalEffects.begin(), normalEffects.end(), [&](const Normal normalEffect) {
+		skillEffects.push_back(std::shared_ptr<NormalEffect>(new NormalEffect(normalEffect, this)));
 	});
 }
 
-void PlayerSkill::swapSkill(PlayerSkill & other) {
+void PlayerSkill::swapSkill(PlayerSkill &other) {
 	skill.swap(other.skill);
 	statePreviews.swap(other.statePreviews);
 }
 
-void PlayerSkill::useSkill() {
+void PlayerSkill::extendCarry(const size_t number) {
+	maximumCarry += number;
 }
 
 size_t PlayerSkill::upgradeSkill() {
 	return skillLevel++;
+}
+
+void PlayerSkill::handleSkill(const sf::Event * const event) {
+	if (skill.second.currentState == SkillState::None || status == Status::None) return;
+
+	if (skill.second.currentState == SkillState::OnMiniField) {
+
+	}
+	else if (skill.second.currentState == SkillState::OnField) {
+
+	}
+	else if (skill.second.currentState == SkillState::Using) {
+
+	}
+	else if (skill.second.currentState == SkillState::Locked) {
+
+	}
+}
+
+void PlayerSkill::handleSelect(const sf::Event * const event) {
+	if (status == Status::None) return;
 }
 
 void PlayerSkill::loadPreviewFile(const std::map<SkillState, std::string> &fileNames, const bool isSmooth) {
@@ -35,6 +60,14 @@ void PlayerSkill::loadPreviewFile(const std::map<SkillState, std::string> &fileN
 void PlayerSkill::setState(const SkillState state) {
 	skill.second.currentState = state;
 	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
+}
+
+size_t PlayerSkill::getMaximumCarry() const {
+	return maximumCarry;
+}
+
+size_t PlayerSkill::getCurrentCarry() const {
+	return currentCarry;
 }
 
 PlayerSkill::SkillState PlayerSkill::getState() const {
@@ -51,7 +84,4 @@ PlayerSkill::~PlayerSkill() {
 void PlayerSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	states.transform *= getTransform();
 	target.draw(*skill.second.context, states);
-}
-
-void PlayerSkill::handleSkill() {
 }

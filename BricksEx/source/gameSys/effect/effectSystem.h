@@ -1,12 +1,11 @@
 #pragma once
-
+#include "../system.h"
 #include <SFML/System/Time.hpp>
 
 namespace game {
-	class SkillSystem;
-
-	class Effect {
+	class EffectSystem : public System {
 	public:
+		// one effect, one normal/attribute effect
 		enum class Normal {
 			None,
 			Fragile,
@@ -32,26 +31,23 @@ namespace game {
 			Paralysis,			// thunder
 			Poisoning,			// poison
 		};
-		// one effect, one normal/attribute effect
-		explicit Effect(const Normal effect, const sf::Time duration);
-		explicit Effect(const Normal effect, const SkillSystem * skill);
-		virtual void handleEffect(const float elapsed);
+		virtual void handleEffect();
+
 		virtual const bool & isExist() const;
 		virtual const sf::Time & getDuration() const;
-		virtual const Normal & getNormalEffect() const;
-		virtual ~Effect();
+		virtual ~EffectSystem();
 
 	protected:
-		Effect();
-		virtual void handleEffect(SkillSystem *);
+		EffectSystem(const sf::Time &duration, const bool belongToSkill, const bool enable = true);
+		virtual void setEnable(const bool) override;
+		sf::Time duration;
+		sf::Time elapsedTime;
 
 	private:
-		sf::Time duration;
-		Normal normalEffect;
-		Attribute attributeEffect;
+		bool belongToSkill;
+		// used to checkout in particular mode
 		bool exist;
-		bool isBelongToSkill;
 	};
-	typedef Effect::Normal NormalEffect;
-	typedef Effect::Attribute AttributeEffect;
+	typedef EffectSystem::Normal Normal;
+	typedef EffectSystem::Attribute Attribute;
 }

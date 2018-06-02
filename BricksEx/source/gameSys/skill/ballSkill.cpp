@@ -1,17 +1,17 @@
 #include "ballSkill.h"
+#include "../effect/normalEffect.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
 
 std::map<size_t, std::shared_ptr<sf::Texture>> BallSkill::frames;
 
-BallSkill::BallSkill(const Ball skillName, const std::vector<NormalEffect> &normalEffects, const sf::Time & duration, const bool autoUse)
-	: skill(skillName, Picture()) {
-	this->duration = duration;
-	setEnable(autoUse);
+BallSkill::BallSkill(const Ball skillName, const std::vector<Normal> &normalEffects, const sf::Time & duration, const bool autoUse)
+	: skill(skillName, Picture())
+	, SkillSystem(duration, autoUse) {
 	skill.second.currentState = SkillState::No_Buy;
-	std::for_each(normalEffects.begin(), normalEffects.end(), [&](const NormalEffect normalEffect) {
-		skillEffects.push_back(std::shared_ptr<Effect>(new Effect(normalEffect, this)));
+	std::for_each(normalEffects.begin(), normalEffects.end(), [&](const Normal normalEffect) {
+		skillEffects.push_back(std::shared_ptr<NormalEffect>(new NormalEffect(normalEffect, this)));
 	});
 }
 
@@ -27,11 +27,14 @@ void BallSkill::swapSkill(BallSkill & other) {
 	statePreviews.swap(other.statePreviews);
 }
 
-void BallSkill::useSkill() {
-}
-
 size_t BallSkill::upgradeSkill() {
 	return skillLevel++;
+}
+
+void BallSkill::handleSkill(const sf::Event * const event) {
+}
+
+void BallSkill::handleSelect(const sf::Event * const event) {
 }
 
 void BallSkill::loadPreviewFile(const std::map<SkillState, std::string> &fileNames, const bool isSmooth) {
@@ -73,7 +76,4 @@ void BallSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	if (skill.second.frame) {
 		target.draw(*skill.second.frame, states);
 	}
-}
-
-void BallSkill::handleSkill() {
 }

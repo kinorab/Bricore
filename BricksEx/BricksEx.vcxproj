@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
     <ClCompile Include="source\stuff\ball.cpp" />
     <ClCompile Include="source\stuff\block.cpp" />
     <ClCompile Include="source\stuff\brick.cpp" />
@@ -29,7 +30,7 @@
     <ClCompile Include="source\event\event.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\gameSys\area.cpp" />
-    <ClCompile Include="source\gameSys\effect\effect.cpp" />
+    <ClCompile Include="source\gameSys\effect\normalEffect.cpp" />
     <ClCompile Include="source\gameSys\LVDeploy.cpp" />
     <ClCompile Include="source\particleSystem.cpp" />
     <ClCompile Include="source\gameSys\skill\skillSystem.cpp" />
@@ -61,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
+    <ClInclude Include="source\gameSys\effect\effectSystem.h" />
     <ClInclude Include="source\singleton.h" />
     <ClInclude Include="source\stuff\ball.h" />
     <ClInclude Include="source\stuff\block.h" />
@@ -75,7 +77,7 @@
     <ClInclude Include="source\event\event.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\gameSys\area.h" />
-    <ClInclude Include="source\gameSys\effect\effect.h" />
+    <ClInclude Include="source\gameSys\effect\normalEffect.h" />
     <ClInclude Include="source\gameSys\LVDeploy.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\gameSys\skill\skillSystem.h" />

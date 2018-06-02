@@ -1,5 +1,5 @@
 #include "area.h"
-#include "effect/effect.h"
+#include "effect/normalEffect.h"
 
 void game::Area::update() {
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "skillSystem.h"
-#include "../effect/effect.h"
+#include "../effect/effectSystem.h"
 #include <map>
 
 namespace sf {
@@ -25,10 +25,11 @@ namespace game {
 			Using,			// when using it
 			Locked			// may be locked by outside effect(stage area, boss skill etc...), cannot be used or swapped
 		};
-		explicit BallSkill(const Ball skillName, const std::vector<NormalEffect> &normalEffects, const sf::Time &duration, const bool autoUse = false);
+		explicit BallSkill(const Ball skillName, const std::vector<Normal> &normalEffects, const sf::Time &duration, const bool autoUse = false);
 		static void loadFrame(const std::map<size_t, std::string> &fileNames);
 		virtual void swapSkill(BallSkill &other);
-		virtual void useSkill() override;
+		virtual void handleSkill(const sf::Event * const event) override;
+		virtual void handleSelect(const sf::Event * const event) override;
 		virtual size_t upgradeSkill() override;
 		virtual void loadPreviewFile(const std::map<SkillState, std::string> &fileName, const bool isSmooth = false);
 		virtual void setState(const SkillState state);
@@ -38,7 +39,7 @@ namespace game {
 		virtual ~BallSkill();
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		virtual void handleSkill() override;
+
 		static std::map<size_t, std::shared_ptr<sf::Texture>> frames;
 
 		std::map<SkillState, std::shared_ptr<sf::Texture>> statePreviews;

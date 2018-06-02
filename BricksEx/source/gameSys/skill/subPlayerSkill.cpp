@@ -1,15 +1,18 @@
 #include "subPlayerSkill.h"
+#include "../effect/normalEffect.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
 
-SubPlayerSkill::SubPlayerSkill(const SubPlayer skillName, const std::vector<NormalEffect> &normalEffects, const sf::Time & duration, const bool autoUse)
-	: skill(skillName, Picture()) {
-	this->duration = duration;
-	setEnable(autoUse);
+size_t SubPlayerSkill::maximumCarry(1);
+size_t SubPlayerSkill::currentCarry(0);
+
+SubPlayerSkill::SubPlayerSkill(const SubPlayer skillName, const std::vector<Normal> &normalEffects, const sf::Time & duration, const bool autoUse)
+	: skill(skillName, Picture())
+	, SkillSystem(duration, autoUse) {
 	skill.second.currentState = SkillState::None;
-	std::for_each(normalEffects.begin(), normalEffects.end(), [&](const NormalEffect normalEffect) {
-		skillEffects.push_back(std::shared_ptr<Effect>(new Effect(normalEffect, this)));
+	std::for_each(normalEffects.begin(), normalEffects.end(), [&](const Normal normalEffect) {
+		skillEffects.push_back(std::shared_ptr<NormalEffect>(new NormalEffect(normalEffect, this)));
 	});
 }
 
@@ -18,7 +21,10 @@ void SubPlayerSkill::swapSkill(SubPlayerSkill & other) {
 	statePreviews.swap(other.statePreviews);
 }
 
-void SubPlayerSkill::useSkill() {
+void SubPlayerSkill::handleSkill(const sf::Event * const event) {
+}
+
+void SubPlayerSkill::handleSelect(const sf::Event * const event) {
 }
 
 size_t SubPlayerSkill::upgradeSkill() {
@@ -37,6 +43,14 @@ void SubPlayerSkill::setState(const SkillState state) {
 	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
 }
 
+size_t SubPlayerSkill::getMaximumCarry() const {
+	return maximumCarry;
+}
+
+size_t SubPlayerSkill::getCurrentCarry() const {
+	return currentCarry;
+}
+
 SubPlayerSkill::SkillState SubPlayerSkill::getState() const {
 	return skill.second.currentState;
 }
@@ -51,7 +65,4 @@ SubPlayerSkill::~SubPlayerSkill() {
 void SubPlayerSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	states.transform *= getTransform();
 	target.draw(*skill.second.context, states);
-}
-
-void SubPlayerSkill::handleSkill() {
 }

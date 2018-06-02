@@ -1,56 +1,97 @@
 #include "skillSystem.h"
-#include "ballSkill.h"
-#include "subPlayerSkill.h"
-#include "playerSkill.h"
-#include "../effect/effect.h"
+#include "../effect/normalEffect.h"
+#include <stdexcept>
 
 using namespace game;
 
-game::SkillSystem::SkillSystem()
-	: exist(true) {
+SkillSystem::SkillSystem(const sf::Time &duration, bool autoUse, const bool exist)
+	: System(false)
+	, autoUse(autoUse)
+	, exist(exist)
+	, duration(duration)
+	, skillLevel(0)
+	, status(Status::None)
+	, elapsedTime(sf::seconds(0)){
 }
 
-bool game::SkillSystem::isExist() const {
+void SkillSystem::selectOn() {
+	if (status != Status::UnSelected) return;
+	status = Status::Selected;
+}
+
+void SkillSystem::selectOff() {
+	if (status != Status::Selected) return;
+	status = Status::UnSelected;
+}
+
+void SkillSystem::setOwnToPlayer(const bool giveOwn) {
+	if (!exist) throw std::invalid_argument("Skill not exist in setOwn.");
+
+	if (giveOwn) {
+		status = Status::UnSelected;
+	}
+	else {
+		status = Status::None;
+	}
+}
+
+void SkillSystem::setAutoUse(const bool autoUse) {
+	this->autoUse = autoUse;
+}
+
+bool SkillSystem::isExist() const {
 	return exist;
 }
 
-bool game::SkillSystem::isEnable() const {
-	return enable;
+bool SkillSystem::isAutoUse() const {
+	return autoUse;
 }
 
-const sf::Time & game::SkillSystem::getDuration() const {
+const sf::Time & SkillSystem::getDuration() const {
 	return duration;
 }
 
-const size_t game::SkillSystem::getSkillLevel() const {
+const size_t SkillSystem::getSkillLevel() const {
 	return skillLevel;
 }
 
-game::SkillSystem::~SkillSystem() {
+SkillSystem::~SkillSystem() {
 }
 
-void game::SkillSystem::setEnable(const bool enable) {
-	if (exist) {
-		this->enable = enable;
-	}
-	else {
-		throw std::invalid_argument("Skill not exist.");
-	}
+void SkillSystem::useSkill() {
+	if (isEnable()) return;
+	setEnable(true);
+	clock.restart();
 }
 
-void game::SkillSystem::exhausted(SkillSystem *skill) {
-	if (auto ballSkill = dynamic_cast<BallSkill *>(skill)) {
-		ballSkill->setState(BallSkill::SkillState::None);
-	}
-	else if (auto playerSkill = dynamic_cast<PlayerSkill *>(skill)) {
-		playerSkill->setState(PlayerSkill::SkillState::None);
-	}
-	else if (auto subPlayerSkill = dynamic_cast<SubPlayerSkill *>(skill)) {
-		subPlayerSkill->setState(SubPlayerSkill::SkillState::None);
-	}
-	else {
-		std::invalid_argument("Cannot find the skill.");
-	}
-	enable = false;
+void SkillSystem::elapsed() {
+	if (!isEnable()) throw std::invalid_argument("Skill is disabled in elapsed.");
+	if (elapsedTime >= duration) return;
+	sf::Time distribute = clock.restart();
+	elapsedTime += distribute;
+	std::for_each(skillEffects.begin(), skillEffects.end(), [&](const std::shared_ptr<NormalEffect> effect) {
+		if (effect->elapsedTime >= effect->duration) {
+			effect->setEnable(false);
+			return;
+		};
+		effect->elapsedTime += distribute;
+	});
 }
 
+void SkillSystem::exhausted() {
+	if (!isEnable()) throw std::invalid_argument("Skill is disabled in exhausted.");
+	setEnable(false);
+}
+
+void SkillSystem::setEnable(const bool enable) {
+	if (!exist) {
+		throw std::invalid_argument("Skill not exist in setEnable.");
+	}
+	System::setEnable(enable);
+	std::for_each(skillEffects.begin(), skillEffects.end(), [=](const std::shared_ptr<NormalEffect> &effect) {
+		if (!effect->isExist()) {
+			throw std::invalid_argument("Effect not exist in setEnable.");
+		}
+		effect->setEnable(enable);
+	});
+}
