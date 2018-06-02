@@ -17,7 +17,7 @@ namespace game {
 		return returnId;
 	}
 
-	bool EventSubject::dispatchEvent(Event * event) {
+	void EventSubject::dispatchEvent(Event * event) {
 		DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 
@@ -26,17 +26,13 @@ namespace game {
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		if (!helper.isPropagationStopped()) {
-			std::map<int, EventListener> tempListeners = listeners;
-			std::for_each(tempListeners.begin(), tempListeners.end(),
-				[&](const std::pair<const int, EventListener> & listener) {
-				if (event->getType() == listener.second.type) {
-					listener.second.callback(event);
-				}
-			});
-		}
-
-		return !event->getDefaultPrevented();
+		std::map<int, EventListener> tempListeners = listeners;
+		std::for_each(tempListeners.begin(), tempListeners.end(),
+			[&](const std::pair<const int, EventListener> & listener) {
+			if (event->getType() == listener.second.type) {
+				listener.second.callback(event);
+			}
+		});
 	}
 
 	void EventSubject::removeEventListener(int id) {

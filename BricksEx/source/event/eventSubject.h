@@ -12,7 +12,7 @@ namespace game {
 		EventSubject();
 		virtual ~EventSubject();
 		virtual int addEventListener(EventType type, std::function<void(Event *)> callback);
-		virtual bool dispatchEvent(Event * event);
+		virtual void dispatchEvent(Event * event);
 		virtual void removeEventListener(int id);
 	private:
 		struct EventListener {
