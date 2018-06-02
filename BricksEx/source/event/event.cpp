@@ -1,26 +1,6 @@
 #include "event.h"
 
 namespace game {
-	Event::DispatchHelper::DispatchHelper(Event * event) {
-		this->event = event;
-	}
-
-	bool Event::DispatchHelper::isPropagationStopped() {
-		return event->propagationStopped;
-	}
-
-	void Event::DispatchHelper::setCurrentTarget(InteractiveObject * target) {
-		event->currentTarget = target;
-	}
-
-	void Event::DispatchHelper::setPhase(EventPhase phase) {
-		event->phase = phase;
-	}
-
-	void Event::DispatchHelper::setTarget(InteractiveObject * target) {
-		event->target = target;
-	}
-
 	Event::Event(EventType type) :
 		Event(type, true, true) {
 	}
@@ -46,7 +26,7 @@ namespace game {
 		return cancelable;
 	}
 
-	InteractiveObject * Event::getCurrentTarget() const {
+	EventSubject * Event::getCurrentTarget() const {
 		return currentTarget;
 	}
 
@@ -58,7 +38,7 @@ namespace game {
 		return phase;
 	}
 
-	InteractiveObject * Event::getTarget() const {
+	EventSubject * Event::getTarget() const {
 		return target;
 	}
 

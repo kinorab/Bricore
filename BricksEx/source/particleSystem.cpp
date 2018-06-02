@@ -10,6 +10,7 @@ ParticleSystem::ParticleSystem(const unsigned int count)
 	:particles(count),
 	vertices(new VertexArray(Points, count)),
 	maxLifeTime(LIFETIME),
+	emitting(true),
 	emitPosition(0, 0) {
 	addChild({ vertices });
 }
@@ -18,18 +19,24 @@ void ParticleSystem::setEmitPosition(const Vector2f & position) {
 	emitPosition = position;
 }
 
+void ParticleSystem::startEmit() {
+	emitting = true;
+}
+
+void ParticleSystem::stopEmit() {
+	emitting = false;
+}
+
 void ParticleSystem::update(const float updateSpan) {
 	for (size_t i = 0; i < particles.size(); ++i) {
 		if (particles[i].lifeTime > 0.0f) {
 			particles[i].lifeTime -= updateSpan;
 		}
+		else if (emitting){
+			resetParticle(i);
+		}
 		else {
-			if (GameState::light) {
-				resetParticle(i);
-			}
-			else {
-				particles[i].lifeTime = 0.0f;
-			}
+			particles[i].lifeTime = 0.0;
 		}
 
 		(*vertices)[i].position += particles[i].velocity * updateSpan;

@@ -119,11 +119,11 @@ void Stage::onKeyReleased(game::Event * event) {
 }
 
 void Stage::onMouseEntered(game::Event *) {
-	GameState::light = true;
+	mouseLight->startEmit();
 }
 
 void Stage::onMouseLeft(game::Event *) {
-	GameState::light = false;
+	mouseLight->stopEmit();
 }
 
 void Stage::onMouseMoved(game::Event * event) {

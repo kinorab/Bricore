@@ -6,7 +6,6 @@ float MAINPLAYERSPEED = 6.f;
 namespace GameState {
 	bool start = false;
 	bool ready = false;
-	bool light = false;
 	bool finishLevel = false;
 	bool pause = false;
 	bool lock = false;

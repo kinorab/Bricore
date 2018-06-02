@@ -39,6 +39,8 @@
     <ClCompile Include="source\UI\button.cpp" />
     <ClCompile Include="source\UI\textButton.cpp" />
     <ClCompile Include="source\UI\textField.cpp" />
+    <ClCompile Include="source\event\dispatchHelper.cpp" />
+    <ClCompile Include="source\event\eventSubject.cpp" />
     <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
     <ClCompile Include="source\gameSys\effect\normalEffect.cpp" />
   </ItemGroup>
@@ -86,6 +88,9 @@
     <ClInclude Include="source\UI\textField.h" />
     <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\singleton.h" />
+    <ClInclude Include="source\event\dispatchHelper.h" />
+    <ClInclude Include="source\event\eventPhase.h" />
+    <ClInclude Include="source\event\eventSubject.h" />
     <ClInclude Include="source\gameSys\effect\effectSystem.h" />
     <ClInclude Include="source\gameSys\effect\normalEffect.h" />
   </ItemGroup>
