@@ -4,15 +4,15 @@
 
 namespace game {
 	class Event;
-	class InteractiveObject;
+	class EventSubject;
 
 	class DispatchHelper {
 	public:
 		explicit DispatchHelper(Event * event);
 		virtual bool isPropagationStopped();
-		virtual void setCurrentTarget(InteractiveObject * target);
+		virtual void setCurrentTarget(EventSubject * target);
 		virtual void setPhase(EventPhase phase);
-		virtual void setTarget(InteractiveObject * target);
+		virtual void setTarget(EventSubject * target);
 	private:
 		Event * event;
 	};

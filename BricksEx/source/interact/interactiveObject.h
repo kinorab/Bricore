@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../event/eventType.h"
+#include "../event/eventSubject.h"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
-#include <functional>
-#include <map>
 
 namespace sf {
 	class RenderTarget;
@@ -13,38 +11,28 @@ namespace sf {
 
 namespace game {
 	class Container;
-	class Event;
 
 	class InteractiveObject
-		: public sf::Drawable,
+		: public EventSubject,
+		public sf::Drawable,
 		public sf::Transformable {
 	public:
 		InteractiveObject();
 		virtual ~InteractiveObject();
-		virtual int addEventListener(EventType type, std::function<void(Event *)> callback);
-		virtual int addEventListener(EventType type, std::function<void(Event *)> callback, bool useCapture);
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
-		virtual bool dispatchEvent(Event * event);
+		virtual bool dispatchEvent(Event * event) override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
 		virtual bool getEnabled() const;
 		virtual Container * getParent();
 		virtual void onDisabled();
 		virtual void onEnabled();
-		virtual void removeEventListener(int id);
 		virtual void setEnabled(bool value);
 		virtual void setParent(Container * parent);
 		virtual void update(const float updateSpan);
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:
-		struct EventListener {
-			EventType type;
-			std::function<void(Event *)> callback;
-			bool useCapture;
-		};
-		std::map<int, EventListener> listeners;
 		bool enabled;
 		Container * parent;
-		int idCount;
 	};
 }

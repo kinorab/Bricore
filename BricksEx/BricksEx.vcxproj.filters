@@ -41,6 +41,7 @@
     <ClCompile Include="source\UI\textButton.cpp" />
     <ClCompile Include="source\UI\textField.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
+    <ClCompile Include="source\event\eventSubject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
@@ -89,6 +90,7 @@
     <ClInclude Include="source\singleton.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
+    <ClInclude Include="source\event\eventSubject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

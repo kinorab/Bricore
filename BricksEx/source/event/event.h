@@ -8,7 +8,7 @@
 #include <variant>
 
 namespace game {
-	class InteractiveObject;
+	class EventSubject;
 
 	class Event {
 		friend class DispatchHelper;
@@ -18,10 +18,10 @@ namespace game {
 		virtual ~Event();
 		virtual bool getBubbles() const;
 		virtual bool getCancelable() const;
-		virtual InteractiveObject * getCurrentTarget() const;
+		virtual EventSubject * getCurrentTarget() const;
 		virtual bool getDefaultPrevented() const;
 		virtual EventPhase getPhase() const;
-		virtual InteractiveObject * getTarget() const;
+		virtual EventSubject * getTarget() const;
 		virtual EventType getType() const;
 		virtual void stopPropagation();
 		virtual void preventDefault();
@@ -41,11 +41,11 @@ namespace game {
 	private:
 		bool bubbles;
 		bool cancelable;
-		InteractiveObject * currentTarget;
+		EventSubject * currentTarget;
 		bool defaultPrevented;
 		EventPhase phase;
 		bool propagationStopped;
-		InteractiveObject * target;
+		EventSubject * target;
 		EventType type;
 	};
 }

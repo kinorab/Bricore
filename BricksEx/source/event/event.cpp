@@ -26,7 +26,7 @@ namespace game {
 		return cancelable;
 	}
 
-	InteractiveObject * Event::getCurrentTarget() const {
+	EventSubject * Event::getCurrentTarget() const {
 		return currentTarget;
 	}
 
@@ -38,7 +38,7 @@ namespace game {
 		return phase;
 	}
 
-	InteractiveObject * Event::getTarget() const {
+	EventSubject * Event::getTarget() const {
 		return target;
 	}
 

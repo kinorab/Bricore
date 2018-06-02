@@ -35,6 +35,9 @@ void ParticleSystem::update(const float updateSpan) {
 		else if (emitting){
 			resetParticle(i);
 		}
+		else {
+			particles[i].lifeTime = 0.0;
+		}
 
 		(*vertices)[i].position += particles[i].velocity * updateSpan;
 		float ratio = particles[i].lifeTime / maxLifeTime;

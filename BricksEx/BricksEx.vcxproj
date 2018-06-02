@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\event\eventSubject.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
     <ClCompile Include="source\stuff\ball.cpp" />
     <ClCompile Include="source\stuff\block.cpp" />
@@ -61,6 +62,7 @@
     <ClCompile Include="source\UI\textField.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\event\eventSubject.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
     <ClInclude Include="source\event\eventType.h" />
