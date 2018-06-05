@@ -11,7 +11,6 @@
     <ClCompile Include="source\event\event.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\gameSys\area.cpp" />
-    <ClCompile Include="source\gameSys\effect\effect.cpp" />
     <ClCompile Include="source\gameSys\LVDeploy.cpp" />
     <ClCompile Include="source\particleSystem.cpp" />
     <ClCompile Include="source\gameSys\skill\skillSystem.cpp" />
@@ -65,6 +64,8 @@
     <ClCompile Include="source\event\sizeListener.cpp" />
     <ClCompile Include="source\event\textListener.cpp" />
     <ClCompile Include="source\event\touchListener.cpp" />
+    <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
+    <ClCompile Include="source\gameSys\effect\normalEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
@@ -81,7 +82,6 @@
     <ClInclude Include="source\event\event.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\gameSys\area.h" />
-    <ClInclude Include="source\gameSys\effect\effect.h" />
     <ClInclude Include="source\gameSys\LVDeploy.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\gameSys\skill\skillSystem.h" />
@@ -141,6 +141,8 @@
     <ClInclude Include="source\event\sizeListener.h" />
     <ClInclude Include="source\event\textListener.h" />
     <ClInclude Include="source\event\touchListener.h" />
+    <ClInclude Include="source\gameSys\effect\effectSystem.h" />
+    <ClInclude Include="source\gameSys\effect\normalEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

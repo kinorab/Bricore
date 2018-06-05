@@ -6,7 +6,7 @@
 #include <map>
 
 namespace game {
-	class Effect;
+	class NormalEffect;
 
 	class Area {
 	public:
@@ -23,13 +23,12 @@ namespace game {
 		virtual ~Area();
 	private:
 		struct AreaItem {
-			Item itemName;
-			std::vector<Effect> effects;
-			sf::Texture lightPower;
-			sf::Texture context;
-			sf::Sprite core;
+			std::vector<std::shared_ptr<NormalEffect>> effects;
+			std::shared_ptr<sf::Texture> lightPower;
+			std::shared_ptr<sf::Texture> context;
+			std::shared_ptr<sf::Sprite> core;
 		};
-		std::map<std::string, AreaItem> areaItems;
-		std::map<std::string, std::vector<Effect>> AOEs;
+		std::map<Item, AreaItem> areaItems;
+		std::map<std::string, std::vector<std::shared_ptr<NormalEffect>>> AOEs;
 	};
 }
