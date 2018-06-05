@@ -19,8 +19,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\event\eventListener.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
+    <ClCompile Include="source\event\joystickButtonEvent.cpp" />
+    <ClCompile Include="source\event\joystickButtonListener.cpp" />
+    <ClCompile Include="source\event\joystickConnectEvent.cpp" />
+    <ClCompile Include="source\event\joystickConnectListener.cpp" />
+    <ClCompile Include="source\event\joystickMoveEvent.cpp" />
+    <ClCompile Include="source\event\joystickMoveListener.cpp" />
+    <ClCompile Include="source\event\keyEvent.cpp" />
+    <ClCompile Include="source\event\keyListener.cpp" />
+    <ClCompile Include="source\event\mouseButtonEvent.cpp" />
+    <ClCompile Include="source\event\mouseButtonListener.cpp" />
+    <ClCompile Include="source\event\mouseMoveEvent.cpp" />
+    <ClCompile Include="source\event\mouseMoveListener.cpp" />
+    <ClCompile Include="source\event\mouseWheelScrollEvent.cpp" />
+    <ClCompile Include="source\event\mouseWheelScrollListener.cpp" />
+    <ClCompile Include="source\event\sensorEvent.cpp" />
+    <ClCompile Include="source\event\sensorListener.cpp" />
+    <ClCompile Include="source\event\sizeEvent.cpp" />
+    <ClCompile Include="source\event\sizeListener.cpp" />
+    <ClCompile Include="source\event\textEvent.cpp" />
+    <ClCompile Include="source\event\textListener.cpp" />
+    <ClCompile Include="source\event\touchEvent.cpp" />
+    <ClCompile Include="source\event\touchListener.cpp" />
     <ClCompile Include="source\stuff\ball.cpp" />
     <ClCompile Include="source\stuff\block.cpp" />
     <ClCompile Include="source\stuff\brick.cpp" />
@@ -62,10 +85,34 @@
     <ClCompile Include="source\UI\textField.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\event\joystickButtonListener.h" />
+    <ClInclude Include="source\common.h" />
+    <ClInclude Include="source\event\joystickButtonEvent.h" />
+    <ClInclude Include="source\event\joystickConnectEvent.h" />
+    <ClInclude Include="source\event\joystickConnectListener.h" />
+    <ClInclude Include="source\event\joystickMoveEvent.h" />
+    <ClInclude Include="source\event\joystickMoveListener.h" />
+    <ClInclude Include="source\event\keyListener.h" />
+    <ClInclude Include="source\event\mouseButtonListener.h" />
+    <ClInclude Include="source\event\mouseMoveListener.h" />
+    <ClInclude Include="source\event\mouseWheelScrollEvent.h" />
+    <ClInclude Include="source\event\mouseButtonEvent.h" />
+    <ClInclude Include="source\event\mouseMoveEvent.h" />
+    <ClInclude Include="source\event\keyEvent.h" />
+    <ClInclude Include="source\event\mouseWheelScrollListener.h" />
+    <ClInclude Include="source\event\sensorEvent.h" />
+    <ClInclude Include="source\event\sensorListener.h" />
+    <ClInclude Include="source\event\sizeEvent.h" />
+    <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\event\eventSubject.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
     <ClInclude Include="source\event\eventType.h" />
+    <ClInclude Include="source\event\sizeListener.h" />
+    <ClInclude Include="source\event\textListener.h" />
+    <ClInclude Include="source\event\touchEvent.h" />
+    <ClInclude Include="source\event\touchListener.h" />
+    <ClInclude Include="source\isBaseOfTemplate.h" />
     <ClInclude Include="source\singleton.h" />
     <ClInclude Include="source\stuff\ball.h" />
     <ClInclude Include="source\stuff\block.h" />
@@ -109,6 +156,9 @@
     <ClInclude Include="source\UI\button.h" />
     <ClInclude Include="source\UI\textButton.h" />
     <ClInclude Include="source\UI\textField.h" />
+    <ClInclude Include="source\event\textEvent.h" />
+    <ClInclude Include="source\visitable.h" />
+    <ClInclude Include="source\visitor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

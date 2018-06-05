@@ -7,11 +7,8 @@ namespace game {
 		idCount(0) {
 	}
 
-	EventSubject::~EventSubject() {
-	}
-
-	int EventSubject::addEventListener(EventType type, std::function<void(Event *)> callback) {
-		listeners[idCount] = EventListener{ type, callback };
+	int EventSubject::addListener(EventType eventType, std::shared_ptr<EventListener> listener) {
+		listeners[idCount] = std::make_pair(eventType, std::move(listener));
 		int returnId = idCount;
 		idCount += 1;
 		return returnId;
@@ -26,18 +23,18 @@ namespace game {
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		std::map<int, EventListener> tempListeners = listeners;
+		auto tempListeners = listeners;
 		std::for_each(tempListeners.begin(), tempListeners.end(),
-			[&](const std::pair<const int, EventListener> & listener) {
-			if (event->getType() == listener.second.type) {
-				listener.second.callback(event);
+			[&](std::pair<const int, std::pair<EventType, std::shared_ptr<EventListener>>> & listener) {
+			if (event->getType() == listener.second.first) {
+				event->accept(listener.second.second.get());
 			}
 		});
 	}
 
-	void EventSubject::removeEventListener(int id) {
+	void EventSubject::removeListener(int id) {
 		listeners.erase(std::find_if(listeners.begin(), listeners.end(),
-			[&](std::pair<const int, EventListener> & listener) {
+			[&](std::pair<const int, std::pair<EventType, std::shared_ptr<EventListener>>> & listener) {
 			return listener.first == id;
 		}));
 	}

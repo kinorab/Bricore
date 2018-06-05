@@ -1,5 +1,7 @@
 #include "game.h"
-#include "event/event.h"
+#include "event/keyEvent.h"
+#include "event/mouseButtonEvent.h"
+#include "event/mouseMoveEvent.h"
 #include "manager/audioManager.h"
 #include "definition/define.h"
 #include "stage.h"
@@ -69,24 +71,22 @@ void Game::handleKeyEvent() {
 		eventType = game::EventType::KeyReleased;
 	}
 
-	game::Event event(eventType, false, true);
-	event.data = currentEvent.key;
+	game::KeyEvent event(eventType, currentEvent.key);
 	stage->dispatchEvent(&event);
 }
 
 void Game::handleMouseEvent() {
 	if (currentEvent.type == Event::MouseMoved) {
-		mousePosition = window->mapPixelToCoords((Vector2i(currentEvent.mouseMove.x, currentEvent.mouseMove.y)));
+		mousePosition = { currentEvent.mouseMove.x, currentEvent.mouseMove.y };
 		std::shared_ptr<game::InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
 			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
 			contactNode = nullptr;
 		}
 		else {
-			contactNode = stage->getObjectUnderPoint(mousePosition);
+			contactNode = stage->getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
-				game::Event event(game::EventType::MouseMoved, true, true);
-				event.data = currentEvent.mouseMove;
+				game::MouseMoveEvent event(game::EventType::MouseMoved, currentEvent.mouseMove);
 				contactNode->dispatchEvent(&event);
 			}
 		}
@@ -124,14 +124,14 @@ void Game::handleMouseEvent() {
 			}
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
-				[](std::shared_ptr<game::InteractiveObject> & node) {
-				game::Event event(game::EventType::MouseLeft, false, true);
+				[this](std::shared_ptr<game::InteractiveObject> & node) {
+				game::MouseMoveEvent event(game::EventType::MouseLeft, { mousePosition.x, mousePosition.y});
 				node->dispatchEvent(&event);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
-				[](std::shared_ptr<game::InteractiveObject> & node) {
-				game::Event event(game::EventType::MouseEntered, false, true);
+				[this](std::shared_ptr<game::InteractiveObject> & node) {
+				game::MouseMoveEvent event(game::EventType::MouseEntered, { mousePosition.x, mousePosition.y });
 				node->dispatchEvent(&event);
 			});
 
@@ -139,13 +139,11 @@ void Game::handleMouseEvent() {
 		}
 	}
 	else if (currentEvent.type == Event::MouseButtonPressed && previousContactNode) {
-		game::Event event(game::EventType::MouseButtonPressed, true, true);
-		event.data = currentEvent.mouseButton;
+		game::MouseButtonEvent event(game::EventType::MouseButtonPressed, currentEvent.mouseButton);
 		previousContactNode->dispatchEvent(&event);
 	}
 	else if (currentEvent.type == Event::MouseButtonReleased && previousContactNode) {
-		game::Event event(game::EventType::MouseButtonReleased, true, true);
-		event.data = currentEvent.mouseButton;
+		game::MouseButtonEvent event(game::EventType::MouseButtonReleased, currentEvent.mouseButton);
 		previousContactNode->dispatchEvent(&event);
 	}
 	else if (currentEvent.type == Event::MouseLeft) {

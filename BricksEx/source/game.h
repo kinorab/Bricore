@@ -37,7 +37,7 @@ private:
 	std::thread renderThread;
 	sf::Event currentEvent;
 	std::unique_ptr<sf::RenderWindow> window;
-	sf::Vector2f mousePosition;
+	sf::Vector2i mousePosition;
 	std::shared_ptr<game::InteractiveObject> previousContactNode;
 	std::shared_ptr<Stage> stage;
 	Graphics graph;

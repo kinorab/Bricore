@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../event/eventType.h"
+#include "eventType.h"
+#include "eventListener.h"
 #include <map>
 #include <functional>
 
@@ -10,16 +11,12 @@ namespace game {
 	class EventSubject {
 	public:
 		EventSubject();
-		virtual ~EventSubject();
-		virtual int addEventListener(EventType type, std::function<void(Event *)> callback);
+		virtual ~EventSubject() = default;
+		virtual int addListener(EventType eventType, std::shared_ptr<EventListener> listener);
 		virtual void dispatchEvent(Event * event);
-		virtual void removeEventListener(int id);
+		virtual void removeListener(int id);
 	private:
-		struct EventListener {
-			EventType type;
-			std::function<void(Event *)> callback;
-		};
-		std::map<int, EventListener> listeners;
+		std::map<int, std::pair<EventType, std::shared_ptr<EventListener>>> listeners;
 		int idCount;
 	};
 }

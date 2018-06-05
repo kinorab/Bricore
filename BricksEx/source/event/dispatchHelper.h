@@ -9,6 +9,7 @@ namespace game {
 	class DispatchHelper {
 	public:
 		explicit DispatchHelper(Event * event);
+		virtual ~DispatchHelper() = default;
 		virtual bool isPropagationStopped();
 		virtual void setCurrentTarget(EventSubject * target);
 		virtual void setPhase(EventPhase phase);

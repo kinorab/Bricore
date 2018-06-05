@@ -1,7 +1,12 @@
 #include "stage.h"
 #include "hud.h"
 #include "particleSystem.h"
-#include "event/event.h"
+#include "event/mouseButtonEvent.h"
+#include "event/mouseButtonListener.h"
+#include "event/mouseMoveEvent.h"
+#include "event/mouseMoveListener.h"
+#include "event/keyEvent.h"
+#include "event/keyListener.h"
 #include "definition/define.h"
 #include "manager/audioManager.h"
 #include "stuff/obstacle.h"
@@ -24,18 +29,18 @@ Stage::Stage() :
 	obstaclePredict(nullptr) {
 	// presettle mainBall's position
 	if (getInstantiated()) {
-		throw std::invalid_argument("This class can only be instantiated once!");
+		throw std::invalid_argument("This class can only be instantiated once.");
 	}
 
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, mouseLight });
 	using namespace std::placeholders;
-	addEventListener(game::EventType::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
-	addEventListener(game::EventType::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
-	addEventListener(game::EventType::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
-	addEventListener(game::EventType::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
-	addEventListener(game::EventType::MouseMoved, std::bind(&Stage::onMouseMoved, this, _1));
-	addEventListener(game::EventType::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
+	addListener(game::EventType::KeyPressed, std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyPressed, this, _1)));
+	addListener(game::EventType::KeyReleased, std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyReleased, this, _1)));
+	addListener(game::EventType::MouseEntered, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseEntered, this, _1)));
+	addListener(game::EventType::MouseLeft, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseLeft, this, _1)));
+	addListener(game::EventType::MouseMoved, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseMoved, this, _1)));
+	addListener(game::EventType::MouseButtonPressed, std::make_shared<game::MouseButtonListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
 	setInstantiated(true);
 }
 
@@ -98,8 +103,8 @@ void Stage::setInstantiated(bool value) {
 	Stage::instantiated = value;
 }
 
-void Stage::onKeyPressed(game::Event * event) {
-	if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::P) {
+void Stage::onKeyPressed(game::KeyEvent * event) {
+	if (event->code == sf::Keyboard::P) {
 		GameState::pause = !GameState::pause;
 		GameState::lock = !GameState::lock;
 	}
@@ -108,37 +113,37 @@ void Stage::onKeyPressed(game::Event * event) {
 		return;
 	}
 	else {
-		if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::G) {
+		if (event->code == sf::Keyboard::G) {
 			GameState::start = true;
 		}
 	}
 }
 
-void Stage::onKeyReleased(game::Event * event) {
+void Stage::onKeyReleased(game::KeyEvent * event) {
 
 }
 
-void Stage::onMouseEntered(game::Event *) {
+void Stage::onMouseEntered(game::MouseMoveEvent *) {
 	mouseLight->startEmit();
 }
 
-void Stage::onMouseLeft(game::Event *) {
+void Stage::onMouseLeft(game::MouseMoveEvent *) {
 	mouseLight->stopEmit();
 }
 
-void Stage::onMouseMoved(game::Event * event) {
-	auto moveEvent = std::get<sf::Event::MouseMoveEvent>(event->data);
+void Stage::onMouseMoved(game::MouseMoveEvent * event) {
+	auto moveEvent = *event;
 	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(moveEvent.x), static_cast<float>(moveEvent.y)));
 }
 
-void Stage::onMouseButtonPressed(game::Event * event) {
+void Stage::onMouseButtonPressed(game::MouseButtonEvent * event) {
 	if (!GameState::lock) {
-		if (std::get<sf::Event::MouseButtonEvent>(event->data).button == sf::Mouse::Left) {
+		if (event->button == sf::Mouse::Left) {
 			// debugging feature
 			GameState::start = true;
 		}
 		// debugging feature
-		else if (std::get<sf::Event::MouseButtonEvent>(event->data).button == sf::Mouse::Right) {
+		else if (event->button == sf::Mouse::Right) {
 			GameState::start = false;
 			GameState::ready = false;
 		}
