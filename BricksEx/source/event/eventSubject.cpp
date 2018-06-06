@@ -8,7 +8,7 @@ namespace game {
 	}
 
 	int EventSubject::addListener(EventType eventType, std::shared_ptr<EventListener> listener) {
-		listeners[idCount] = std::make_pair(eventType, std::move(listener));
+		listeners.emplace(eventType, std::pair<const int, std::shared_ptr<EventListener>>(idCount, std::move(listener)));
 		int returnId = idCount;
 		idCount += 1;
 		return returnId;
@@ -23,19 +23,20 @@ namespace game {
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		auto tempListeners = listeners;
+		auto listenerRange = listeners.equal_range(event->getType());
+		std::vector<std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
+		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
 		std::for_each(tempListeners.begin(), tempListeners.end(),
-			[&](std::pair<const int, std::pair<EventType, std::shared_ptr<EventListener>>> & listener) {
-			if (event->getType() == listener.second.first) {
-				event->accept(listener.second.second.get());
-			}
+			[&](std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
+			event->accept(listener.second.second.get());
 		});
 	}
 
-	void EventSubject::removeListener(int id) {
-		listeners.erase(std::find_if(listeners.begin(), listeners.end(),
-			[&](std::pair<const int, std::pair<EventType, std::shared_ptr<EventListener>>> & listener) {
-			return listener.first == id;
+	void EventSubject::removeListener(EventType eventType, int id) {
+		auto listenerRange = listeners.equal_range(eventType);
+		listeners.erase(std::find_if(listenerRange.first, listenerRange.second,
+			[&](std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
+			return listener.second.first == id;
 		}));
 	}
 }

@@ -14,9 +14,9 @@ namespace game {
 		virtual ~EventSubject() = default;
 		virtual int addListener(EventType eventType, std::shared_ptr<EventListener> listener);
 		virtual void dispatchEvent(Event * event);
-		virtual void removeListener(int id);
+		virtual void removeListener(EventType eventType, int id);
 	private:
-		std::map<int, std::pair<EventType, std::shared_ptr<EventListener>>> listeners;
+		std::multimap<const EventType, std::pair<const int, std::shared_ptr<EventListener>>> listeners;
 		int idCount;
 	};
 }
