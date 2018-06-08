@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../visitable.h"
-#include "eventListener.h"
+#include "../template/acyclicVisitable.h"
 #include "eventPhase.h"
 #include "eventType.h"
 #include <SFML\Window\Event.hpp>
@@ -11,12 +10,12 @@
 
 namespace game {
 	class EventSubject;
+	class EventListener;
 
 	class Event :
-		public Visitable<EventListener> {
+		public AcyclicVisitable<EventListener> {
 		friend class DispatchHelper;
 	public:
-		Event(EventType type, bool bubbles, bool cancelable);
 		virtual ~Event() = default;
 		virtual bool getBubbles() const;
 		virtual bool getCancelable() const;
@@ -28,6 +27,8 @@ namespace game {
 		virtual void stopPropagation();
 		virtual void preventDefault();
 	protected:
+		Event(EventType type, bool bubbles, bool cancelable);
+		virtual void visitFailedHandler() override;
 	private:
 		bool bubbles;
 		bool cancelable;

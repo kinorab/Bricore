@@ -41,7 +41,6 @@
     <ClCompile Include="source\UI\textField.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
-    <ClCompile Include="source\event\eventListener.cpp" />
     <ClCompile Include="source\event\joystickButtonEvent.cpp" />
     <ClCompile Include="source\event\joystickConnectEvent.cpp" />
     <ClCompile Include="source\event\joystickMoveEvent.cpp" />
@@ -110,14 +109,10 @@
     <ClInclude Include="source\UI\textButton.h" />
     <ClInclude Include="source\UI\textField.h" />
     <ClInclude Include="source\resource.h" />
-    <ClInclude Include="source\singleton.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
     <ClInclude Include="source\event\eventSubject.h" />
-    <ClInclude Include="source\visitable.h" />
-    <ClInclude Include="source\visitor.h" />
     <ClInclude Include="source\common.h" />
-    <ClInclude Include="source\isBaseOfTemplate.h" />
     <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\event\joystickButtonEvent.h" />
     <ClInclude Include="source\event\joystickConnectEvent.h" />
@@ -143,6 +138,11 @@
     <ClInclude Include="source\event\touchListener.h" />
     <ClInclude Include="source\gameSys\effect\effectSystem.h" />
     <ClInclude Include="source\gameSys\effect\normalEffect.h" />
+    <ClInclude Include="source\template\isBaseOfTemplate.h" />
+    <ClInclude Include="source\template\singleton.h" />
+    <ClInclude Include="source\template\visitable.h" />
+    <ClInclude Include="source\template\visitor.h" />
+    <ClInclude Include="source\template\acyclicVisitable.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

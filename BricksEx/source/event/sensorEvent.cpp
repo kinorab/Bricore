@@ -1,4 +1,5 @@
 #include "sensorEvent.h"
+#include "sensorListener.h"
 
 namespace game {
 	SensorEvent::SensorEvent(EventType type, sf::Event::SensorEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void SensorEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		SensorListener * listener = dynamic_cast<SensorListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

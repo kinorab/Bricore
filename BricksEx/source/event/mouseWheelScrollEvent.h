@@ -1,14 +1,11 @@
 #pragma once
 
 #include "event.h"
-#include "../visitable.h"
-#include <SFML\Window\Event.hpp>
 
 namespace game {
 	class MouseWheelScrollEvent :
 		public sf::Event::MouseWheelScrollEvent,
-		public virtual Event,
-		public virtual Visitable<EventListener> {
+		public Event {
 	public:
 		MouseWheelScrollEvent(EventType type, sf::Event::MouseWheelScrollEvent eventData);
 		virtual ~MouseWheelScrollEvent() = default;

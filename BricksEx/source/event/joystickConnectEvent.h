@@ -1,14 +1,11 @@
 #pragma once
 
 #include "event.h"
-#include "../visitable.h"
-#include <SFML\Window\Event.hpp>
 
 namespace game {
 	class JoystickConnectEvent :
 		public sf::Event::JoystickConnectEvent,
-		public virtual Event,
-		public virtual Visitable<EventListener> {
+		public Event {
 	public:
 		JoystickConnectEvent(EventType type, sf::Event::JoystickConnectEvent eventData);
 		virtual ~JoystickConnectEvent() = default;

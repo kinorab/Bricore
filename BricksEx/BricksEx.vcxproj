@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\event\eventListener.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
     <ClCompile Include="source\event\joystickButtonEvent.cpp" />
@@ -113,9 +112,10 @@
     <ClInclude Include="source\event\textListener.h" />
     <ClInclude Include="source\event\touchEvent.h" />
     <ClInclude Include="source\event\touchListener.h" />
-    <ClInclude Include="source\isBaseOfTemplate.h" />
+    <ClInclude Include="source\template\acyclicVisitable.h" />
+    <ClInclude Include="source\template\isBaseOfTemplate.h" />
     <ClInclude Include="source\gameSys\effect\effectSystem.h" />
-    <ClInclude Include="source\singleton.h" />
+    <ClInclude Include="source\template\singleton.h" />
     <ClInclude Include="source\stuff\ball.h" />
     <ClInclude Include="source\stuff\block.h" />
     <ClInclude Include="source\stuff\brick.h" />
@@ -159,8 +159,8 @@
     <ClInclude Include="source\UI\textButton.h" />
     <ClInclude Include="source\UI\textField.h" />
     <ClInclude Include="source\event\textEvent.h" />
-    <ClInclude Include="source\visitable.h" />
-    <ClInclude Include="source\visitor.h" />
+    <ClInclude Include="source\template\visitable.h" />
+    <ClInclude Include="source\template\visitor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "eventType.h"
-#include "eventListener.h"
 #include <map>
 #include <functional>
 
 namespace game {
 	class Event;
+	class EventListener;
 
 	class EventSubject {
 	public:

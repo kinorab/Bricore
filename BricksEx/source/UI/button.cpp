@@ -1,6 +1,5 @@
 #include "button.h"
 #include "../definition/utility.h"
-#include "../definition/intersects.h"
 #include "../event/mouseButtonListener.h"
 #include "../event/mouseMoveListener.h"
 #include <SFML/Graphics.hpp>

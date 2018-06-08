@@ -11,6 +11,11 @@ class Obstacle;
 class Player;
 class ParticleSystem;
 class HUD;
+namespace game {
+	class KeyEvent;
+	class MouseMoveEvent;
+	class MouseButtonEvent;
+}
 
 class Stage
 	: public game::Container {

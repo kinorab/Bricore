@@ -1,4 +1,5 @@
 #include "textEvent.h"
+#include "textListener.h"
 
 namespace game {
 	TextEvent::TextEvent(EventType type, sf::Event::TextEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void TextEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		TextListener * listener = dynamic_cast<TextListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

@@ -1,4 +1,5 @@
 #include "mouseWheelScrollEvent.h"
+#include "mouseWheelScrollListener.h"
 
 namespace game {
 	MouseWheelScrollEvent::MouseWheelScrollEvent(EventType type, sf::Event::MouseWheelScrollEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void MouseWheelScrollEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		MouseWheelScrollListener * listener = dynamic_cast<MouseWheelScrollListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

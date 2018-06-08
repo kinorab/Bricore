@@ -1,4 +1,5 @@
 #include "keyEvent.h"
+#include "keyListener.h"
 
 namespace game {
 	KeyEvent::KeyEvent(EventType type, sf::Event::KeyEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void KeyEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		KeyListener * listener = dynamic_cast<KeyListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

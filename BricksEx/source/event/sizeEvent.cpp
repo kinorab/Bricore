@@ -1,4 +1,5 @@
 #include "sizeEvent.h"
+#include "sizeListener.h"
 
 namespace game {
 	SizeEvent::SizeEvent(EventType type, sf::Event::SizeEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void SizeEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		SizeListener * listener = dynamic_cast<SizeListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

@@ -1,4 +1,5 @@
 #include "mouseMoveEvent.h"
+#include "mouseMoveListener.h"
 
 namespace game {
 	MouseMoveEvent::MouseMoveEvent(EventType type, sf::Event::MouseMoveEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void MouseMoveEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		MouseMoveListener * listener = dynamic_cast<MouseMoveListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

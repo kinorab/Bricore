@@ -12,8 +12,8 @@ namespace sf {
 namespace game {
 	class Container;
 
-	class InteractiveObject
-		: public EventSubject,
+	class InteractiveObject :
+		public EventSubject,
 		public sf::Drawable,
 		public sf::Transformable {
 	public:

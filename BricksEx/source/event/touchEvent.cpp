@@ -1,4 +1,5 @@
 #include "touchEvent.h"
+#include "touchListener.h"
 
 namespace game {
 	TouchEvent::TouchEvent(EventType type, sf::Event::TouchEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void TouchEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		TouchListener * listener = dynamic_cast<TouchListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

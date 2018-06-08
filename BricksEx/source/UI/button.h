@@ -3,6 +3,8 @@
 #include "UIComponent.h"
 
 namespace game {
+	class MouseMoveEvent;
+	class MouseButtonEvent;
 	class Button
 		: public InteractiveObject {
 	public:

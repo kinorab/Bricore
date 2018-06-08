@@ -1,4 +1,5 @@
 #include "joystickMoveEvent.h"
+#include "joystickMoveListener.h"
 
 namespace game {
 	JoystickMoveEvent::JoystickMoveEvent(EventType type, sf::Event::JoystickMoveEvent eventData) :
@@ -7,7 +8,13 @@ namespace game {
 	}
 
 	void JoystickMoveEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		JoystickMoveListener * listener = dynamic_cast<JoystickMoveListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }
 

@@ -1,4 +1,5 @@
 #include "mouseButtonEvent.h"
+#include "mouseButtonListener.h"
 
 namespace game {
 	MouseButtonEvent::MouseButtonEvent(EventType type, sf::Event::MouseButtonEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void MouseButtonEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		MouseButtonListener * listener = dynamic_cast<MouseButtonListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }

@@ -1,4 +1,5 @@
 #include "joystickConnectEvent.h"
+#include "joystickConnectListener.h"
 
 namespace game {
 	JoystickConnectEvent::JoystickConnectEvent(EventType type, sf::Event::JoystickConnectEvent eventData) :
@@ -7,6 +8,12 @@ namespace game {
 	}
 
 	void JoystickConnectEvent::accept(EventListener * visitor) {
-		visitor->visit(this);
+		JoystickConnectListener * listener = dynamic_cast<JoystickConnectListener *>(visitor);
+		if (listener) {
+			listener->visit(this);
+		}
+		else {
+			visitFailedHandler();
+		}
 	}
 }
