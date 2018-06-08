@@ -7,13 +7,8 @@ namespace game {
 		sf::Event::TouchEvent(eventData) {
 	}
 
-	void TouchEvent::accept(EventListener * visitor) {
-		TouchListener * listener = dynamic_cast<TouchListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void TouchEvent::accept(EventListener & visitor) {
+		TouchListener & listener = dynamic_cast<TouchListener &>(visitor);
+		listener.visit(*this);
 	}
 }

@@ -7,14 +7,9 @@ namespace game {
 		sf::Event::JoystickMoveEvent(eventData) {
 	}
 
-	void JoystickMoveEvent::accept(EventListener * visitor) {
-		JoystickMoveListener * listener = dynamic_cast<JoystickMoveListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void JoystickMoveEvent::accept(EventListener & visitor) {
+		JoystickMoveListener & listener = dynamic_cast<JoystickMoveListener &>(visitor);
+		listener.visit(*this);
 	}
 }
 

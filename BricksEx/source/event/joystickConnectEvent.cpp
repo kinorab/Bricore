@@ -7,13 +7,8 @@ namespace game {
 		sf::Event::JoystickConnectEvent(eventData) {
 	}
 
-	void JoystickConnectEvent::accept(EventListener * visitor) {
-		JoystickConnectListener * listener = dynamic_cast<JoystickConnectListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void JoystickConnectEvent::accept(EventListener & visitor) {
+		JoystickConnectListener & listener = dynamic_cast<JoystickConnectListener &>(visitor);
+		listener.visit(*this);
 	}
 }

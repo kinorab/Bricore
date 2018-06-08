@@ -72,7 +72,7 @@ void Game::handleKeyEvent() {
 	}
 
 	game::KeyEvent event(eventType, currentEvent.key);
-	stage->dispatchEvent(&event);
+	stage->dispatchEvent(event);
 }
 
 void Game::handleMouseEvent() {
@@ -87,7 +87,7 @@ void Game::handleMouseEvent() {
 			contactNode = stage->getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
 				game::MouseMoveEvent event(game::EventType::MouseMoved, currentEvent.mouseMove);
-				contactNode->dispatchEvent(&event);
+				contactNode->dispatchEvent(event);
 			}
 		}
 
@@ -126,13 +126,13 @@ void Game::handleMouseEvent() {
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
 				[this](std::shared_ptr<game::InteractiveObject> & node) {
 				game::MouseMoveEvent event(game::EventType::MouseLeft, { mousePosition.x, mousePosition.y});
-				node->dispatchEvent(&event);
+				node->dispatchEvent(event);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
 				[this](std::shared_ptr<game::InteractiveObject> & node) {
 				game::MouseMoveEvent event(game::EventType::MouseEntered, { mousePosition.x, mousePosition.y });
-				node->dispatchEvent(&event);
+				node->dispatchEvent(event);
 			});
 
 			previousContactNode = contactNode;
@@ -140,11 +140,11 @@ void Game::handleMouseEvent() {
 	}
 	else if (currentEvent.type == Event::MouseButtonPressed && previousContactNode) {
 		game::MouseButtonEvent event(game::EventType::MouseButtonPressed, currentEvent.mouseButton);
-		previousContactNode->dispatchEvent(&event);
+		previousContactNode->dispatchEvent(event);
 	}
 	else if (currentEvent.type == Event::MouseButtonReleased && previousContactNode) {
 		game::MouseButtonEvent event(game::EventType::MouseButtonReleased, currentEvent.mouseButton);
-		previousContactNode->dispatchEvent(&event);
+		previousContactNode->dispatchEvent(event);
 	}
 	else if (currentEvent.type == Event::MouseLeft) {
 		Event event;

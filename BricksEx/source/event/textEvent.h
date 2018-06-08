@@ -9,6 +9,6 @@ namespace game {
 	public:
 		TextEvent(EventType type, sf::Event::TextEvent eventData);
 		virtual ~TextEvent() = default;
-		virtual void accept(EventListener * visitor) override;
+		virtual void accept(EventListener & visitor) override;
 	};
 }

@@ -23,9 +23,9 @@ namespace game {
 		std::shared_ptr<sf::Drawable> overObject;
 		std::shared_ptr<sf::Drawable> downObject;
 		std::shared_ptr<InteractiveObject> hitObject;
-		virtual void onMouseEntered(MouseMoveEvent * event);
-		virtual void onMouseLeft(MouseMoveEvent * event);
-		virtual void onMousePressed(MouseButtonEvent * event);
-		virtual void onMouseReleased(MouseButtonEvent * event);
+		virtual void onMouseEntered(MouseMoveEvent & event);
+		virtual void onMouseLeft(MouseMoveEvent & event);
+		virtual void onMousePressed(MouseButtonEvent & event);
+		virtual void onMouseReleased(MouseButtonEvent & event);
 	};
 }

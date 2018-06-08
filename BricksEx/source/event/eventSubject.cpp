@@ -14,21 +14,21 @@ namespace game {
 		return returnId;
 	}
 
-	void EventSubject::dispatchEvent(Event * event) {
+	void EventSubject::dispatchEvent(Event & event) {
 		DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 
-		if (event->getPhase() == EventPhase::NONE) {
+		if (event.getPhase() == EventPhase::NONE) {
 			helper.setTarget(this);
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		auto listenerRange = listeners.equal_range(event->getType());
+		auto listenerRange = listeners.equal_range(event.getType());
 		std::vector<std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
 		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
 		std::for_each(tempListeners.begin(), tempListeners.end(),
 			[&](std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
-			event->accept(listener.second.second.get());
+			event.accept(*listener.second.second);
 		});
 	}
 

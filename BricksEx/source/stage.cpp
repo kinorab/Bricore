@@ -103,8 +103,8 @@ void Stage::setInstantiated(bool value) {
 	Stage::instantiated = value;
 }
 
-void Stage::onKeyPressed(game::KeyEvent * event) {
-	if (event->code == sf::Keyboard::P) {
+void Stage::onKeyPressed(game::KeyEvent & event) {
+	if (event.code == sf::Keyboard::P) {
 		GameState::pause = !GameState::pause;
 		GameState::lock = !GameState::lock;
 	}
@@ -113,37 +113,36 @@ void Stage::onKeyPressed(game::KeyEvent * event) {
 		return;
 	}
 	else {
-		if (event->code == sf::Keyboard::G) {
+		if (event.code == sf::Keyboard::G) {
 			GameState::start = true;
 		}
 	}
 }
 
-void Stage::onKeyReleased(game::KeyEvent * event) {
+void Stage::onKeyReleased(game::KeyEvent & event) {
 
 }
 
-void Stage::onMouseEntered(game::MouseMoveEvent *) {
+void Stage::onMouseEntered(game::MouseMoveEvent &) {
 	mouseLight->startEmit();
 }
 
-void Stage::onMouseLeft(game::MouseMoveEvent *) {
+void Stage::onMouseLeft(game::MouseMoveEvent &) {
 	mouseLight->stopEmit();
 }
 
-void Stage::onMouseMoved(game::MouseMoveEvent * event) {
-	auto moveEvent = *event;
-	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(moveEvent.x), static_cast<float>(moveEvent.y)));
+void Stage::onMouseMoved(game::MouseMoveEvent & event) {
+	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(event.x), static_cast<float>(event.y)));
 }
 
-void Stage::onMouseButtonPressed(game::MouseButtonEvent * event) {
+void Stage::onMouseButtonPressed(game::MouseButtonEvent & event) {
 	if (!GameState::lock) {
-		if (event->button == sf::Mouse::Left) {
+		if (event.button == sf::Mouse::Left) {
 			// debugging feature
 			GameState::start = true;
 		}
 		// debugging feature
-		else if (event->button == sf::Mouse::Right) {
+		else if (event.button == sf::Mouse::Right) {
 			GameState::start = false;
 			GameState::ready = false;
 		}

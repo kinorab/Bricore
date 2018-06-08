@@ -3,5 +3,5 @@
 template<typename Type>
 class Visitable {
 public:
-	virtual void accept(Type * visitor) = 0;
+	virtual void accept(Type & visitor) = 0;
 };

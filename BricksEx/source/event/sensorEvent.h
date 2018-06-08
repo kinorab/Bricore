@@ -9,6 +9,6 @@ namespace game {
 	public:
 		SensorEvent(EventType type, sf::Event::SensorEvent eventData);
 		virtual ~SensorEvent() = default;
-		virtual void accept(EventListener * visitor) override;
+		virtual void accept(EventListener & visitor) override;
 	};
 }

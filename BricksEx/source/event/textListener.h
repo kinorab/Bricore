@@ -8,10 +8,10 @@ namespace game {
 	class TextListener :
 		public EventListener {
 	public:
-		explicit TextListener(std::function<void(TextEvent *)> callback);
+		explicit TextListener(std::function<void(TextEvent &)> callback);
 		virtual ~TextListener() = default;
-		virtual void visit(TextEvent * visitable);
+		virtual void visit(TextEvent & visitable);
 	private:
-		std::function<void(TextEvent *)> callback;
+		std::function<void(TextEvent &)> callback;
 	};
 }

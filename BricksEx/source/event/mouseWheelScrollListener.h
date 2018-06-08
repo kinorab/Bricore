@@ -8,10 +8,10 @@ namespace game {
 	class MouseWheelScrollListener :
 		public EventListener {
 	public:
-		explicit MouseWheelScrollListener(std::function<void(MouseWheelScrollEvent *)> callback);
+		explicit MouseWheelScrollListener(std::function<void(MouseWheelScrollEvent &)> callback);
 		virtual ~MouseWheelScrollListener() = default;
-		virtual void visit(MouseWheelScrollEvent * visitable);
+		virtual void visit(MouseWheelScrollEvent & visitable);
 	private:
-		std::function<void(MouseWheelScrollEvent *)> callback;
+		std::function<void(MouseWheelScrollEvent &)> callback;
 	};
 }

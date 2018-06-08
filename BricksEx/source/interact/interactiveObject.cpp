@@ -15,21 +15,21 @@ namespace game {
 	InteractiveObject::~InteractiveObject() {
 	}
 
-	void InteractiveObject::dispatchEvent(Event * event) {
+	void InteractiveObject::dispatchEvent(Event & event) {
 		EventSubject::dispatchEvent(event);
 		DispatchHelper helper(event);
-		if (event->getPhase() == EventPhase::AT_TARGET) {
+		if (event.getPhase() == EventPhase::AT_TARGET) {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}
 
-		if (event->getPhase() == EventPhase::BUBBLING_PHASE
-			&& event->getBubbles()
+		if (event.getPhase() == EventPhase::BUBBLING_PHASE
+			&& event.getBubbles()
 			&& parent != nullptr
 			&& !helper.isPropagationStopped()) {
 			parent->dispatchEvent(event);
 		}
 
-		if (event->getTarget() == this) {
+		if (event.getTarget() == this) {
 			helper.setPhase(EventPhase::NONE);
 			helper.setCurrentTarget(nullptr);
 		}

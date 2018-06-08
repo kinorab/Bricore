@@ -9,6 +9,6 @@ namespace game {
 	public:
 		JoystickMoveEvent(EventType type, sf::Event::JoystickMoveEvent eventData);
 		virtual ~JoystickMoveEvent() = default;
-		virtual void accept(EventListener * visitor) override;
+		virtual void accept(EventListener & visitor) override;
 	};
 }

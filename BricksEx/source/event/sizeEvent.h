@@ -9,6 +9,6 @@ namespace game {
 	public:
 		SizeEvent(EventType type, sf::Event::SizeEvent eventData);
 		virtual ~SizeEvent() = default;
-		virtual void accept(EventListener * visitor) override;
+		virtual void accept(EventListener & visitor) override;
 	};
 }

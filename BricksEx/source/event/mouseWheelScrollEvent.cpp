@@ -7,13 +7,8 @@ namespace game {
 		sf::Event::MouseWheelScrollEvent(eventData) {
 	}
 
-	void MouseWheelScrollEvent::accept(EventListener * visitor) {
-		MouseWheelScrollListener * listener = dynamic_cast<MouseWheelScrollListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void MouseWheelScrollEvent::accept(EventListener & visitor) {
+		MouseWheelScrollListener & listener = dynamic_cast<MouseWheelScrollListener &>(visitor);
+		listener.visit(*this);
 	}
 }

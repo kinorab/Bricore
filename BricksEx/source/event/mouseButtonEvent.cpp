@@ -7,13 +7,8 @@ namespace game {
 		sf::Event::MouseButtonEvent(eventData) {
 	}
 
-	void MouseButtonEvent::accept(EventListener * visitor) {
-		MouseButtonListener * listener = dynamic_cast<MouseButtonListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void MouseButtonEvent::accept(EventListener & visitor) {
+		MouseButtonListener & listener = dynamic_cast<MouseButtonListener &>(visitor);
+		listener.visit(*this);
 	}
 }

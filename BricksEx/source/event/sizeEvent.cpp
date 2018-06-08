@@ -7,13 +7,8 @@ namespace game {
 		sf::Event::SizeEvent(eventData) {
 	}
 
-	void SizeEvent::accept(EventListener * visitor) {
-		SizeListener * listener = dynamic_cast<SizeListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void SizeEvent::accept(EventListener & visitor) {
+		SizeListener & listener = dynamic_cast<SizeListener &>(visitor);
+		listener.visit(*this);
 	}
 }

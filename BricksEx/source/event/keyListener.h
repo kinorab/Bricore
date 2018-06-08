@@ -8,10 +8,10 @@ namespace game {
 	class KeyListener :
 		public EventListener {
 	public:
-		explicit KeyListener(std::function<void(KeyEvent *)> callback);
+		explicit KeyListener(std::function<void(KeyEvent &)> callback);
 		virtual ~KeyListener() = default;
-		virtual void visit(KeyEvent * visitable);
+		virtual void visit(KeyEvent & visitable);
 	private:
-		std::function<void(KeyEvent *)> callback;
+		std::function<void(KeyEvent &)> callback;
 	};
 }

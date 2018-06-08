@@ -10,10 +10,6 @@ namespace game {
 		this->type = type;
 	}
 
-	void Event::visitFailedHandler() {
-		throw std::invalid_argument("Invalid visitor.");
-	}
-
 	bool Event::getBubbles() const {
 		return bubbles;
 	}

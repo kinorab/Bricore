@@ -9,6 +9,6 @@ namespace game {
 	public:
 		KeyEvent(EventType type, sf::Event::KeyEvent eventData);
 		virtual ~KeyEvent() = default;
-		virtual void accept(EventListener * visitor) override;
+		virtual void accept(EventListener & visitor) override;
 	};
 }

@@ -9,6 +9,6 @@ namespace game {
 	public:
 		JoystickConnectEvent(EventType type, sf::Event::JoystickConnectEvent eventData);
 		virtual ~JoystickConnectEvent() = default;
-		virtual void accept(EventListener * visitor) override;
+		virtual void accept(EventListener & visitor) override;
 	};
 }

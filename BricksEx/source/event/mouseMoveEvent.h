@@ -9,6 +9,6 @@ namespace game {
 	public:
 		MouseMoveEvent(EventType type, sf::Event::MouseMoveEvent eventData);
 		virtual ~MouseMoveEvent() = default;
-		virtual void accept(EventListener * visitor) override;
+		virtual void accept(EventListener & visitor) override;
 	};
 }

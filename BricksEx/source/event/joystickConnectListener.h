@@ -8,10 +8,10 @@ namespace game {
 	class JoystickConnectListener :
 		public EventListener {
 	public:
-		explicit JoystickConnectListener(std::function<void(JoystickConnectEvent *)> callback);
+		explicit JoystickConnectListener(std::function<void(JoystickConnectEvent &)> callback);
 		virtual ~JoystickConnectListener() = default;
-		virtual void visit(JoystickConnectEvent * visitable);
+		virtual void visit(JoystickConnectEvent & visitable);
 	private:
-		std::function<void(JoystickConnectEvent *)> callback;
+		std::function<void(JoystickConnectEvent &)> callback;
 	};
 }

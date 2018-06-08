@@ -7,13 +7,8 @@ namespace game {
 		sf::Event::SensorEvent(eventData) {
 	}
 
-	void SensorEvent::accept(EventListener * visitor) {
-		SensorListener * listener = dynamic_cast<SensorListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void SensorEvent::accept(EventListener & visitor) {
+		SensorListener & listener = dynamic_cast<SensorListener &>(visitor);
+		listener.visit(*this);
 	}
 }

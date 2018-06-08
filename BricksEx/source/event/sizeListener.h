@@ -8,10 +8,10 @@ namespace game {
 	class SizeListener :
 		public EventListener {
 	public:
-		explicit SizeListener(std::function<void(SizeEvent *)> callback);
+		explicit SizeListener(std::function<void(SizeEvent &)> callback);
 		virtual ~SizeListener() = default;
-		virtual void visit(SizeEvent * visitable);
+		virtual void visit(SizeEvent & visitable);
 	private:
-		std::function<void(SizeEvent *)> callback;
+		std::function<void(SizeEvent &)> callback;
 	};
 }

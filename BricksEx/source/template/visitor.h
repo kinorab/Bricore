@@ -7,7 +7,7 @@ template<typename Type>
 class Visitor<Type> {
 public:
 	virtual void visitFailedHandler() = 0;
-	virtual void visit(Type * visitable) {
+	virtual void visit(Type & visitable) {
 		visitFailedHandler();
 	}
 };
@@ -18,7 +18,7 @@ class Visitor<Type, Types...> :
 public:
 	using Visitor<Types...>::visit;
 	using Visitor<Types...>::visitFailedHandler;
-	virtual void visit(Type * visitable) {
+	virtual void visit(Type & visitable) {
 		visitFailedHandler();
 	}
 };

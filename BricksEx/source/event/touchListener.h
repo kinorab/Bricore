@@ -8,10 +8,10 @@ namespace game {
 	class TouchListener :
 		public EventListener {
 	public:
-		explicit TouchListener(std::function<void(TouchEvent *)> callback);
+		explicit TouchListener(std::function<void(TouchEvent &)> callback);
 		virtual ~TouchListener() = default;
-		virtual void visit(TouchEvent * visitable);
+		virtual void visit(TouchEvent & visitable);
 	private:
-		std::function<void(TouchEvent *)> callback;
+		std::function<void(TouchEvent &)> callback;
 	};
 }

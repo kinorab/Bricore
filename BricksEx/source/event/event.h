@@ -28,7 +28,6 @@ namespace game {
 		virtual void preventDefault();
 	protected:
 		Event(EventType type, bool bubbles, bool cancelable);
-		virtual void visitFailedHandler() override;
 	private:
 		bool bubbles;
 		bool cancelable;

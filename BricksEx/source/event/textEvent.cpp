@@ -7,13 +7,8 @@ namespace game {
 		sf::Event::TextEvent(eventData) {
 	}
 
-	void TextEvent::accept(EventListener * visitor) {
-		TextListener * listener = dynamic_cast<TextListener *>(visitor);
-		if (listener) {
-			listener->visit(this);
-		}
-		else {
-			visitFailedHandler();
-		}
+	void TextEvent::accept(EventListener & visitor) {
+		TextListener & listener = dynamic_cast<TextListener &>(visitor);
+		listener.visit(*this);
 	}
 }
