@@ -8,7 +8,6 @@
 #include <SFML/Window/Export.hpp>
 #include <map>
 #include <atomic>
-#include <thread>
 
 class Stage;
 
@@ -25,12 +24,10 @@ public:
 private:
 	virtual void settleWindow();
 	virtual void renderFunc();
-
+	virtual void handleEvents(bool & finishing);
 	game::SFMLEventQueue eventQueue;
 	game::SFMLMouseHandler mouseHandler;
 	game::SFMLKeyboardHandler keyboardHandler;
-	std::atomic<bool> finished;
-	std::thread renderThread;
 	std::unique_ptr<sf::RenderWindow> window;
 	std::shared_ptr<Stage> stage;
 	Graphics graph;
