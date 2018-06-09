@@ -25,9 +25,6 @@ public:
 	virtual void predictUpdate(const float updateSpan);
 	virtual void update(const float updateSpan) override;
 private:
-	static bool instantiated;
-	virtual bool getInstantiated() const;
-	virtual void setInstantiated(bool value);
 	virtual void onKeyPressed(game::KeyEvent & event);
 	virtual void onKeyReleased(game::KeyEvent & event);
 	virtual void onMouseEntered(game::MouseMoveEvent & event);

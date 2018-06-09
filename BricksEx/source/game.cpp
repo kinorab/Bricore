@@ -25,15 +25,9 @@ void Game::run() {
 	renderThread = std::thread(std::bind(&Game::renderFunc, this));
 	Event nextEvent;
 	while (!finished && window->waitEvent(nextEvent)) {
-		pushEvent(nextEvent);
+		eventQueue.push(nextEvent);
 	}
 	window->close();
-}
-
-void Game::pushEvent(const Event & event) {
-	eventQueueMutex.lock();
-	eventQueue.push(event);
-	eventQueueMutex.unlock();
 }
 
 void Game::settleWindow() {
@@ -43,14 +37,6 @@ void Game::settleWindow() {
 	ImmAssociateContext(window->getSystemHandle(), 0);
 	//window.setIcon(graph.getIconSize().x, graph.getIconSize().y, graph.getIcon());
 	window->setActive(false);
-}
-
-Event Game::popEvent() {
-	eventQueueMutex.lock();
-	Event event = eventQueue.front();
-	eventQueue.pop();
-	eventQueueMutex.unlock();
-	return event;
 }
 
 void Game::handleKeyEvent() {
@@ -77,7 +63,8 @@ void Game::handleKeyEvent() {
 
 void Game::handleMouseEvent() {
 	if (currentEvent.type == Event::MouseMoved) {
-		mousePosition = { currentEvent.mouseMove.x, currentEvent.mouseMove.y };
+		sf::Vector2i mousePosition = { currentEvent.mouseMove.x, currentEvent.mouseMove.y };
+		std::cout << currentEvent.mouseMove.x << ", " << currentEvent.mouseMove.y << std::endl;
 		std::shared_ptr<game::InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
 			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
@@ -124,13 +111,13 @@ void Game::handleMouseEvent() {
 			}
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
-				[this](std::shared_ptr<game::InteractiveObject> & node) {
+				[&](std::shared_ptr<game::InteractiveObject> & node) {
 				game::MouseMoveEvent event(game::EventType::MouseLeft, { mousePosition.x, mousePosition.y});
 				node->dispatchEvent(event);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
-				[this](std::shared_ptr<game::InteractiveObject> & node) {
+				[&](std::shared_ptr<game::InteractiveObject> & node) {
 				game::MouseMoveEvent event(game::EventType::MouseEntered, { mousePosition.x, mousePosition.y });
 				node->dispatchEvent(event);
 			});
@@ -150,7 +137,8 @@ void Game::handleMouseEvent() {
 		Event event;
 		event.type = Event::MouseMoved;
 		event.mouseMove = { -1, -1 };
-		pushEvent(event);
+		std::cout << "left\n";
+		eventQueue.push(event);
 	}
 }
 
@@ -178,7 +166,7 @@ void Game::renderFunc() {
 		elapsed += distribute;
 		renderElapsed += distribute;
 		while (!eventQueue.empty()) {
-			currentEvent = popEvent();
+			currentEvent = eventQueue.pop();
 			handleKeyEvent();
 			handleMouseEvent();
 			handleGraphicsEvent();

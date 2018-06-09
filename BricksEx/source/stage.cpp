@@ -14,8 +14,6 @@
 #include "stuff/player.h"
 #include "stuff/brick.h"
 
-bool Stage::instantiated = false;
-
 Stage::Stage() : 
 	hud(new HUD()),
 	player(new Player()),
@@ -27,10 +25,7 @@ Stage::Stage() :
 	ballPredict(nullptr),
 	brickPredict(nullptr),
 	obstaclePredict(nullptr) {
-	// presettle mainBall's position
-	if (getInstantiated()) {
-		throw std::invalid_argument("This class can only be instantiated once.");
-	}
+	// settle mainBall's position
 
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, mouseLight });
@@ -41,13 +36,11 @@ Stage::Stage() :
 	addListener(game::EventType::MouseLeft, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseLeft, this, _1)));
 	addListener(game::EventType::MouseMoved, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseMoved, this, _1)));
 	addListener(game::EventType::MouseButtonPressed, std::make_shared<game::MouseButtonListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
-	setInstantiated(true);
 }
 
 Stage::~Stage() {
 	AudioManager::getInstance().bgmusic.stop();
 	AudioManager::getInstance().sound1.stop();
-	setInstantiated(false);
 }
 
 void Stage::predictUpdate(const float updateSpan) {
@@ -93,14 +86,6 @@ void Stage::update(const float updateSpan) {
 	}
 
 	mouseLight->update(updateSpan);
-}
-
-bool Stage::getInstantiated() const {
-	return Stage::instantiated;
-}
-
-void Stage::setInstantiated(bool value) {
-	Stage::instantiated = value;
 }
 
 void Stage::onKeyPressed(game::KeyEvent & event) {

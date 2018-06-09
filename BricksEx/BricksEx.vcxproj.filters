@@ -65,6 +65,7 @@
     <ClCompile Include="source\event\touchListener.cpp" />
     <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
     <ClCompile Include="source\gameSys\effect\normalEffect.cpp" />
+    <ClCompile Include="source\SFMLEventQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="source\template\visitable.h" />
     <ClInclude Include="source\template\visitor.h" />
     <ClInclude Include="source\template\acyclicVisitable.h" />
+    <ClInclude Include="source\SFMLEventQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />
