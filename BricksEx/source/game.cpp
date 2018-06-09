@@ -15,8 +15,7 @@ Game::Game() :
 		, "BricksEx", Style::Close, graph.getSettings()));
 }
 
-Game::~Game() {
-}
+Game::~Game() = default;
 
 void Game::run() {
 	settleWindow();
