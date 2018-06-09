@@ -1,5 +1,4 @@
 #include "game.h"
-#include "event/keyEvent.h"
 #include "manager/audioManager.h"
 #include "definition/define.h"
 #include "stage.h"
@@ -38,39 +37,8 @@ void Game::settleWindow() {
 	window->setActive(false);
 }
 
-void Game::handleKeyEvent() {
-	if (currentEvent.type != Event::KeyPressed
-		&& currentEvent.type != Event::KeyReleased) {
-		return;
-	}
-
-	game::EventType eventType;
-	if (currentEvent.type == Event::KeyPressed) {
-		if (keyDown[currentEvent.key.code]) return;
-		keyDown[currentEvent.key.code] = true;
-		eventType = game::EventType::KeyPressed;
-	}
-	else if (currentEvent.type == Event::KeyReleased) {
-		if (!keyDown[currentEvent.key.code]) return;
-		keyDown[currentEvent.key.code] = false;
-		eventType = game::EventType::KeyReleased;
-	}
-
-	game::KeyEvent event(eventType, currentEvent.key);
-	stage->dispatchEvent(event);
-}
-
-void Game::handleGraphicsEvent() {
-	//window.create(window.getSystemHandle(), settings);
-}
-
 void Game::renderFunc() {
 	AudioManager::getInstance().initialize();
-	for (Keyboard::Key i = Keyboard::Unknown;
-		i < Keyboard::Unknown + Keyboard::KeyCount;
-		i = static_cast<Keyboard::Key>(i + 1)) {
-		keyDown.insert({ i, false });
-	}
 	// display in milliseconds
 	constexpr float updateSpan = 0.013f * 1000.f;
 	Time elapsed = milliseconds(0);
@@ -85,9 +53,8 @@ void Game::renderFunc() {
 		renderElapsed += distribute;
 		while (!eventQueue.empty()) {
 			currentEvent = eventQueue.pop();
-			handleKeyEvent();
 			mouseHandler.handle(currentEvent, *stage);
-			handleGraphicsEvent();
+			keyboardHandler.handle(currentEvent, *stage);
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;
 			}
@@ -95,12 +62,12 @@ void Game::renderFunc() {
 		// max fixed at 1.5x current fps
 		renderElapsed = std::min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 
-		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
+		while (elapsed.asMilliseconds() >= updateSpan) {
 			stage->update(updateSpan);
 			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
 		}
 
-		if (renderElapsed.asMicroseconds() >= graph.getFrameSpan() * 1000.f) {
+		if (renderElapsed.asMilliseconds() >= graph.getFrameSpan()) {
 			stage->predictUpdate(elapsed.asMilliseconds() / updateSpan);
 			window->draw(*stage);
 			window->display();

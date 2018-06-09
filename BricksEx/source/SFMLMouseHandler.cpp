@@ -8,7 +8,7 @@ namespace game {
 		clientSize(clientSize) {
 	}
 
-	void SFMLMouseHandler::handle(const sf::Event & event, game::Container & root) {
+	void SFMLMouseHandler::handle(const sf::Event & event, Container & root) {
 		if (event.type == sf::Event::MouseMoved) {
 			handleMouseMove(event, root);
 		}
@@ -23,34 +23,34 @@ namespace game {
 		}
 	}
 
-	void SFMLMouseHandler::handleMouseButtonPressed(const sf::Event & event, game::Container & root) {
+	void SFMLMouseHandler::handleMouseButtonPressed(const sf::Event & event, Container & root) {
 		if (!previousContactNode) {
 			return;
 		}
 
-		game::MouseButtonEvent gameEvent(game::EventType::MouseButtonPressed, event.mouseButton);
+		MouseButtonEvent gameEvent(EventType::MouseButtonPressed, event.mouseButton);
 		previousContactNode->dispatchEvent(gameEvent);
 	}
 
-	void SFMLMouseHandler::handleMouseButtonReleased(const sf::Event & event, game::Container & root) {
+	void SFMLMouseHandler::handleMouseButtonReleased(const sf::Event & event, Container & root) {
 		if (!previousContactNode) {
 			return;
 		}
 
-		game::MouseButtonEvent gameEvent(game::EventType::MouseButtonReleased, event.mouseButton);
+		MouseButtonEvent gameEvent(EventType::MouseButtonReleased, event.mouseButton);
 		previousContactNode->dispatchEvent(gameEvent);
 	}
 
-	void SFMLMouseHandler::handleMouseLeft(const sf::Event & event, game::Container & root) {
+	void SFMLMouseHandler::handleMouseLeft(const sf::Event & event, Container & root) {
 		sf::Event newEvent;
 		newEvent.type = sf::Event::MouseMoved;
 		newEvent.mouseMove = { -1, -1 };
 		handleMouseMove(newEvent, root);
 	}
 
-	void SFMLMouseHandler::handleMouseMove(const sf::Event & event, game::Container & root) {
+	void SFMLMouseHandler::handleMouseMove(const sf::Event & event, Container & root) {
 		sf::Vector2i mousePosition = { event.mouseMove.x, event.mouseMove.y };
-		std::shared_ptr<game::InteractiveObject> contactNode;
+		std::shared_ptr<InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > clientSize.x
 			|| mousePosition.y < 0 || mousePosition.y > clientSize.y) {
 			contactNode = nullptr;
@@ -58,16 +58,16 @@ namespace game {
 		else {
 			contactNode = root.getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
-				game::MouseMoveEvent event(game::EventType::MouseMoved, event.mouseMove);
+				MouseMoveEvent event(EventType::MouseMoved, event.mouseMove);
 				contactNode->dispatchEvent(event);
 			}
 		}
 
 		if (contactNode != previousContactNode) {
-			std::vector<std::shared_ptr<game::InteractiveObject>> previousNodes;
-			for (std::shared_ptr<game::InteractiveObject> node = previousContactNode; node;) {
+			std::vector<std::shared_ptr<InteractiveObject>> previousNodes;
+			for (std::shared_ptr<InteractiveObject> node = previousContactNode; node;) {
 				previousNodes.push_back(node);
-				game::Container * parent = node->getParent();
+				Container * parent = node->getParent();
 				if (parent) {
 					node = parent->shared_from_this();
 				}
@@ -76,10 +76,10 @@ namespace game {
 				}
 			}
 
-			std::vector<std::shared_ptr<game::InteractiveObject>> currentNodes;
-			for (std::shared_ptr<game::InteractiveObject> node = contactNode; node;) {
+			std::vector<std::shared_ptr<InteractiveObject>> currentNodes;
+			for (std::shared_ptr<InteractiveObject> node = contactNode; node;) {
 				currentNodes.push_back(node);
-				game::Container * parent = node->getParent();
+				Container * parent = node->getParent();
 				if (parent) {
 					node = parent->shared_from_this();
 				}
@@ -96,14 +96,14 @@ namespace game {
 			}
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
-				[&](std::shared_ptr<game::InteractiveObject> & node) {
-				game::MouseMoveEvent gameEvent(game::EventType::MouseLeft, { mousePosition.x, mousePosition.y });
+				[&](std::shared_ptr<InteractiveObject> & node) {
+				MouseMoveEvent gameEvent(EventType::MouseLeft, { mousePosition.x, mousePosition.y });
 				node->dispatchEvent(gameEvent);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
-				[&](std::shared_ptr<game::InteractiveObject> & node) {
-				game::MouseMoveEvent gameEvent(game::EventType::MouseEntered, { mousePosition.x, mousePosition.y });
+				[&](std::shared_ptr<InteractiveObject> & node) {
+				MouseMoveEvent gameEvent(EventType::MouseEntered, { mousePosition.x, mousePosition.y });
 				node->dispatchEvent(gameEvent);
 			});
 

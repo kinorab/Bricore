@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\SFMLKeyboardHandler.cpp" />
     <ClCompile Include="source\SFMLMouseHandler.cpp" />
     <ClCompile Include="source\SFMLEventQueue.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="source\UI\textField.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\SFMLKeyboardHandler.h" />
     <ClInclude Include="source\SFMLMouseHandler.h" />
     <ClInclude Include="source\SFMLEventQueue.h" />
     <ClInclude Include="source\event\joystickButtonListener.h" />

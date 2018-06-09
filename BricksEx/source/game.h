@@ -4,7 +4,7 @@
 #include "interact/interactiveObject.h"
 #include "SFMLEventQueue.h"
 #include "SFMLMouseHandler.h"
-#include <SFML/Window/Event.hpp>
+#include "SFMLKeyboardHandler.h"
 #include <SFML/Window/Export.hpp>
 #include <map>
 #include <atomic>
@@ -24,14 +24,12 @@ public:
 
 private:
 	virtual void settleWindow();
-	virtual void handleKeyEvent();
-	virtual void handleGraphicsEvent();
 	virtual void renderFunc();
 
 	game::SFMLEventQueue eventQueue;
 	game::SFMLMouseHandler mouseHandler;
+	game::SFMLKeyboardHandler keyboardHandler;
 	std::atomic<bool> finished;
-	std::map<sf::Keyboard::Key, bool> keyDown;
 	std::thread renderThread;
 	sf::Event currentEvent;
 	std::unique_ptr<sf::RenderWindow> window;
