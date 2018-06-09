@@ -1,7 +1,5 @@
 #include "game.h"
 #include "event/keyEvent.h"
-#include "event/mouseButtonEvent.h"
-#include "event/mouseMoveEvent.h"
 #include "manager/audioManager.h"
 #include "definition/define.h"
 #include "stage.h"
@@ -12,7 +10,8 @@ using namespace sf;
 
 Game::Game() :
 	finished(false),
-	stage(new Stage()) {
+	stage(new Stage()),
+	mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }) {
 	window.reset(new RenderWindow(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
 		, "BricksEx", Style::Close, graph.getSettings()));
 }
@@ -61,87 +60,6 @@ void Game::handleKeyEvent() {
 	stage->dispatchEvent(event);
 }
 
-void Game::handleMouseEvent() {
-	if (currentEvent.type == Event::MouseMoved) {
-		sf::Vector2i mousePosition = { currentEvent.mouseMove.x, currentEvent.mouseMove.y };
-		std::cout << currentEvent.mouseMove.x << ", " << currentEvent.mouseMove.y << std::endl;
-		std::shared_ptr<game::InteractiveObject> contactNode;
-		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
-			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
-			contactNode = nullptr;
-		}
-		else {
-			contactNode = stage->getObjectUnderPoint(sf::Vector2f(mousePosition));
-			if (contactNode) {
-				game::MouseMoveEvent event(game::EventType::MouseMoved, currentEvent.mouseMove);
-				contactNode->dispatchEvent(event);
-			}
-		}
-
-		if (contactNode != previousContactNode) {
-			std::vector<std::shared_ptr<game::InteractiveObject>> previousNodes;
-			for (std::shared_ptr<game::InteractiveObject> node = previousContactNode; node;) {
-				previousNodes.push_back(node);
-				game::Container * parent = node->getParent();
-				if (parent) {
-					node = parent->shared_from_this();
-				}
-				else {
-					node = nullptr;
-				}
-			}
-
-			std::vector<std::shared_ptr<game::InteractiveObject>> currentNodes;
-			for (std::shared_ptr<game::InteractiveObject> node = contactNode; node;) {
-				currentNodes.push_back(node);
-				game::Container * parent = node->getParent();
-				if (parent) {
-					node = parent->shared_from_this();
-				}
-				else {
-					node = nullptr;
-				}
-			}
-
-			int sameNodeCount = 0;
-			if (previousContactNode && contactNode) {
-				while (*(previousNodes.rbegin() + sameNodeCount) == *(currentNodes.rbegin() + sameNodeCount)) {
-					sameNodeCount += 1;
-				}
-			}
-
-			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
-				[&](std::shared_ptr<game::InteractiveObject> & node) {
-				game::MouseMoveEvent event(game::EventType::MouseLeft, { mousePosition.x, mousePosition.y});
-				node->dispatchEvent(event);
-			});
-
-			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
-				[&](std::shared_ptr<game::InteractiveObject> & node) {
-				game::MouseMoveEvent event(game::EventType::MouseEntered, { mousePosition.x, mousePosition.y });
-				node->dispatchEvent(event);
-			});
-
-			previousContactNode = contactNode;
-		}
-	}
-	else if (currentEvent.type == Event::MouseButtonPressed && previousContactNode) {
-		game::MouseButtonEvent event(game::EventType::MouseButtonPressed, currentEvent.mouseButton);
-		previousContactNode->dispatchEvent(event);
-	}
-	else if (currentEvent.type == Event::MouseButtonReleased && previousContactNode) {
-		game::MouseButtonEvent event(game::EventType::MouseButtonReleased, currentEvent.mouseButton);
-		previousContactNode->dispatchEvent(event);
-	}
-	else if (currentEvent.type == Event::MouseLeft) {
-		Event event;
-		event.type = Event::MouseMoved;
-		event.mouseMove = { -1, -1 };
-		std::cout << "left\n";
-		eventQueue.push(event);
-	}
-}
-
 void Game::handleGraphicsEvent() {
 	//window.create(window.getSystemHandle(), settings);
 }
@@ -168,7 +86,7 @@ void Game::renderFunc() {
 		while (!eventQueue.empty()) {
 			currentEvent = eventQueue.pop();
 			handleKeyEvent();
-			handleMouseEvent();
+			mouseHandler.handle(currentEvent, *stage);
 			handleGraphicsEvent();
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;

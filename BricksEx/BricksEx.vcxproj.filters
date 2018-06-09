@@ -66,6 +66,7 @@
     <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
     <ClCompile Include="source\gameSys\effect\normalEffect.cpp" />
     <ClCompile Include="source\SFMLEventQueue.cpp" />
+    <ClCompile Include="source\SFMLMouseHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="source\template\visitor.h" />
     <ClInclude Include="source\template\acyclicVisitable.h" />
     <ClInclude Include="source\SFMLEventQueue.h" />
+    <ClInclude Include="source\SFMLMouseHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />
