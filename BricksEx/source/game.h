@@ -31,7 +31,6 @@ private:
 	game::SFMLKeyboardHandler keyboardHandler;
 	std::atomic<bool> finished;
 	std::thread renderThread;
-	sf::Event currentEvent;
 	std::unique_ptr<sf::RenderWindow> window;
 	std::shared_ptr<Stage> stage;
 	Graphics graph;

@@ -38,7 +38,6 @@ void Game::settleWindow() {
 
 void Game::renderFunc() {
 	AudioManager::getInstance().initialize();
-	// display in milliseconds
 	constexpr float updateSpan = 0.013f * 1000.f;
 	Time elapsed = milliseconds(0);
 	Time renderElapsed = milliseconds(0);
@@ -51,14 +50,14 @@ void Game::renderFunc() {
 		elapsed += distribute;
 		renderElapsed += distribute;
 		while (!eventQueue.empty()) {
-			currentEvent = eventQueue.pop();
+			sf::Event currentEvent = eventQueue.pop();
 			mouseHandler.handle(currentEvent, *stage);
 			keyboardHandler.handle(currentEvent, *stage);
 			if (currentEvent.type == Event::Closed) {
 				finishing = true;
 			}
 		}
-		// max fixed at 1.5x current fps
+		// maximum elapsed cap
 		renderElapsed = std::min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 
 		while (elapsed.asMilliseconds() >= updateSpan) {
