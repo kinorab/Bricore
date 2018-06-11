@@ -1,4 +1,5 @@
-#include "definition/define.h"
+#include "definition/gameState.h"
+#include "definition/utility.h"
 #include "particleSystem.h"
 #include <cmath>
 

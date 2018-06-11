@@ -1,6 +1,7 @@
 #include "brick.h"
 #include "ball.h"
-#include "../definition/define.h"
+#include "../definition/gameState.h"
+#include "../definition/utility.h"
 #include "../manager/textureManager.h"
 #include "../gameSys/LVDeploy.h"
 #include <SFML/Graphics.hpp>

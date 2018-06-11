@@ -5,7 +5,6 @@
     <ClCompile Include="source\stuff\block.cpp" />
     <ClCompile Include="source\stuff\brick.cpp" />
     <ClCompile Include="source\interact\container.cpp" />
-    <ClCompile Include="source\definition\define.cpp" />
     <ClCompile Include="source\definition\utility.cpp" />
     <ClCompile Include="source\stuff\ellipse.cpp" />
     <ClCompile Include="source\event\event.cpp" />
@@ -68,6 +67,7 @@
     <ClCompile Include="source\SFMLEventQueue.cpp" />
     <ClCompile Include="source\SFMLMouseHandler.cpp" />
     <ClCompile Include="source\SFMLKeyboardHandler.cpp" />
+    <ClCompile Include="source\definition\gameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
@@ -75,7 +75,6 @@
     <ClInclude Include="source\stuff\block.h" />
     <ClInclude Include="source\stuff\brick.h" />
     <ClInclude Include="source\interact\container.h" />
-    <ClInclude Include="source\definition\define.h" />
     <ClInclude Include="source\definition\diagonalPoint.h" />
     <ClInclude Include="source\definition\intersects.h" />
     <ClInclude Include="source\definition\matrix.h" />
@@ -149,6 +148,7 @@
     <ClInclude Include="source\SFMLEventQueue.h" />
     <ClInclude Include="source\SFMLMouseHandler.h" />
     <ClInclude Include="source\SFMLKeyboardHandler.h" />
+    <ClInclude Include="source\definition\gameState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

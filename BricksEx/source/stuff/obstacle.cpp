@@ -2,7 +2,8 @@
 #include "block.h"
 #include "ball.h"
 #include "../gameSys/LVDeploy.h"
-#include "../definition/define.h"
+#include "../definition/gameState.h"
+#include "../definition/utility.h"
 #include "../definition/intersects.h"
 #include <SFML/Graphics.hpp>
 

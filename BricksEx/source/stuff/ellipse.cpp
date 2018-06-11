@@ -1,5 +1,6 @@
 #include "ellipse.h"
-#include "../definition/define.h"
+#include "../definition/gameState.h"
+#include "../definition/utility.h"
 
 using namespace std;
 using namespace sf;

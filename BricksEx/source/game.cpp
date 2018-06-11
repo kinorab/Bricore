@@ -1,6 +1,7 @@
 #include "game.h"
 #include "manager/audioManager.h"
-#include "definition/define.h"
+#include "definition/gameState.h"
+#include "definition/utility.h"
 #include "stage.h"
 #include <SFML/Graphics.hpp>
 #include <Windows.h>

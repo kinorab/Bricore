@@ -1,5 +1,6 @@
 #include "player.h"
-#include "../definition/define.h"
+#include "../definition/gameState.h"
+#include "../definition/utility.h"
 #include "../definition/intersects.h"
 #include "../manager/audioManager.h"
 #include <SFML/Graphics.hpp>

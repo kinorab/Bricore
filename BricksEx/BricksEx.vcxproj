@@ -51,7 +51,7 @@
     <ClCompile Include="source\stuff\block.cpp" />
     <ClCompile Include="source\stuff\brick.cpp" />
     <ClCompile Include="source\interact\container.cpp" />
-    <ClCompile Include="source\definition\define.cpp" />
+    <ClCompile Include="source\definition\gameState.cpp" />
     <ClCompile Include="source\definition\utility.cpp" />
     <ClCompile Include="source\stuff\ellipse.cpp" />
     <ClCompile Include="source\event\event.cpp" />
@@ -126,7 +126,7 @@
     <ClInclude Include="source\stuff\block.h" />
     <ClInclude Include="source\stuff\brick.h" />
     <ClInclude Include="source\interact\container.h" />
-    <ClInclude Include="source\definition\define.h" />
+    <ClInclude Include="source\definition\gameState.h" />
     <ClInclude Include="source\definition\diagonalPoint.h" />
     <ClInclude Include="source\definition\intersects.h" />
     <ClInclude Include="source\definition\matrix.h" />

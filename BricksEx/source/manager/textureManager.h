@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../singleton.h"
+#include "../template/singleton.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <memory>
 #include <unordered_map>
