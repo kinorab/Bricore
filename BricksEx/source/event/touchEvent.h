@@ -1,11 +1,11 @@
 #pragma once
 
-#include "event.h"
+#include "UIEvent.h"
 
 namespace game {
 	class TouchEvent :
 		public sf::Event::TouchEvent,
-		public Event {
+		public UIEvent {
 	public:
 		TouchEvent(EventType type, sf::Event::TouchEvent eventData);
 		virtual ~TouchEvent() = default;

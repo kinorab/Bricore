@@ -3,7 +3,7 @@
 
 namespace game {
 	MouseMoveEvent::MouseMoveEvent(EventType type, sf::Event::MouseMoveEvent eventData) :
-		Event(type, true, true),
+		UIEvent(type, true, true),
 		sf::Event::MouseMoveEvent(eventData) {
 	}
 

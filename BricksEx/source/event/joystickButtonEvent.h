@@ -1,11 +1,11 @@
 #pragma once
 
-#include "event.h"
+#include "UIEvent.h"
 
 namespace game {
 	class JoystickButtonEvent :
 		public sf::Event::JoystickButtonEvent,
-		public Event {
+		public UIEvent {
 	public:
 		JoystickButtonEvent(EventType type, sf::Event::JoystickButtonEvent eventData);
 		virtual ~JoystickButtonEvent() = default;

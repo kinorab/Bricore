@@ -1,6 +1,6 @@
 #include "eventSubject.h"
 #include "event.h"
-#include "dispatchHelper.h"
+#include <algorithm>
 
 namespace game {
 	EventSubject::EventSubject() :
@@ -15,14 +15,6 @@ namespace game {
 	}
 
 	void EventSubject::dispatchEvent(Event & event) {
-		DispatchHelper helper(event);
-		helper.setCurrentTarget(this);
-
-		if (event.getPhase() == EventPhase::NONE) {
-			helper.setTarget(this);
-			helper.setPhase(EventPhase::AT_TARGET);
-		}
-
 		auto listenerRange = listeners.equal_range(event.getType());
 		std::vector<std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
 		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));

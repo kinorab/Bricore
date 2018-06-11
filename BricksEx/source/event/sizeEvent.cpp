@@ -3,7 +3,7 @@
 
 namespace game {
 	SizeEvent::SizeEvent(EventType type, sf::Event::SizeEvent eventData) :
-		Event(type, false, false),
+		UIEvent(type, false, false),
 		sf::Event::SizeEvent(eventData) {
 	}
 

@@ -11,6 +11,7 @@ namespace sf {
 
 namespace game {
 	class Container;
+	class UIEvent;
 
 	class InteractiveObject :
 		public EventSubject,
@@ -20,7 +21,7 @@ namespace game {
 		InteractiveObject();
 		virtual ~InteractiveObject();
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
-		virtual void dispatchEvent(Event & event) override;
+		virtual void dispatchEvent(UIEvent & event);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
 		virtual bool getEnabled() const;
 		virtual Container * getParent();

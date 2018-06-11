@@ -1,7 +1,5 @@
 #pragma once
 
-#include "common.h"
-
 template <template <typename...> class Class, typename...Types>
 std::true_type is_base_of_template_impl(const Class<Types...>*) {
 	return std::true_type();

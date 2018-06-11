@@ -7,13 +7,11 @@
 #include <Windows.h>
 #include <future>
 
-using namespace sf;
-
 Game::Game() :
 	stage(new Stage()),
 	mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }) {
-	window.reset(new RenderWindow(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
-		"BricksEx", Style::Close, graph.getSettings()));
+	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
+		"BricksEx", sf::Style::Close, graph.getSettings()));
 }
 
 Game::~Game() = default;
@@ -22,7 +20,7 @@ void Game::run() {
 	settleWindow();
 	AudioManager::getInstance().initialize();
 	std::future<void> renderThread = std::async(std::launch::async, &Game::renderFunc, this);
-	Event nextEvent;
+	sf::Event nextEvent;
 	while (renderThread.wait_for(std::chrono::seconds(0)) != std::future_status::ready && window->waitEvent(nextEvent)) {
 		eventQueue.push(nextEvent);
 	}
@@ -32,7 +30,7 @@ void Game::run() {
 void Game::settleWindow() {
 	window->setMouseCursorVisible(false);
 	window->setVerticalSyncEnabled(true);
-	window->setPosition(Vector2i(window->getPosition().x, 20));
+	window->setPosition(sf::Vector2i(window->getPosition().x, 20));
 	ImmAssociateContext(window->getSystemHandle(), 0);
 	//window.setIcon(graph.getIconSize().x, graph.getIconSize().y, graph.getIcon());
 	window->setActive(false);
@@ -41,7 +39,7 @@ void Game::settleWindow() {
 void Game::renderFunc() {
 	float elapsed = 0;
 	float renderElapsed = 0;
-	Clock clock;
+	sf::Clock clock;
 
 	for (bool finishing = false; !finishing;) {
 		constexpr float updateSpan = 0.013f * 1000.f;
@@ -71,7 +69,7 @@ void Game::handleEvents(bool & finishing) {
 		sf::Event currentEvent = eventQueue.pop();
 		mouseHandler.handle(currentEvent, *stage);
 		keyboardHandler.handle(currentEvent, *stage);
-		if (currentEvent.type == Event::Closed) {
+		if (currentEvent.type == sf::Event::Closed) {
 			finishing = true;
 		}
 	}

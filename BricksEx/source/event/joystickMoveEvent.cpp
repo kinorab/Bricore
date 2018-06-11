@@ -3,7 +3,7 @@
 
 namespace game {
 	JoystickMoveEvent::JoystickMoveEvent(EventType type, sf::Event::JoystickMoveEvent eventData) :
-		Event(type, false, false),
+		UIEvent(type, false, false),
 		sf::Event::JoystickMoveEvent(eventData) {
 	}
 

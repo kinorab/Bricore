@@ -1,11 +1,11 @@
 #pragma once
 
-#include "event.h"
+#include "UIEvent.h"
 
 namespace game {
 	class MouseWheelScrollEvent :
 		public sf::Event::MouseWheelScrollEvent,
-		public Event {
+		public UIEvent {
 	public:
 		MouseWheelScrollEvent(EventType type, sf::Event::MouseWheelScrollEvent eventData);
 		virtual ~MouseWheelScrollEvent() = default;

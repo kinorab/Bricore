@@ -1,5 +1,5 @@
 #include "interactiveObject.h"
-#include "../event/event.h"
+#include "../event/UIEvent.h"
 #include "../event/dispatchHelper.h"
 #include "container.h"
 #include "../definition/utility.h"
@@ -15,9 +15,23 @@ namespace game {
 	InteractiveObject::~InteractiveObject() {
 	}
 
-	void InteractiveObject::dispatchEvent(Event & event) {
-		EventSubject::dispatchEvent(event);
+	void InteractiveObject::dispatchEvent(UIEvent & event) {
 		DispatchHelper helper(event);
+		helper.setCurrentTarget(this);
+
+		if (event.getPhase() == EventPhase::NONE) {
+			helper.setTarget(this);
+			helper.setPhase(EventPhase::AT_TARGET);
+		}
+
+		auto listenerRange = listeners.equal_range(event.getType());
+		std::vector<std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
+		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
+		std::for_each(tempListeners.begin(), tempListeners.end(),
+			[&](std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
+			event.accept(*listener.second.second);
+		});
+
 		if (event.getPhase() == EventPhase::AT_TARGET) {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}

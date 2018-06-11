@@ -3,7 +3,7 @@
 
 namespace game {
 	KeyEvent::KeyEvent(EventType type, sf::Event::KeyEvent eventData) :
-		Event(type, true, true),
+		UIEvent(type, true, true),
 		sf::Event::KeyEvent(eventData) {
 	}
 

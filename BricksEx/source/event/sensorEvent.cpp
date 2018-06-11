@@ -3,7 +3,7 @@
 
 namespace game {
 	SensorEvent::SensorEvent(EventType type, sf::Event::SensorEvent eventData) :
-		Event(type, false, false),
+		UIEvent(type, false, false),
 		sf::Event::SensorEvent(eventData) {
 	}
 

@@ -3,7 +3,7 @@
 
 namespace game {
 	MouseButtonEvent::MouseButtonEvent(EventType type, sf::Event::MouseButtonEvent eventData) :
-		Event(type, true, true),
+		UIEvent(type, true, true),
 		sf::Event::MouseButtonEvent(eventData) {
 	}
 

@@ -1,8 +1,8 @@
 #include "dispatchHelper.h"
-#include "event.h"
+#include "UIEvent.h"
 
 namespace game {
-	DispatchHelper::DispatchHelper(Event & event) :
+	DispatchHelper::DispatchHelper(UIEvent & event) :
 		event(event) {
 	}
 

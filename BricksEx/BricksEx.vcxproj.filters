@@ -7,7 +7,6 @@
     <ClCompile Include="source\interact\container.cpp" />
     <ClCompile Include="source\definition\utility.cpp" />
     <ClCompile Include="source\stuff\ellipse.cpp" />
-    <ClCompile Include="source\event\event.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\gameSys\area.cpp" />
     <ClCompile Include="source\gameSys\LVDeploy.cpp" />
@@ -68,6 +67,8 @@
     <ClCompile Include="source\SFMLMouseHandler.cpp" />
     <ClCompile Include="source\SFMLKeyboardHandler.cpp" />
     <ClCompile Include="source\definition\gameState.cpp" />
+    <ClCompile Include="source\event\UIEvent.cpp" />
+    <ClCompile Include="source\event\event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\eventType.h" />
@@ -80,7 +81,6 @@
     <ClInclude Include="source\definition\matrix.h" />
     <ClInclude Include="source\definition\utility.h" />
     <ClInclude Include="source\stuff\ellipse.h" />
-    <ClInclude Include="source\event\event.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\gameSys\area.h" />
     <ClInclude Include="source\gameSys\LVDeploy.h" />
@@ -140,15 +140,17 @@
     <ClInclude Include="source\event\touchListener.h" />
     <ClInclude Include="source\gameSys\effect\effectSystem.h" />
     <ClInclude Include="source\gameSys\effect\normalEffect.h" />
-    <ClInclude Include="source\template\isBaseOfTemplate.h" />
-    <ClInclude Include="source\template\singleton.h" />
-    <ClInclude Include="source\template\visitable.h" />
-    <ClInclude Include="source\template\visitor.h" />
-    <ClInclude Include="source\template\acyclicVisitable.h" />
     <ClInclude Include="source\SFMLEventQueue.h" />
     <ClInclude Include="source\SFMLMouseHandler.h" />
     <ClInclude Include="source\SFMLKeyboardHandler.h" />
     <ClInclude Include="source\definition\gameState.h" />
+    <ClInclude Include="source\event\UIEvent.h" />
+    <ClInclude Include="source\event\event.h" />
+    <ClInclude Include="source\template\acyclicVisitable.h" />
+    <ClInclude Include="source\template\isBaseOfTemplate.h" />
+    <ClInclude Include="source\template\singleton.h" />
+    <ClInclude Include="source\template\visitable.h" />
+    <ClInclude Include="source\template\visitor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\diagonalPoint.inl" />

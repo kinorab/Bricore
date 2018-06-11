@@ -1,11 +1,11 @@
 #pragma once
 
-#include "event.h"
+#include "UIEvent.h"
 
 namespace game {
 	class SensorEvent :
 		public sf::Event::SensorEvent,
-		public Event {
+		public UIEvent {
 	public:
 		SensorEvent(EventType type, sf::Event::SensorEvent eventData);
 		virtual ~SensorEvent() = default;
