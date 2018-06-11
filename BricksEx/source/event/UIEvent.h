@@ -5,6 +5,8 @@
 #include <SFML\Window\Event.hpp>
 
 namespace game {
+	class EventSubject;
+
 	class UIEvent :
 		public Event {
 		friend class DispatchHelper;

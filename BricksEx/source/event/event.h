@@ -5,7 +5,6 @@
 
 namespace game {
 	class EventListener;
-	class EventSubject;
 
 	class Event :
 		public AcyclicVisitable<EventListener> {
