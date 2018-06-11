@@ -20,9 +20,9 @@ Game::~Game() = default;
 
 void Game::run() {
 	settleWindow();
-	Event nextEvent;
-
+	AudioManager::getInstance().initialize();
 	std::future<void> renderThread = std::async(std::launch::async, &Game::renderFunc, this);
+	Event nextEvent;
 	while (renderThread.wait_for(std::chrono::seconds(0)) != std::future_status::ready && window->waitEvent(nextEvent)) {
 		eventQueue.push(nextEvent);
 	}
@@ -39,31 +39,27 @@ void Game::settleWindow() {
 }
 
 void Game::renderFunc() {
-	AudioManager::getInstance().initialize();
-	constexpr float updateSpan = 0.013f * 1000.f;
-	Time elapsed = milliseconds(0);
-	Time renderElapsed = milliseconds(0);
-	Time distribute = milliseconds(0);
+	float elapsed = 0;
+	float renderElapsed = 0;
 	Clock clock;
-	bool finishing = false;
 
-	while (!finishing) {
-		distribute = std::min<Time>(clock.restart(), milliseconds(500));
-		elapsed += distribute;
-		renderElapsed += distribute;
+	for (bool finishing = false; !finishing;) {
+		constexpr float updateSpan = 0.013f * 1000.f;
+		const float distribute = clock.restart().asSeconds() * 1000;
 		// maximum elapsed cap
-		renderElapsed = std::min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
 		handleEvents(finishing);
-		while (elapsed.asMilliseconds() >= updateSpan) {
+
+		elapsed = std::min<float>(elapsed + distribute, 500);
+		for (; elapsed >= updateSpan; elapsed -= updateSpan) {
 			stage->update(updateSpan);
-			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
 		}
 
-		if (renderElapsed.asMilliseconds() >= graph.getFrameSpan()) {
-			stage->predictUpdate(elapsed.asMilliseconds() / updateSpan);
+		renderElapsed = std::min<float>(renderElapsed + distribute, graph.getFrameSpan() * 1.5f);
+		if (renderElapsed >= graph.getFrameSpan()) {
+			stage->predictUpdate(elapsed / updateSpan);
 			window->draw(*stage);
 			window->display();
-			renderElapsed -= milliseconds(static_cast<Int32>(graph.getFrameSpan()));
+			renderElapsed -= graph.getFrameSpan();
 		}
 	}
 	// finalize...
