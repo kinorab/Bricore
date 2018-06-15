@@ -1,9 +1,9 @@
 #include "SFMLMouseHandler.h"
 #include "definition/utility.h"
-#include "event/mouseButtonEvent.h"
-#include "event/mouseMovedEvent.h"
-#include "event/mouseEnteredEvent.h"
-#include "event/mouseLeftEvent.h"
+#include "event/mouse/mouseButtonEvent.h"
+#include "event/mouse/mouseMovedEvent.h"
+#include "event/mouse/mouseEnteredEvent.h"
+#include "event/mouse/mouseLeftEvent.h"
 
 namespace game {
 	SFMLMouseHandler::SFMLMouseHandler(const sf::Vector2i clientSize) :

@@ -1,10 +1,10 @@
 #include "button.h"
 #include "../definition/utility.h"
-#include "../event/mouseButtonEvent.h"
-#include "../event/mouseButtonListener.h"
-#include "../event/mouseMovedListener.h"
-#include "../event/mouseEnteredListener.h"
-#include "../event/mouseLeftListener.h"
+#include "../event/mouse/mouseButtonEvent.h"
+#include "../event/mouse/mouseButtonListener.h"
+#include "../event/mouse/mouseMovedListener.h"
+#include "../event/mouse/mouseEnteredListener.h"
+#include "../event/mouse/mouseLeftListener.h"
 #include <SFML/Graphics.hpp>
 
 namespace game {

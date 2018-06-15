@@ -1,6 +1,6 @@
 #include "SFMLKeyboardHandler.h"
 #include "definition/utility.h"
-#include "event/keyEvent.h"
+#include "event/keyboard/keyEvent.h"
 
 namespace game {
 	SFMLKeyboardHandler::SFMLKeyboardHandler() {
