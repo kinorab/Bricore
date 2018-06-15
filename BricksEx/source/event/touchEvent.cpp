@@ -8,7 +8,6 @@ namespace game {
 	}
 
 	void TouchEvent::accept(EventListener & visitor) {
-		TouchListener & listener = dynamic_cast<TouchListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<TouchListener &>(visitor).visit(*this);
 	}
 }

@@ -3,7 +3,6 @@
 
 namespace game {
 	void LostFocusEvent::accept(EventListener & visitor) {
-		LostFocusListener & listener = dynamic_cast<LostFocusListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<LostFocusListener &>(visitor).visit(*this);
 	}
 }

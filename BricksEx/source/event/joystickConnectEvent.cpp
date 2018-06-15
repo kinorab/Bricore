@@ -8,7 +8,6 @@ namespace game {
 	}
 
 	void JoystickConnectEvent::accept(EventListener & visitor) {
-		JoystickConnectListener & listener = dynamic_cast<JoystickConnectListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<JoystickConnectListener &>(visitor).visit(*this);
 	}
 }

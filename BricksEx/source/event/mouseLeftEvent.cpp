@@ -3,7 +3,6 @@
 
 namespace game {
 	void MouseLeftEvent::accept(EventListener & visitor) {
-		MouseLeftListener & listener = dynamic_cast<MouseLeftListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<MouseLeftListener &>(visitor).visit(*this);
 	}
 }

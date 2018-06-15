@@ -1,11 +1,12 @@
 #pragma once
 
-#include "UIEvent.h"
+#include "Event.h"
+#include <SFML\Window\Event.hpp>
 
 namespace game {
 	class ResizedEvent :
 		public sf::Event::SizeEvent,
-		public UIEvent {
+		public Event {
 	public:
 		ResizedEvent(sf::Event::SizeEvent eventData);
 		virtual ~ResizedEvent() = default;

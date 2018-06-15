@@ -1,11 +1,12 @@
 #pragma once
 
-#include "UIEvent.h"
+#include "Event.h"
+#include <SFML\Window\Event.hpp>
 
 namespace game {
 	class SensorChangedEvent :
 		public sf::Event::SensorEvent,
-		public UIEvent {
+		public Event {
 	public:
 		SensorChangedEvent(sf::Event::SensorEvent eventData);
 		virtual ~SensorChangedEvent() = default;

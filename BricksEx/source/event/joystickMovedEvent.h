@@ -1,11 +1,12 @@
 #pragma once
 
-#include "UIEvent.h"
+#include "Event.h"
+#include <SFML\Window\Event.hpp>
 
 namespace game {
 	class JoystickMovedEvent :
 		public sf::Event::JoystickMoveEvent,
-		public UIEvent {
+		public Event {
 	public:
 		JoystickMovedEvent(sf::Event::JoystickMoveEvent eventData);
 		virtual ~JoystickMovedEvent() = default;

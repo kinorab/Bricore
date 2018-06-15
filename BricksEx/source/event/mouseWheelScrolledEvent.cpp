@@ -8,7 +8,6 @@ namespace game {
 	}
 
 	void MouseWheelScrolledEvent::accept(EventListener & visitor) {
-		MouseWheelScrolledListener & listener = dynamic_cast<MouseWheelScrolledListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<MouseWheelScrolledListener &>(visitor).visit(*this);
 	}
 }

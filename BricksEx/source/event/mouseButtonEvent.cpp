@@ -8,7 +8,6 @@ namespace game {
 	}
 
 	void MouseButtonEvent::accept(EventListener & visitor) {
-		MouseButtonListener & listener = dynamic_cast<MouseButtonListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<MouseButtonListener &>(visitor).visit(*this);
 	}
 }

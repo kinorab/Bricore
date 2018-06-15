@@ -8,7 +8,6 @@ namespace game {
 	}
 
 	void JoystickButtonEvent::accept(EventListener & visitor) {
-		JoystickButtonListener & listener = dynamic_cast<JoystickButtonListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<JoystickButtonListener &>(visitor).visit(*this);
 	}
 }

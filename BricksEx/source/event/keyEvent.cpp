@@ -8,7 +8,6 @@ namespace game {
 	}
 
 	void KeyEvent::accept(EventListener & visitor) {
-		KeyListener & listener = dynamic_cast<KeyListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<KeyListener &>(visitor).visit(*this);
 	}
 }

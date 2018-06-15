@@ -8,7 +8,6 @@ namespace game {
 	}
 
 	void TextEnteredEvent::accept(EventListener & visitor) {
-		TextEnteredListener & listener = dynamic_cast<TextEnteredListener &>(visitor);
-		listener.visit(*this);
+		dynamic_cast<TextEnteredListener &>(visitor).visit(*this);
 	}
 }
