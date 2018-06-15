@@ -1,5 +1,6 @@
 #include "interactiveObject.h"
 #include "../event/UIEvent.h"
+#include "../event/eventListener.h"
 #include "../event/dispatchHelper.h"
 #include "container.h"
 #include "../definition/utility.h"
@@ -15,6 +16,13 @@ namespace game {
 	InteractiveObject::~InteractiveObject() {
 	}
 
+	int InteractiveObject::addListener(std::type_index eventType, std::shared_ptr<EventListener> listener) {
+		listeners.emplace(eventType, std::pair<const int, std::shared_ptr<EventListener>>(idCount, std::move(listener)));
+		int returnId = idCount;
+		idCount += 1;
+		return returnId;
+	}
+
 	void InteractiveObject::dispatchEvent(UIEvent & event) {
 		DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
@@ -25,10 +33,10 @@ namespace game {
 		}
 
 		auto listenerRange = listeners.equal_range(event.getType());
-		std::vector<std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
+		std::vector<std::pair<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
 		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
 		std::for_each(tempListeners.begin(), tempListeners.end(),
-			[&](std::pair<const EventType, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
+			[&](std::pair<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
 			event.accept(*listener.second.second);
 		});
 

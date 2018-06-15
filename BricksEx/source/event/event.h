@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../template/acyclicVisitable.h"
-#include "eventType.h"
+#include "../common.h"
 
 namespace game {
 	class EventListener;
@@ -10,8 +10,5 @@ namespace game {
 		public AcyclicVisitable<EventListener> {
 	public:
 		virtual ~Event() = default;
-		virtual EventType getType() const;
-	protected:
-		EventType type;
 	};
 }

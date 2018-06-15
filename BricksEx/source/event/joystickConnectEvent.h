@@ -7,8 +7,10 @@ namespace game {
 		public sf::Event::JoystickConnectEvent,
 		public UIEvent {
 	public:
-		JoystickConnectEvent(EventType type, sf::Event::JoystickConnectEvent eventData);
+		JoystickConnectEvent(std::type_index type, sf::Event::JoystickConnectEvent eventData);
 		virtual ~JoystickConnectEvent() = default;
 		virtual void accept(EventListener & visitor) override;
+		class Connected {};
+		class Disconnected {};
 	};
 }

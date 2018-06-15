@@ -2,7 +2,7 @@
 #include "keyListener.h"
 
 namespace game {
-	KeyEvent::KeyEvent(EventType type, sf::Event::KeyEvent eventData) :
+	KeyEvent::KeyEvent(std::type_index type, sf::Event::KeyEvent eventData) :
 		UIEvent(type, true, true),
 		sf::Event::KeyEvent(eventData) {
 	}

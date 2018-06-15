@@ -2,7 +2,7 @@
 #include "joystickButtonListener.h"
 
 namespace game {
-	JoystickButtonEvent::JoystickButtonEvent(EventType type, sf::Event::JoystickButtonEvent eventData) :
+	JoystickButtonEvent::JoystickButtonEvent(std::type_index type, sf::Event::JoystickButtonEvent eventData) :
 		UIEvent(type, false, false),
 		sf::Event::JoystickButtonEvent(eventData) {
 	}

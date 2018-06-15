@@ -13,7 +13,9 @@ class ParticleSystem;
 class HUD;
 namespace game {
 	class KeyEvent;
-	class MouseMoveEvent;
+	class MouseMovedEvent;
+	class MouseEnteredEvent;
+	class MouseLeftEvent;
 	class MouseButtonEvent;
 }
 
@@ -27,9 +29,9 @@ public:
 private:
 	virtual void onKeyPressed(game::KeyEvent & event);
 	virtual void onKeyReleased(game::KeyEvent & event);
-	virtual void onMouseEntered(game::MouseMoveEvent & event);
-	virtual void onMouseLeft(game::MouseMoveEvent & event);
-	virtual void onMouseMoved(game::MouseMoveEvent & event);
+	virtual void onMouseEntered(game::MouseEnteredEvent & event);
+	virtual void onMouseLeft(game::MouseLeftEvent & event);
+	virtual void onMouseMoved(game::MouseMovedEvent & event);
 	virtual void onMouseButtonPressed(game::MouseButtonEvent & event);
 
 	std::shared_ptr<HUD> hud;

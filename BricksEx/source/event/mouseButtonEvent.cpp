@@ -2,7 +2,7 @@
 #include "mouseButtonListener.h"
 
 namespace game {
-	MouseButtonEvent::MouseButtonEvent(EventType type, sf::Event::MouseButtonEvent eventData) :
+	MouseButtonEvent::MouseButtonEvent(std::type_index type, sf::Event::MouseButtonEvent eventData) :
 		UIEvent(type, true, true),
 		sf::Event::MouseButtonEvent(eventData) {
 	}

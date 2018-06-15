@@ -2,7 +2,7 @@
 #include "touchListener.h"
 
 namespace game {
-	TouchEvent::TouchEvent(EventType type, sf::Event::TouchEvent eventData) :
+	TouchEvent::TouchEvent(std::type_index type, sf::Event::TouchEvent eventData) :
 		UIEvent(type, true, true),
 		sf::Event::TouchEvent(eventData) {
 	}

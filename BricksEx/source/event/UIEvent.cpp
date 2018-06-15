@@ -1,13 +1,13 @@
 #include "UIEvent.h"
 
 namespace game {
-	UIEvent::UIEvent(EventType type, bool bubbles, bool cancelable) :
+	UIEvent::UIEvent(std::type_index type, bool bubbles, bool cancelable) :
 		bubbles(bubbles),
 		cancelable(cancelable),
 		defaultPrevented(false),
 		phase(EventPhase::NONE),
-		propagationStopped(false) {
-		this->type = type;
+		propagationStopped(false),
+		type(type) {
 	}
 
 	bool UIEvent::getBubbles() const {
@@ -32,6 +32,10 @@ namespace game {
 
 	EventSubject * UIEvent::getTarget() const {
 		return target;
+	}
+
+	std::type_index UIEvent::getType() const {
+		return type;
 	}
 
 	void UIEvent::stopPropagation() {

@@ -19,7 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\event\closedEvent.cpp" />
+    <ClCompile Include="source\event\closedListener.cpp" />
     <ClCompile Include="source\event\event.cpp" />
+    <ClCompile Include="source\event\gainedFocusEvent.cpp" />
+    <ClCompile Include="source\event\gainedFocusListener.cpp" />
+    <ClCompile Include="source\event\lostFocusEvent.cpp" />
+    <ClCompile Include="source\event\lostFocusListener.cpp" />
+    <ClCompile Include="source\event\mouseEnteredEvent.cpp" />
+    <ClCompile Include="source\event\mouseEnteredListener.cpp" />
+    <ClCompile Include="source\event\mouseLeftEvent.cpp" />
+    <ClCompile Include="source\event\mouseLeftListener.cpp" />
     <ClCompile Include="source\SFMLKeyboardHandler.cpp" />
     <ClCompile Include="source\SFMLMouseHandler.cpp" />
     <ClCompile Include="source\SFMLEventQueue.cpp" />
@@ -29,22 +39,22 @@
     <ClCompile Include="source\event\joystickButtonListener.cpp" />
     <ClCompile Include="source\event\joystickConnectEvent.cpp" />
     <ClCompile Include="source\event\joystickConnectListener.cpp" />
-    <ClCompile Include="source\event\joystickMoveEvent.cpp" />
-    <ClCompile Include="source\event\joystickMoveListener.cpp" />
+    <ClCompile Include="source\event\joystickMovedEvent.cpp" />
+    <ClCompile Include="source\event\joystickMovedListener.cpp" />
     <ClCompile Include="source\event\keyEvent.cpp" />
     <ClCompile Include="source\event\keyListener.cpp" />
     <ClCompile Include="source\event\mouseButtonEvent.cpp" />
     <ClCompile Include="source\event\mouseButtonListener.cpp" />
-    <ClCompile Include="source\event\mouseMoveEvent.cpp" />
-    <ClCompile Include="source\event\mouseMoveListener.cpp" />
-    <ClCompile Include="source\event\mouseWheelScrollEvent.cpp" />
-    <ClCompile Include="source\event\mouseWheelScrollListener.cpp" />
-    <ClCompile Include="source\event\sensorEvent.cpp" />
-    <ClCompile Include="source\event\sensorListener.cpp" />
-    <ClCompile Include="source\event\sizeEvent.cpp" />
-    <ClCompile Include="source\event\sizeListener.cpp" />
-    <ClCompile Include="source\event\textEvent.cpp" />
-    <ClCompile Include="source\event\textListener.cpp" />
+    <ClCompile Include="source\event\mouseMovedEvent.cpp" />
+    <ClCompile Include="source\event\mouseMovedListener.cpp" />
+    <ClCompile Include="source\event\mouseWheelScrolledEvent.cpp" />
+    <ClCompile Include="source\event\mouseWheelScrolledListener.cpp" />
+    <ClCompile Include="source\event\sensorChangedEvent.cpp" />
+    <ClCompile Include="source\event\sensorChangedListener.cpp" />
+    <ClCompile Include="source\event\resizedEvent.cpp" />
+    <ClCompile Include="source\event\resizedListener.cpp" />
+    <ClCompile Include="source\event\textEnteredEvent.cpp" />
+    <ClCompile Include="source\event\textEnteredListener.cpp" />
     <ClCompile Include="source\event\touchEvent.cpp" />
     <ClCompile Include="source\event\touchListener.cpp" />
     <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
@@ -89,7 +99,17 @@
     <ClCompile Include="source\UI\textField.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\event\closedEvent.h" />
+    <ClInclude Include="source\event\closedListener.h" />
     <ClInclude Include="source\event\event.h" />
+    <ClInclude Include="source\event\gainedFocusEvent.h" />
+    <ClInclude Include="source\event\gainedFocusListener.h" />
+    <ClInclude Include="source\event\lostFocusEvent.h" />
+    <ClInclude Include="source\event\lostFocusListener.h" />
+    <ClInclude Include="source\event\mouseEnteredEvent.h" />
+    <ClInclude Include="source\event\mouseEnteredListener.h" />
+    <ClInclude Include="source\event\mouseLeftEvent.h" />
+    <ClInclude Include="source\event\mouseLeftListener.h" />
     <ClInclude Include="source\SFMLKeyboardHandler.h" />
     <ClInclude Include="source\SFMLMouseHandler.h" />
     <ClInclude Include="source\SFMLEventQueue.h" />
@@ -98,26 +118,25 @@
     <ClInclude Include="source\event\joystickButtonEvent.h" />
     <ClInclude Include="source\event\joystickConnectEvent.h" />
     <ClInclude Include="source\event\joystickConnectListener.h" />
-    <ClInclude Include="source\event\joystickMoveEvent.h" />
-    <ClInclude Include="source\event\joystickMoveListener.h" />
+    <ClInclude Include="source\event\joystickMovedEvent.h" />
+    <ClInclude Include="source\event\joystickMovedListener.h" />
     <ClInclude Include="source\event\keyListener.h" />
     <ClInclude Include="source\event\mouseButtonListener.h" />
-    <ClInclude Include="source\event\mouseMoveListener.h" />
-    <ClInclude Include="source\event\mouseWheelScrollEvent.h" />
+    <ClInclude Include="source\event\mouseMovedListener.h" />
+    <ClInclude Include="source\event\mouseWheelScrolledEvent.h" />
     <ClInclude Include="source\event\mouseButtonEvent.h" />
-    <ClInclude Include="source\event\mouseMoveEvent.h" />
+    <ClInclude Include="source\event\mouseMovedEvent.h" />
     <ClInclude Include="source\event\keyEvent.h" />
-    <ClInclude Include="source\event\mouseWheelScrollListener.h" />
-    <ClInclude Include="source\event\sensorEvent.h" />
-    <ClInclude Include="source\event\sensorListener.h" />
-    <ClInclude Include="source\event\sizeEvent.h" />
+    <ClInclude Include="source\event\mouseWheelScrolledListener.h" />
+    <ClInclude Include="source\event\sensorChangedEvent.h" />
+    <ClInclude Include="source\event\sensorChangedListener.h" />
+    <ClInclude Include="source\event\resizedEvent.h" />
     <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\event\eventSubject.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
-    <ClInclude Include="source\event\eventType.h" />
-    <ClInclude Include="source\event\sizeListener.h" />
-    <ClInclude Include="source\event\textListener.h" />
+    <ClInclude Include="source\event\resizedListener.h" />
+    <ClInclude Include="source\event\textEnteredListener.h" />
     <ClInclude Include="source\event\touchEvent.h" />
     <ClInclude Include="source\event\touchListener.h" />
     <ClInclude Include="source\template\acyclicVisitable.h" />
@@ -166,7 +185,7 @@
     <ClInclude Include="source\UI\button.h" />
     <ClInclude Include="source\UI\textButton.h" />
     <ClInclude Include="source\UI\textField.h" />
-    <ClInclude Include="source\event\textEvent.h" />
+    <ClInclude Include="source\event\textEnteredEvent.h" />
     <ClInclude Include="source\template\visitable.h" />
     <ClInclude Include="source\template\visitor.h" />
   </ItemGroup>

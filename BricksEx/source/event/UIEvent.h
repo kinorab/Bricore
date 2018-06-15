@@ -18,10 +18,11 @@ namespace game {
 		virtual bool getDefaultPrevented() const;
 		virtual EventPhase getPhase() const;
 		virtual EventSubject * getTarget() const;
+		virtual std::type_index getType() const;
 		virtual void stopPropagation();
 		virtual void preventDefault();
 	protected:
-		UIEvent(EventType type, bool bubbles, bool cancelable);
+		UIEvent(std::type_index type, bool bubbles, bool cancelable);
 	private:
 		bool bubbles;
 		bool cancelable;
@@ -30,5 +31,6 @@ namespace game {
 		EventPhase phase;
 		bool propagationStopped;
 		EventSubject * target;
+		std::type_index type;
 	};
 }

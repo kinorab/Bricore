@@ -2,7 +2,7 @@
 #include "joystickConnectListener.h"
 
 namespace game {
-	JoystickConnectEvent::JoystickConnectEvent(EventType type, sf::Event::JoystickConnectEvent eventData) :
+	JoystickConnectEvent::JoystickConnectEvent(std::type_index type, sf::Event::JoystickConnectEvent eventData) :
 		UIEvent(type, false, false),
 		sf::Event::JoystickConnectEvent(eventData) {
 	}

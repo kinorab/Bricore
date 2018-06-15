@@ -11,6 +11,7 @@ namespace game {
 		explicit TouchListener(std::function<void(TouchEvent &)> callback);
 		virtual ~TouchListener() = default;
 		virtual void visit(TouchEvent & visitable);
+		virtual std::type_index getEventType() override;
 	private:
 		std::function<void(TouchEvent &)> callback;
 	};

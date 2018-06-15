@@ -11,6 +11,7 @@ namespace game {
 		explicit KeyListener(std::function<void(KeyEvent &)> callback);
 		virtual ~KeyListener() = default;
 		virtual void visit(KeyEvent & visitable);
+		virtual std::type_index getEventType() override;
 	private:
 		std::function<void(KeyEvent &)> callback;
 	};

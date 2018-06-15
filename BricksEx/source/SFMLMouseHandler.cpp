@@ -1,7 +1,9 @@
 #include "SFMLMouseHandler.h"
 #include "definition/utility.h"
 #include "event/mouseButtonEvent.h"
-#include "event/mouseMoveEvent.h"
+#include "event/mouseMovedEvent.h"
+#include "event/mouseEnteredEvent.h"
+#include "event/mouseLeftEvent.h"
 
 namespace game {
 	SFMLMouseHandler::SFMLMouseHandler(const sf::Vector2i clientSize) :
@@ -28,7 +30,7 @@ namespace game {
 			return;
 		}
 
-		MouseButtonEvent gameEvent(EventType::MouseButtonPressed, event.mouseButton);
+		MouseButtonEvent gameEvent(typeid(MouseButtonEvent::Pressed), event.mouseButton);
 		previousContactNode->dispatchEvent(gameEvent);
 	}
 
@@ -37,7 +39,7 @@ namespace game {
 			return;
 		}
 
-		MouseButtonEvent gameEvent(EventType::MouseButtonReleased, event.mouseButton);
+		MouseButtonEvent gameEvent(typeid(MouseButtonEvent::Released), event.mouseButton);
 		previousContactNode->dispatchEvent(gameEvent);
 	}
 
@@ -58,7 +60,7 @@ namespace game {
 		else {
 			contactNode = root.getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
-				MouseMoveEvent event(EventType::MouseMoved, event.mouseMove);
+				MouseMovedEvent event(event.mouseMove);
 				contactNode->dispatchEvent(event);
 			}
 		}
@@ -97,13 +99,13 @@ namespace game {
 
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
 				[&](std::shared_ptr<InteractiveObject> & node) {
-				MouseMoveEvent gameEvent(EventType::MouseLeft, { mousePosition.x, mousePosition.y });
+				MouseLeftEvent gameEvent;
 				node->dispatchEvent(gameEvent);
 			});
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
 				[&](std::shared_ptr<InteractiveObject> & node) {
-				MouseMoveEvent gameEvent(EventType::MouseEntered, { mousePosition.x, mousePosition.y });
+				MouseEnteredEvent gameEvent;
 				node->dispatchEvent(gameEvent);
 			});
 

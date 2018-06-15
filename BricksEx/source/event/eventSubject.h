@@ -1,6 +1,6 @@
 #pragma once
 
-#include "eventType.h"
+#include "../common.h"
 #include <map>
 #include <functional>
 
@@ -12,12 +12,11 @@ namespace game {
 	public:
 		EventSubject();
 		virtual ~EventSubject() = default;
-		virtual int addListener(EventType eventType, std::shared_ptr<EventListener> listener);
+		virtual int addListener(std::shared_ptr<EventListener> listener);
 		virtual void dispatchEvent(Event & event);
-		virtual void removeListener(EventType eventType, int id);
+		virtual void removeListener(std::type_index eventType, int id);
 	protected:
-		std::multimap<const EventType, std::pair<const int, std::shared_ptr<EventListener>>> listeners;
-	private:
+		std::multimap<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>> listeners;
 		int idCount;
 	};
 }

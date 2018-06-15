@@ -3,8 +3,12 @@
 #include "particleSystem.h"
 #include "event/mouseButtonEvent.h"
 #include "event/mouseButtonListener.h"
-#include "event/mouseMoveEvent.h"
-#include "event/mouseMoveListener.h"
+#include "event/mouseMovedEvent.h"
+#include "event/mouseMovedListener.h"
+#include "event/mouseEnteredEvent.h"
+#include "event/mouseEnteredListener.h"
+#include "event/mouseLeftEvent.h"
+#include "event/mouseLeftListener.h"
 #include "event/keyEvent.h"
 #include "event/keyListener.h"
 #include "definition/gameState.h"
@@ -31,12 +35,12 @@ Stage::Stage() :
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, mouseLight });
 	using namespace std::placeholders;
-	addListener(game::EventType::KeyPressed, std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyPressed, this, _1)));
-	addListener(game::EventType::KeyReleased, std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyReleased, this, _1)));
-	addListener(game::EventType::MouseEntered, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseEntered, this, _1)));
-	addListener(game::EventType::MouseLeft, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseLeft, this, _1)));
-	addListener(game::EventType::MouseMoved, std::make_shared<game::MouseMoveListener>(std::bind(&Stage::onMouseMoved, this, _1)));
-	addListener(game::EventType::MouseButtonPressed, std::make_shared<game::MouseButtonListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
+	addListener(typeid(game::KeyEvent::Pressed), std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyPressed, this, _1)));
+	addListener(typeid(game::KeyEvent::Released), std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyReleased, this, _1)));
+	addListener(std::make_shared<game::MouseEnteredListener>(std::bind(&Stage::onMouseEntered, this, _1)));
+	addListener(std::make_shared<game::MouseLeftListener>(std::bind(&Stage::onMouseLeft, this, _1)));
+	addListener(std::make_shared<game::MouseMovedListener>(std::bind(&Stage::onMouseMoved, this, _1)));
+	addListener(typeid(game::MouseButtonEvent::Pressed), std::make_shared<game::MouseButtonListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
 }
 
 Stage::~Stage() {
@@ -109,15 +113,15 @@ void Stage::onKeyReleased(game::KeyEvent & event) {
 
 }
 
-void Stage::onMouseEntered(game::MouseMoveEvent &) {
+void Stage::onMouseEntered(game::MouseEnteredEvent &) {
 	mouseLight->startEmit();
 }
 
-void Stage::onMouseLeft(game::MouseMoveEvent &) {
+void Stage::onMouseLeft(game::MouseLeftEvent &) {
 	mouseLight->stopEmit();
 }
 
-void Stage::onMouseMoved(game::MouseMoveEvent & event) {
+void Stage::onMouseMoved(game::MouseMovedEvent & event) {
 	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(event.x), static_cast<float>(event.y)));
 }
 

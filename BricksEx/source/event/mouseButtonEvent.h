@@ -7,8 +7,10 @@ namespace game {
 		public sf::Event::MouseButtonEvent,
 		public UIEvent {
 	public:
-		MouseButtonEvent(EventType type, sf::Event::MouseButtonEvent eventData);
+		MouseButtonEvent(std::type_index type, sf::Event::MouseButtonEvent eventData);
 		virtual ~MouseButtonEvent() = default;
 		virtual void accept(EventListener & visitor) override;
+		class Pressed {};
+		class Released {};
 	};
 }

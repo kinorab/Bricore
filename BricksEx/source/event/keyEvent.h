@@ -7,8 +7,10 @@ namespace game {
 		public sf::Event::KeyEvent,
 		public UIEvent {
 	public:
-		KeyEvent(EventType type, sf::Event::KeyEvent eventData);
+		KeyEvent(std::type_index type, sf::Event::KeyEvent eventData);
 		virtual ~KeyEvent() = default;
 		virtual void accept(EventListener & visitor) override;
+		class Pressed {};
+		class Released {};
 	};
 }

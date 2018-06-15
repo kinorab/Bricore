@@ -7,8 +7,10 @@ namespace game {
 		public sf::Event::JoystickButtonEvent,
 		public UIEvent {
 	public:
-		JoystickButtonEvent(EventType type, sf::Event::JoystickButtonEvent eventData);
+		JoystickButtonEvent(std::type_index type, sf::Event::JoystickButtonEvent eventData);
 		virtual ~JoystickButtonEvent() = default;
 		virtual void accept(EventListener & visitor) override;
+		class Pressed {};
+		class Released {};
 	};
 }
