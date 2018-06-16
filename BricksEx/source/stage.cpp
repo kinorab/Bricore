@@ -1,14 +1,8 @@
 #include "stage.h"
 #include "hud.h"
 #include "particleSystem.h"
-#include "event/mouse/mouseButtonEvent.h"
-#include "event/mouse/mouseButtonListener.h"
-#include "event/mouse/mouseMovedEvent.h"
-#include "event/mouse/mouseMovedListener.h"
-#include "event/mouse/mouseEnteredEvent.h"
-#include "event/mouse/mouseEnteredListener.h"
-#include "event/mouse/mouseLeftEvent.h"
-#include "event/mouse/mouseLeftListener.h"
+#include "event/mouse/mouseEvent.h"
+#include "event/mouse/mouseListener.h"
 #include "event/keyboard/keyEvent.h"
 #include "event/keyboard/keyListener.h"
 #include "definition/gameState.h"
@@ -20,11 +14,11 @@
 #include "stuff/brick.h"
 
 Stage::Stage() : 
-	hud(new HUD()),
-	player(new Player()),
-	ball(new item::Ball()),
-	brick(new item::Brick()),
-	obstacle(new Obstacle()),
+	hud(new HUD),
+	player(new Player),
+	ball(new item::Ball),
+	brick(new item::Brick),
+	obstacle(new Obstacle),
 	mouseLight(new ParticleSystem(2000)),
 	playerPredict(nullptr),
 	ballPredict(nullptr),

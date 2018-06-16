@@ -1,10 +1,7 @@
 #include "button.h"
 #include "../definition/utility.h"
-#include "../event/mouse/mouseButtonEvent.h"
-#include "../event/mouse/mouseButtonListener.h"
-#include "../event/mouse/mouseMovedListener.h"
-#include "../event/mouse/mouseEnteredListener.h"
-#include "../event/mouse/mouseLeftListener.h"
+#include "../event/mouse/mouseEvent.h"
+#include "../event/mouse/mouseListener.h"
 #include <SFML/Graphics.hpp>
 
 namespace game {
@@ -30,13 +27,13 @@ namespace game {
 
 	std::shared_ptr<sf::Drawable> Button::getDrawable() const {
 		switch (currentState) {
-		case game::Button::ButtonState::UP:
+		case ButtonState::UP:
 			return upObject;
 			break;
-		case game::Button::ButtonState::OVER:
+		case ButtonState::OVER:
 			return overObject;
 			break;
-		case game::Button::ButtonState::DOWN:
+		case ButtonState::DOWN:
 			return downObject;
 			break;
 		default:

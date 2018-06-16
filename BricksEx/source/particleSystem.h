@@ -16,8 +16,8 @@ private:
 		float lifeTime;
 	};
 	virtual void resetParticle(size_t);
-	bool emitting;
-	sf::Vector2f emitPosition;
+	bool emitting = true;
+	sf::Vector2f emitPosition{ 0, 0 };
 	float maxLifeTime;
 	std::vector<Particle> particles;
 	std::shared_ptr<sf::VertexArray> vertices;

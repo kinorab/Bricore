@@ -3,7 +3,7 @@
 
 namespace game {
 	TextEnteredEvent::TextEnteredEvent(sf::Event::TextEvent eventData) :
-		UIEvent(typeid(TextEnteredEvent), true, true),
+		UIEvent(typeid(TextEnteredEvent), true),
 		sf::Event::TextEvent(eventData) {
 	}
 

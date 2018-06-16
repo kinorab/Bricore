@@ -11,7 +11,7 @@
 namespace game {
 	class Container :
 		public std::enable_shared_from_this<Container>,
-		public game::InteractiveObject {
+		public InteractiveObject {
 	public:
 		Container();
 		virtual ~Container() override;

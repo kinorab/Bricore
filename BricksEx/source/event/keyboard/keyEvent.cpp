@@ -3,7 +3,7 @@
 
 namespace game {
 	KeyEvent::KeyEvent(std::type_index type, sf::Event::KeyEvent eventData) :
-		UIEvent(type, true, true),
+		UIEvent(type, true),
 		sf::Event::KeyEvent(eventData) {
 	}
 

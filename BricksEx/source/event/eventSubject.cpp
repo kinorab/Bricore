@@ -4,10 +4,6 @@
 #include <algorithm>
 
 namespace game {
-	EventSubject::EventSubject() :
-		idCount(0) {
-	}
-
 	int EventSubject::addListener(std::shared_ptr<EventListener> listener) {
 		listeners.emplace(listener->getEventType(), std::pair<const int, std::shared_ptr<EventListener>>(idCount, std::move(listener)));
 		int returnId = idCount;

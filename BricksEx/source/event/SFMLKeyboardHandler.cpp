@@ -1,6 +1,6 @@
 #include "SFMLKeyboardHandler.h"
-#include "definition/utility.h"
-#include "event/keyboard/keyEvent.h"
+#include "../definition/utility.h"
+#include "keyboard/keyEvent.h"
 
 namespace game {
 	SFMLKeyboardHandler::SFMLKeyboardHandler() {
@@ -26,7 +26,7 @@ namespace game {
 		}
 
 		keyDown[event.key.code] = true;
-		KeyEvent gameEvent(typeid(game::KeyEvent::Pressed), event.key);
+		KeyEvent gameEvent(typeid(KeyEvent::Pressed), event.key);
 		root.dispatchEvent(gameEvent);
 	}
 
@@ -36,7 +36,7 @@ namespace game {
 		}
 
 		keyDown[event.key.code] = false;
-		KeyEvent gameEvent(typeid(game::KeyEvent::Released), event.key);
+		KeyEvent gameEvent(typeid(KeyEvent::Released), event.key);
 		root.dispatchEvent(gameEvent);
 	}
 }

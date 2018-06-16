@@ -13,23 +13,18 @@ namespace game {
 	public:
 		virtual ~UIEvent() = default;
 		virtual bool getBubbles() const;
-		virtual bool getCancelable() const;
 		virtual EventSubject * getCurrentTarget() const;
-		virtual bool getDefaultPrevented() const;
 		virtual EventPhase getPhase() const;
 		virtual EventSubject * getTarget() const;
 		virtual std::type_index getType() const;
 		virtual void stopPropagation();
-		virtual void preventDefault();
 	protected:
-		UIEvent(std::type_index type, bool bubbles, bool cancelable);
+		UIEvent(std::type_index type, bool bubbles);
 	private:
 		bool bubbles;
-		bool cancelable;
 		EventSubject * currentTarget;
-		bool defaultPrevented;
-		EventPhase phase;
-		bool propagationStopped;
+		EventPhase phase = EventPhase::NONE;
+		bool propagationStopped = false;
 		EventSubject * target;
 		std::type_index type;
 	};

@@ -4,7 +4,7 @@
 
 namespace game {
 	class UIComponent
-		: public game::Container {
+		: public Container {
 	public:
 		virtual ~UIComponent() {}
 		virtual bool getEnabled() const;

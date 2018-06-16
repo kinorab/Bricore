@@ -3,7 +3,7 @@
 
 namespace game {
 	JoystickButtonEvent::JoystickButtonEvent(std::type_index type, sf::Event::JoystickButtonEvent eventData) :
-		UIEvent(type, false, false),
+		UIEvent(type, false),
 		sf::Event::JoystickButtonEvent(eventData) {
 	}
 

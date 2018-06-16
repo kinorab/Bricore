@@ -1,5 +1,5 @@
 #include "SFMLEventQueue.h"
-#include "definition/utility.h"
+#include "../definition/utility.h"
 
 namespace game {
 	bool SFMLEventQueue::empty() {

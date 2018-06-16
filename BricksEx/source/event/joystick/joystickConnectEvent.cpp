@@ -3,7 +3,7 @@
 
 namespace game {
 	JoystickConnectEvent::JoystickConnectEvent(std::type_index type, sf::Event::JoystickConnectEvent eventData) :
-		UIEvent(type, false, false),
+		UIEvent(type, false),
 		sf::Event::JoystickConnectEvent(eventData) {
 	}
 

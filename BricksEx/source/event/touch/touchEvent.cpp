@@ -3,7 +3,7 @@
 
 namespace game {
 	TouchEvent::TouchEvent(std::type_index type, sf::Event::TouchEvent eventData) :
-		UIEvent(type, true, true),
+		UIEvent(type, true),
 		sf::Event::TouchEvent(eventData) {
 	}
 

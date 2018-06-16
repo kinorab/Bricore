@@ -2,9 +2,9 @@
 
 #include "UI/graphics.h"
 #include "interact/interactiveObject.h"
-#include "SFMLEventQueue.h"
-#include "SFMLMouseHandler.h"
-#include "SFMLKeyboardHandler.h"
+#include "event/SFMLEventQueue.h"
+#include "event/SFMLMouseHandler.h"
+#include "event/SFMLKeyboardHandler.h"
 #include <SFML/Window/Export.hpp>
 #include <map>
 #include <atomic>

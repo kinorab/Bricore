@@ -17,7 +17,7 @@ BallSkill::BallSkill(const Ball skillName, const std::vector<Normal> &normalEffe
 
 void BallSkill::loadFrame(const std::map<size_t, std::string> &fileNames) {
 	std::for_each(fileNames.begin(), fileNames.end(), [&](const std::pair<size_t, std::string> &file) {
-		frames.emplace(file.first, std::shared_ptr<sf::Texture>(new sf::Texture()));
+		frames.emplace(file.first, std::shared_ptr<sf::Texture>(new sf::Texture));
 		frames.at(file.first)->loadFromFile(file.second);
 	});
 }

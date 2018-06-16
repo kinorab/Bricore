@@ -10,9 +10,7 @@ constexpr float LIFETIME = 1500.f;
 ParticleSystem::ParticleSystem(const unsigned int count)
 	:particles(count),
 	vertices(new VertexArray(Points, count)),
-	maxLifeTime(LIFETIME),
-	emitting(true),
-	emitPosition(0, 0) {
+	maxLifeTime(LIFETIME) {
 	addChild({ vertices });
 }
 

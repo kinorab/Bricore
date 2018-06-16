@@ -1,11 +1,13 @@
 #pragma once
 
 #include "../UIEvent.h"
+#include "../cancelable.h"
 
 namespace game {
 	class KeyEvent :
 		public sf::Event::KeyEvent,
-		public UIEvent {
+		public UIEvent,
+		public Cancelable {
 	public:
 		KeyEvent(std::type_index type, sf::Event::KeyEvent eventData);
 		virtual ~KeyEvent() = default;
