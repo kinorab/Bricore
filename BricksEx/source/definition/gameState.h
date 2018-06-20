@@ -1,11 +1,10 @@
 #pragma once
 
-#include "utility.h"
 #include <SFML/Graphics/RectangleShape.hpp>
 
 extern float MAINPLAYERSPEED;
+extern void getPlayedTime();
 
-constexpr float PI = 3.141592654f;
 constexpr float RESETTIME = 25.f;
 constexpr float BOOST = 2.5f;
 constexpr float MAXSPEED = 20.f;

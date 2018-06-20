@@ -1,26 +1,23 @@
 #pragma once
 
-#include "../event/eventType.h"
+#include "../common.h"
 #include <map>
 #include <functional>
 
 namespace game {
 	class Event;
+	class EventListener;
 
 	class EventSubject {
 	public:
-		EventSubject();
-		virtual ~EventSubject();
-		virtual int addEventListener(EventType type, std::function<void(Event *)> callback);
-		virtual void dispatchEvent(Event * event);
-		virtual void removeEventListener(int id);
-	private:
-		struct EventListener {
-			EventType type;
-			std::function<void(Event *)> callback;
-		};
-		std::map<int, EventListener> listeners;
-		int idCount;
+		virtual ~EventSubject() = default;
+		virtual int addListener(std::shared_ptr<EventListener> listener);
+		virtual void dispatchEvent(Event & event);
+		virtual void removeListener(std::type_index eventType, int id);
+	protected:
+		EventSubject() = default;
+		std::multimap<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>> listeners;
+		int idCount = 0;
 	};
 }
 

@@ -11,6 +11,14 @@ class Obstacle;
 class Player;
 class ParticleSystem;
 class HUD;
+namespace game {
+	class KeyPressedEvent;
+	class KeyReleasedEvent;
+	class MouseMovedEvent;
+	class MouseEnteredEvent;
+	class MouseLeftEvent;
+	class MousePressedEvent;
+}
 
 class Stage
 	: public game::Container {
@@ -19,15 +27,12 @@ public:
 	virtual ~Stage();
 	virtual void update(const float updateSpan, const float intervalRate) override;
 private:
-	static bool instantiated;
-	virtual bool getInstantiated() const;
-	virtual void setInstantiated(bool value);
-	virtual void onKeyPressed(game::Event * event);
-	virtual void onKeyReleased(game::Event * event);
-	virtual void onMouseEntered(game::Event * event);
-	virtual void onMouseLeft(game::Event * event);
-	virtual void onMouseMoved(game::Event * event);
-	virtual void onMouseButtonPressed(game::Event * event);
+	virtual void onKeyPressed(game::KeyPressedEvent & event);
+	virtual void onKeyReleased(game::KeyReleasedEvent & event);
+	virtual void onMouseEntered(game::MouseEnteredEvent & event);
+	virtual void onMouseLeft(game::MouseLeftEvent & event);
+	virtual void onMouseMoved(game::MouseMovedEvent & event);
+	virtual void onMouseButtonPressed(game::MousePressedEvent & event);
 
 	std::shared_ptr<HUD> hud;
 	std::shared_ptr<ParticleSystem> mouseLight;

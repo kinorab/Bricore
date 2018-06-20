@@ -3,7 +3,8 @@
 #include "../stuff/ball.h"
 #include "../stuff/obstacle.h"
 #include "../stuff/player.h"
-#include "../definition/define.h"
+#include "../definition/gameState.h"
+#include "../definition/utility.h"
 #include <SFML/Graphics/Color.hpp>
 
 float LVDeploy::blockLength(100.f);

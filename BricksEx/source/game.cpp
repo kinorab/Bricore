@@ -1,96 +1,78 @@
 #include "game.h"
-#include "event/event.h"
 #include "manager/audioManager.h"
-#include "definition/define.h"
+#include "definition/gameState.h"
+#include "definition/utility.h"
 #include "stage.h"
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
-
-using namespace sf;
+#include <future>
 
 Game::Game() :
-	finished(false),
-	stage(new Stage()) {
-	window.reset(new RenderWindow(VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT))
-		, "BricksEx", Style::Close, graph.getSettings()));
+	stage(new Stage()),
+	mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }) {
+	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
+		"BricksEx", sf::Style::Close, graph.getSettings()));
 }
 
-Game::~Game() {
-}
+Game::~Game() = default;
 
 void Game::run() {
 	settleWindow();
-	renderThread = std::thread(std::bind(&Game::renderFunc, this));
-	Event nextEvent;
-	while (!finished && window->waitEvent(nextEvent)) {
-		pushEvent(nextEvent);
+	AudioManager::getInstance().initialize();
+	std::future<void> renderThread = std::async(std::launch::async, &Game::renderFunc, this);
+	sf::Event nextEvent;
+	while (renderThread.wait_for(std::chrono::seconds(0)) != std::future_status::ready && window->waitEvent(nextEvent)) {
+		eventQueue.push(nextEvent);
 	}
 	window->close();
-}
-
-void Game::pushEvent(const Event & event) {
-	eventQueueMutex.lock();
-	eventQueue.push(event);
-	eventQueueMutex.unlock();
 }
 
 void Game::settleWindow() {
 	window->setMouseCursorVisible(false);
 	window->setVerticalSyncEnabled(true);
-	window->setPosition(Vector2i(window->getPosition().x, 20));
+	window->setPosition(sf::Vector2i(window->getPosition().x, 20));
 	ImmAssociateContext(window->getSystemHandle(), 0);
 	//window.setIcon(graph.getIconSize().x, graph.getIconSize().y, graph.getIcon());
 	window->setActive(false);
 }
 
-Event Game::popEvent() {
-	eventQueueMutex.lock();
-	Event event = eventQueue.front();
-	eventQueue.pop();
-	eventQueueMutex.unlock();
-	return event;
-}
+void Game::renderFunc() {
+	float elapsed = 0;
+	float renderElapsed = 0;
+	sf::Clock clock;
 
-void Game::handleKeyEvent() {
-	if (currentEvent.type != Event::KeyPressed
-		&& currentEvent.type != Event::KeyReleased) {
-		return;
-	}
+	for (bool finishing = false; !finishing;) {
+		constexpr float updateSpan = 0.013f * 1000.f;
+		const float distribute = clock.restart().asSeconds() * 1000;
+		// maximum elapsed cap
+		handleEvents(finishing);
 
-	game::EventType eventType;
-	if (currentEvent.type == Event::KeyPressed) {
-		if (keyDown[currentEvent.key.code]) return;
-		keyDown[currentEvent.key.code] = true;
-		eventType = game::EventType::KeyPressed;
-	}
-	else if (currentEvent.type == Event::KeyReleased) {
-		if (!keyDown[currentEvent.key.code]) return;
-		keyDown[currentEvent.key.code] = false;
-		eventType = game::EventType::KeyReleased;
-	}
-
-	game::Event event(eventType, false, true);
-	event.data = currentEvent.key;
-	stage->dispatchEvent(&event);
-}
-
-void Game::handleMouseEvent() {
-	if (currentEvent.type == Event::MouseMoved) {
-		mousePosition = window->mapPixelToCoords((Vector2i(currentEvent.mouseMove.x, currentEvent.mouseMove.y)));
-		std::shared_ptr<game::InteractiveObject> contactNode;
-		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
-			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
-			contactNode = nullptr;
-		}
-		else {
-			contactNode = stage->getObjectUnderPoint(mousePosition);
-			if (contactNode) {
-				game::Event event(game::EventType::MouseMoved, true, true);
-				event.data = currentEvent.mouseMove;
-				contactNode->dispatchEvent(&event);
-			}
+		elapsed = std::min<float>(elapsed + distribute, 500);
+		for (; elapsed >= updateSpan; elapsed -= updateSpan) {
+			stage->update(updateSpan);
 		}
 
+		renderElapsed = std::min<float>(renderElapsed + distribute, graph.getFrameSpan() * 1.5f);
+		if (renderElapsed >= graph.getFrameSpan()) {
+			stage->predictUpdate(elapsed / updateSpan);
+			window->draw(*stage);
+			window->display();
+			renderElapsed -= graph.getFrameSpan();
+		}
+	}
+	// finalize...
+	window->setActive(false);
+}
+
+void Game::handleEvents(bool & finishing) {
+	while (!eventQueue.empty()) {
+		sf::Event currentEvent = eventQueue.pop();
+		mouseHandler.handle(currentEvent, *stage);
+		keyboardHandler.handle(currentEvent, *stage);
+		if (currentEvent.type == sf::Event::Closed) {
+			finishing = true;
+		}
+	}
 		if (contactNode != previousContactNode) {
 			std::vector<std::shared_ptr<game::InteractiveObject>> previousNodes;
 			for (std::shared_ptr<game::InteractiveObject> node = previousContactNode; node;) {

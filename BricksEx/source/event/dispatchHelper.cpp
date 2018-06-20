@@ -1,24 +1,24 @@
 #include "dispatchHelper.h"
-#include "event.h"
+#include "UIEvent.h"
 
 namespace game {
-	DispatchHelper::DispatchHelper(Event * event) {
-		this->event = event;
+	DispatchHelper::DispatchHelper(UIEvent & event) :
+		event(event) {
 	}
 
 	bool DispatchHelper::isPropagationStopped() {
-		return event->propagationStopped;
+		return event.propagationStopped;
 	}
 
 	void DispatchHelper::setCurrentTarget(EventSubject * target) {
-		event->currentTarget = target;
+		event.currentTarget = target;
 	}
 
 	void DispatchHelper::setPhase(EventPhase phase) {
-		event->phase = phase;
+		event.phase = phase;
 	}
 
 	void DispatchHelper::setTarget(EventSubject * target) {
-		event->target = target;
+		event.target = target;
 	}
 }

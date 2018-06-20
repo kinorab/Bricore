@@ -1,15 +1,17 @@
 #include "stage.h"
 #include "hud.h"
 #include "particleSystem.h"
-#include "event/event.h"
-#include "definition/define.h"
+#include "event/mouse/mouseEvent.h"
+#include "event/mouse/mouseListener.h"
+#include "event/keyboard/keyEvent.h"
+#include "event/keyboard/keyListener.h"
+#include "definition/gameState.h"
+#include "definition/utility.h"
 #include "manager/audioManager.h"
 #include "stuff/obstacle.h"
 #include "stuff/ball.h"
 #include "stuff/player.h"
 #include "stuff/brick.h"
-
-bool Stage::instantiated = false;
 
 Stage::Stage() : 
 	hud(new HUD),
@@ -26,19 +28,17 @@ Stage::Stage() :
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, player, ball, brick, obstacle, mouseLight });
 	using namespace std::placeholders;
-	addEventListener(game::EventType::KeyPressed, std::bind(&Stage::onKeyPressed, this, _1));
-	addEventListener(game::EventType::KeyReleased, std::bind(&Stage::onKeyReleased, this, _1));
-	addEventListener(game::EventType::MouseEntered, std::bind(&Stage::onMouseEntered, this, _1));
-	addEventListener(game::EventType::MouseLeft, std::bind(&Stage::onMouseLeft, this, _1));
-	addEventListener(game::EventType::MouseMoved, std::bind(&Stage::onMouseMoved, this, _1));
-	addEventListener(game::EventType::MouseButtonPressed, std::bind(&Stage::onMouseButtonPressed, this, _1));
-	setInstantiated(true);
+	addListener(std::make_shared<game::KeyPressedListener>(std::bind(&Stage::onKeyPressed, this, _1)));
+	addListener(std::make_shared<game::KeyReleasedListener>(std::bind(&Stage::onKeyReleased, this, _1)));
+	addListener(std::make_shared<game::MouseEnteredListener>(std::bind(&Stage::onMouseEntered, this, _1)));
+	addListener(std::make_shared<game::MouseLeftListener>(std::bind(&Stage::onMouseLeft, this, _1)));
+	addListener(std::make_shared<game::MouseMovedListener>(std::bind(&Stage::onMouseMoved, this, _1)));
+	addListener(std::make_shared<game::MousePressedListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
 }
 
 Stage::~Stage() {
 	AudioManager::getInstance().bgmusic.stop();
 	AudioManager::getInstance().sound1.stop();
-	setInstantiated(false);
 }
 
 void Stage::update(const float updateSpan, const float intervalRate) {
@@ -60,16 +60,8 @@ void Stage::update(const float updateSpan, const float intervalRate) {
 	mouseLight->update(updateSpan, intervalRate);
 }
 
-bool Stage::getInstantiated() const {
-	return Stage::instantiated;
-}
-
-void Stage::setInstantiated(bool value) {
-	Stage::instantiated = value;
-}
-
-void Stage::onKeyPressed(game::Event * event) {
-	if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::P) {
+void Stage::onKeyPressed(game::KeyPressedEvent & event) {
+	if (event.code == sf::Keyboard::P) {
 		GameState::pause = !GameState::pause;
 		GameState::lock = !GameState::lock;
 	}
@@ -78,37 +70,36 @@ void Stage::onKeyPressed(game::Event * event) {
 		return;
 	}
 	else {
-		if (std::get<sf::Event::KeyEvent>(event->data).code == sf::Keyboard::G) {
+		if (event.code == sf::Keyboard::G) {
 			GameState::start = true;
 		}
 	}
 }
 
-void Stage::onKeyReleased(game::Event * event) {
+void Stage::onKeyReleased(game::KeyReleasedEvent & event) {
 
 }
 
-void Stage::onMouseEntered(game::Event *) {
+void Stage::onMouseEntered(game::MouseEnteredEvent &) {
 	mouseLight->startEmit();
 }
 
-void Stage::onMouseLeft(game::Event *) {
+void Stage::onMouseLeft(game::MouseLeftEvent &) {
 	mouseLight->stopEmit();
 }
 
-void Stage::onMouseMoved(game::Event * event) {
-	auto moveEvent = std::get<sf::Event::MouseMoveEvent>(event->data);
-	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(moveEvent.x), static_cast<float>(moveEvent.y)));
+void Stage::onMouseMoved(game::MouseMovedEvent & event) {
+	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(event.x), static_cast<float>(event.y)));
 }
 
-void Stage::onMouseButtonPressed(game::Event * event) {
+void Stage::onMouseButtonPressed(game::MousePressedEvent & event) {
 	if (!GameState::lock) {
-		if (std::get<sf::Event::MouseButtonEvent>(event->data).button == sf::Mouse::Left) {
+		if (event.button == sf::Mouse::Left) {
 			// debugging feature
 			GameState::start = true;
 		}
 		// debugging feature
-		else if (std::get<sf::Event::MouseButtonEvent>(event->data).button == sf::Mouse::Right) {
+		else if (event.button == sf::Mouse::Right) {
 			GameState::start = false;
 			GameState::ready = false;
 		}

@@ -1,44 +1,31 @@
 #include "eventSubject.h"
+#include "eventListener.h"
 #include "event.h"
-#include "dispatchHelper.h"
+#include <algorithm>
 
 namespace game {
-	EventSubject::EventSubject() :
-		idCount(0) {
-	}
-
-	EventSubject::~EventSubject() {
-	}
-
-	int EventSubject::addEventListener(EventType type, std::function<void(Event *)> callback) {
-		listeners[idCount] = EventListener{ type, callback };
+	int EventSubject::addListener(std::shared_ptr<EventListener> listener) {
+		listeners.emplace(listener->getEventType(), std::pair<const int, std::shared_ptr<EventListener>>(idCount, std::move(listener)));
 		int returnId = idCount;
 		idCount += 1;
 		return returnId;
 	}
 
-	void EventSubject::dispatchEvent(Event * event) {
-		DispatchHelper helper(event);
-		helper.setCurrentTarget(this);
-
-		if (event->getPhase() == EventPhase::NONE) {
-			helper.setTarget(this);
-			helper.setPhase(EventPhase::AT_TARGET);
-		}
-
-		std::map<int, EventListener> tempListeners = listeners;
+	void EventSubject::dispatchEvent(Event & event) {
+		auto listenerRange = listeners.equal_range(typeid(event));
+		std::vector<std::pair<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
+		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
 		std::for_each(tempListeners.begin(), tempListeners.end(),
-			[&](const std::pair<const int, EventListener> & listener) {
-			if (event->getType() == listener.second.type) {
-				listener.second.callback(event);
-			}
+			[&](std::pair<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
+			event.accept(*listener.second.second);
 		});
 	}
 
-	void EventSubject::removeEventListener(int id) {
-		listeners.erase(std::find_if(listeners.begin(), listeners.end(),
-			[&](std::pair<const int, EventListener> & listener) {
-			return listener.first == id;
+	void EventSubject::removeListener(std::type_index eventType, int id) {
+		auto listenerRange = listeners.equal_range(eventType);
+		listeners.erase(std::find_if(listenerRange.first, listenerRange.second,
+			[&](std::pair<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
+			return listener.second.first == id;
 		}));
 	}
 }

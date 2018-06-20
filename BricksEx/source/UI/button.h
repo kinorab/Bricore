@@ -3,6 +3,11 @@
 #include "UIComponent.h"
 
 namespace game {
+	class MouseMovedEvent;
+	class MousePressedEvent;
+	class MouseReleasedEvent;
+	class MouseEnteredEvent;
+	class MouseLeftEvent;
 	class Button
 		: public InteractiveObject {
 	public:
@@ -20,10 +25,10 @@ namespace game {
 		std::shared_ptr<sf::Drawable> upObject;
 		std::shared_ptr<sf::Drawable> overObject;
 		std::shared_ptr<sf::Drawable> downObject;
-		std::shared_ptr<game::InteractiveObject> hitObject;
-		virtual void onMouseEntered(Event * event);
-		virtual void onMouseLeft(Event * event);
-		virtual void onMousePressed(Event * event);
-		virtual void onMouseReleased(game::Event * event);
+		std::shared_ptr<InteractiveObject> hitObject;
+		virtual void onMouseEntered(MouseEnteredEvent & event);
+		virtual void onMouseLeft(MouseLeftEvent & event);
+		virtual void onMousePressed(MousePressedEvent & event);
+		virtual void onMouseReleased(MouseReleasedEvent & event);
 	};
 }

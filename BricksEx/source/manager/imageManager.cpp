@@ -16,7 +16,7 @@ sf::Image * ImageManager::get(const std::string key) {
 }
 
 void ImageManager::load(const std::string key) {
-	resources.emplace(key, new sf::Image());
+	resources.emplace(key, new sf::Image);
 	if (!resources[key]->loadFromFile(key)) {
 		throw std::out_of_range("File not found.");
 	}

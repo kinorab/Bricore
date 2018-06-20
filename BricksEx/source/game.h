@@ -2,12 +2,12 @@
 
 #include "UI/graphics.h"
 #include "interact/interactiveObject.h"
-#include <SFML/Window/Event.hpp>
+#include "event/SFMLEventQueue.h"
+#include "event/SFMLMouseHandler.h"
+#include "event/SFMLKeyboardHandler.h"
 #include <SFML/Window/Export.hpp>
-#include <atomic>
-#include <queue>
 #include <map>
-#include <mutex>
+#include <atomic>
 
 class Stage;
 
@@ -22,23 +22,13 @@ public:
 	virtual void run();
 
 private:
-	virtual void pushEvent(const sf::Event &);
 	virtual void settleWindow();
-	virtual sf::Event popEvent();
-	virtual void handleKeyEvent();
-	virtual void handleMouseEvent();
-	virtual void handleGraphicsEvent();
 	virtual void renderFunc();
-
-	std::atomic<bool> finished;
-	std::queue<sf::Event> eventQueue;
-	std::mutex eventQueueMutex;
-	std::map<sf::Keyboard::Key, bool> keyDown;
-	std::thread renderThread;
-	sf::Event currentEvent;
+	virtual void handleEvents(bool & finishing);
+	game::SFMLEventQueue eventQueue;
+	game::SFMLMouseHandler mouseHandler;
+	game::SFMLKeyboardHandler keyboardHandler;
 	std::unique_ptr<sf::RenderWindow> window;
-	sf::Vector2f mousePosition;
-	std::shared_ptr<game::InteractiveObject> previousContactNode;
 	std::shared_ptr<Stage> stage;
 	Graphics graph;
 };

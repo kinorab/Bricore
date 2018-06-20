@@ -15,7 +15,7 @@ sf::Texture * TextureManager::get(const std::string key) {
 }
 
 void TextureManager::load(const std::string key) {
-	resources.emplace(key, new sf::Texture());
+	resources.emplace(key, new sf::Texture);
 	if (!resources[key]->loadFromFile(key)) {
 		throw std::out_of_range("File not found.");
 	}

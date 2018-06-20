@@ -1,5 +1,6 @@
 #include "interactiveObject.h"
-#include "../event/event.h"
+#include "../event/UIEvent.h"
+#include "../event/eventListener.h"
 #include "../event/dispatchHelper.h"
 #include "container.h"
 #include "../definition/utility.h"
@@ -15,21 +16,34 @@ namespace game {
 	InteractiveObject::~InteractiveObject() {
 	}
 
-	void InteractiveObject::dispatchEvent(Event * event) {
-		EventSubject::dispatchEvent(event);
+	int InteractiveObject::addListener(std::type_index eventType, std::shared_ptr<EventListener> listener) {
+		listeners.emplace(eventType, std::pair<const int, std::shared_ptr<EventListener>>(idCount, std::move(listener)));
+		int returnId = idCount;
+		idCount += 1;
+		return returnId;
+	}
+
+	void InteractiveObject::dispatchEvent(UIEvent & event) {
 		DispatchHelper helper(event);
-		if (event->getPhase() == EventPhase::AT_TARGET) {
+		helper.setCurrentTarget(this);
+
+		if (event.getPhase() == EventPhase::NONE) {
+			helper.setTarget(this);
+			helper.setPhase(EventPhase::AT_TARGET);
+		}
+
+		dispatchEvent(static_cast<Event &>(event));
+		if (event.getPhase() == EventPhase::AT_TARGET) {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}
 
-		if (event->getPhase() == EventPhase::BUBBLING_PHASE
-			&& event->getBubbles()
+		if (event.getPhase() == EventPhase::BUBBLING_PHASE
 			&& parent != nullptr
 			&& !helper.isPropagationStopped()) {
 			parent->dispatchEvent(event);
 		}
 
-		if (event->getTarget() == this) {
+		if (event.getTarget() == this) {
 			helper.setPhase(EventPhase::NONE);
 			helper.setCurrentTarget(nullptr);
 		}

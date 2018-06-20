@@ -1,6 +1,7 @@
 #include "button.h"
 #include "../definition/utility.h"
-#include "../definition/intersects.h"
+#include "../event/mouse/mouseEvent.h"
+#include "../event/mouse/mouseListener.h"
 #include <SFML/Graphics.hpp>
 
 namespace game {
@@ -10,10 +11,10 @@ namespace game {
 		, downObject(downObject)
 		, hitObject(new SpriteNode(upObject)) {
 		using namespace std::placeholders;
-		addEventListener(EventType::MouseEntered, std::bind(&Button::onMouseEntered, this, _1));
-		addEventListener(EventType::MouseLeft, std::bind(&Button::onMouseLeft, this, _1));
-		addEventListener(EventType::MouseButtonPressed, std::bind(&Button::onMousePressed, this, _1));
-		addEventListener(EventType::MouseButtonReleased, std::bind(&Button::onMouseReleased, this, _1));
+		addListener(std::make_shared<MouseEnteredListener>(std::bind(&Button::onMouseEntered, this, _1)));
+		addListener(std::make_shared<MouseLeftListener>(std::bind(&Button::onMouseLeft, this, _1)));
+		addListener(std::make_shared<MousePressedListener>(std::bind(&Button::onMousePressed, this, _1)));
+		addListener(std::make_shared<MouseReleasedListener>(std::bind(&Button::onMouseReleased, this, _1)));
 	}
 
 	Button::~Button() {
@@ -26,13 +27,13 @@ namespace game {
 
 	std::shared_ptr<sf::Drawable> Button::getDrawable() const {
 		switch (currentState) {
-		case game::Button::ButtonState::UP:
+		case ButtonState::UP:
 			return upObject;
 			break;
-		case game::Button::ButtonState::OVER:
+		case ButtonState::OVER:
 			return overObject;
 			break;
-		case game::Button::ButtonState::DOWN:
+		case ButtonState::DOWN:
 			return downObject;
 			break;
 		default:
@@ -41,19 +42,19 @@ namespace game {
 		}
 	}
 
-	void Button::onMouseEntered(Event *) {
+	void Button::onMouseEntered(MouseEnteredEvent &) {
 		currentState = ButtonState::OVER;
 	}
 
-	void Button::onMouseLeft(Event *) {
+	void Button::onMouseLeft(MouseLeftEvent &) {
 		currentState = ButtonState::UP;
 	}
 
-	void Button::onMousePressed(Event *) {
+	void Button::onMousePressed(MousePressedEvent &) {
 		currentState = ButtonState::DOWN;
 	}
 
-	void Button::onMouseReleased(game::Event *) {
+	void Button::onMouseReleased(MouseReleasedEvent &) {
 		currentState = ButtonState::OVER;
 	}
 }
