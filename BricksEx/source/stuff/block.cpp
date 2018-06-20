@@ -1,7 +1,7 @@
 #include "block.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
-#include "../definition/define.h"
+#include "../definition/gameState.h"
 #include <SFML/Graphics.hpp>
 
 using namespace std;

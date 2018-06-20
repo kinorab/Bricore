@@ -21,10 +21,6 @@ Stage::Stage() :
 	obstacle(new Obstacle),
 	mouseLight(new ParticleSystem(2000)) {
 	// presettle mainBall's position
-	if (getInstantiated()) {
-		throw std::invalid_argument("This class can only be instantiated once!");
-	}
-
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, player, ball, brick, obstacle, mouseLight });
 	using namespace std::placeholders;

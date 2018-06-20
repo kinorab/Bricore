@@ -1,7 +1,7 @@
 #include "bossSkill.h"
 #include "skillHandler.h"
 #include "../effect/entireEffect.h"
-#include "../../definition/define.h"
+#include "../../definition/gameState.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;

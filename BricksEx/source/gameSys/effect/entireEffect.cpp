@@ -1,7 +1,7 @@
 #include "entireEffect.h"
 #include "effect.h"
 #include "../skill/skillSystem.h"
-#include "../../definition/define.h"
+#include "../../definition/gameState.h"
 #include <SFML/System.hpp>
 
 using namespace game;
