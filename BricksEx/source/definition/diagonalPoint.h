@@ -18,7 +18,7 @@ namespace sys {
 		sf::Vector2<T> dot2;
 	};
 	template<typename T>
-	std::ostream& operator <<(std::ostream& os, const DPoint<T>& DP) ;
+	std::ostream& operator <<(std::ostream& os, const DPoint<T>& DP);
 
 	template<typename T>
 	DPoint<T> operator +(const DPoint<T>& left, const sf::Vector2<T> &right);
@@ -69,8 +69,8 @@ namespace sys {
 	bool operator !=(const DPoint<T>& left, const DPoint<T>& right);
 #include "diagonalPoint.inl"
 
-	typedef DPoint<int>          DPointi;
-	typedef DPoint<unsigned int> DPointu;
-	typedef DPoint<float>        DPointf;
+	typedef DPoint<int>		DPointi;
+	typedef DPoint<size_t>	DPointu;
+	typedef DPoint<float>	DPointf;
 }
 

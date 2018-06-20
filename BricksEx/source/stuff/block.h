@@ -1,7 +1,12 @@
 #pragma once
 
 #include "../definition/diagonalPoint.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/System/Vector2.hpp>
+
+namespace sf {
+	class Color;
+}
 
 namespace item {
 	class Block : public sf::VertexArray {
@@ -9,6 +14,7 @@ namespace item {
 	public:
 		explicit Block(const sf::Vector2f &position, const float width, const float height);
 		explicit Block(const Block &copy);
+		void update(const float intervalRate);
 		void setVerticeColor(const sf::Color &);
 		void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
 		void setWidth(const float width);
@@ -16,8 +22,6 @@ namespace item {
 		void resetPosition();
 		void setSpeed(const float speedX, const float speedY = 0.0f);
 		void setSpeed(const sf::Vector2f &speed);
-		void update();
-		void preUpdate(const float intervalTime);
 
 		const sys::DPointf getDP() const;
 		const sf::Color & getVerticeColor(const size_t index) const;
@@ -30,7 +34,7 @@ namespace item {
 
 	private:
 		void setBlockVertice();
-		void moveEntity(const float = 1.f);
+		void moveEntity(const float);
 
 		sf::Vector2f position;
 		const sf::Vector2f oriPos;

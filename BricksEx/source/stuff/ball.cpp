@@ -25,9 +25,9 @@ Ball::Ball(const Ball & copy)
 	});
 }
 
-void Ball::update(const sys::DPointf &playerDP) {
+void Ball::update(const sys::DPointf &playerDP, const float intervalRate) {
 	for (size_t i = 0; i < balls.size(); ++i) {
-		balls.at(i)->move(playerDP, initialized);
+		balls.at(i)->move(playerDP, initialized, intervalRate);
 		if (balls.at(i)->broke) {
 			balls.erase(balls.begin() + i);
 		}
@@ -37,16 +37,6 @@ void Ball::update(const sys::DPointf &playerDP) {
 	}
 }
 
-void Ball::preUpdate(const sys::DPointf & playerDP, const float intervalTime) {
-	for (size_t i = 0; i < balls.size(); ++i) {
-		balls.at(i)->predictMove(playerDP, intervalTime);
-		if (multiple) {
-			ballsCollision(i);
-		}
-	}
-}
-
-// only for non-predict
 void Ball::initializeBall() {
 	if (!initialized && !balls.empty()) {
 		balls.erase(balls.begin() + 1, balls.end());
@@ -295,7 +285,7 @@ void Ball::BallContainer::draw(sf::RenderTarget &target, sf::RenderStates states
 	target.draw(ball, states);
 }
 
-void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized) {
+void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized, const float intervalRate) {
 	const Vector2f ballPos = getPos();
 	const float radius = getRad();
 	if (!active) {
@@ -359,38 +349,7 @@ void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized) {
 		}
 	}
 	determineUpdate(initialized);
-	ball.move(ballSpeed.x / SLICE, ballSpeed.y / SLICE);
-}
-
-void Ball::BallContainer::predictMove(const sys::DPointf &DP, const float intervalTime) {
-	const Vector2f ballPos = getPos();
-	const float radius = getRad();
-	// window's right bound
-	if (ballPos.x + radius >= LEVEL_WIDTH) {
-		ballSpeed.x = -abs(ballSpeed.x);
-	}
-	// window's left bound
-	else if (ballPos.x - radius <= 0) {
-		ballSpeed.x = abs(ballSpeed.x);
-	}
-	// window's top bound
-	else if (ballPos.y - radius <= 0) {
-		ballSpeed.y = abs(ballSpeed.y);
-	}
-	// the collision between mainBall and player
-	else if (game::ballRectINCIntersects(ballPos, radius, DP)) {
-		hitByPlayer(DP);
-	}
-	// prevent speed too fast
-	if (abs(ballSpeed.x) >= MAXSPEED) {
-		if (ballSpeed.x < 0) {
-			ballSpeed.x = -MAXSPEED;
-		}
-		else {
-			ballSpeed.x = MAXSPEED;
-		}
-	}
-	ball.move(Vector2f(ballSpeed.x / SLICE, ballSpeed.y / SLICE) * intervalTime);
+	ball.move(sf::Vector2f(ballSpeed.x / SLICE, ballSpeed.y / SLICE) * intervalRate);
 }
 
 void Ball::BallContainer::hitByPlayer(const sys::DPointf &DP) {

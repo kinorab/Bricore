@@ -1,22 +1,21 @@
 #include "graphics.h"
 
-Graphics::Graphics(const FrameRate Fps, const Resolution Dpi)
-	:currentFps(Fps), currentDpi(Dpi) {
+Graphics::Graphics(const FrameRate Fps, const Resolution Dpi) {
 	//icon.loadFromFile("");
-	setFrameRate();
-	setResolution();
+	setDpi(Dpi);
+	setFps(Fps);
 }
 
 void Graphics::handleSettle(const FrameRate Fps, const Resolution Dpi) {
-	handleFps(Fps);
-	handleDpi(Dpi);
+	if(currentFps != Fps) setFps(Fps);
+	if(currentDpi != Dpi) setDpi(Dpi);
 }
 
 const sf::ContextSettings & Graphics::getSettings() const {
 	return currentSettings;
 }
 
-const float & Graphics::getFrameSpan() const {
+const float Graphics::getFrameSpan() const {
 	return frameSpan;
 }
 
@@ -28,23 +27,8 @@ const sf::Vector2u Graphics::getIconSize() const {
 	return icon.getSize();
 }
 
-void Graphics::handleFps(const FrameRate Fps) {
-	if (Fps == currentFps) {
-		return;
-	}
+void Graphics::setFps(const FrameRate Fps) {
 	currentFps = Fps;
-	setFrameRate();
-}
-
-void Graphics::handleDpi(const Resolution Dpi) {
-	if (Dpi == currentDpi) {
-		return;
-	}
-	currentDpi = Dpi;
-	setResolution();
-}
-
-void Graphics::setFrameRate() {
 	switch (currentFps) {
 	case FrameRate::Fps30:
 		frameSpan = (1.f / 30.f) * 1000.f;
@@ -58,7 +42,8 @@ void Graphics::setFrameRate() {
 	}
 }
 
-void Graphics::setResolution() {
+void Graphics::setDpi(const Resolution Dpi) {
+	currentDpi = Dpi;
 	switch (currentDpi) {
 	case Resolution::Low_noAA:
 		currentSettings = sf::ContextSettings(8, 4, 0, 3, 1);

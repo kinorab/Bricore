@@ -1,6 +1,10 @@
 #pragma once
 #include "skillSystem.h"
-#include "../effect/effectSystem.h"
+#include "skillState.h"
+#include "skillKind.h"
+#include "../effect/effect.h"
+#include "../effect/attribute.h"
+#include <SFML/Window/Keyboard.hpp>
 #include <map>
 
 namespace sf {
@@ -11,42 +15,50 @@ namespace sf {
 }
 
 namespace game {
+	template<typename T> class SkillHandler;
+
 	class SubPlayerSkill :
 		public SkillSystem
+		, public SkillKind<SubPlayerSkill>
+		, public SkillState<SubPlayerSkill>
+		, public std::enable_shared_from_this<SubPlayerSkill>
 		, public sf::Drawable
 		, public sf::Transformable {
+		friend class SkillHandler<SubPlayerSkill>;
 	public:
-		enum class SkillState {
-			None,			// no appear on stage
-			OnField,		// on subPlayer skill field
-			Using,			// when using it
-			Locked			// may be locked by outside effect(stage area, boss skill etc...), cannot be used or swapped
-		};
-		explicit SubPlayerSkill(const SubPlayer skillName, const std::vector<Normal> &normalEffects, const sf::Time &duration, const bool autoUse = false);
-		virtual void swapSkill(SubPlayerSkill &other);
+		explicit SubPlayerSkill(const Kind skillName, const sf::Time duration
+			, const std::vector<Effect::Kind> &effects
+			, const std::vector<Attribute::Kind> &attributes = { Attribute::None }, const bool autoUse = false);
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
-		virtual size_t upgradeSkill() override;
-		virtual void loadPreviewFile(const std::map<SkillState, std::string> &fileName, const bool isSmooth = false);
-		virtual void setState(const SkillState state);
+		virtual void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
+		static void extendCarry(const size_t number);
+		static void extendField(const size_t number);
+		static void resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::Key swapKey);
 
-		virtual size_t getMaximumCarry() const;
-		virtual size_t getCurrentCarry() const;
-		virtual SkillState getState() const;
-		virtual SubPlayer getSkillName() const;
+		static size_t getMaxCarry();
+		static size_t getCurrentCarry();
+		static size_t getMaxOnField();
+		static size_t getCurrentOnField();
+		virtual State getState() const;
+		virtual Kind getSkillName() const;
 		virtual ~SubPlayerSkill();
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		virtual void setState(const State state);
+		virtual void swapSkill(const std::shared_ptr<SubPlayerSkill> other);
 
-		std::map<SkillState, std::shared_ptr<sf::Texture>> statePreviews;
-		struct Picture {
-			SkillState currentState;
+		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
+		struct Content {
+			State currentState;
 			std::shared_ptr<sf::Sprite> context;
 		};
-		std::pair<SubPlayer, Picture> skill;
-		// maximum skill's carrying capacity in every level
-		static size_t maximumCarry;
+		std::pair<Kind, Content> skill;
+		static size_t maxCarry;
 		static size_t currentCarry;
+		static size_t maxOnField;
+		static size_t currentOnField;
+		static SkillHandler<SubPlayerSkill> handler;
 	};
 }

@@ -28,7 +28,7 @@ namespace game {
 		virtual void onEnabled();
 		virtual void setEnabled(bool value);
 		virtual void setParent(Container * parent);
-		virtual void update(const float updateSpan);
+		virtual void update(const float updateSpan, const float intervalRate);
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:

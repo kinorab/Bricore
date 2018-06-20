@@ -9,7 +9,7 @@ public:
 	virtual void setEmitPosition(const sf::Vector2f & position);
 	virtual void startEmit();
 	virtual void stopEmit();
-	virtual void update(const float updateSpan) override;
+	virtual void update(const float updateSpan, const float intervalRate) override;
 private:
 	struct Particle {
 		sf::Vector2f velocity;

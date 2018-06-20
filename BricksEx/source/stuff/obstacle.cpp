@@ -41,9 +41,9 @@ void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f>
 }
 
 
-void Obstacle::update(item::Ball &ball) {
+void Obstacle::update(item::Ball &ball, const float intervalRate) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		blocks.at(i)->update();
+		blocks.at(i)->update(intervalRate);
 		blocksCollision(i);
 	}
 	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
@@ -57,20 +57,6 @@ void Obstacle::update(item::Ball &ball) {
 		reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
 		setAllVerticeColor(LVDeploy::getBlockCD());
 		setAllSpeed(LVDeploy::getBlockSD());
-	}
-}
-
-void Obstacle::preUpdate(item::Ball & ball, const float intervalTime) {
-	for (size_t i = 0; i < blocks.size(); ++i) {
-		blocks.at(i)->preUpdate(intervalTime);
-		blocksCollision(i);
-	}
-	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
-		if (ball.isBallEnteredObstacleArea(ballN)) {
-			for (size_t blocksN = 0; blocksN < blocks.size(); ++blocksN) {
-				ball.ballCollidedObstaclePre(ballN, blocksN, getDP(blocksN), getSpeed(blocksN));
-			}
-		}
 	}
 }
 

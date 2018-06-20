@@ -17,8 +17,7 @@ class Stage
 public:
 	Stage();
 	virtual ~Stage();
-	virtual void predictUpdate(const float updateSpan);
-	virtual void update(const float updateSpan) override;
+	virtual void update(const float updateSpan, const float intervalRate) override;
 private:
 	static bool instantiated;
 	virtual bool getInstantiated() const;
@@ -36,9 +35,4 @@ private:
 	std::shared_ptr<item::Ball> ball;
 	std::shared_ptr<item::Brick> brick;
 	std::shared_ptr<Obstacle> obstacle;
-	// predict member
-	std::shared_ptr<Player> playerPredict;
-	std::shared_ptr<item::Ball> ballPredict;
-	std::shared_ptr<item::Brick> brickPredict;
-	std::shared_ptr<Obstacle> obstaclePredict;
 };

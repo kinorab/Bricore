@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,9 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\gameSys\AI\AISystem.cpp" />
+    <ClCompile Include="source\gameSys\AI\boss.cpp" />
+    <ClCompile Include="source\gameSys\bar\energeBar.cpp" />
+    <ClCompile Include="source\gameSys\bar\barSystem.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
+    <ClCompile Include="source\gameSys\bar\lifeBar.cpp" />
+    <ClCompile Include="source\gameSys\bar\rageBar.cpp" />
+    <ClCompile Include="source\gameSys\battle\battleSystem.cpp" />
+    <ClCompile Include="source\gameSys\effect\attribute.cpp" />
+    <ClCompile Include="source\gameSys\effect\effect.cpp" />
     <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
+    <ClCompile Include="source\gameSys\item\chip.cpp" />
+    <ClCompile Include="source\gameSys\item\core.cpp" />
+    <ClCompile Include="source\gameSys\item\enerma.cpp" />
+    <ClCompile Include="source\gameSys\skill\bossSkill.cpp" />
+    <ClCompile Include="source\gameSys\skill\skillHandler.cpp" />
     <ClCompile Include="source\stuff\ball.cpp" />
     <ClCompile Include="source\stuff\block.cpp" />
     <ClCompile Include="source\stuff\brick.cpp" />
@@ -31,8 +45,8 @@
     <ClCompile Include="source\stuff\ellipse.cpp" />
     <ClCompile Include="source\event\event.cpp" />
     <ClCompile Include="source\game.cpp" />
-    <ClCompile Include="source\gameSys\area.cpp" />
-    <ClCompile Include="source\gameSys\effect\normalEffect.cpp" />
+    <ClCompile Include="source\gameSys\area\area.cpp" />
+    <ClCompile Include="source\gameSys\effect\entireEffect.cpp" />
     <ClCompile Include="source\gameSys\LVDeploy.cpp" />
     <ClCompile Include="source\particleSystem.cpp" />
     <ClCompile Include="source\gameSys\skill\skillSystem.cpp" />
@@ -63,11 +77,29 @@
     <ClCompile Include="source\UI\textField.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\gameSys\AI\AISystem.h" />
+    <ClInclude Include="source\gameSys\AI\boss.h" />
+    <ClInclude Include="source\gameSys\battle\battleSystem.h" />
+    <ClInclude Include="source\gameSys\item\chip.h" />
+    <ClInclude Include="source\gameSys\item\core.h" />
+    <ClInclude Include="source\gameSys\item\enerma.h" />
+    <ClInclude Include="source\gameSys\item\itemKind.h" />
+    <ClInclude Include="source\gameSys\effect\attribute.h" />
+    <ClInclude Include="source\gameSys\bar\energeBar.h" />
+    <ClInclude Include="source\gameSys\bar\barSystem.h" />
     <ClInclude Include="source\event\eventSubject.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
     <ClInclude Include="source\event\eventType.h" />
+    <ClInclude Include="source\gameSys\bar\lifeBar.h" />
+    <ClInclude Include="source\gameSys\bar\rageBar.h" />
+    <ClInclude Include="source\gameSys\effect\effect.h" />
+    <ClInclude Include="source\gameSys\effect\effectKind.h" />
     <ClInclude Include="source\gameSys\effect\effectSystem.h" />
+    <ClInclude Include="source\gameSys\skill\bossSkill.h" />
+    <ClInclude Include="source\gameSys\skill\skillKind.h" />
+    <ClInclude Include="source\gameSys\skill\skillState.h" />
+    <ClInclude Include="source\gameSys\skill\skillHandler.h" />
     <ClInclude Include="source\singleton.h" />
     <ClInclude Include="source\stuff\ball.h" />
     <ClInclude Include="source\stuff\block.h" />
@@ -81,8 +113,8 @@
     <ClInclude Include="source\stuff\ellipse.h" />
     <ClInclude Include="source\event\event.h" />
     <ClInclude Include="source\game.h" />
-    <ClInclude Include="source\gameSys\area.h" />
-    <ClInclude Include="source\gameSys\effect\normalEffect.h" />
+    <ClInclude Include="source\gameSys\area\area.h" />
+    <ClInclude Include="source\gameSys\effect\entireEffect.h" />
     <ClInclude Include="source\gameSys\LVDeploy.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\gameSys\skill\skillSystem.h" />

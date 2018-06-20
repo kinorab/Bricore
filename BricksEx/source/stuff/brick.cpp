@@ -22,7 +22,7 @@ Brick::Brick()
 	setBrickColor(LVDeploy::getBrickCD().at(0));
 }
 
-Brick::Brick(const Brick & copy) 
+Brick::Brick(const Brick & copy)
 	: frameSize(copy.frameSize) {
 	bricks.clear();
 	std::for_each(copy.bricks.begin(), copy.bricks.end()
@@ -33,20 +33,8 @@ Brick::Brick(const Brick & copy)
 	setFrameColor(copy.frameColor);
 }
 
-void Brick::update(Ball &ball) {
-	if (!bricks.empty()) {
-		for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
-			if (ball.isBallEnteredBricksArea(ballN)) {
-				for (size_t brickN = 0; brickN < getBricksSize(); ++brickN) {
-					if (ball.isBallCollidedBrick(ballN, brickN, getDP(brickN))) {
-						bricks.erase(bricks.begin() + brickN);
-						--brickN;
-					}
-				}
-			}
-		}
-	}
-	else {
+void Brick::update(Ball &ball, const float intervalRate) {
+	if (bricks.empty()) {
 		LVDeploy::finishLevel();
 		reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))
 			, LVDeploy::getBrickD().at(1)
@@ -55,18 +43,14 @@ void Brick::update(Ball &ball) {
 			, LVDeploy::getBrickD().at(5)
 			, LVDeploy::getBrickD().at(6));
 		setBrickColor(LVDeploy::getBrickCD().at(0));
+		return;
 	}
-}
-
-void Brick::preUpdate(Ball & ball, const float intervalTime) {
-	if (!bricks.empty()) {
-		for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
-			if (ball.isBallEnteredBricksArea(ballN)) {
-				for (size_t brickN = 0; brickN < getBricksSize(); ++brickN) {
-					if (ball.isBallCollidedBrickPre(ballN, brickN, getDP(brickN))) {
-						bricks.erase(bricks.begin() + brickN);
-						--brickN;
-					}
+	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
+		if (ball.isBallEnteredBricksArea(ballN)) {
+			for (size_t brickN = 0; brickN < getBricksSize(); ++brickN) {
+				if (ball.isBallCollidedBrick(ballN, brickN, getDP(brickN))) {
+					bricks.erase(bricks.begin() + brickN);
+					--brickN;
 				}
 			}
 		}

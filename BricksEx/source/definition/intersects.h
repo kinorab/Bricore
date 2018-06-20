@@ -1,7 +1,8 @@
 #pragma once
 
-#include "diagonalPoint.h"
-
+namespace sys {
+	template<typename T> class DPoint;
+}
 namespace game {
 	//=============================================================================================//
 	//-------------------------------below are rects intersects------------------------------------//

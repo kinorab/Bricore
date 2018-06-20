@@ -1,10 +1,10 @@
 #include "diagonalPoint.h"
+
 template<typename T>
 inline sys::DPoint<T>::DPoint(const sf::Vector2<T> &D1, const sf::Vector2<T> &D2) {
 	if (D1 == D2) {
 		throw std::invalid_argument("Two points are not diagonal points");
 	}
-
 	dot1 = D1;
 	dot2 = D2;
 }

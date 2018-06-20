@@ -37,43 +37,19 @@ Player::Player(const Player & copy)
 
 }
 
-void Player::update(const Vector2f &ballPos, const float ballRadius) {
+void Player::update(const Vector2f &ballPos, const float ballRadius, const float intervalRate) {
 	const FloatRect playerBound = mainPlayer.getGlobalBounds();
 	if (playerBound.left >= 0
 		&& (Keyboard::isKeyPressed(Keyboard::Left))
 		) {
-		mainPlayer.move(Vector2f(-MAINPLAYERSPEED / SLICE, 0));
-		redRange.move(Vector2f(-MAINPLAYERSPEED / SLICE, 0));
+		mainPlayer.move(Vector2f(-MAINPLAYERSPEED / SLICE * intervalRate, 0));
+		redRange.move(Vector2f(-MAINPLAYERSPEED / SLICE * intervalRate, 0));
 	}
 	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(Keyboard::Right))
 		) {
-		mainPlayer.move(Vector2f(MAINPLAYERSPEED / SLICE, 0));
-		redRange.move(Vector2f(MAINPLAYERSPEED / SLICE, 0));
-	}
-	if (GameState::start) {
-		flashRange(AudioManager::getInstance().sound1, ballPos, ballRadius);
-	}
-	if (flash) {
-		flashElapsed();
-	}
-
-	yellowRange.setPosition(mainPlayer.getPosition());
-}
-
-void Player::preUpdate(const sf::Vector2f & ballPos, const float ballRadius, const float intervalTime) {
-	const FloatRect playerBound = mainPlayer.getGlobalBounds();
-	if (playerBound.left >= 0
-		&& (Keyboard::isKeyPressed(Keyboard::Left))
-		) {
-		mainPlayer.move(Vector2f((-MAINPLAYERSPEED / SLICE) * intervalTime, 0));
-		redRange.move(Vector2f((-MAINPLAYERSPEED / SLICE) * intervalTime, 0));
-	}
-	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
-		&& (Keyboard::isKeyPressed(Keyboard::Right))
-		) {
-		mainPlayer.move(Vector2f((MAINPLAYERSPEED / SLICE) * intervalTime, 0));
-		redRange.move(Vector2f((MAINPLAYERSPEED / SLICE) * intervalTime, 0));
+		mainPlayer.move(Vector2f(MAINPLAYERSPEED / SLICE * intervalRate, 0));
+		redRange.move(Vector2f(MAINPLAYERSPEED / SLICE * intervalRate, 0));
 	}
 	if (GameState::start) {
 		flashRange(AudioManager::getInstance().sound1, ballPos, ballRadius);

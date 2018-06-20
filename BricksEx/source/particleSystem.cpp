@@ -27,10 +27,11 @@ void ParticleSystem::stopEmit() {
 	emitting = false;
 }
 
-void ParticleSystem::update(const float updateSpan) {
+void ParticleSystem::update(const float updateSpan, const float intervalRate) {
+	float span = updateSpan * intervalRate;
 	for (size_t i = 0; i < particles.size(); ++i) {
 		if (particles[i].lifeTime > 0.0f) {
-			particles[i].lifeTime -= updateSpan;
+			particles[i].lifeTime -= span;
 		}
 		else if (emitting){
 			resetParticle(i);
@@ -39,7 +40,7 @@ void ParticleSystem::update(const float updateSpan) {
 			particles[i].lifeTime = 0.0;
 		}
 
-		(*vertices)[i].position += particles[i].velocity * updateSpan;
+		(*vertices)[i].position += particles[i].velocity * span;
 		float ratio = particles[i].lifeTime / maxLifeTime;
 		(*vertices)[i].color = Color(
 			static_cast<Uint8>(rng() % 256),

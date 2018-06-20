@@ -1,5 +1,6 @@
 #include "block.h"
 #include "../definition/define.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 using namespace sf;
@@ -70,7 +71,7 @@ void Block::setSpeed(const Vector2f & speed) {
 }
 
 // all change direct by using abs() to prevent stuck inside the block
-void Block::update() {
+void Block::update(const float intervalRate) {
 
 	const Vector2f posLT = (*this)[0].position;
 	const Vector2f posRB = (*this)[2].position;
@@ -87,27 +88,7 @@ void Block::update() {
 	else if (posRB.y >= LEVEL_HEIGHT) {
 		speed.y = -abs(speed.y);
 	}
-	moveEntity();
-}
-
-void Block::preUpdate(const float intervalTime) {
-
-	const Vector2f posLT = (*this)[0].position;
-	const Vector2f posRB = (*this)[2].position;
-
-	if (posLT.x <= 0.0f) {
-		speed.x = abs(speed.x);
-	}
-	else if (posRB.x >= LEVEL_WIDTH) {
-		speed.x = -abs(speed.x);
-	}
-	if (posLT.y <= 0.0f) {
-		speed.y = abs(speed.y);
-	}
-	else if (posRB.y >= LEVEL_HEIGHT) {
-		speed.y = -abs(speed.y);
-	}
-	moveEntity(intervalTime);
+	moveEntity(intervalRate);
 }
 
 const sys::DPointf Block::getDP() const {
@@ -158,10 +139,10 @@ void Block::setBlockVertice() {
 	(*this)[3].position += Vector2f(0.0f, height);
 }
 
-void Block::moveEntity(const float intervalTime) {
+void Block::moveEntity(const float intervalRate) {
 
 	for (size_t i = 0; i < getVertexCount(); ++i) {
-		(*this)[i].position += (speed / static_cast<float>(SLICE)) * intervalTime;
+		(*this)[i].position += (speed / static_cast<float>(SLICE)) * intervalRate;
 	}
 	position = (*this)[0].position;// mark new position in [0]
 }

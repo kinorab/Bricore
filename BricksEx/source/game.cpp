@@ -167,18 +167,17 @@ void Game::renderFunc() {
 		i = static_cast<Keyboard::Key>(i + 1)) {
 		keyDown.insert({ i, false });
 	}
-	// display in milliseconds
-	constexpr float updateSpan = 0.013f * 1000.f;
-	Time elapsed = milliseconds(0);
-	Time renderElapsed = milliseconds(0);
-	Time distribute = milliseconds(0);
+
+	float elapsed = 0.f;
+	float renderElapsed = 0.f;
 	Clock clock;
+	Clock clock2;
 	bool finishing = false;
 
 	while (!finishing) {
-		distribute = std::min<Time>(clock.restart(), milliseconds(500));
-		elapsed += distribute;
-		renderElapsed += distribute;
+		// display in milliseconds
+		constexpr float updateSpan = 13.f;
+		float distribute = clock.restart().asSeconds() * 1000.f;
 		while (!eventQueue.empty()) {
 			currentEvent = popEvent();
 			handleKeyEvent();
@@ -188,19 +187,18 @@ void Game::renderFunc() {
 				finishing = true;
 			}
 		}
-		// max fixed at 1.5x current fps
-		renderElapsed = std::min<Time>(renderElapsed, milliseconds(static_cast<Int32>(graph.getFrameSpan() * 1.5f)));
-
-		while (elapsed.asMicroseconds() >= updateSpan * 1000.f) {
-			stage->update(updateSpan);
-			elapsed -= milliseconds(static_cast<Int32>(updateSpan));
+		elapsed = std::min<float>(elapsed + distribute, updateSpan * 1.5f);
+		while (elapsed > 0.0f) {
+			float intervalRate = std::min<float>(elapsed, updateSpan) / updateSpan;
+			stage->update(updateSpan, intervalRate);
+			elapsed -= updateSpan * intervalRate;
 		}
-
-		if (renderElapsed.asMicroseconds() >= graph.getFrameSpan() * 1000.f) {
-			stage->predictUpdate(elapsed.asMilliseconds() / updateSpan);
+		// max fixed at 1.5x current fps
+		renderElapsed = std::min<float>(renderElapsed + distribute, graph.getFrameSpan() * 1.5f);
+		if (renderElapsed >= graph.getFrameSpan()) {
 			window->draw(*stage);
 			window->display();
-			renderElapsed -= milliseconds(static_cast<Int32>(graph.getFrameSpan()));
+			renderElapsed -= graph.getFrameSpan();
 		}
 	}
 	// finalize...

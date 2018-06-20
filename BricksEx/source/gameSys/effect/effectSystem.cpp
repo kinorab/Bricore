@@ -3,21 +3,15 @@
 
 using namespace game;
 
-void EffectSystem::handleEffect() {
-	if (belongToSkill) {
-		throw std::invalid_argument("This effect belongs to skill.");
-	}
-	duration -= clock.restart();
-	if (duration.asSeconds() <= 0.0f) {
-		exist = false;
-	}
-}
-
 const sf::Time & EffectSystem::getDuration() const {
 	return duration;
 }
 
-const bool & EffectSystem::isExist() const {
+bool EffectSystem::isBelongToSkill() const {
+	return belongToSkill;
+}
+
+bool EffectSystem::isExist() const {
 	return exist;
 }
 

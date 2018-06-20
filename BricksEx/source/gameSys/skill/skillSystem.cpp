@@ -1,5 +1,6 @@
 #include "skillSystem.h"
-#include "../effect/normalEffect.h"
+#include "../effect/entireEffect.h"
+#include "../effect/attribute.h"
 #include <stdexcept>
 
 using namespace game;
@@ -7,31 +8,44 @@ using namespace game;
 SkillSystem::SkillSystem(const sf::Time &duration, bool autoUse, const bool exist)
 	: System(false)
 	, autoUse(autoUse)
+	, silenced(false)
+	, locked(false)
 	, exist(exist)
 	, duration(duration)
-	, skillLevel(0)
-	, status(Status::None)
+	, level(0)
+	, status(None)
 	, elapsedTime(sf::seconds(0)){
 }
 
-void SkillSystem::selectOn() {
-	if (status != Status::UnSelected) return;
-	status = Status::Selected;
+bool SkillSystem::selectOn() {
+	if (status != UnSelected) return false;
+	status = Selected;
+	return true;
 }
 
-void SkillSystem::selectOff() {
-	if (status != Status::Selected) return;
-	status = Status::UnSelected;
+bool SkillSystem::selectOff() {
+	if (status != Selected) return false;
+	status = UnSelected;
+	return true;
+}
+
+void SkillSystem::upgradeSkill(const size_t number) {
+	if (level + number > maxLevel) throw std::out_of_range("Upgrade level over the max level.");
+	level += number;
+}
+
+void SkillSystem::extendMaxLevel(const size_t number) {
+	maxLevel += number;
 }
 
 void SkillSystem::setOwnToPlayer(const bool giveOwn) {
 	if (!exist) throw std::invalid_argument("Skill not exist in setOwn.");
 
 	if (giveOwn) {
-		status = Status::UnSelected;
+		status = UnSelected;
 	}
 	else {
-		status = Status::None;
+		status = None;
 	}
 }
 
@@ -51,8 +65,12 @@ const sf::Time & SkillSystem::getDuration() const {
 	return duration;
 }
 
-const size_t SkillSystem::getSkillLevel() const {
-	return skillLevel;
+size_t SkillSystem::getLevel() const {
+	return level;
+}
+
+size_t SkillSystem::getmaxLevel() const {
+	return maxLevel;
 }
 
 SkillSystem::~SkillSystem() {
@@ -64,22 +82,23 @@ void SkillSystem::useSkill() {
 	clock.restart();
 }
 
-void SkillSystem::elapsed() {
-	if (!isEnable()) throw std::invalid_argument("Skill is disabled in elapsed.");
-	if (elapsedTime >= duration) return;
+bool SkillSystem::elapsed() {
+	if (!isEnable()) throw std::invalid_argument("Skill was disabled in elapsed.");
+	if (elapsedTime >= duration) return true;
 	sf::Time distribute = clock.restart();
 	elapsedTime += distribute;
-	std::for_each(skillEffects.begin(), skillEffects.end(), [&](const std::shared_ptr<NormalEffect> effect) {
+	std::for_each(skillEffects.begin(), skillEffects.end(), [&](const std::shared_ptr<EntireEffect> effect) {
 		if (effect->elapsedTime >= effect->duration) {
 			effect->setEnable(false);
 			return;
 		};
 		effect->elapsedTime += distribute;
 	});
+	return false;
 }
 
 void SkillSystem::exhausted() {
-	if (!isEnable()) throw std::invalid_argument("Skill is disabled in exhausted.");
+	if (!isEnable()) throw std::invalid_argument("Skill has been already disabled in exhausted.");
 	setEnable(false);
 }
 
@@ -88,10 +107,7 @@ void SkillSystem::setEnable(const bool enable) {
 		throw std::invalid_argument("Skill not exist in setEnable.");
 	}
 	System::setEnable(enable);
-	std::for_each(skillEffects.begin(), skillEffects.end(), [=](const std::shared_ptr<NormalEffect> &effect) {
-		if (!effect->isExist()) {
-			throw std::invalid_argument("Effect not exist in setEnable.");
-		}
+	std::for_each(skillEffects.begin(), skillEffects.end(), [=](const std::shared_ptr<EntireEffect> &effect) {
 		effect->setEnable(enable);
 	});
 }

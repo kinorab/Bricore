@@ -1,6 +1,6 @@
 #include "hud.h"
 #include "definition/define.h"
-#include "gameSys/area.h"
+#include "gameSys/area/area.h"
 #include <SFML/Graphics.hpp>
 
 HUD::HUD() {
