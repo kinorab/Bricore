@@ -29,12 +29,12 @@ Stage::Stage() :
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, mouseLight });
 	using namespace std::placeholders;
-	addListener(typeid(game::KeyEvent::Pressed), std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyPressed, this, _1)));
-	addListener(typeid(game::KeyEvent::Released), std::make_shared<game::KeyListener>(std::bind(&Stage::onKeyReleased, this, _1)));
+	addListener(std::make_shared<game::KeyPressedListener>(std::bind(&Stage::onKeyPressed, this, _1)));
+	addListener(std::make_shared<game::KeyReleasedListener>(std::bind(&Stage::onKeyReleased, this, _1)));
 	addListener(std::make_shared<game::MouseEnteredListener>(std::bind(&Stage::onMouseEntered, this, _1)));
 	addListener(std::make_shared<game::MouseLeftListener>(std::bind(&Stage::onMouseLeft, this, _1)));
 	addListener(std::make_shared<game::MouseMovedListener>(std::bind(&Stage::onMouseMoved, this, _1)));
-	addListener(typeid(game::MouseButtonEvent::Pressed), std::make_shared<game::MouseButtonListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
+	addListener(std::make_shared<game::MousePressedListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
 }
 
 Stage::~Stage() {
@@ -87,7 +87,7 @@ void Stage::update(const float updateSpan) {
 	mouseLight->update(updateSpan);
 }
 
-void Stage::onKeyPressed(game::KeyEvent & event) {
+void Stage::onKeyPressed(game::KeyPressedEvent & event) {
 	if (event.code == sf::Keyboard::P) {
 		GameState::pause = !GameState::pause;
 		GameState::lock = !GameState::lock;
@@ -103,7 +103,7 @@ void Stage::onKeyPressed(game::KeyEvent & event) {
 	}
 }
 
-void Stage::onKeyReleased(game::KeyEvent & event) {
+void Stage::onKeyReleased(game::KeyReleasedEvent & event) {
 
 }
 
@@ -119,7 +119,7 @@ void Stage::onMouseMoved(game::MouseMovedEvent & event) {
 	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(event.x), static_cast<float>(event.y)));
 }
 
-void Stage::onMouseButtonPressed(game::MouseButtonEvent & event) {
+void Stage::onMouseButtonPressed(game::MousePressedEvent & event) {
 	if (!GameState::lock) {
 		if (event.button == sf::Mouse::Left) {
 			// debugging feature

@@ -4,15 +4,13 @@
 #include "../cancelable.h"
 
 namespace game {
-	class MouseButtonEvent :
+	class MouseReleasedEvent :
 		public sf::Event::MouseButtonEvent,
 		public UIEvent,
 		public Cancelable {
 	public:
-		MouseButtonEvent(std::type_index type, sf::Event::MouseButtonEvent eventData);
-		virtual ~MouseButtonEvent() = default;
+		MouseReleasedEvent(sf::Event::MouseButtonEvent eventData);
+		virtual ~MouseReleasedEvent() = default;
 		virtual void accept(EventListener & visitor) override;
-		class Pressed {};
-		class Released {};
 	};
 }

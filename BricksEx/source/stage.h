@@ -12,11 +12,12 @@ class Player;
 class ParticleSystem;
 class HUD;
 namespace game {
-	class KeyEvent;
+	class KeyPressedEvent;
+	class KeyReleasedEvent;
 	class MouseMovedEvent;
 	class MouseEnteredEvent;
 	class MouseLeftEvent;
-	class MouseButtonEvent;
+	class MousePressedEvent;
 }
 
 class Stage
@@ -27,12 +28,12 @@ public:
 	virtual void predictUpdate(const float updateSpan);
 	virtual void update(const float updateSpan) override;
 private:
-	virtual void onKeyPressed(game::KeyEvent & event);
-	virtual void onKeyReleased(game::KeyEvent & event);
+	virtual void onKeyPressed(game::KeyPressedEvent & event);
+	virtual void onKeyReleased(game::KeyReleasedEvent & event);
 	virtual void onMouseEntered(game::MouseEnteredEvent & event);
 	virtual void onMouseLeft(game::MouseLeftEvent & event);
 	virtual void onMouseMoved(game::MouseMovedEvent & event);
-	virtual void onMouseButtonPressed(game::MouseButtonEvent & event);
+	virtual void onMouseButtonPressed(game::MousePressedEvent & event);
 
 	std::shared_ptr<HUD> hud;
 	std::shared_ptr<ParticleSystem> mouseLight;

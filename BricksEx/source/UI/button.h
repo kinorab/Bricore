@@ -4,7 +4,8 @@
 
 namespace game {
 	class MouseMovedEvent;
-	class MouseButtonEvent;
+	class MousePressedEvent;
+	class MouseReleasedEvent;
 	class MouseEnteredEvent;
 	class MouseLeftEvent;
 	class Button
@@ -27,7 +28,7 @@ namespace game {
 		std::shared_ptr<InteractiveObject> hitObject;
 		virtual void onMouseEntered(MouseEnteredEvent & event);
 		virtual void onMouseLeft(MouseLeftEvent & event);
-		virtual void onMousePressed(MouseButtonEvent & event);
-		virtual void onMouseReleased(MouseButtonEvent & event);
+		virtual void onMousePressed(MousePressedEvent & event);
+		virtual void onMouseReleased(MouseReleasedEvent & event);
 	};
 }

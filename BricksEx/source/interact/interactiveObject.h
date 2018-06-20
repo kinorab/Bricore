@@ -18,7 +18,6 @@ namespace game {
 		public sf::Drawable,
 		public sf::Transformable {
 	public:
-		InteractiveObject();
 		virtual ~InteractiveObject();
 		using EventSubject::addListener;
 		virtual int addListener(std::type_index eventType, std::shared_ptr<EventListener> listener);
@@ -34,6 +33,7 @@ namespace game {
 		virtual void setParent(Container * parent);
 		virtual void update(const float updateSpan);
 	protected:
+		InteractiveObject();
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 	private:
 		bool enabled;

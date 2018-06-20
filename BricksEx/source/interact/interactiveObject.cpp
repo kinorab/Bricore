@@ -32,20 +32,12 @@ namespace game {
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		auto listenerRange = listeners.equal_range(event.getType());
-		std::vector<std::pair<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>>> tempListeners;
-		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
-		std::for_each(tempListeners.begin(), tempListeners.end(),
-			[&](std::pair<const std::type_index, std::pair<const int, std::shared_ptr<EventListener>>> & listener) {
-			event.accept(*listener.second.second);
-		});
-
+		dispatchEvent(static_cast<Event &>(event));
 		if (event.getPhase() == EventPhase::AT_TARGET) {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}
 
 		if (event.getPhase() == EventPhase::BUBBLING_PHASE
-			&& event.getBubbles()
 			&& parent != nullptr
 			&& !helper.isPropagationStopped()) {
 			parent->dispatchEvent(event);

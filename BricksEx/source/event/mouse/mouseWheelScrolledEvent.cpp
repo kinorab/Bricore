@@ -3,7 +3,6 @@
 
 namespace game {
 	MouseWheelScrolledEvent::MouseWheelScrolledEvent(sf::Event::MouseWheelScrollEvent eventData) :
-		UIEvent(typeid(MouseWheelScrolledEvent), true),
 		sf::Event::MouseWheelScrollEvent(eventData) {
 	}
 

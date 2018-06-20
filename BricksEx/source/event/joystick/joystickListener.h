@@ -1,5 +1,7 @@
 #pragma once
 
-#include "joystickButtonListener.h"
-#include "joystickConnectListener.h"
+#include "joystickPressedListener.h"
+#include "joystickReleasedListener.h"
+#include "joystickConnectedListener.h"
+#include "joystickDisconnectedListener.h"
 #include "joystickMovedListener.h"

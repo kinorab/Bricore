@@ -26,7 +26,7 @@ namespace game {
 		}
 
 		keyDown[event.key.code] = true;
-		KeyEvent gameEvent(typeid(KeyEvent::Pressed), event.key);
+		KeyPressedEvent gameEvent(event.key);
 		root.dispatchEvent(gameEvent);
 	}
 
@@ -36,7 +36,7 @@ namespace game {
 		}
 
 		keyDown[event.key.code] = false;
-		KeyEvent gameEvent(typeid(KeyEvent::Released), event.key);
+		KeyReleasedEvent gameEvent(event.key);
 		root.dispatchEvent(gameEvent);
 	}
 }

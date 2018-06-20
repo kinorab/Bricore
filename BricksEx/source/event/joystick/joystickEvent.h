@@ -1,5 +1,7 @@
 #pragma once
 
-#include "joystickButtonEvent.h"
-#include "joystickConnectEvent.h"
+#include "joystickPressedEvent.h"
+#include "joystickReleasedEvent.h"
+#include "joystickConnectedEvent.h"
+#include "joystickDisconnectedEvent.h"
 #include "joystickMovedEvent.h"

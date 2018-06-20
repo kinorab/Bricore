@@ -12,20 +12,16 @@ namespace game {
 		friend class DispatchHelper;
 	public:
 		virtual ~UIEvent() = default;
-		virtual bool getBubbles() const;
 		virtual EventSubject * getCurrentTarget() const;
 		virtual EventPhase getPhase() const;
 		virtual EventSubject * getTarget() const;
-		virtual std::type_index getType() const;
 		virtual void stopPropagation();
 	protected:
-		UIEvent(std::type_index type, bool bubbles);
+		UIEvent() = default;
 	private:
-		bool bubbles;
 		EventSubject * currentTarget;
 		EventPhase phase = EventPhase::NONE;
 		bool propagationStopped = false;
 		EventSubject * target;
-		std::type_index type;
 	};
 }

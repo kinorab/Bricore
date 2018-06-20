@@ -1,6 +1,7 @@
 #pragma once
 
-#include "mouseButtonEvent.h"
+#include "mousePressedEvent.h"
+#include "mouseReleasedEvent.h"
 #include "mouseEnteredEvent.h"
 #include "mouseLeftEvent.h"
 #include "mouseMovedEvent.h"

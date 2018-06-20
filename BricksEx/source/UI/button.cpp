@@ -13,8 +13,8 @@ namespace game {
 		using namespace std::placeholders;
 		addListener(std::make_shared<MouseEnteredListener>(std::bind(&Button::onMouseEntered, this, _1)));
 		addListener(std::make_shared<MouseLeftListener>(std::bind(&Button::onMouseLeft, this, _1)));
-		addListener(typeid(MouseButtonEvent::Pressed), std::make_shared<MouseButtonListener>(std::bind(&Button::onMousePressed, this, _1)));
-		addListener(typeid(MouseButtonEvent::Released), std::make_shared<MouseButtonListener>(std::bind(&Button::onMouseReleased, this, _1)));
+		addListener(std::make_shared<MousePressedListener>(std::bind(&Button::onMousePressed, this, _1)));
+		addListener(std::make_shared<MouseReleasedListener>(std::bind(&Button::onMouseReleased, this, _1)));
 	}
 
 	Button::~Button() {
@@ -50,11 +50,11 @@ namespace game {
 		currentState = ButtonState::UP;
 	}
 
-	void Button::onMousePressed(MouseButtonEvent &) {
+	void Button::onMousePressed(MousePressedEvent &) {
 		currentState = ButtonState::DOWN;
 	}
 
-	void Button::onMouseReleased(MouseButtonEvent &) {
+	void Button::onMouseReleased(MouseReleasedEvent &) {
 		currentState = ButtonState::OVER;
 	}
 }

@@ -27,7 +27,7 @@ namespace game {
 			return;
 		}
 
-		MouseButtonEvent gameEvent(typeid(MouseButtonEvent::Pressed), event.mouseButton);
+		MousePressedEvent gameEvent(event.mouseButton);
 		previousContactNode->dispatchEvent(gameEvent);
 	}
 
@@ -36,7 +36,7 @@ namespace game {
 			return;
 		}
 
-		MouseButtonEvent gameEvent(typeid(MouseButtonEvent::Released), event.mouseButton);
+		MouseReleasedEvent gameEvent(event.mouseButton);
 		previousContactNode->dispatchEvent(gameEvent);
 	}
 
