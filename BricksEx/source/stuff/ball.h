@@ -22,7 +22,7 @@ namespace item {
 	public:
 		Ball();
 		explicit Ball(const Ball &copy);
-		virtual void update(const sys::DPointf &playerDP, const float intervalRate);
+		virtual void update(const sys::DPointf &playerDP, const float updateRatio);
 		virtual void initializeBall();
 		virtual void followPlayer(const sf::Vector2f &pos);
 		virtual void ballCollidedObstacle(const size_t number, const size_t blockNumber, const sys::DPointf boundsDP, const sf::Vector2f &speed);

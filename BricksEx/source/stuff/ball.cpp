@@ -26,9 +26,9 @@ Ball::Ball(const Ball & copy)
 	});
 }
 
-void Ball::update(const sys::DPointf &playerDP, const float intervalRate) {
+void Ball::update(const sys::DPointf &playerDP, const float updateRatio) {
 	for (size_t i = 0; i < balls.size(); ++i) {
-		balls.at(i)->move(playerDP, initialized, intervalRate);
+		balls.at(i)->move(playerDP, initialized, updateRatio);
 		if (balls.at(i)->broke) {
 			balls.erase(balls.begin() + i);
 		}
@@ -286,7 +286,7 @@ void Ball::BallContainer::draw(sf::RenderTarget &target, sf::RenderStates states
 	target.draw(ball, states);
 }
 
-void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized, const float intervalRate) {
+void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized, const float updateRatio) {
 	const Vector2f ballPos = getPos();
 	const float radius = getRad();
 	if (!active) {
@@ -350,7 +350,7 @@ void Ball::BallContainer::move(const sys::DPointf &DP, bool &initialized, const 
 		}
 	}
 	determineUpdate(initialized);
-	ball.move(sf::Vector2f(ballSpeed.x / SLICE, ballSpeed.y / SLICE) * intervalRate);
+	ball.move(sf::Vector2f(ballSpeed.x / SLICE, ballSpeed.y / SLICE) * updateRatio);
 }
 
 void Ball::BallContainer::hitByPlayer(const sys::DPointf &DP) {

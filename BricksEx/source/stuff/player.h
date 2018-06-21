@@ -22,7 +22,7 @@ class Player :
 public:
 	Player();
 	explicit Player(const Player &copy);
-	virtual void update(const sf::Vector2f &ballPos, const float ballRadius, const float intervalRate);
+	virtual void update(const sf::Vector2f &ballPos, const float ballRadius, const float updateRatio);
 	virtual const sf::Vector2f & getMainPlayerPos() const;
 	virtual const sf::Vector2f getMainPlayerTopCenterPos() const;
 	virtual const sf::FloatRect getMainPlayerBounds() const;

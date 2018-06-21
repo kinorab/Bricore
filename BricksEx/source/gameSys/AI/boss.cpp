@@ -34,7 +34,7 @@ void Boss::loadPartPreviews(const std::vector<std::string>& fileName, const bool
 	});
 }
 
-void Boss::update(const float intervalRate) {
+void Boss::update(const float updateRatio) {
 }
 
 void Boss::handle(const sf::Event * const event) {

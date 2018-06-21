@@ -23,7 +23,7 @@ namespace item {
 	public:
 		Brick();
 		explicit Brick(const Brick &copy);
-		virtual void update(Ball &ball, const float intervalRate);
+		virtual void update(Ball &ball, const float updateRatio);
 		virtual void displayImage(const std::string fileName);
 		virtual void setBrickColor(const sf::Color&);
 		virtual void setFrameColor(const sf::Color&);

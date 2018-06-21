@@ -34,7 +34,7 @@ Brick::Brick(const Brick & copy)
 	setFrameColor(copy.frameColor);
 }
 
-void Brick::update(Ball &ball, const float intervalRate) {
+void Brick::update(Ball &ball, const float updateRatio) {
 	if (bricks.empty()) {
 		LVDeploy::finishLevel();
 		reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))

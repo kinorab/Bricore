@@ -50,9 +50,9 @@ void Game::renderFunc() {
 
 		elapsed = std::min<float>(elapsed + distribute, updateSpan * 1.5f);
 		while (elapsed > 0.0f) {
-			float intervalRate = std::min<float>(elapsed, updateSpan) / updateSpan;
-			stage->update(updateSpan, intervalRate);
-			elapsed -= updateSpan * intervalRate;
+			float updateRatio = std::min<float>(elapsed, updateSpan) / updateSpan;
+			stage->update(updateRatio);
+			elapsed -= updateSpan * updateRatio;
 		}
 		// max fixed at 1.5x current fps
 		renderElapsed = std::min<float>(renderElapsed + distribute, graph.getFrameSpan() * 1.5f);

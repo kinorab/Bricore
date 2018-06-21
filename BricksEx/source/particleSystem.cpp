@@ -26,8 +26,8 @@ void ParticleSystem::stopEmit() {
 	emitting = false;
 }
 
-void ParticleSystem::update(const float updateSpan, const float intervalRate) {
-	float span = updateSpan * intervalRate;
+void ParticleSystem::update(const float updateRatio) {
+	float span = 15 * updateRatio;
 	for (size_t i = 0; i < particles.size(); ++i) {
 		if (particles[i].lifeTime > 0.0f) {
 			particles[i].lifeTime -= span;

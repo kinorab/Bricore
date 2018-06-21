@@ -14,7 +14,7 @@ namespace item {
 	public:
 		explicit Block(const sf::Vector2f &position, const float width, const float height);
 		explicit Block(const Block &copy);
-		void update(const float intervalRate);
+		void update(const float updateRatio);
 		void setVerticeColor(const sf::Color &);
 		void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
 		void setWidth(const float width);

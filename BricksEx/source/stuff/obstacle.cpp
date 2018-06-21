@@ -42,9 +42,9 @@ void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f>
 }
 
 
-void Obstacle::update(item::Ball &ball, const float intervalRate) {
+void Obstacle::update(item::Ball &ball, const float updateRatio) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		blocks.at(i)->update(intervalRate);
+		blocks.at(i)->update(updateRatio);
 		blocksCollision(i);
 	}
 	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {

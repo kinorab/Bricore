@@ -25,7 +25,7 @@ class Stage
 public:
 	Stage();
 	virtual ~Stage();
-	virtual void update(const float updateSpan, const float intervalRate) override;
+	virtual void update(const float updateRatio) override;
 private:
 	virtual void onKeyPressed(game::KeyPressedEvent & event);
 	virtual void onKeyReleased(game::KeyReleasedEvent & event);

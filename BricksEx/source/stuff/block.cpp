@@ -73,7 +73,7 @@ void Block::setSpeed(const Vector2f & speed) {
 }
 
 // all change direct by using abs() to prevent stuck inside the block
-void Block::update(const float intervalRate) {
+void Block::update(const float updateRatio) {
 
 	const Vector2f posLT = (*this)[0].position;
 	const Vector2f posRB = (*this)[2].position;
@@ -90,7 +90,7 @@ void Block::update(const float intervalRate) {
 	else if (posRB.y >= LEVEL_HEIGHT) {
 		speed.y = -abs(speed.y);
 	}
-	moveEntity(intervalRate);
+	moveEntity(updateRatio);
 }
 
 const sys::DPointf Block::getDP() const {
@@ -141,10 +141,10 @@ void Block::setBlockVertice() {
 	(*this)[3].position += Vector2f(0.0f, height);
 }
 
-void Block::moveEntity(const float intervalRate) {
+void Block::moveEntity(const float updateRatio) {
 
 	for (size_t i = 0; i < getVertexCount(); ++i) {
-		(*this)[i].position += (speed / static_cast<float>(SLICE)) * intervalRate;
+		(*this)[i].position += (speed / static_cast<float>(SLICE)) * updateRatio;
 	}
 	position = (*this)[0].position;// mark new position in [0]
 }

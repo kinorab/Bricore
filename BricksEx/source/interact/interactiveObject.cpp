@@ -82,7 +82,7 @@ namespace game {
 		parent = container;
 	}
 
-	void InteractiveObject::update(const float, const float) {
+	void InteractiveObject::update(const float) {
 	}
 
 	void InteractiveObject::draw(sf::RenderTarget & target, sf::RenderStates states) const {

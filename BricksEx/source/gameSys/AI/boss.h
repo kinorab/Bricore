@@ -29,7 +29,7 @@ namespace game {
 		explicit Boss(const std::string name, const Attribute::Kind &attribute
 			, const std::vector<BossSkill> &skills, const size_t maxSkillUsing);
 		virtual void loadPartPreviews(const std::vector<std::string> &fileName, const bool isSmooth = false);
-		virtual void update(const float intervalRate);
+		virtual void update(const float updateRatio);
 		virtual void handle(const sf::Event * const event) override;
 		virtual void extendMaxOnUsing(const size_t number);
 		virtual void offset(const sf::Vector2f &offset, const sf::Time &moveTime);

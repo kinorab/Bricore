@@ -37,15 +37,15 @@ Stage::~Stage() {
 	AudioManager::getInstance().sound1.stop();
 }
 
-void Stage::update(const float updateSpan, const float intervalRate) {
+void Stage::update(const float updateRatio) {
 	if (!GameState::pause) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
-			player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), intervalRate);
+			player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
 			if (GameState::start) {
-				brick->update(*ball, intervalRate);
-				obstacle->update(*ball, intervalRate);
-				ball->update(player->getMainPlayerDP(), intervalRate);
+				brick->update(*ball, updateRatio);
+				obstacle->update(*ball, updateRatio);
+				ball->update(player->getMainPlayerDP(), updateRatio);
 			}
 			else {
 				ball->followPlayer(player->getMainPlayerTopCenterPos());
@@ -53,7 +53,7 @@ void Stage::update(const float updateSpan, const float intervalRate) {
 			}
 		}
 	}
-	mouseLight->update(updateSpan, intervalRate);
+	mouseLight->update(updateRatio);
 }
 
 void Stage::onKeyPressed(game::KeyPressedEvent & event) {
