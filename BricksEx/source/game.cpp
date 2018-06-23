@@ -40,14 +40,12 @@ void Game::renderFunc() {
 	float elapsed = 0;
 	float renderElapsed = 0;
 	sf::Clock clock;
-
 	for (bool finishing = false; !finishing;) {
 		// display in milliseconds
 		constexpr float updateSpan = 13.f;
 		const float distribute = clock.restart().asSeconds() * 1000.f;
 		// maximum elapsed cap
 		handleEvents(finishing);
-
 		elapsed = std::min<float>(elapsed + distribute, updateSpan * 1.5f);
 		while (elapsed > 0.0f) {
 			float updateRatio = std::min<float>(elapsed, updateSpan) / updateSpan;

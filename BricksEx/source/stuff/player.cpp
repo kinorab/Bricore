@@ -58,8 +58,8 @@ void Player::update(const Vector2f &ballPos, const float ballRadius, const float
 	if (flash) {
 		flashElapsed();
 	}
-
 	yellowRange.setPosition(mainPlayer.getPosition());
+
 }
 
 const Vector2f & Player::getMainPlayerPos() const {

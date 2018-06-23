@@ -41,7 +41,6 @@ namespace game {
 		if (!GameState::pause) {
 			ball->initializeBall();
 			for (size_t i = 0; i < SLICE; ++i) {
-				player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
 				if (GameState::start) {
 					brick->update(*ball, updateRatio);
 					obstacle->update(*ball, updateRatio);
@@ -49,6 +48,7 @@ namespace game {
 				}
 				else {
 					ball->followPlayer(player->getMainPlayerTopCenterPos());
+					player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
 					obstacle->restart();
 				}
 			}

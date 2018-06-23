@@ -19,7 +19,6 @@ HUD::HUD() {
 	interface.at(3)->setFillColor(sf::Color::Cyan);
 	interface.at(3)->setPosition({ LEVEL_WIDTH, 500.f });
 	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3) });
-
 	// button
 	// addChild({ button });
 }

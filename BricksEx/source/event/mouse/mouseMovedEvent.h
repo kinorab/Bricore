@@ -6,6 +6,7 @@
 
 namespace game {
 	class MouseMovedEvent :
+		public sf::Event::MouseMoveEvent,
 		public UIEvent,
 		public Cancelable {
 	public:

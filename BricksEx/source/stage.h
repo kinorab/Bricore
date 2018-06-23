@@ -18,8 +18,8 @@ namespace game {
 	class MouseEnteredEvent;
 	class MouseLeftEvent;
 	class MousePressedEvent;
-	class Stage
-		: public Container {
+	class Stage	: 
+		public Container {
 	public:
 		Stage();
 		virtual ~Stage();
