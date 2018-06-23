@@ -47,7 +47,7 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 		break;
 	case State::OnFirstField:
 		if (silenced) break;
-		if (event->key.code == sf::Keyboard::D || autoUse) setState(State::Using);
+		if (event->key.code == handler.useKey || autoUse) setState(State::Using);
 		break;
 	case State::OnSecondField:
 		if (locked) break;

@@ -1,57 +1,43 @@
 #include "obstacle.h"
-#include "block.h"
 #include "ball.h"
+#include "component/block.h"
+#include "component/globular.h"
 #include "../gameSys/LVDeploy.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
 #include <SFML/Graphics.hpp>
 
-using namespace std;
 using namespace sf;
+using namespace item;
 
-// unity of Block-->Obstacle
 Obstacle::Obstacle() {
 	reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
 	setAllVerticeColor(LVDeploy::getBlockCD());
 	setAllSpeed(LVDeploy::getBlockSD());
 }
 
-Obstacle::Obstacle(const Obstacle & copy) {
-	blocks.clear();
-	std::for_each(copy.blocks.begin(), copy.blocks.end()
-		, [&](const std::shared_ptr<item::Block> element) {
-		blocks.push_back(std::make_shared<item::Block>(*element));
-	});
-}
-
-void Obstacle::reset(const vector <Vector2f> & position, const vector <Vector2f> & sideLength) {
-
+void Obstacle::reset(const std::vector<Vector2f> & position, const std::vector<Vector2f> & sideLength) {
 	if (position.size() != sideLength.size()) {
-		throw out_of_range("Position size not equal to side-length size.");
+		throw std::out_of_range("Position size not equal to side-length size.");
 	}
-
 	blocks.resize(position.size());
 	for (size_t i = 0; i < blocks.size(); ++i) {
-		blocks.at(i) = shared_ptr<item::Block>(new item::Block(position.at(i), sideLength.at(i).x, sideLength.at(i).y));
+		blocks.at(i) = std::shared_ptr<Block>(new Block(position.at(i), sideLength.at(i)));
+		blocks.at(i)->setOrigin(blocks.at(i)->getSize() / 2.f);
 	}
-
 	GameState::obstacleArea = RectangleShape(Vector2f(LEVEL_WIDTH
-		, LEVEL_HEIGHT - (GameState::playerArea.getSize().y + GameState::bricksArea.getSize().y + 2 * AREAINTERVAL)));
-	GameState::obstacleArea.setPosition(Vector2f(0.0f, GameState::bricksArea.getSize().y + AREAINTERVAL));
+		, LEVEL_HEIGHT - (GameState::playerArea.getSize().y + GameState::wallArea.getSize().y + 2 * AREAINTERVAL)));
+	GameState::obstacleArea.setPosition(Vector2f(0.0f, GameState::wallArea.getSize().y + AREAINTERVAL));
 }
 
 
-void Obstacle::update(item::Ball &ball, const float updateRatio) {
+void Obstacle::update(Ball &ball, const float updateRatio) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blocks.at(i)->update(updateRatio);
 		blocksCollision(i);
-	}
-	for (size_t ballN = 0; ballN < ball.getBallsAmount(); ++ballN) {
-		if (ball.isBallEnteredObstacleArea(ballN)) {
-			for (size_t blocksN = 0; blocksN < blocks.size(); ++blocksN) {
-				ball.ballCollidedObstacle(ballN, blocksN, getDP(blocksN), getSpeed(blocksN));
-			}
+		for (auto element : ball.enteredObstacleArea()) {
+			element->isCollidedObstacle(blocks.at(i).get());
 		}
 	}
 	if (GameState::finishLevel) {
@@ -65,17 +51,17 @@ void Obstacle::setBlockColor(const size_t number, const Color &c1, const Color &
 	blocks.at(number)->setVerticeColor(c1, c2, c3, c4);
 }
 
-void Obstacle::setBlockColor(const size_t number, const Color &color) {
+void Obstacle::setBlockColor(const size_t number, const Color & color) {
 	blocks.at(number)->setVerticeColor(color);
 }
 
-void Obstacle::setAllColor(const vector<Color>& color) {
+void Obstacle::setAllColor(const std::vector<Color> & color) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blocks.at(i)->setVerticeColor(color.at(i));
 	}
 }
 
-void Obstacle::setAllVerticeColor(const std::vector<sf::Color>& vertice) {
+void Obstacle::setAllVerticeColor(const std::vector<sf::Color> & vertice) {
 	for (size_t i = 0, j = 1; i < blocks.size(); ++i, ++j) {
 		blocks.at(i)->setVerticeColor(vertice.at(4 * j - 4), vertice.at(4 * j - 3), vertice.at(4 * j - 2), vertice.at(4 * j - 1));
 	}
@@ -89,13 +75,13 @@ void Obstacle::setBlockSpeed(const size_t number, const Vector2f & speed) {
 	blocks.at(number)->setSpeed(speed);
 }
 
-void Obstacle::setAllSpeed(const vector <Vector2f> &speed) {
+void Obstacle::setAllSpeed(const std::vector<Vector2f> & speed) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blocks.at(i)->setSpeed(speed.at(i));
 	}
 }
 
-void Obstacle::restart() {
+void Obstacle::resetPosition() {
 	if (!GameState::ready) {
 		for (size_t i = 0; i < blocks.size(); ++i) {
 			blocks.at(i)->resetPosition();
@@ -104,35 +90,33 @@ void Obstacle::restart() {
 	}
 }
 
+Obstacle::~Obstacle() {
+}
+
 const Vector2f & Obstacle::getSpeed(const size_t number) const {
 	return blocks.at(number)->getSpeed();
 }
 
-const size_t Obstacle::getBlocksAmount() const {
+size_t Obstacle::getBlocksAmount() const {
 	return blocks.size();
 }
 
-const sys::DPointf Obstacle::getDP(const size_t number) const {
+sys::DPointf Obstacle::getDP(const size_t number) const {
 	return blocks.at(number)->getDP();
 }
 
-Obstacle & Obstacle::operator=(const Obstacle &) = default;
-
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
-	states.texture = nullptr;
+	states.transform *= getTransform();
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		target.draw(*blocks.at(i), states);
 	}
 }
 
 void Obstacle::blocksCollision(const size_t number) {
-
 	for (size_t j = number + 1; j < blocks.size(); ++j) {
-
-		if (game::INCIntersects(blocks.at(number)->getDP(), blocks.at(j)->getDP())) {
-
-			const Vector2f APos(blocks.at(number)->getCenterPosition());
-			const Vector2f BPos(blocks.at(j)->getCenterPosition());
+		if (sys::INCIntersects(blocks.at(number)->getDP(), blocks.at(j)->getDP())) {
+			const Vector2f APos(blocks.at(number)->getPosition());
+			const Vector2f BPos(blocks.at(j)->getPosition());
 			const Vector2f ASpeed(blocks.at(number)->getSpeed());
 			const Vector2f BSpeed(blocks.at(j)->getSpeed());
 			if (APos.x > BPos.x) {

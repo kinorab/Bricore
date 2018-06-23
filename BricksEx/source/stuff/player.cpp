@@ -8,49 +8,40 @@
 using namespace sf;
 
 Player::Player()
-	: mainPlayer(RectangleShape(Vector2f(240, 12)))
-	, yellowRange(RectangleShape(Vector2f(mainPlayer.getSize().x * 0.1f, mainPlayer.getSize().y)))
-	, redRange(RectangleShape(Vector2f(mainPlayer.getSize().x * 0.05f, mainPlayer.getSize().y)))
+	: board(RectangleShape(Vector2f(240.f, 12.f)))
+	, yellowRange(RectangleShape(Vector2f(board.getSize().x * 0.1f, board.getSize().y)))
+	, redRange(RectangleShape(Vector2f(board.getSize().x * 0.05f, board.getSize().y)))
 	, flash(false)
-	, flashCD(false) {
-
-	mainPlayer.setOrigin(Vector2f(mainPlayer.getSize().x / 2, mainPlayer.getSize().y / 2));
-	mainPlayer.setFillColor(Color::Green);
-	mainPlayer.setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - mainPlayer.getSize().y));
+	, flashCD(false)
+	, speed(4.5f)
+	, leftMoveKey(sf::Keyboard::Left)
+	, rightMoveKey(sf::Keyboard::Right) {
+	board.setOrigin(Vector2f(board.getSize().x / 2, board.getSize().y / 2));
+	board.setFillColor(Color::Green);
+	board.setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - board.getSize().y));
 	yellowRange.setOrigin(Vector2f(yellowRange.getSize().x / 2, yellowRange.getSize().y / 2));
-	yellowRange.setPosition(mainPlayer.getPosition());
+	yellowRange.setPosition(board.getPosition());
 	yellowRange.setFillColor(Color::Yellow);
 	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
-	redRange.setPosition(mainPlayer.getPosition());
+	redRange.setPosition(board.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 	GameState::playerArea.setSize(Vector2f(LEVEL_WIDTH, 100.f));
 	GameState::playerArea.setPosition(0.0f, LEVEL_HEIGHT - 100.f);
 }
 
-Player::Player(const Player & copy)
-	: flash(copy.flash)
-	, flashCD(copy.flash)
-	, CDTime(copy.CDTime)
-	, elapsed(copy.elapsed)
-	, mainPlayer(copy.mainPlayer)
-	, redRange(copy.redRange)
-	, yellowRange(copy.yellowRange) {
-
-}
-
 void Player::update(const Vector2f &ballPos, const float ballRadius, const float updateRatio) {
-	const FloatRect playerBound = mainPlayer.getGlobalBounds();
+	const FloatRect playerBound = board.getGlobalBounds();
 	if (playerBound.left >= 0
-		&& (Keyboard::isKeyPressed(Keyboard::Left))
+		&& (Keyboard::isKeyPressed(leftMoveKey))
 		) {
-		mainPlayer.move(Vector2f(-MAINPLAYERSPEED / SLICE * updateRatio, 0));
-		redRange.move(Vector2f(-MAINPLAYERSPEED / SLICE * updateRatio, 0));
+		board.move(Vector2f(-speed / SLICE * updateRatio, 0));
+		redRange.move(Vector2f(-speed / SLICE * updateRatio, 0));
 	}
 	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
-		&& (Keyboard::isKeyPressed(Keyboard::Right))
+		&& (Keyboard::isKeyPressed(rightMoveKey))
 		) {
-		mainPlayer.move(Vector2f(MAINPLAYERSPEED / SLICE * updateRatio, 0));
-		redRange.move(Vector2f(MAINPLAYERSPEED / SLICE * updateRatio, 0));
+		board.move(Vector2f(speed / SLICE * updateRatio, 0));
+		redRange.move(Vector2f(speed / SLICE * updateRatio, 0));
 	}
 	if (GameState::start) {
 		flashRange(AudioManager::getInstance().sound1, ballPos, ballRadius);
@@ -58,52 +49,45 @@ void Player::update(const Vector2f &ballPos, const float ballRadius, const float
 	if (flash) {
 		flashElapsed();
 	}
-	yellowRange.setPosition(mainPlayer.getPosition());
-
+	yellowRange.setPosition(board.getPosition());
 }
 
-const Vector2f & Player::getMainPlayerPos() const {
-	return mainPlayer.getPosition();
+void Player::setPlayerKey(const Keyboard::Key left, const Keyboard::Key right) {
+	leftMoveKey = left;
+	rightMoveKey = right;
 }
 
-const Vector2f Player::getMainPlayerTopCenterPos() const {
-	return Vector2f(mainPlayer.getPosition().x, mainPlayer.getGlobalBounds().top);
+float Player::getSpeed() const {
+	return speed;
 }
 
-const FloatRect Player::getMainPlayerBounds() const {
-	return mainPlayer.getGlobalBounds();
+const Vector2f & Player::getPosition() const {
+	return board.getPosition();
 }
 
-const sys::DPointf Player::getMainPlayerDP() const {
-	return sys::DPointf(mainPlayer.getGlobalBounds());
+Vector2f Player::getTopCenterPos() const {
+	return Vector2f(board.getPosition().x, board.getGlobalBounds().top);
+}
+
+FloatRect Player::getGlobalBounds() const {
+	return board.getGlobalBounds();
+}
+
+sys::DPointf Player::getDP() const {
+	return sys::DPointf(board.getGlobalBounds());
 }
 
 Player::~Player(){ }
 
-Player & Player::operator=(const Player &right) {
-	flash = right.flash;
-	flashCD = right.flashCD;
-	CDTime = right.CDTime;
-	elapsed = right.elapsed;
-	mainPlayer = right.mainPlayer;
-	redRange = right.redRange;
-	yellowRange = right.yellowRange;
-	return *this;
-}
-
 void Player::draw(RenderTarget &target, RenderStates states) const {
 	states.transform *= getTransform();
-	target.draw(mainPlayer, states);
+	target.draw(board, states);
 	target.draw(yellowRange, states);
 	target.draw(redRange, states);
 }
 
 void Player::setFlashPosition(const Vector2f & position) {
 	redRange.setPosition(position);
-}
-
-void Player::setFlashPosition(const float posX, const float posY) {
-	redRange.setPosition(posX, posY);
 }
 
 void Player::setFlashFillColor(const sf::Color & color) {
@@ -122,22 +106,22 @@ void Player::flashElapsed() {
 }
 
 void Player::flashRange(Sound & sound, const Vector2f ballPos, const float radius) {
-	const FloatRect playerBounds = getMainPlayerBounds();
+	const FloatRect playerBounds = getGlobalBounds();
 	const FloatRect rangeBounds = redRange.getGlobalBounds();
-	const Vector2f pos1P = getMainPlayerPos();
+	const Vector2f pos1P = getPosition();
 
 	if (!flashCD) {
-		if (game::ballRectINCIntersects(ballPos, radius, playerBounds)) {
+		if (sys::ballRectINCIntersects(ballPos, radius, playerBounds)) {
 			elapsed.restart();
 			sound.play();
 			if (ballPos.x - radius <= playerBounds.left) {
-				setFlashPosition(playerBounds.left + rangeBounds.width / 2, pos1P.y);
+				setFlashPosition(Vector2f(playerBounds.left + rangeBounds.width / 2, pos1P.y));
 			}
 			else if (ballPos.x + radius >= playerBounds.left + playerBounds.width) {
-				setFlashPosition(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y);
+				setFlashPosition(Vector2f(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y));
 			}
 			else {
-				setFlashPosition(ballPos.x, pos1P.y);
+				setFlashPosition(Vector2f(ballPos.x, pos1P.y));
 			}
 			flash = true;
 			flashCD = true;

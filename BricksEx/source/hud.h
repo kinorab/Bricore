@@ -2,9 +2,6 @@
 
 #include "UI/button.h"
 
-namespace game {
-	class Area;
-}
 namespace sf {
 	class Color;
 	class RectangleShape;
@@ -18,11 +15,9 @@ public:
 	virtual bool containsPoint(const sf::Vector2f & point) const override;
 
 private:
-	std::unique_ptr<game::Area> area;
 	std::vector <std::shared_ptr<sf::RectangleShape>> interface;
 	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel1;
 	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel2;
 	std::map <std::string, std::pair<std::shared_ptr<sf::RectangleShape>, size_t>> panel3;
 	std::shared_ptr<game::Button> button;
-
 };
