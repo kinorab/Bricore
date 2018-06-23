@@ -6,21 +6,21 @@
 
 namespace game {
 	template<typename Type>
-	class EventListener :
+	class EmptyListener :
 		public EventListenerBase {
 		static_assert(std::is_base_of<Event, Type>::value, "Type must derive from Event");
 	public:
-		explicit EventListener(std::function<void(Type &)> callback) :
+		explicit EmptyListener(std::function<void(void)> callback) :
 			callback(callback) {
 		}
-		virtual ~EventListener() = default;
-		virtual void visit(Type & visitable) {
-			callback(visitable);
+		virtual ~EmptyListener() = default;
+		virtual void visit() {
+			callback();
 		}
 		virtual std::type_index getEventType() const override {
 			return typeid(Type);
 		}
 	private:
-		std::function<void(Type &)> callback;
+		std::function<void(void)> callback;
 	};
 }

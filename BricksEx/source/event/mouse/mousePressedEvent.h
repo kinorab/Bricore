@@ -11,6 +11,6 @@ namespace game {
 	public:
 		MousePressedEvent(sf::Event::MouseButtonEvent eventData);
 		virtual ~MousePressedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

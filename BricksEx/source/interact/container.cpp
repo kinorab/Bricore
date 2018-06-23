@@ -165,6 +165,7 @@ namespace game {
 			child->setParent(nullptr);
 		});
 		children.erase(children.begin() + beginIndex, children.begin() + endIndex);
+		children.shrink_to_fit();
 	}
 
 	void Container::replaceChild(const std::vector<std::shared_ptr<sf::Drawable>>& elements, const std::vector<int> indexes) {

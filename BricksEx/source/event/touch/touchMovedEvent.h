@@ -11,6 +11,6 @@ namespace game {
 	public:
 		TouchMovedEvent(sf::Event::TouchEvent eventData);
 		virtual ~TouchMovedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

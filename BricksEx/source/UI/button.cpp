@@ -1,7 +1,8 @@
 #include "button.h"
 #include "../definition/utility.h"
 #include "../event/mouse/mouseEvent.h"
-#include "../event/mouse/mouseListener.h"
+#include "../event/eventListener.h"
+#include "../event/emptyListener.h"
 #include <SFML/Graphics.hpp>
 
 namespace game {
@@ -10,11 +11,10 @@ namespace game {
 		, overObject(overObject)
 		, downObject(downObject)
 		, hitObject(new SpriteNode(upObject)) {
-		using namespace std::placeholders;
-		addListener(std::make_shared<MouseEnteredListener>(std::bind(&Button::onMouseEntered, this, _1)));
-		addListener(std::make_shared<MouseLeftListener>(std::bind(&Button::onMouseLeft, this, _1)));
-		addListener(std::make_shared<MousePressedListener>(std::bind(&Button::onMousePressed, this, _1)));
-		addListener(std::make_shared<MouseReleasedListener>(std::bind(&Button::onMouseReleased, this, _1)));
+		addListener(std::make_shared<EmptyListener<MouseEnteredEvent>>([&] { onMouseEntered(); }));
+		addListener(std::make_shared<EmptyListener<MouseLeftEvent>>([&] { onMouseLeft(); }));
+		addListener(std::make_shared<EventListener<MousePressedEvent>>([&](auto & event) { onMousePressed(event); }));
+		addListener(std::make_shared<EventListener<MouseReleasedEvent>>([&](auto & event) { onMouseReleased(event); }));
 	}
 
 	Button::~Button() {
@@ -42,11 +42,11 @@ namespace game {
 		}
 	}
 
-	void Button::onMouseEntered(MouseEnteredEvent &) {
+	void Button::onMouseEntered() {
 		currentState = ButtonState::OVER;
 	}
 
-	void Button::onMouseLeft(MouseLeftEvent &) {
+	void Button::onMouseLeft() {
 		currentState = ButtonState::UP;
 	}
 

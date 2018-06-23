@@ -8,7 +8,7 @@
 #include <future>
 
 Game::Game() :
-	stage(new Stage()),
+	stage(new game::Stage),
 	mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"BricksEx", sf::Style::Close, graph.getSettings()));
@@ -40,7 +40,6 @@ void Game::renderFunc() {
 	float elapsed = 0;
 	float renderElapsed = 0;
 	sf::Clock clock;
-
 	for (bool finishing = false; !finishing;) {
 		// display in milliseconds
 		constexpr float updateSpan = 10.f;

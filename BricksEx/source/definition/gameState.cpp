@@ -23,7 +23,6 @@ namespace GameState {
 	bool start = false;
 	bool ready = false;
 	bool finishLevel = false;
-	bool pause = false;
 	bool lock = false;
 	sf::RectangleShape wallArea;
 	sf::RectangleShape obstacleArea;

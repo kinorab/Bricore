@@ -16,13 +16,6 @@ namespace game {
 	InteractiveObject::~InteractiveObject() {
 	}
 
-	int InteractiveObject::addListener(std::type_index eventType, std::shared_ptr<EventListener> listener) {
-		listeners.emplace(eventType, std::pair<const int, std::shared_ptr<EventListener>>(idCount, std::move(listener)));
-		int returnId = idCount;
-		idCount += 1;
-		return returnId;
-	}
-
 	void InteractiveObject::dispatchEvent(UIEvent & event) {
 		DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
@@ -47,6 +40,10 @@ namespace game {
 			helper.setPhase(EventPhase::NONE);
 			helper.setCurrentTarget(nullptr);
 		}
+	}
+
+	void InteractiveObject::dispatchEvent(UIEvent && event) {
+		dispatchEvent(event);
 	}
 
 	bool InteractiveObject::getEnabled() const {

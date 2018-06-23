@@ -11,6 +11,6 @@ namespace game {
 	public:
 		MouseWheelScrolledEvent(sf::Event::MouseWheelScrollEvent eventData);
 		virtual ~MouseWheelScrolledEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

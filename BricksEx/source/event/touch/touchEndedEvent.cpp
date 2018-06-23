@@ -1,12 +1,12 @@
 #include "touchEndedEvent.h"
-#include "touchEndedListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	TouchEndedEvent::TouchEndedEvent(sf::Event::TouchEvent eventData) :
 		sf::Event::TouchEvent(eventData) {
 	}
 
-	void TouchEndedEvent::accept(EventListener & visitor) {
-		dynamic_cast<TouchEndedListener &>(visitor).visit(*this);
+	void TouchEndedEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<TouchEndedEvent> &>(visitor).visit(*this);
 	}
 }

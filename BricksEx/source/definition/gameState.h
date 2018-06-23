@@ -18,7 +18,6 @@ namespace GameState {
 	extern bool start;
 	extern bool ready;
 	extern bool finishLevel;
-	extern bool pause;
 	extern bool lock;
 	extern sf::RectangleShape wallArea;
 	extern sf::RectangleShape obstacleArea;

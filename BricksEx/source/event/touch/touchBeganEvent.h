@@ -11,6 +11,6 @@ namespace game {
 	public:
 		TouchBeganEvent(sf::Event::TouchEvent eventData);
 		virtual ~TouchBeganEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

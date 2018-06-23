@@ -11,6 +11,6 @@ namespace game {
 	public:
 		TextEnteredEvent(sf::Event::TextEvent eventData);
 		virtual ~TextEnteredEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

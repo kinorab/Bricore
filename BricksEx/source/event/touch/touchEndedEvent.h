@@ -11,6 +11,6 @@ namespace game {
 	public:
 		TouchEndedEvent(sf::Event::TouchEvent eventData);
 		virtual ~TouchEndedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

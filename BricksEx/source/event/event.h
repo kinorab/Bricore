@@ -4,10 +4,10 @@
 #include "../common.h"
 
 namespace game {
-	class EventListener;
+	class EventListenerBase;
 
 	class Event :
-		public AcyclicVisitable<EventListener> {
+		public AcyclicVisitable<EventListenerBase> {
 	public:
 		virtual ~Event() = default;
 	};

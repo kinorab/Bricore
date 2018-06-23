@@ -10,6 +10,6 @@ namespace game {
 	public:
 		ResizedEvent(sf::Event::SizeEvent eventData);
 		virtual ~ResizedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

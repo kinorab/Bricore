@@ -2,6 +2,7 @@
 
 #include "../UIEvent.h"
 #include "../cancelable.h"
+#include <SFML\Window\Event.hpp>
 
 namespace game {
 	class MouseMovedEvent :
@@ -11,6 +12,6 @@ namespace game {
 	public:
 		MouseMovedEvent(sf::Event::MouseMoveEvent eventData);
 		virtual ~MouseMovedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }
