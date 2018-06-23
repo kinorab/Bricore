@@ -38,9 +38,10 @@ namespace game {
 
 	void Stage::update(const float updateRatio) {
 		mouseLight->update(updateRatio);
-		if (!GameState::pause) {
+		if (!paused) {
 			ball->initializeBall();
 			for (size_t i = 0; i < SLICE; ++i) {
+				player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
 				if (GameState::start) {
 					brick->update(*ball, updateRatio);
 					obstacle->update(*ball, updateRatio);
@@ -48,7 +49,6 @@ namespace game {
 				}
 				else {
 					ball->followPlayer(player->getMainPlayerTopCenterPos());
-					player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
 					obstacle->restart();
 				}
 			}
@@ -57,7 +57,7 @@ namespace game {
 
 	void Stage::onKeyPressed(KeyPressedEvent & event) {
 		if (event.code == sf::Keyboard::P) {
-			GameState::pause = !GameState::pause;
+			paused = !paused;
 			GameState::lock = !GameState::lock;
 		}
 

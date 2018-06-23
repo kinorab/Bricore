@@ -38,5 +38,6 @@ namespace game {
 		std::shared_ptr<item::Ball> ball;
 		std::shared_ptr<item::Brick> brick;
 		std::shared_ptr<Obstacle> obstacle;
+		bool paused = false;
 	};
 }
