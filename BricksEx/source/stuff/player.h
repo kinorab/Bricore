@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <memory>
 
 namespace sf {
@@ -21,29 +22,34 @@ class Player :
 
 public:
 	Player();
-	explicit Player(const Player &copy);
 	virtual void update(const sf::Vector2f &ballPos, const float ballRadius, const float updateRatio);
-	virtual const sf::Vector2f & getMainPlayerPos() const;
-	virtual const sf::Vector2f getMainPlayerTopCenterPos() const;
-	virtual const sf::FloatRect getMainPlayerBounds() const;
-	virtual const sys::DPointf getMainPlayerDP() const;
-	virtual Player & operator =(const Player &copy);
+	virtual void setPlayerKey(const sf::Keyboard::Key left, const sf::Keyboard::Key right);
+
+	virtual float getSpeed() const;
+	virtual const sf::Vector2f & getPosition() const;
+	virtual sf::Vector2f getTopCenterPos() const;
+	virtual sf::FloatRect getGlobalBounds() const;
+	virtual sys::DPointf getDP() const;
 	virtual ~Player();
 
-private:
-	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+protected:
 	virtual void setFlashPosition(const sf::Vector2f &);
-	virtual void setFlashPosition(const float, const float);
 	virtual void setFlashFillColor(const sf::Color &);
 	virtual void flashElapsed();
 	virtual void flashRange(sf::Sound &, const sf::Vector2f, const float);
 
+private:
+	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+
 	bool flash;
 	bool flashCD;
+	float speed;
 	sf::Clock CDTime;
 	sf::Clock elapsed;
-	sf::RectangleShape mainPlayer;
+	sf::RectangleShape board;
 	sf::RectangleShape redRange;
 	sf::RectangleShape yellowRange;
+	sf::Keyboard::Key leftMoveKey;
+	sf::Keyboard::Key rightMoveKey;
 };
 

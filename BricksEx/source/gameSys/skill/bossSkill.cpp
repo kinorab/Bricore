@@ -46,10 +46,10 @@ SkillKind<BossSkill>::Kind BossSkill::getSkillName() const {
 BossSkill::~BossSkill() {
 }
 
-void BossSkill::draw(sf::RenderTarget &target, sf::RenderStates state) const {
-	state.transform *= getTransform();
+void BossSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+	states.transform *= getTransform();
 	if (skill.second.preview) {
-		target.draw(*skill.second.preview, state);
+		target.draw(*skill.second.preview, states);
 	}
 }
 

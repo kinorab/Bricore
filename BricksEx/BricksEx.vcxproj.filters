@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="source\stuff\ball.cpp" />
-    <ClCompile Include="source\stuff\block.cpp" />
-    <ClCompile Include="source\stuff\brick.cpp" />
     <ClCompile Include="source\interact\container.cpp" />
     <ClCompile Include="source\definition\utility.cpp" />
     <ClCompile Include="source\stuff\ellipse.cpp" />
@@ -39,7 +37,6 @@
     <ClCompile Include="source\event\dispatchHelper.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
     <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
-    <ClCompile Include="source\gameSys\effect\normalEffect.cpp" />
     <ClCompile Include="source\definition\gameState.cpp" />
     <ClCompile Include="source\event\UIEvent.cpp" />
     <ClCompile Include="source\event\event.cpp" />
@@ -96,7 +93,6 @@
     <ClCompile Include="source\gameSys\bar\energeBar.cpp" />
     <ClCompile Include="source\gameSys\bar\rageBar.cpp" />
     <ClCompile Include="source\gameSys\bar\lifeBar.cpp" />
-    <ClCompile Include="source\gameSys\area\area.cpp" />
     <ClCompile Include="source\gameSys\AI\AISystem.cpp" />
     <ClCompile Include="source\gameSys\AI\boss.cpp" />
     <ClCompile Include="source\gameSys\effect\attribute.cpp" />
@@ -107,11 +103,17 @@
     <ClCompile Include="source\gameSys\item\chip.cpp" />
     <ClCompile Include="source\gameSys\item\enerma.cpp" />
     <ClCompile Include="source\gameSys\battle\battleSystem.cpp" />
+    <ClCompile Include="source\stuff\subPlayer.cpp" />
+    <ClCompile Include="source\stuff\component\block.cpp" />
+    <ClCompile Include="source\stuff\component\mainBall.cpp" />
+    <ClCompile Include="source\stuff\component\shadowBall.cpp" />
+    <ClCompile Include="source\stuff\component\globular.cpp" />
+    <ClCompile Include="source\stuff\wall.cpp" />
+    <ClCompile Include="source\stuff\component\brick.cpp" />
+    <ClCompile Include="source\gameSys\area\arena.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
-    <ClInclude Include="source\stuff\block.h" />
-    <ClInclude Include="source\stuff\brick.h" />
     <ClInclude Include="source\interact\container.h" />
     <ClInclude Include="source\definition\diagonalPoint.h" />
     <ClInclude Include="source\definition\intersects.h" />
@@ -153,7 +155,6 @@
     <ClInclude Include="source\common.h" />
     <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\gameSys\effect\effectSystem.h" />
-    <ClInclude Include="source\gameSys\effect\normalEffect.h" />
     <ClInclude Include="source\definition\gameState.h" />
     <ClInclude Include="source\event\UIEvent.h" />
     <ClInclude Include="source\event\event.h" />
@@ -228,7 +229,6 @@
     <ClInclude Include="source\gameSys\skill\skillKind.h" />
     <ClInclude Include="source\gameSys\effect\effectKind.h" />
     <ClInclude Include="source\gameSys\bar\lifeBar.h" />
-    <ClInclude Include="source\gameSys\area\area.h" />
     <ClInclude Include="source\gameSys\AI\AISystem.h" />
     <ClInclude Include="source\gameSys\AI\boss.h" />
     <ClInclude Include="source\gameSys\effect\attribute.h" />
@@ -240,6 +240,16 @@
     <ClInclude Include="source\gameSys\item\chip.h" />
     <ClInclude Include="source\gameSys\item\enerma.h" />
     <ClInclude Include="source\gameSys\battle\battleSystem.h" />
+    <ClInclude Include="source\event\eventType.h" />
+    <ClInclude Include="source\singleton.h" />
+    <ClInclude Include="source\stuff\subPlayer.h" />
+    <ClInclude Include="source\stuff\component\block.h" />
+    <ClInclude Include="source\stuff\component\mainBall.h" />
+    <ClInclude Include="source\stuff\component\shadowBall.h" />
+    <ClInclude Include="source\stuff\component\globular.h" />
+    <ClInclude Include="source\stuff\wall.h" />
+    <ClInclude Include="source\stuff\component\brick.h" />
+    <ClInclude Include="source\gameSys\area\arena.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

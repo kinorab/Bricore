@@ -3,8 +3,6 @@
 #include <chrono>
 #include <iomanip>
 
-float MAINPLAYERSPEED = 6.f;
-
 static const size_t startTimeP = static_cast<size_t>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count());
 
 void getPlayedTime() {
@@ -27,7 +25,7 @@ namespace GameState {
 	bool finishLevel = false;
 	bool pause = false;
 	bool lock = false;
-	sf::RectangleShape bricksArea;
+	sf::RectangleShape wallArea;
 	sf::RectangleShape obstacleArea;
 	sf::RectangleShape playerArea;
 };

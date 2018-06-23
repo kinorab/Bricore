@@ -2,8 +2,6 @@
 
 namespace sys {
 	template<typename T> class DPoint;
-}
-namespace game {
 	//=============================================================================================//
 	//-------------------------------below are rects intersects------------------------------------//
 	//=============================================================================================//
@@ -74,7 +72,8 @@ namespace game {
 	//=============================================================================================//
 
 	template<typename T>
-	extern const bool ballsIntersects(const sf::Vector2<T> &APos, const T &ARadius, const sf::Vector2<T> &BPos, const T &BRadius) {
+	extern const bool ballsIntersects(const sf::Vector2<T> &APos, const T &ARadius
+		, const sf::Vector2<T> &BPos, const T &BRadius) {
 
 		const T pow2Delta = (APos.x - BPos.x) * (APos.x - BPos.x) + (APos.y - BPos.y) * (APos.y - BPos.y);
 		const T pow2Distance = (ARadius + BRadius) * (ARadius + BRadius);
@@ -82,7 +81,8 @@ namespace game {
 	}
 
 	template<typename T>
-	extern const T ballsDistance(const sf::Vector2<T> &APos, const T &ARadius, const sf::Vector2<T> &BPos, const T &BRadius) {
+	extern const T ballsDistance(const sf::Vector2<T> &APos, const T &ARadius
+		, const sf::Vector2<T> &BPos, const T &BRadius) {
 
 		const T distance = std::sqrt((APos.x - BPos.x) * (APos.x - BPos.x) + (APos.y - BPos.y) * (APos.y - BPos.y))
 			- (ARadius + BRadius);
@@ -95,7 +95,8 @@ namespace game {
 
 	// include 4-points edge frame
 	template<typename T>
-	extern const bool ballRectINCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius, const sf::Rect<T> &rect) {
+	extern const bool ballRectINCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius
+		, const sf::Rect<T> &rect) {
 
 		const sf::Vector2<T> LT(rect.left, rect.top);
 		const sf::Vector2<T> RB(rect.left + rect.width, rect.top + rect.height);
@@ -108,7 +109,8 @@ namespace game {
 	}
 	// include 4-points edge frame
 	template<typename T>
-	extern const bool ballRectINCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius, const sys::DPoint<T> &rectDP) {
+	extern const bool ballRectINCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius
+		, const sys::DPoint<T> &rectDP) {
 
 		const sf::Vector2<T> LT(rectDP.dot1);
 		const sf::Vector2<T> RB(rectDP.dot2);
@@ -121,7 +123,8 @@ namespace game {
 	}
 	// exclude 4-points edge frame
 	template<typename T>
-	extern const bool ballRectEXCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius, const sf::Rect<T> &rect) {
+	extern const bool ballRectEXCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius
+		, const sf::Rect<T> &rect) {
 
 		const sf::Vector2<T> LT(rect.left, rect.top);
 		const sf::Vector2<T> RB(rect.left + rect.width, rect.top + rect.height);
@@ -134,7 +137,8 @@ namespace game {
 	}
 	// exclude 4-points edge frame
 	template<typename T>
-	extern const bool ballRectEXCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius, const sys::DPoint<T> &rectDP) {
+	extern const bool ballRectEXCIntersects(const sf::Vector2<T> &ballPos, const T &ballRadius
+		, const sys::DPoint<T> &rectDP) {
 
 		const sf::Vector2<T> LT(rectDP.dot1);
 		const sf::Vector2<T> RB(rectDP.dot2);
@@ -144,5 +148,17 @@ namespace game {
 			+ (nearPos.y - ballPos.y) * (nearPos.y - ballPos.y);
 		const T pow2Distance = ballRadius * ballRadius;
 		return pow2Delta < pow2Distance;
+	}
+	// return intersection point
+	template<typename T>
+	extern const sf::Vector2<T> lineToLineIntersects(const sf::Vector2<T> &previousA, const sf::Vector2<T> &A
+		, const sf::Vector2<T> &previousB, const sf::Vector2<T> &B) {
+		const T slopeA = (A.y - previousA.y) / (A.x - previousA.x);
+		const T slopeB = (B.y - previousB.y) / (B.x - previousB.x);
+		const T interceptY_A = A.y - slopeA * A.x;
+		const T interceptY_B = B.y - slopeB * B.x;
+		const T pointX = (interceptY_B - interceptY_A) / (slopeA - slopeB);
+		const sf::Vector2<T> intersectPoint(pointX, pointX * slopeA + interceptY_A);
+		return intersectPoint;
 	}
 }

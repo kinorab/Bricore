@@ -137,21 +137,21 @@ Boss & Boss::operator =(Boss copy) {
 	return *this;
 }
 
-void Boss::draw(sf::RenderTarget &target, sf::RenderStates state) const {
+void Boss::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	if (exist) {
-		state.transform *= getTransform();
-		target.draw(*boss.first.context, state);
+		states.transform *= getTransform();
+		target.draw(*boss.first.context, states);
 		std::for_each(boss.second.parts.begin(), boss.second.parts.end()
 			, [&](const std::pair<std::string, Part> &element) {
-			target.draw(*element.second.context, state);
+			target.draw(*element.second.context, states);
 		});
 		std::for_each(boss.second.weakParts.begin(), boss.second.weakParts.end()
 			, [&](const std::pair<std::string, WeakPart> &element) {
-			target.draw(*element.second.context, state);
+			target.draw(*element.second.context, states);
 		});
 		std::for_each(boss.second.skills.begin(), boss.second.skills.end()
 			, [&](const std::shared_ptr<BossSkill> skill) {
-			target.draw(*skill, state);
+			target.draw(*skill, states);
 		});
 	}
 }

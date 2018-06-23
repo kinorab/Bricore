@@ -1,16 +1,13 @@
 #pragma once
-
 #include "interact/container.h"
 
-namespace item {
-	class Ball;
-	class Brick;
-}
-
+class Ball;
+class Wall;
 class Obstacle;
 class Player;
 class ParticleSystem;
 class HUD;
+
 namespace game {
 	class KeyPressedEvent;
 	class KeyReleasedEvent;
@@ -37,7 +34,7 @@ private:
 	std::shared_ptr<HUD> hud;
 	std::shared_ptr<ParticleSystem> mouseLight;
 	std::shared_ptr<Player> player;
-	std::shared_ptr<item::Ball> ball;
-	std::shared_ptr<item::Brick> brick;
+	std::shared_ptr<Ball> ball;
+	std::shared_ptr<Wall> wall;
 	std::shared_ptr<Obstacle> obstacle;
 };

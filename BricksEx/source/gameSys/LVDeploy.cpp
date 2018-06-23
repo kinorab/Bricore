@@ -1,5 +1,5 @@
 #include "LVDeploy.h"
-#include "../stuff/brick.h"
+#include "../stuff/wall.h"
 #include "../stuff/ball.h"
 #include "../stuff/obstacle.h"
 #include "../stuff/player.h"
@@ -181,11 +181,11 @@ sys::Matrix<sf::Color> LVDeploy::blockColorDeploy({
 	});
 sys::Matrix<sf::Vector2f> LVDeploy::blockSpeedDeploy({
 	// level 1
-	{ sf::Vector2f(1.5f, 0)
-	, sf::Vector2f(-1.5f, 0)
-	, sf::Vector2f(2.5f, 0)
-	, sf::Vector2f(-2.5f, 0)
-	, sf::Vector2f(3.f, 0) }
+	{ sf::Vector2f(1.f, 0)
+	, sf::Vector2f(-1.f, 0)
+	, sf::Vector2f(2.f, 0)
+	, sf::Vector2f(-2.f, 0)
+	, sf::Vector2f(2.f, 0) }
 	// level 2
 	, { sf::Vector2f(1.5f, 0)
 	, sf::Vector2f(-1.5f, 0)
