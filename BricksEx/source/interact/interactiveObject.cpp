@@ -42,6 +42,10 @@ namespace game {
 		}
 	}
 
+	void InteractiveObject::dispatchEvent(UIEvent && event) {
+		dispatchEvent(event);
+	}
+
 	bool InteractiveObject::getEnabled() const {
 		return enabled;
 	}

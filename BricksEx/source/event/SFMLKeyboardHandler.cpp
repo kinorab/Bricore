@@ -26,8 +26,7 @@ namespace game {
 		}
 
 		keyDown[event.key.code] = true;
-		KeyPressedEvent gameEvent(event.key);
-		root.dispatchEvent(gameEvent);
+		root.dispatchEvent(KeyPressedEvent(event.key));
 	}
 
 	void SFMLKeyboardHandler::handleKeyReleased(const sf::Event & event, Container & root) {
@@ -36,7 +35,6 @@ namespace game {
 		}
 
 		keyDown[event.key.code] = false;
-		KeyReleasedEvent gameEvent(event.key);
-		root.dispatchEvent(gameEvent);
+		root.dispatchEvent(KeyReleasedEvent(event.key));
 	}
 }

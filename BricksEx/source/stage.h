@@ -20,8 +20,10 @@ namespace game {
 	class Stage :
 		public Container {
 	public:
-		class PauseEvent :
-			public EmptyEvent<PauseEvent> {};
+		class PausedEvent :
+			public EmptyEvent<PausedEvent> {};
+		class UnPausedEvent :
+			public EmptyEvent<UnPausedEvent> {};
 		Stage();
 		virtual ~Stage();
 		virtual void update(const float updateRatio) override;

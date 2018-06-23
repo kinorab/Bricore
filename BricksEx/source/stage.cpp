@@ -58,6 +58,12 @@ namespace game {
 	void Stage::onKeyPressed(KeyPressedEvent & event) {
 		if (event.code == sf::Keyboard::P) {
 			paused = !paused;
+			if (paused) {
+				dispatchEvent(PausedEvent());
+			}
+			else {
+				dispatchEvent(UnPausedEvent());
+			}
 			GameState::lock = !GameState::lock;
 		}
 

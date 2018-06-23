@@ -30,6 +30,10 @@ namespace game {
 		});
 	}
 
+	void EventSubject::dispatchEvent(Event && event) {
+		dispatchEvent(event);
+	}
+
 	void EventSubject::removeListener(std::type_index eventType, int id) {
 		auto listenerRange = listeners.equal_range(eventType);
 		listeners.erase(std::find_if(listenerRange.first, listenerRange.second,

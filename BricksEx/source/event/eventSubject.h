@@ -14,6 +14,7 @@ namespace game {
 		virtual int addListener(std::shared_ptr<EventListenerBase> listener);
 		virtual int addListener(std::shared_ptr<EventListenerBase> listener, std::shared_ptr<EventSubject> trackedSubject);
 		virtual void dispatchEvent(Event & event);
+		virtual void dispatchEvent(Event && event);
 		virtual void removeListener(std::type_index eventType, int id);
 	protected:
 		EventSubject() = default;
