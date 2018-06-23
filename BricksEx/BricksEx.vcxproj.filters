@@ -40,20 +40,13 @@
     <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
     <ClCompile Include="source\definition\gameState.cpp" />
     <ClCompile Include="source\event\UIEvent.cpp" />
-    <ClCompile Include="source\event\event.cpp" />
     <ClCompile Include="source\event\joystick\joystickMovedEvent.cpp" />
-    <ClCompile Include="source\event\window\closedEvent.cpp" />
-    <ClCompile Include="source\event\window\gainedFocusEvent.cpp" />
-    <ClCompile Include="source\event\window\lostFocusEvent.cpp" />
-    <ClCompile Include="source\event\window\resizedEvent.cpp" />
     <ClCompile Include="source\event\sensor\sensorChangedEvent.cpp" />
     <ClCompile Include="source\event\text\textEnteredEvent.cpp" />
     <ClCompile Include="source\event\SFMLEventQueue.cpp" />
     <ClCompile Include="source\event\SFMLKeyboardHandler.cpp" />
     <ClCompile Include="source\event\SFMLMouseHandler.cpp" />
     <ClCompile Include="source\event\cancelable.cpp" />
-    <ClCompile Include="source\event\mouse\mouseEnteredEvent.cpp" />
-    <ClCompile Include="source\event\mouse\mouseLeftEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseMovedEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseWheelScrolledEvent.cpp" />
     <ClCompile Include="source\event\mouse\mousePressedEvent.cpp" />
@@ -84,6 +77,7 @@
     <ClCompile Include="source\gameSys\item\enerma.cpp" />
     <ClCompile Include="source\gameSys\battle\battleSystem.cpp" />
     <ClCompile Include="source\stage.cpp" />
+    <ClCompile Include="source\event\window\resizedEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -194,6 +188,7 @@
     <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\event\eventListenerBase.h" />
     <ClInclude Include="source\event\emptyListener.h" />
+    <ClInclude Include="source\event\emptyEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

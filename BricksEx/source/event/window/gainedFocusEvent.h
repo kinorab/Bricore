@@ -1,12 +1,8 @@
 #pragma once
 
-#include "../event.h"
+#include "../emptyEvent.h"
 
 namespace game {
 	class GainedFocusEvent :
-		public Event {
-	public:
-		virtual ~GainedFocusEvent() = default;
-		virtual void accept(EventListenerBase & visitor) override;
-	};
+		public EmptyEvent<GainedFocusEvent> {};
 }

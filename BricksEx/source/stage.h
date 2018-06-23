@@ -1,7 +1,7 @@
 #pragma once
 
 #include "interact/container.h"
-#include "event/event.h"
+#include "event/emptyEvent.h"
 
 namespace item {
 	class Ball;
@@ -21,10 +21,7 @@ namespace game {
 		public Container {
 	public:
 		class PauseEvent :
-			public Event {
-			virtual ~PauseEvent() = default;
-			virtual void accept(EventListenerBase & visitor) override;
-		};
+			public EmptyEvent<PauseEvent> {};
 		Stage();
 		virtual ~Stage();
 		virtual void update(const float updateRatio) override;

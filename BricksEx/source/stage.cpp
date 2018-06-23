@@ -4,7 +4,6 @@
 #include "event/mouse/mouseEvent.h"
 #include "event/keyboard/keyEvent.h"
 #include "event/eventListener.h"
-#include "event/emptyListener.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
 #include "manager/audioManager.h"
@@ -14,10 +13,6 @@
 #include "stuff/brick.h"
 
 namespace game {
-	void Stage::PauseEvent::accept(EventListenerBase & visitor) {
-		dynamic_cast<EmptyListener<PauseEvent> &>(visitor).visit();
-	}
-
 	Stage::Stage() :
 		hud(new HUD),
 		player(new Player),

@@ -1,5 +1,5 @@
 #include "resizedEvent.h"
-#include "../emptyListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	ResizedEvent::ResizedEvent(sf::Event::SizeEvent eventData) :
@@ -7,6 +7,6 @@ namespace game {
 	}
 
 	void ResizedEvent::accept(EventListenerBase & visitor) {
-        dynamic_cast<EmptyListener<ResizedEvent> &>(visitor).visit();
+        dynamic_cast<EventListener<ResizedEvent> &>(visitor).visit(*this);
 	}
 }

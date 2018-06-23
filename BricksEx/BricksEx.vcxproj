@@ -29,15 +29,10 @@
     <ClCompile Include="source\event\touch\touchBeganEvent.cpp" />
     <ClCompile Include="source\event\touch\touchEndedEvent.cpp" />
     <ClCompile Include="source\event\touch\touchMovedEvent.cpp" />
-    <ClCompile Include="source\event\window\closedEvent.cpp" />
-    <ClCompile Include="source\event\event.cpp" />
-    <ClCompile Include="source\event\window\gainedFocusEvent.cpp" />
-    <ClCompile Include="source\event\window\lostFocusEvent.cpp" />
-    <ClCompile Include="source\event\mouse\mouseEnteredEvent.cpp" />
-    <ClCompile Include="source\event\mouse\mouseLeftEvent.cpp" />
     <ClCompile Include="source\event\SFMLKeyboardHandler.cpp" />
     <ClCompile Include="source\event\SFMLMouseHandler.cpp" />
     <ClCompile Include="source\event\SFMLEventQueue.cpp" />
+    <ClCompile Include="source\event\window\resizedEvent.cpp" />
     <ClCompile Include="source\gameSys\AI\AISystem.cpp" />
     <ClCompile Include="source\gameSys\AI\boss.cpp" />
     <ClCompile Include="source\gameSys\bar\energeBar.cpp" />
@@ -50,7 +45,6 @@
     <ClCompile Include="source\event\mouse\mouseMovedEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseWheelScrolledEvent.cpp" />
     <ClCompile Include="source\event\sensor\sensorChangedEvent.cpp" />
-    <ClCompile Include="source\event\window\resizedEvent.cpp" />
     <ClCompile Include="source\event\text\textEnteredEvent.cpp" />
     <ClCompile Include="source\gameSys\bar\lifeBar.cpp" />
     <ClCompile Include="source\gameSys\bar\rageBar.cpp" />
@@ -105,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\cancelable.h" />
+    <ClInclude Include="source\event\emptyEvent.h" />
     <ClInclude Include="source\event\emptyListener.h" />
     <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\event\eventListenerBase.h" />
