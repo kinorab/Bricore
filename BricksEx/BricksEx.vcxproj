@@ -105,7 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\event\cancelable.h" />
+    <ClInclude Include="source\event\emptyListener.h" />
     <ClInclude Include="source\event\eventListener.h" />
+    <ClInclude Include="source\event\eventListenerBase.h" />
     <ClInclude Include="source\event\eventSlot.h" />
     <ClInclude Include="source\event\joystick\joystickDIsconnectedEvent.h" />
     <ClInclude Include="source\event\joystick\joystickEvent.h" />

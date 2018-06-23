@@ -1,8 +1,8 @@
 #include "lostFocusEvent.h"
-#include "../eventListener.h"
+#include "../emptyListener.h"
 
 namespace game {
 	void LostFocusEvent::accept(EventListenerBase & visitor) {
-        dynamic_cast<EventListener<LostFocusEvent> &>(visitor).visit(*this);
+        dynamic_cast<EmptyListener<LostFocusEvent> &>(visitor).visit();
 	}
 }

@@ -4,6 +4,7 @@
 #include "event/mouse/mouseEvent.h"
 #include "event/keyboard/keyEvent.h"
 #include "event/eventListener.h"
+#include "event/emptyListener.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
 #include "manager/audioManager.h"
@@ -13,6 +14,10 @@
 #include "stuff/brick.h"
 
 namespace game {
+	void Stage::PauseEvent::accept(EventListenerBase & visitor) {
+		dynamic_cast<EmptyListener<PauseEvent> &>(visitor).visit();
+	}
+
 	Stage::Stage() :
 		hud(new HUD),
 		player(new Player),
@@ -25,8 +30,8 @@ namespace game {
 		addChild({ hud, player, ball, brick, obstacle, mouseLight });
 		addListener(std::make_shared<EventListener<KeyPressedEvent>>([&](auto & event) { onKeyPressed(event); }));
 		addListener(std::make_shared<EventListener<KeyReleasedEvent>>([&](auto & event) { onKeyReleased(event); }));
-		addListener(std::make_shared<EventListener<MouseEnteredEvent>>([&](auto & event) { onMouseEntered(event); }));
-		addListener(std::make_shared<EventListener<MouseLeftEvent>>([&](auto & event) { onMouseLeft(event); }));
+		addListener(std::make_shared<EmptyListener<MouseEnteredEvent>>([&] { onMouseEntered(); }));
+		addListener(std::make_shared<EmptyListener<MouseLeftEvent>>([&] { onMouseLeft(); }));
 		addListener(std::make_shared<EventListener<MouseMovedEvent>>([&](auto & event) { onMouseMoved(event); }));
 		addListener(std::make_shared<EventListener<MousePressedEvent>>([&](auto & event) { onMouseButtonPressed(event); }));
 	}
@@ -75,11 +80,11 @@ namespace game {
 
 	}
 
-	void Stage::onMouseEntered(MouseEnteredEvent &) {
+	void Stage::onMouseEntered() {
 		mouseLight->startEmit();
 	}
 
-	void Stage::onMouseLeft(MouseLeftEvent &) {
+	void Stage::onMouseLeft() {
 		mouseLight->stopEmit();
 	}
 

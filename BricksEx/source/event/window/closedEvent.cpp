@@ -1,8 +1,8 @@
 #include "closedEvent.h"
-#include "../eventListener.h"
+#include "../emptyListener.h"
 
 namespace game {
 	void ClosedEvent::accept(EventListenerBase & visitor) {
-        dynamic_cast<EventListener<ClosedEvent> &>(visitor).visit(*this);
+        dynamic_cast<EmptyListener<ClosedEvent> &>(visitor).visit();
 	}
 }

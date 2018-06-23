@@ -6,7 +6,6 @@ namespace game {
 	class GainedFocusEvent :
 		public Event {
 	public:
-		GainedFocusEvent() = default;
 		virtual ~GainedFocusEvent() = default;
 		virtual void accept(EventListenerBase & visitor) override;
 	};

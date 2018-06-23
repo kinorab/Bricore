@@ -1,6 +1,7 @@
 #pragma once
 
 #include "interact/container.h"
+#include "event/event.h"
 
 namespace item {
 	class Ball;
@@ -15,20 +16,23 @@ namespace game {
 	class KeyPressedEvent;
 	class KeyReleasedEvent;
 	class MouseMovedEvent;
-	class MouseEnteredEvent;
-	class MouseLeftEvent;
 	class MousePressedEvent;
-	class Stage	: 
+	class Stage :
 		public Container {
 	public:
+		class PauseEvent :
+			public Event {
+			virtual ~PauseEvent() = default;
+			virtual void accept(EventListenerBase & visitor) override;
+		};
 		Stage();
 		virtual ~Stage();
 		virtual void update(const float updateRatio) override;
 	private:
 		virtual void onKeyPressed(KeyPressedEvent & event);
 		virtual void onKeyReleased(KeyReleasedEvent & event);
-		virtual void onMouseEntered(MouseEnteredEvent & event);
-		virtual void onMouseLeft(MouseLeftEvent & event);
+		virtual void onMouseEntered();
+		virtual void onMouseLeft();
 		virtual void onMouseMoved(MouseMovedEvent & event);
 		virtual void onMouseButtonPressed(MousePressedEvent & event);
 

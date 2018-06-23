@@ -1,8 +1,8 @@
 #include "mouseLeftEvent.h"
-#include "../eventListener.h"
+#include "../emptyListener.h"
 
 namespace game {
 	void MouseLeftEvent::accept(EventListenerBase & visitor) {
-        dynamic_cast<EventListener<MouseLeftEvent> &>(visitor).visit(*this);
+        dynamic_cast<EmptyListener<MouseLeftEvent> &>(visitor).visit();
 	}
 }
