@@ -98,7 +98,7 @@ namespace game {
 
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
 				[&](std::shared_ptr<InteractiveObject> & node) {
-				node->dispatchEvent(MouseLeftEvent());
+				node->dispatchEvent(MouseEnteredEvent());
 			});
 
 			previousContactNode = contactNode;
