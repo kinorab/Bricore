@@ -30,20 +30,13 @@ namespace game {
 		virtual void onMouseEntered();
 		virtual void onMouseLeft();
 		virtual void onMouseMoved(MouseMovedEvent & event);
-		virtual void onMouseButtonPressed(MousePressedEvent & event);
+		virtual void onMousePressed(MousePressedEvent & event);
 
-	std::shared_ptr<HUD> hud;
-	std::shared_ptr<ParticleSystem> mouseLight;
-	std::shared_ptr<Player> player;
-	std::shared_ptr<Ball> ball;
-	std::shared_ptr<Wall> wall;
-	std::shared_ptr<Obstacle> obstacle;
-};
 		std::shared_ptr<HUD> hud;
 		std::shared_ptr<ParticleSystem> mouseLight;
 		std::shared_ptr<Player> player;
-		std::shared_ptr<item::Ball> ball;
-		std::shared_ptr<item::Brick> brick;
+		std::shared_ptr<Ball> ball;
+		std::shared_ptr<Wall> wall;
 		std::shared_ptr<Obstacle> obstacle;
 		bool paused = false;
 	};

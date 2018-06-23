@@ -49,8 +49,7 @@ void Player::update(const Vector2f &ballPos, const float ballRadius, const float
 	if (flash) {
 		flashElapsed();
 	}
-	yellowRange.setPosition(mainPlayer.getPosition());
-
+	yellowRange.setPosition(board.getPosition());
 }
 
 void Player::setPlayerKey(const Keyboard::Key left, const Keyboard::Key right) {
