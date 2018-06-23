@@ -5,7 +5,7 @@
 
 namespace game {
 	int EventSubject::addListener(std::shared_ptr<EventListenerBase> listener) {
-		listeners.emplace(listener->getEventType(), std::pair<const int, std::shared_ptr<EventListenerBase>>(idCount, std::move(listener)));
+		listeners.emplace(listener->getEventType(), std::make_pair(idCount, std::move(listener)));
 		int returnId = idCount;
 		idCount += 1;
 		return returnId;

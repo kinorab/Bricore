@@ -1,14 +1,23 @@
 #pragma once
 
-#include "../template/acyclicVisitable.h"
-#include "../common.h"
+#include "eventListener.h"
+#include "eventSubject.h"
 
 namespace game {
-	class EventListener;
-
+	template<typename Type>
 	class EventSlot {
 	public:
-		EventSlot();
-		virtual ~EventSlot() = default;
+		explicit EventSlot(std::function<void(Type &)> callback, EventSubject & subject) :
+			eventListener(callback),
+			subject(subject) {
+			listenerId = subject.addListener(callback);
+		}
+		virtual ~EventSlot() {
+			subject.removeEventListener(typeid(Type), listenerId);
+		};
+	private:
+		int listenerId;
+		EventListener<Type> eventListener;
+		EventSubject & subject;
 	};
 }

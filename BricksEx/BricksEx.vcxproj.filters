@@ -31,7 +31,6 @@
     <ClCompile Include="source\interact\vertexArrayNode.cpp" />
     <ClCompile Include="source\stuff\obstacle.cpp" />
     <ClCompile Include="source\stuff\player.cpp" />
-    <ClCompile Include="source\stage.cpp" />
     <ClCompile Include="source\UI\UIComponent.cpp" />
     <ClCompile Include="source\UI\button.cpp" />
     <ClCompile Include="source\UI\textButton.cpp" />
@@ -84,7 +83,7 @@
     <ClCompile Include="source\gameSys\item\chip.cpp" />
     <ClCompile Include="source\gameSys\item\enerma.cpp" />
     <ClCompile Include="source\gameSys\battle\battleSystem.cpp" />
-    <ClCompile Include="source\event\eventSlot.cpp" />
+    <ClCompile Include="source\stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />

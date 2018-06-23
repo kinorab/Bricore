@@ -9,10 +9,12 @@
 #include <map>
 #include <atomic>
 
-class Stage;
-
 namespace sf {
 	class RenderWindow;
+}
+
+namespace game {
+	class Stage;
 }
 
 class Game {
@@ -29,6 +31,6 @@ private:
 	game::SFMLMouseHandler mouseHandler;
 	game::SFMLKeyboardHandler keyboardHandler;
 	std::unique_ptr<sf::RenderWindow> window;
-	std::shared_ptr<Stage> stage;
+	std::shared_ptr<game::Stage> stage;
 	Graphics graph;
 };

@@ -10,11 +10,10 @@ namespace game {
 		, overObject(overObject)
 		, downObject(downObject)
 		, hitObject(new SpriteNode(upObject)) {
-		using namespace std::placeholders;
-		addListener(std::make_shared<EventListener<MouseEnteredEvent>>(std::bind(&Button::onMouseEntered, this, _1)));
-		addListener(std::make_shared<EventListener<MouseLeftEvent>>(std::bind(&Button::onMouseLeft, this, _1)));
-		addListener(std::make_shared<EventListener<MousePressedEvent>>(std::bind(&Button::onMousePressed, this, _1)));
-		addListener(std::make_shared<EventListener<MouseReleasedEvent>>(std::bind(&Button::onMouseReleased, this, _1)));
+		addListener(std::make_shared<EventListener<MouseEnteredEvent>>([&](auto & event) {onMouseEntered(event); }));
+		addListener(std::make_shared<EventListener<MouseLeftEvent>>([&](auto & event) {onMouseLeft(event); }));
+		addListener(std::make_shared<EventListener<MousePressedEvent>>([&](auto & event) {onMousePressed(event); }));
+		addListener(std::make_shared<EventListener<MouseReleasedEvent>>([&](auto & event) {onMouseReleased(event); }));
 	}
 
 	Button::~Button() {

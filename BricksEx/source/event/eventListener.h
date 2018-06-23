@@ -7,7 +7,7 @@
 namespace game {
 	class EventListenerBase {
 	public:
-		virtual std::type_index getEventType() = 0;
+		virtual std::type_index getEventType() const = 0;
 		virtual ~EventListenerBase() = default;
 	};
 
@@ -23,7 +23,7 @@ namespace game {
 		virtual void visit(Type & visitable) {
 			callback(visitable);
 		}
-		virtual std::type_index getEventType() override {
+		virtual std::type_index getEventType() const override {
 			return typeid(Type);
 		}
 	private:

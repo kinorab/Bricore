@@ -18,26 +18,25 @@ namespace game {
 	class MouseEnteredEvent;
 	class MouseLeftEvent;
 	class MousePressedEvent;
+	class Stage
+		: public Container {
+	public:
+		Stage();
+		virtual ~Stage();
+		virtual void update(const float updateRatio) override;
+	private:
+		virtual void onKeyPressed(KeyPressedEvent & event);
+		virtual void onKeyReleased(KeyReleasedEvent & event);
+		virtual void onMouseEntered(MouseEnteredEvent & event);
+		virtual void onMouseLeft(MouseLeftEvent & event);
+		virtual void onMouseMoved(MouseMovedEvent & event);
+		virtual void onMouseButtonPressed(MousePressedEvent & event);
+
+		std::shared_ptr<HUD> hud;
+		std::shared_ptr<ParticleSystem> mouseLight;
+		std::shared_ptr<Player> player;
+		std::shared_ptr<item::Ball> ball;
+		std::shared_ptr<item::Brick> brick;
+		std::shared_ptr<Obstacle> obstacle;
+	};
 }
-
-class Stage
-	: public game::Container {
-public:
-	Stage();
-	virtual ~Stage();
-	virtual void update(const float updateRatio) override;
-private:
-	virtual void onKeyPressed(game::KeyPressedEvent & event);
-	virtual void onKeyReleased(game::KeyReleasedEvent & event);
-	virtual void onMouseEntered(game::MouseEnteredEvent & event);
-	virtual void onMouseLeft(game::MouseLeftEvent & event);
-	virtual void onMouseMoved(game::MouseMovedEvent & event);
-	virtual void onMouseButtonPressed(game::MousePressedEvent & event);
-
-	std::shared_ptr<HUD> hud;
-	std::shared_ptr<ParticleSystem> mouseLight;
-	std::shared_ptr<Player> player;
-	std::shared_ptr<item::Ball> ball;
-	std::shared_ptr<item::Brick> brick;
-	std::shared_ptr<Obstacle> obstacle;
-};
