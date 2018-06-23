@@ -8,6 +8,6 @@ namespace game {
 	public:
 		ClosedEvent() = default;
 		virtual ~ClosedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

@@ -10,6 +10,6 @@ namespace game {
 	public:
 		JoystickDisconnectedEvent(sf::Event::JoystickConnectEvent eventData);
 		virtual ~JoystickDisconnectedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

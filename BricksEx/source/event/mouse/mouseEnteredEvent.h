@@ -8,6 +8,6 @@ namespace game {
 	public:
 		MouseEnteredEvent() = default;
 		virtual ~MouseEnteredEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

@@ -1,12 +1,12 @@
 #include "mouseReleasedEvent.h"
-#include "mouseReleasedListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	MouseReleasedEvent::MouseReleasedEvent(sf::Event::MouseButtonEvent eventData) :
 		sf::Event::MouseButtonEvent(eventData) {
 	}
 
-	void MouseReleasedEvent::accept(EventListener & visitor) {
-		dynamic_cast<MouseReleasedListener &>(visitor).visit(*this);
+	void MouseReleasedEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<MouseReleasedEvent> &>(visitor).visit(*this);
 	}
 }

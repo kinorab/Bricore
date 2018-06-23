@@ -11,6 +11,6 @@ namespace game {
 	public:
 		KeyReleasedEvent(sf::Event::KeyEvent eventData);
 		virtual ~KeyReleasedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

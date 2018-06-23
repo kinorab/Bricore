@@ -1,12 +1,12 @@
 #include "textEnteredEvent.h"
-#include "textEnteredListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	TextEnteredEvent::TextEnteredEvent(sf::Event::TextEvent eventData) :
 		sf::Event::TextEvent(eventData) {
 	}
 
-	void TextEnteredEvent::accept(EventListener & visitor) {
-		dynamic_cast<TextEnteredListener &>(visitor).visit(*this);
+	void TextEnteredEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<TextEnteredEvent> &>(visitor).visit(*this);
 	}
 }

@@ -10,6 +10,6 @@ namespace game {
 	public:
 		JoystickPressedEvent(sf::Event::JoystickButtonEvent eventData);
 		virtual ~JoystickPressedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

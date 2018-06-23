@@ -8,6 +8,6 @@ namespace game {
 	public:
 		MouseLeftEvent() = default;
 		virtual ~MouseLeftEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

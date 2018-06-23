@@ -1,8 +1,8 @@
 #include "gainedFocusEvent.h"
-#include "gainedFocusListener.h"
+#include "../eventListener.h"
 
 namespace game {
-	void GainedFocusEvent::accept(EventListener & visitor) {
-		dynamic_cast<GainedFocusListener &>(visitor).visit(*this);
+	void GainedFocusEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<GainedFocusEvent> &>(visitor).visit(*this);
 	}
 }

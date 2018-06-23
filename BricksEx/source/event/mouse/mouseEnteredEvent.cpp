@@ -1,8 +1,8 @@
 #include "mouseEnteredEvent.h"
-#include "mouseEnteredListener.h"
+#include "../eventListener.h"
 
 namespace game {
-	void MouseEnteredEvent::accept(EventListener & visitor) {
-		dynamic_cast<MouseEnteredListener &>(visitor).visit(*this);
+	void MouseEnteredEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<MouseEnteredEvent> &>(visitor).visit(*this);
 	}
 }

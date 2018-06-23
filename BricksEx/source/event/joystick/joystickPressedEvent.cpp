@@ -1,12 +1,12 @@
 #include "joystickPressedEvent.h"
-#include "joystickPressedListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	JoystickPressedEvent::JoystickPressedEvent(sf::Event::JoystickButtonEvent eventData) :
 		sf::Event::JoystickButtonEvent(eventData) {
 	}
 
-	void JoystickPressedEvent::accept(EventListener & visitor) {
-		dynamic_cast<JoystickPressedListener &>(visitor).visit(*this);
+	void JoystickPressedEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<JoystickPressedEvent> &>(visitor).visit(*this);
 	}
 }

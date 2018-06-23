@@ -11,6 +11,6 @@ namespace game {
 	public:
 		KeyPressedEvent(sf::Event::KeyEvent eventData);
 		virtual ~KeyPressedEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

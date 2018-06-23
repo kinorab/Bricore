@@ -1,12 +1,12 @@
 #include "sensorChangedEvent.h"
-#include "sensorChangedListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	SensorChangedEvent::SensorChangedEvent(sf::Event::SensorEvent eventData) :
 		sf::Event::SensorEvent(eventData) {
 	}
 
-	void SensorChangedEvent::accept(EventListener & visitor) {
-		dynamic_cast<SensorChangedListener &>(visitor).visit(*this);
+	void SensorChangedEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<SensorChangedEvent> &>(visitor).visit(*this);
 	}
 }

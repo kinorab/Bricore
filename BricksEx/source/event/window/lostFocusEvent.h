@@ -8,6 +8,6 @@ namespace game {
 	public:
 		LostFocusEvent() = default;
 		virtual ~LostFocusEvent() = default;
-		virtual void accept(EventListener & visitor) override;
+		virtual void accept(EventListenerBase & visitor) override;
 	};
 }

@@ -1,7 +1,7 @@
 #include "button.h"
 #include "../definition/utility.h"
 #include "../event/mouse/mouseEvent.h"
-#include "../event/mouse/mouseListener.h"
+#include "../event/eventListener.h"
 #include <SFML/Graphics.hpp>
 
 namespace game {
@@ -11,10 +11,10 @@ namespace game {
 		, downObject(downObject)
 		, hitObject(new SpriteNode(upObject)) {
 		using namespace std::placeholders;
-		addListener(std::make_shared<MouseEnteredListener>(std::bind(&Button::onMouseEntered, this, _1)));
-		addListener(std::make_shared<MouseLeftListener>(std::bind(&Button::onMouseLeft, this, _1)));
-		addListener(std::make_shared<MousePressedListener>(std::bind(&Button::onMousePressed, this, _1)));
-		addListener(std::make_shared<MouseReleasedListener>(std::bind(&Button::onMouseReleased, this, _1)));
+		addListener(std::make_shared<EventListener<MouseEnteredEvent>>(std::bind(&Button::onMouseEntered, this, _1)));
+		addListener(std::make_shared<EventListener<MouseLeftEvent>>(std::bind(&Button::onMouseLeft, this, _1)));
+		addListener(std::make_shared<EventListener<MousePressedEvent>>(std::bind(&Button::onMousePressed, this, _1)));
+		addListener(std::make_shared<EventListener<MouseReleasedEvent>>(std::bind(&Button::onMouseReleased, this, _1)));
 	}
 
 	Button::~Button() {

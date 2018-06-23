@@ -1,12 +1,12 @@
 #include "mouseWheelScrolledEvent.h"
-#include "mouseWheelScrolledListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	MouseWheelScrolledEvent::MouseWheelScrolledEvent(sf::Event::MouseWheelScrollEvent eventData) :
 		sf::Event::MouseWheelScrollEvent(eventData) {
 	}
 
-	void MouseWheelScrolledEvent::accept(EventListener & visitor) {
-		dynamic_cast<MouseWheelScrolledListener &>(visitor).visit(*this);
+	void MouseWheelScrolledEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<MouseWheelScrolledEvent> &>(visitor).visit(*this);
 	}
 }

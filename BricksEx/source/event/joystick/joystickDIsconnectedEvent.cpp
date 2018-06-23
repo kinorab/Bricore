@@ -1,12 +1,12 @@
 #include "joystickDisconnectedEvent.h"
-#include "joystickDisconnectedListener.h"
+#include "../eventListener.h"
 
 namespace game {
 	JoystickDisconnectedEvent::JoystickDisconnectedEvent(sf::Event::JoystickConnectEvent eventData) :
 		sf::Event::JoystickConnectEvent(eventData) {
 	}
 
-	void JoystickDisconnectedEvent::accept(EventListener & visitor) {
-		dynamic_cast<JoystickDisconnectedListener &>(visitor).visit(*this);
+	void JoystickDisconnectedEvent::accept(EventListenerBase & visitor) {
+        dynamic_cast<EventListener<JoystickDisconnectedEvent> &>(visitor).visit(*this);
 	}
 }

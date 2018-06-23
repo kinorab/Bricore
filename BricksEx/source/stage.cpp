@@ -2,9 +2,8 @@
 #include "hud.h"
 #include "particleSystem.h"
 #include "event/mouse/mouseEvent.h"
-#include "event/mouse/mouseListener.h"
+#include "event/eventListener.h"
 #include "event/keyboard/keyEvent.h"
-#include "event/keyboard/keyListener.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
 #include "manager/audioManager.h"
@@ -13,7 +12,7 @@
 #include "stuff/player.h"
 #include "stuff/brick.h"
 
-Stage::Stage() : 
+Stage::Stage() :
 	hud(new HUD),
 	player(new Player),
 	ball(new item::Ball),
@@ -24,12 +23,13 @@ Stage::Stage() :
 	ball->followPlayer(player->getMainPlayerTopCenterPos());
 	addChild({ hud, player, ball, brick, obstacle, mouseLight });
 	using namespace std::placeholders;
-	addListener(std::make_shared<game::KeyPressedListener>(std::bind(&Stage::onKeyPressed, this, _1)));
-	addListener(std::make_shared<game::KeyReleasedListener>(std::bind(&Stage::onKeyReleased, this, _1)));
-	addListener(std::make_shared<game::MouseEnteredListener>(std::bind(&Stage::onMouseEntered, this, _1)));
-	addListener(std::make_shared<game::MouseLeftListener>(std::bind(&Stage::onMouseLeft, this, _1)));
-	addListener(std::make_shared<game::MouseMovedListener>(std::bind(&Stage::onMouseMoved, this, _1)));
-	addListener(std::make_shared<game::MousePressedListener>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
+	// addListener(std::make_shared<game::EventListener<game::KeyPressedEvent>>(std::bind(&Stage::onKeyPressed, this, _1)));
+	addListener(std::make_shared<game::EventListener<game::KeyPressedEvent>>(std::bind(&Stage::onKeyPressed, this, _1)));
+	addListener(std::make_shared<game::EventListener<game::KeyReleasedEvent>>(std::bind(&Stage::onKeyReleased, this, _1)));
+	addListener(std::make_shared<game::EventListener<game::MouseEnteredEvent>>(std::bind(&Stage::onMouseEntered, this, _1)));
+	addListener(std::make_shared<game::EventListener<game::MouseLeftEvent>>(std::bind(&Stage::onMouseLeft, this, _1)));
+	addListener(std::make_shared<game::EventListener<game::MouseMovedEvent>>(std::bind(&Stage::onMouseMoved, this, _1)));
+	addListener(std::make_shared<game::EventListener<game::MousePressedEvent>>(std::bind(&Stage::onMouseButtonPressed, this, _1)));
 }
 
 Stage::~Stage() {
@@ -38,22 +38,24 @@ Stage::~Stage() {
 }
 
 void Stage::update(const float updateRatio) {
-	if (!GameState::pause) {
-		ball->initializeBall();
-		for (size_t i = 0; i < SLICE; ++i) {
-			player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
-			if (GameState::start) {
-				brick->update(*ball, updateRatio);
-				obstacle->update(*ball, updateRatio);
-				ball->update(player->getMainPlayerDP(), updateRatio);
-			}
-			else {
-				ball->followPlayer(player->getMainPlayerTopCenterPos());
-				obstacle->restart();
-			}
+	mouseLight->update(updateRatio);
+	if (GameState::pause) {
+		return;
+	}
+
+	ball->initializeBall();
+	for (size_t i = 0; i < SLICE; ++i) {
+		player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
+		if (GameState::start) {
+			brick->update(*ball, updateRatio);
+			obstacle->update(*ball, updateRatio);
+			ball->update(player->getMainPlayerDP(), updateRatio);
+		}
+		else {
+			ball->followPlayer(player->getMainPlayerTopCenterPos());
+			obstacle->restart();
 		}
 	}
-	mouseLight->update(updateRatio);
 }
 
 void Stage::onKeyPressed(game::KeyPressedEvent & event) {
