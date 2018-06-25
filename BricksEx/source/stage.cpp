@@ -64,7 +64,7 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 			dispatchEvent(PausedEvent());
 		}
 		else {
-			dispatchEvent(UnPausedEvent());
+			dispatchEvent(UnpausedEvent());
 		}
 		GameState::lock = !GameState::lock;
 	}
