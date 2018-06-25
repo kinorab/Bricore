@@ -66,10 +66,10 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 		else {
 			dispatchEvent(UnpausedEvent());
 		}
-		GameState::lock = !GameState::lock;
+		locked = !locked;
 	}
 
-	if (GameState::lock) {
+	if (locked) {
 		return;
 	}
 	else {
@@ -96,7 +96,7 @@ void Stage::onMouseMoved(MouseMovedEvent & event) {
 }
 
 void Stage::onMousePressed(MousePressedEvent & event) {
-	if (!GameState::lock) {
+	if (!locked) {
 		if (event.button == sf::Mouse::Left) {
 			// debugging feature
 			GameState::start = true;

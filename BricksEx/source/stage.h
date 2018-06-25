@@ -36,5 +36,6 @@ namespace game {
 		std::shared_ptr<Wall> wall;
 		std::shared_ptr<Obstacle> obstacle;
 		bool paused = false;
+		bool locked = false;
 	};
 }
