@@ -15,6 +15,7 @@ constexpr float AREAINTERVAL = 50.f;
 constexpr size_t SLICE = 5;
 
 enum class GameState {
+	LEVEL_FINISHED,
 	STARTED,
 	READY,
 	NOT_READY,
@@ -22,7 +23,6 @@ enum class GameState {
 
 namespace game {
 	extern GameState currentState;
-	extern bool finishLevel;
 	extern sf::RectangleShape wallArea;
 	extern sf::RectangleShape obstacleArea;
 	extern sf::RectangleShape playerArea;

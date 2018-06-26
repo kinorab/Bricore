@@ -27,7 +27,7 @@ SubPlayerSkill::SubPlayerSkill(const Kind skillName, const sf::Time duration
 }
 
 void SubPlayerSkill::handleSkill(const sf::Event * const event) {
-	if (status != Status::Selected || game::finishLevel) return;
+	if (status != Status::Selected || game::currentState == GameState::LEVEL_FINISHED) return;
 	using namespace std::placeholders;
 	State currentState = skill.second.currentState;
 	switch (currentState) {
@@ -73,7 +73,7 @@ void SubPlayerSkill::handleSkill(const sf::Event * const event) {
 }
 
 void SubPlayerSkill::handleSelect(const sf::Event * const event) {
-	if (status == Status::None || event->type != sf::Event::MouseButtonPressed || !game::finishLevel) return;
+	if (status == Status::None || event->type != sf::Event::MouseButtonPressed || game::currentState != GameState::LEVEL_FINISHED) return;
 	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
 		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
 		if (currentCarry < maxCarry && selectOn()) {

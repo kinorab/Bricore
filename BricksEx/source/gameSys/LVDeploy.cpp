@@ -282,8 +282,7 @@ sys::Matrix<sf::Color> LVDeploy::brickColorDeploy({
 	});
 
 void LVDeploy::finishLevel() noexcept {
-	game::currentState = GameState::NOT_READY;
-	game::finishLevel = true;
+	game::currentState = GameState::LEVEL_FINISHED;
 	std::cout << "Finished level: " << level++ << "!!!" << std::endl;
 }
 

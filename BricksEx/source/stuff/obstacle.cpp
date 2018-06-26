@@ -40,7 +40,7 @@ void Obstacle::update(Ball &ball, const float updateRatio) {
 			element->isCollidedObstacle(blocks.at(i).get());
 		}
 	}
-	if (game::finishLevel) {
+	if (game::currentState == GameState::LEVEL_FINISHED) {
 		reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
 		setAllVerticeColor(LVDeploy::getBlockCD());
 		setAllSpeed(LVDeploy::getBlockSD());
