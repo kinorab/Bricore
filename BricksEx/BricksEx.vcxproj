@@ -110,6 +110,7 @@
     <ClInclude Include="source\event\eventListenerBase.h" />
     <ClInclude Include="source\event\eventSlot.h" />
     <ClInclude Include="source\event\game\pausedEvent.h" />
+    <ClInclude Include="source\event\game\startedEvent.h" />
     <ClInclude Include="source\event\game\unpausedEvent.h" />
     <ClInclude Include="source\event\joystick\joystickDIsconnectedEvent.h" />
     <ClInclude Include="source\event\joystick\joystickEvent.h" />

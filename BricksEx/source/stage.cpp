@@ -98,7 +98,6 @@ void Stage::onMouseMoved(MouseMovedEvent & event) {
 void Stage::onMousePressed(MousePressedEvent & event) {
 	if (!locked) {
 		if (event.button == sf::Mouse::Left) {
-			// debugging feature
 			currentState = GameState::STARTED;
 		}
 		// debugging feature

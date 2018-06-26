@@ -204,6 +204,7 @@
     <ClInclude Include="source\event\window\windowListener.h" />
     <ClInclude Include="source\event\game\unpausedEvent.h" />
     <ClInclude Include="source\event\game\pausedEvent.h" />
+    <ClInclude Include="source\event\game\startedEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

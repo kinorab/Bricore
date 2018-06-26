@@ -52,7 +52,7 @@ void Game::renderFunc() {
 			stage->update(updateRatio);
 			elapsed -= updateSpan * updateRatio;
 		}
-		// max fixed at 1.5x current fps
+		// maximum render elapsed cap
 		renderElapsed = std::min<float>(renderElapsed + distribute, graph.getFrameSpan() * 1.5f);
 		if (renderElapsed >= graph.getFrameSpan()) {
 			window->draw(*stage);
