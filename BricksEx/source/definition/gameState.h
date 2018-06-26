@@ -14,9 +14,14 @@ constexpr float LEVEL_HEIGHT = 900.f;
 constexpr float AREAINTERVAL = 50.f;
 constexpr size_t SLICE = 5;
 
-namespace GameState {
-	extern bool start;
-	extern bool ready;
+enum class GameState {
+	STARTED,
+	READY,
+	NOT_READY,
+};
+
+namespace game {
+	extern GameState currentState;
 	extern bool finishLevel;
 	extern sf::RectangleShape wallArea;
 	extern sf::RectangleShape obstacleArea;

@@ -36,7 +36,7 @@ void BallSkill::loadFrame(const std::vector<std::string> &fileName, const bool i
 }
 
 void BallSkill::handleSkill(const sf::Event * const event) {
-	if (status != Status::Selected || GameState::finishLevel) return;
+	if (status != Status::Selected || game::finishLevel) return;
 	using namespace std::placeholders;
 	State currentState = skill.second.currentState;
 	switch (currentState) {
@@ -85,7 +85,7 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 }
 
 void BallSkill::handleSelect(const sf::Event * const event) {
-	if (status == Status::None || event->type != sf::Event::MouseButtonPressed || !GameState::finishLevel) return;
+	if (status == Status::None || event->type != sf::Event::MouseButtonPressed || !game::finishLevel) return;
 	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
 		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
 		if (selectOn()) {

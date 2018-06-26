@@ -44,7 +44,7 @@ void Stage::update(const float updateRatio) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
 			player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
-			if (GameState::start) {
+			if (currentState == GameState::STARTED) {
 				wall->update(*ball, updateRatio);
 				obstacle->update(*ball, updateRatio);
 				ball->update(player->getDP(), player->getSpeed(), updateRatio);
@@ -74,7 +74,7 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 	}
 	else {
 		if (event.code == sf::Keyboard::G) {
-			GameState::start = true;
+			currentState = GameState::STARTED;
 		}
 	}
 }
@@ -99,12 +99,12 @@ void Stage::onMousePressed(MousePressedEvent & event) {
 	if (!locked) {
 		if (event.button == sf::Mouse::Left) {
 			// debugging feature
-			GameState::start = true;
+			currentState = GameState::STARTED;
 		}
 		// debugging feature
 		else if (event.button == sf::Mouse::Right) {
-			GameState::start = false;
-			GameState::ready = false;
+			currentState = GameState::NOT_READY;
+
 		}
 	}
 }

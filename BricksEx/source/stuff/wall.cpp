@@ -158,7 +158,7 @@ void Wall::settlePlace() {
 				element->setFrameColor(Color::Black);
 			}
 		});
-		GameState::wallArea.setSize(Vector2f(LEVEL_WIDTH, height));
+		game::wallArea.setSize(Vector2f(LEVEL_WIDTH, height));
 		changeEntity = false;
 	}
 	// ensure that total with the intervals should not be out of screen

@@ -35,9 +35,9 @@ void Ball::initializeBall() {
 		shadowBalls.clear();
 		mainBall->initialize();
 	}
-	else if (GameState::finishLevel) {
+	else if (game::finishLevel) {
 		mainBall->resettle();
-		GameState::finishLevel = false;
+		game::finishLevel = false;
 	}
 }
 

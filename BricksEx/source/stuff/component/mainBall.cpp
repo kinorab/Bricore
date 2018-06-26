@@ -75,7 +75,7 @@ void MainBall::initialize() {
 }
 
 void MainBall::resettle() {
-	if (!GameState::finishLevel) throw std::invalid_argument("Level not finished.");
+	if (!game::finishLevel) throw std::invalid_argument("Level not finished.");
 	settle = false;
 }
 
@@ -109,8 +109,7 @@ void MainBall::determineUpdate() {
 	if (broke) {
 		broke = false;
 		settle = false;
-		GameState::start = false;
-		GameState::ready = false;
+		game::currentState = GameState::NOT_READY;
 	}
 	left = false;
 	right = false;

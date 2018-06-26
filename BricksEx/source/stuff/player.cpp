@@ -25,8 +25,8 @@ Player::Player()
 	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
 	redRange.setPosition(board.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
-	GameState::playerArea.setSize(Vector2f(LEVEL_WIDTH, 100.f));
-	GameState::playerArea.setPosition(0.0f, LEVEL_HEIGHT - 100.f);
+	game::playerArea.setSize(Vector2f(LEVEL_WIDTH, 100.f));
+	game::playerArea.setPosition(0.0f, LEVEL_HEIGHT - 100.f);
 }
 
 void Player::update(const Vector2f &ballPos, const float ballRadius, const float updateRatio) {
@@ -43,7 +43,7 @@ void Player::update(const Vector2f &ballPos, const float ballRadius, const float
 		board.move(Vector2f(speed / SLICE * updateRatio, 0));
 		redRange.move(Vector2f(speed / SLICE * updateRatio, 0));
 	}
-	if (GameState::start) {
+	if (game::currentState == GameState::STARTED) {
 		flashRange(AudioManager::getInstance().sound1, ballPos, ballRadius);
 	}
 	if (flash) {

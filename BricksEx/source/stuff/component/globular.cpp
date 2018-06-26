@@ -17,13 +17,13 @@ void Globular::restartClock() {
 bool Globular::isEnteredObstacleArea() const {
 	const float radius = getRadius();
 	const Vector2f ballPos = getPosition();
-	return sys::ballRectINCIntersects(ballPos, radius, GameState::obstacleArea.getGlobalBounds());
+	return sys::ballRectINCIntersects(ballPos, radius, game::obstacleArea.getGlobalBounds());
 }
 
 bool Globular::isEnteredWallArea() const {
 	const float radius = getRadius();
 	const Vector2f ballPos = getPosition();
-	return sys::ballRectINCIntersects(ballPos, radius, GameState::wallArea.getGlobalBounds());
+	return sys::ballRectINCIntersects(ballPos, radius, game::wallArea.getGlobalBounds());
 }
 
 Globular::Globular()

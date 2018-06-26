@@ -26,9 +26,9 @@ void Obstacle::reset(const std::vector<Vector2f> & position, const std::vector<V
 		blocks.at(i) = std::shared_ptr<Block>(new Block(position.at(i), sideLength.at(i)));
 		blocks.at(i)->setOrigin(blocks.at(i)->getSize() / 2.f);
 	}
-	GameState::obstacleArea = RectangleShape(Vector2f(LEVEL_WIDTH
-		, LEVEL_HEIGHT - (GameState::playerArea.getSize().y + GameState::wallArea.getSize().y + 2 * AREAINTERVAL)));
-	GameState::obstacleArea.setPosition(Vector2f(0.0f, GameState::wallArea.getSize().y + AREAINTERVAL));
+	game::obstacleArea = RectangleShape(Vector2f(LEVEL_WIDTH
+		, LEVEL_HEIGHT - (game::playerArea.getSize().y + game::wallArea.getSize().y + 2 * AREAINTERVAL)));
+	game::obstacleArea.setPosition(Vector2f(0.0f, game::wallArea.getSize().y + AREAINTERVAL));
 }
 
 
@@ -40,7 +40,7 @@ void Obstacle::update(Ball &ball, const float updateRatio) {
 			element->isCollidedObstacle(blocks.at(i).get());
 		}
 	}
-	if (GameState::finishLevel) {
+	if (game::finishLevel) {
 		reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
 		setAllVerticeColor(LVDeploy::getBlockCD());
 		setAllSpeed(LVDeploy::getBlockSD());
@@ -82,11 +82,11 @@ void Obstacle::setAllSpeed(const std::vector<Vector2f> & speed) {
 }
 
 void Obstacle::resetPosition() {
-	if (!GameState::ready) {
+	if (game::currentState == GameState::NOT_READY) {
 		for (size_t i = 0; i < blocks.size(); ++i) {
 			blocks.at(i)->resetPosition();
 		}
-		GameState::ready = true;
+		game::currentState = GameState::READY;
 	}
 }
 

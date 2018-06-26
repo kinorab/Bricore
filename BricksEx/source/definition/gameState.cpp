@@ -19,9 +19,8 @@ void getPlayedTime() {
 		<< std::setw(2) << std::setfill('0') << sec << std::endl;
 }
 
-namespace GameState {
-	bool start = false;
-	bool ready = false;
+namespace game {
+	GameState currentState = GameState::NOT_READY;
 	bool finishLevel = false;
 	sf::RectangleShape wallArea;
 	sf::RectangleShape obstacleArea;
