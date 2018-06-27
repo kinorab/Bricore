@@ -194,6 +194,13 @@ namespace game {
 		std::swap(children.at(indexA), children.at(indexB));
 	}
 
+	void Container::update(const float updateRatio)	{
+		std::for_each(children.begin(), children.end(),
+			[&](const std::shared_ptr<InteractiveObject> & child) {
+			child->tryUpdate(updateRatio);
+		});
+	}
+
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 		states.transform = states.transform.combine(getTransform());
 		std::for_each(children.begin(), children.end(),

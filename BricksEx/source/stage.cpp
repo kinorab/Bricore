@@ -39,7 +39,7 @@ Stage::~Stage() {
 }
 
 void Stage::update(const float updateRatio) {
-	mouseLight->update(updateRatio);
+	Container::update(updateRatio);
 	if (!paused) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {

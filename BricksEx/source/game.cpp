@@ -49,7 +49,7 @@ void Game::renderFunc() {
 		elapsed = std::min<float>(elapsed + distribute, updateSpan * 1.5f);
 		while (elapsed > 0.0f) {
 			float updateRatio = std::min<float>(elapsed, updateSpan) / updateSpan;
-			stage->update(updateRatio);
+			stage->tryUpdate(updateRatio);
 			elapsed -= updateSpan * updateRatio;
 		}
 		// maximum render elapsed cap

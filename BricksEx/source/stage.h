@@ -20,6 +20,7 @@ namespace game {
 	public:
 		Stage();
 		virtual ~Stage();
+	protected:
 		virtual void update(const float updateRatio) override;
 	private:
 		virtual void onKeyPressed(KeyPressedEvent & event);

@@ -31,10 +31,11 @@ namespace game {
 		virtual void onEnabled();
 		virtual void setEnabled(bool value);
 		virtual void setParent(Container * parent);
-		virtual void update(const float updateRatio);
+		virtual void tryUpdate(const float updateRatio);
 	protected:
 		InteractiveObject();
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+		virtual void update(const float updateRatio);
 	private:
 		bool enabled;
 		Container * parent;

@@ -36,6 +36,7 @@ namespace game {
 		virtual void swapChildrenAt(const int indexA, const int indexB);
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+		virtual void update(const float updateRatio) override;
 	private:
 		std::vector<std::shared_ptr<InteractiveObject>> children;
 	};

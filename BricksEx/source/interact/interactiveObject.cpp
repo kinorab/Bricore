@@ -79,6 +79,12 @@ namespace game {
 		parent = container;
 	}
 
+	void InteractiveObject::tryUpdate(const float updateRatio) {
+		if (getEnabled()) {
+			update(updateRatio);
+		}
+	}
+
 	void InteractiveObject::update(const float) {
 	}
 
