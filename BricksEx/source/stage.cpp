@@ -44,6 +44,11 @@ void Stage::update(const float updateRatio) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
 			player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
+			if (game::currentState == GameState::NOT_READY) {
+				obstacle->resetPosition();
+				game::currentState = GameState::READY;
+			}
+
 			if (currentState == GameState::STARTED) {
 				wall->update(*ball, updateRatio);
 				obstacle->update(*ball, updateRatio);
@@ -51,10 +56,6 @@ void Stage::update(const float updateRatio) {
 			}
 			else {
 				ball->followPlayer(player->getTopCenterPos());
-				if (game::currentState == GameState::NOT_READY) {
-					obstacle->resetPosition();
-					game::currentState = GameState::READY;
-				}
 			}
 		}
 	}
@@ -69,16 +70,16 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 		else {
 			dispatchEvent(UnpausedEvent());
 		}
+
 		locked = !locked;
 	}
 
 	if (locked) {
 		return;
 	}
-	else {
-		if (event.code == sf::Keyboard::G) {
-			currentState = GameState::STARTED;
-		}
+
+	if (event.code == sf::Keyboard::G) {
+		currentState = GameState::STARTED;
 	}
 }
 
