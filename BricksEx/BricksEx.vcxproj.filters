@@ -81,8 +81,8 @@
     <ClCompile Include="source\stuff\wall.cpp" />
     <ClCompile Include="source\stuff\component\brick.cpp" />
     <ClCompile Include="source\gameSys\area\arena.cpp" />
-    <ClCompile Include="source\stage.cpp" />
     <ClCompile Include="source\event\window\resizedEvent.cpp" />
+    <ClCompile Include="source\root.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -115,7 +115,6 @@
     <ClInclude Include="source\interact\vertexArrayNode.h" />
     <ClInclude Include="source\stuff\obstacle.h" />
     <ClInclude Include="source\stuff\player.h" />
-    <ClInclude Include="source\stage.h" />
     <ClInclude Include="source\UI\UIComponent.h" />
     <ClInclude Include="source\UI\button.h" />
     <ClInclude Include="source\UI\textButton.h" />
@@ -205,6 +204,7 @@
     <ClInclude Include="source\event\game\unpausedEvent.h" />
     <ClInclude Include="source\event\game\pausedEvent.h" />
     <ClInclude Include="source\event\game\startedEvent.h" />
+    <ClInclude Include="source\root.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

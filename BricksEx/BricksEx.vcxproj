@@ -57,7 +57,7 @@
     <ClCompile Include="source\gameSys\item\enerma.cpp" />
     <ClCompile Include="source\gameSys\skill\bossSkill.cpp" />
     <ClCompile Include="source\gameSys\skill\skillHandler.cpp" />
-    <ClCompile Include="source\stage.cpp" />
+    <ClCompile Include="source\root.cpp" />
     <ClCompile Include="source\stuff\ball.cpp" />
     <ClCompile Include="source\stuff\component\block.cpp" />
     <ClCompile Include="source\stuff\component\brick.cpp" />
@@ -213,7 +213,7 @@
     <ClInclude Include="source\stuff\obstacle.h" />
     <ClInclude Include="source\stuff\player.h" />
     <ClInclude Include="source\resource.h" />
-    <ClInclude Include="source\stage.h" />
+    <ClInclude Include="source\root.h" />
     <ClInclude Include="source\UI\UIComponent.h" />
     <ClInclude Include="source\UI\button.h" />
     <ClInclude Include="source\UI\textButton.h" />

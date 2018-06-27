@@ -15,11 +15,11 @@ namespace game {
 	class KeyReleasedEvent;
 	class MouseMovedEvent;
 	class MousePressedEvent;
-	class Stage :
+	class Root :
 		public Container {
 	public:
-		Stage();
-		virtual ~Stage();
+		Root();
+		virtual ~Root();
 	protected:
 		virtual void update(const float updateRatio) override;
 	private:

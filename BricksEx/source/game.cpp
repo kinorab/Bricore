@@ -2,13 +2,13 @@
 #include "manager/audioManager.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
-#include "stage.h"
+#include "root.h"
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <future>
 
 Game::Game() :
-	stage(new game::Stage),
+	stage(new game::Root),
 	mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"BricksEx", sf::Style::Close, graph.getSettings()));

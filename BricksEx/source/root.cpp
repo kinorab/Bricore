@@ -1,4 +1,4 @@
-#include "stage.h"
+#include "root.h"
 #include "hud.h"
 #include "particleSystem.h"
 #include "event/mouse/mouseEvent.h"
@@ -14,7 +14,7 @@
 
 using namespace game;
 
-Stage::Stage() :
+Root::Root() :
 	hud(new HUD),
 	player(new Player),
 	ball(new Ball),
@@ -33,12 +33,12 @@ Stage::Stage() :
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([&](auto & event) { onMousePressed(event); }));
 }
 
-Stage::~Stage() {
+Root::~Root() {
 	AudioManager::getInstance().bgmusic.stop();
 	AudioManager::getInstance().sound1.stop();
 }
 
-void Stage::update(const float updateRatio) {
+void Root::update(const float updateRatio) {
 	Container::update(updateRatio);
 	if (!paused) {
 		ball->initializeBall();
@@ -61,7 +61,7 @@ void Stage::update(const float updateRatio) {
 	}
 }
 
-void Stage::onKeyPressed(KeyPressedEvent & event) {
+void Root::onKeyPressed(KeyPressedEvent & event) {
 	if (event.code == sf::Keyboard::P) {
 		paused = !paused;
 		if (paused) {
@@ -83,23 +83,23 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 	}
 }
 
-void Stage::onKeyReleased(KeyReleasedEvent & event) {
+void Root::onKeyReleased(KeyReleasedEvent & event) {
 
 }
 
-void Stage::onMouseEntered() {
+void Root::onMouseEntered() {
 	mouseLight->startEmit();
 }
 
-void Stage::onMouseLeft() {
+void Root::onMouseLeft() {
 	mouseLight->stopEmit();
 }
 
-void Stage::onMouseMoved(MouseMovedEvent & event) {
+void Root::onMouseMoved(MouseMovedEvent & event) {
 	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(event.x), static_cast<float>(event.y)));
 }
 
-void Stage::onMousePressed(MousePressedEvent & event) {
+void Root::onMousePressed(MousePressedEvent & event) {
 	if (!locked) {
 		if (event.button == sf::Mouse::Left) {
 			currentState = GameState::STARTED;

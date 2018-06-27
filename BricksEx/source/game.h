@@ -14,7 +14,7 @@ namespace sf {
 }
 
 namespace game {
-	class Stage;
+	class Root;
 }
 
 class Game {
@@ -31,6 +31,6 @@ private:
 	game::SFMLMouseHandler mouseHandler;
 	game::SFMLKeyboardHandler keyboardHandler;
 	std::unique_ptr<sf::RenderWindow> window;
-	std::shared_ptr<game::Stage> stage;
+	std::shared_ptr<game::Root> stage;
 	Graphics graph;
 };
