@@ -82,11 +82,8 @@ void Obstacle::setAllSpeed(const std::vector<Vector2f> & speed) {
 }
 
 void Obstacle::resetPosition() {
-	if (game::currentState == GameState::NOT_READY) {
-		for (size_t i = 0; i < blocks.size(); ++i) {
-			blocks.at(i)->resetPosition();
-		}
-		game::currentState = GameState::READY;
+	for (size_t i = 0; i < blocks.size(); ++i) {
+		blocks.at(i)->resetPosition();
 	}
 }
 

@@ -51,7 +51,10 @@ void Stage::update(const float updateRatio) {
 			}
 			else {
 				ball->followPlayer(player->getTopCenterPos());
-				obstacle->resetPosition();
+				if (game::currentState == GameState::NOT_READY) {
+					obstacle->resetPosition();
+					game::currentState = GameState::READY;
+				}
 			}
 		}
 	}
