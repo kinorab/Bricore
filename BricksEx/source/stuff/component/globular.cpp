@@ -1,6 +1,7 @@
 #include "globular.h"
 #include "../../definition/gameState.h"
 #include "../../definition/intersects.h"
+#include "../../gameSys/area/area.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -17,13 +18,15 @@ void Globular::restartClock() {
 bool Globular::isEnteredObstacleArea() const {
 	const float radius = getRadius();
 	const Vector2f ballPos = getPosition();
-	return sys::ballRectINCIntersects(ballPos, radius, game::obstacleArea.getGlobalBounds());
+	auto &obstacleArea = game::Area::getInstance().getArea(game::Area::Obstacle);
+	return sys::ballRectINCIntersects(ballPos, radius, obstacleArea.getGlobalBounds());
 }
 
 bool Globular::isEnteredWallArea() const {
 	const float radius = getRadius();
 	const Vector2f ballPos = getPosition();
-	return sys::ballRectINCIntersects(ballPos, radius, game::wallArea.getGlobalBounds());
+	auto &wallArea = game::Area::getInstance().getArea(game::Area::Wall);
+	return sys::ballRectINCIntersects(ballPos, radius, wallArea.getGlobalBounds());
 }
 
 Globular::Globular()

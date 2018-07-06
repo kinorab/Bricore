@@ -1,8 +1,6 @@
 #include "matrix.h"
 template<typename T>
-inline sys::Matrix<T>::Matrix() 
-	:matrix({ {} }) {
-}
+inline sys::Matrix<T>::Matrix(){ }
 
 template<typename T>
 inline sys::Matrix<T>::Matrix(const size_t row, const size_t col) {
@@ -11,12 +9,22 @@ inline sys::Matrix<T>::Matrix(const size_t row, const size_t col) {
 
 template<typename T>
 inline sys::Matrix<T>::Matrix(const std::vector<std::vector<T>>& matrix)
-	:matrix(matrix) {
+	: matrix(matrix) {
+}
+
+template<typename T>
+inline sys::Matrix<T>::Matrix(std::vector<std::vector<T>>&& matrix)
+	: matrix(matrix) {
 }
 
 template<typename T>
 inline sys::Matrix<T>::Matrix(const Matrix<T>& vector2D)
 	: matrix(vector2D.matrix) {
+}
+
+template<typename T>
+inline sys::Matrix<T>::Matrix(Matrix<T>&& vector2D)
+	: matric(vector2D.matrix) {
 }
 // swap two 2D vector
 template<typename T>
@@ -36,6 +44,11 @@ inline void sys::Matrix<T>::resize(const size_t row) {
 // push_back a row
 template<typename T>
 inline void sys::Matrix<T>::push_back(const std::vector<T>& vector) {
+	matrix.push_back(vector);
+}
+// push_back a row
+template<typename T>
+inline void sys::Matrix<T>::push_back(std::vector<T>&& vector) {
 	matrix.push_back(vector);
 }
 // pop_back a row
@@ -61,6 +74,11 @@ inline void sys::Matrix<T>::clear() noexcept {
 // assign row(s) to 2D vector
 template<typename T>
 inline void sys::Matrix<T>::assign(const size_t n, const std::vector<T>& val) {
+	matrix.assign(n, val);
+}
+// assign row(s) to 2D vector
+template<typename T>
+inline void sys::Matrix<T>::assign(const size_t n, std::vector<T>&& val) {
 	matrix.assign(n, val);
 }
 // assign row(s) or another 2D vector's row(s) to 2D vector
@@ -108,6 +126,11 @@ inline const T & sys::Matrix<T>::at(const size_t rowIndex, const size_t colIndex
 // insert row(s) to 2D vector
 template<typename T>
 inline typename sys::Matrix<T>::iter sys::Matrix<T>::insert(const_iter pos, const std::vector<T>& val, const size_t n) {
+	return n == 0 ? matrix.insert(pos, val) : matrix.insert(pos, n, val);
+}
+// insert row(s) to 2D vector
+template<typename T>
+inline typename sys::Matrix<T>::iter sys::Matrix<T>::insert(const_iter pos, std::vector<T>&& val, const size_t n) {
 	return n == 0 ? matrix.insert(pos, val) : matrix.insert(pos, n, val);
 }
 // insert row(s) or another 2D vector's row(s) to 2D vector
@@ -315,7 +338,7 @@ inline typename sys::Matrix<T>::Proxy sys::Matrix<T>::operator [](const size_t r
 }
 
 template<typename T>
-inline sys::Matrix<T>::Proxy::Proxy(std::vector<T>& inputVector)
+inline sys::Matrix<T>::Proxy::Proxy(const std::vector<T>& inputVector)
 	: outputVector(inputVector) {}
 
 template<typename T>

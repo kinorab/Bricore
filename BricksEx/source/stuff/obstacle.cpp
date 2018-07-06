@@ -3,6 +3,7 @@
 #include "component/block.h"
 #include "component/globular.h"
 #include "../gameSys/LVDeploy.h"
+#include "../gameSys/area/area.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
@@ -26,9 +27,10 @@ void Obstacle::reset(const std::vector<Vector2f> & position, const std::vector<V
 		blocks.at(i) = std::shared_ptr<Block>(new Block(position.at(i), sideLength.at(i)));
 		blocks.at(i)->setOrigin(blocks.at(i)->getSize() / 2.f);
 	}
-	game::obstacleArea = RectangleShape(Vector2f(LEVEL_WIDTH
-		, LEVEL_HEIGHT - (game::playerArea.getSize().y + game::wallArea.getSize().y + 2 * AREAINTERVAL)));
-	game::obstacleArea.setPosition(Vector2f(0.0f, game::wallArea.getSize().y + AREAINTERVAL));
+	using namespace game;
+	auto &instance = Area::getInstance();
+	instance.settleArea(Area::Obstacle, Vector2f(0.0f, instance.getArea(Area::Wall).getSize().y + AREAINTERVAL)
+	, LEVEL_HEIGHT - (instance.getArea(Area::Player).getSize().y + instance.getArea(Area::Wall).getSize().y + 2 * AREAINTERVAL));
 }
 
 

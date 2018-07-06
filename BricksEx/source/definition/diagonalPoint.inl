@@ -10,9 +10,38 @@ inline sys::DPoint<T>::DPoint(const sf::Vector2<T> &D1, const sf::Vector2<T> &D2
 }
 
 template<typename T>
+inline sys::DPoint<T>::DPoint(sf::Vector2<T>&& D1, sf::Vector2<T>&& D2) {
+	if (D1 == D2) {
+		throw std::invalid_argument("Two points are not diagonal points");
+	}
+	dot1 = D1;
+	dot2 = D2;
+}
+
+template<typename T>
 inline sys::DPoint<T>::DPoint(const sf::Rect<T>& rect)
 	: dot1(rect.left, rect.top)
 	, dot2(rect.left + rect.width, rect.top + rect.height) {
+}
+
+template<typename T>
+inline sys::DPoint<T>::DPoint(sf::Rect<T>&& rect)
+	: dot1(rect.left, rect.top)
+	, dot2(rect.left + rect.width, rect.top + rect.height) {
+}
+
+template<typename T>
+inline sys::DPoint<T>& sys::DPoint<T>::operator =(const DPoint<T>& right) {
+	dot1 = right.dot1;
+	dot2 = right.dot2;
+	return *this;
+}
+
+template<typename T>
+inline sys::DPoint<T>& sys::DPoint<T>::operator =(DPoint<T>&& right) {
+	dot1 = right.dot1;
+	dot2 = right.dot2;
+	return *this;
 }
 
 template<typename T>

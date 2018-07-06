@@ -19,17 +19,21 @@ namespace sys {
 		Matrix();
 		explicit Matrix(const size_t row, const size_t col);
 		explicit Matrix(const std::vector<std::vector<T>>& matrix);
+		explicit Matrix(std::vector<std::vector<T>>&& matrix);
 		explicit Matrix(const Matrix<T>& vector2D);
+		explicit Matrix(Matrix<T>&& vector2D);
 
 		void swap(Matrix<T>& vector2D);
 		void resize(const size_t row, const size_t col);
 		void resize(const size_t row);
 		void push_back(const std::vector<T>& vector);
+		void push_back(std::vector<T>&& vector);
 		void pop_back();
 		void erase(const_iter it);
 		void erase(const_iter first, const_iter last);
 		void clear() noexcept;
 		void assign(const size_t n, const std::vector<T> & val);
+		void assign(const size_t n, std::vector<T> && val);
 		void assign(inputIter first, inputIter last);
 		void shrink_to_fit();
 		std::vector<T> & front();
@@ -39,6 +43,7 @@ namespace sys {
 		T & at(const size_t rowIndex, const size_t colIndex);
 		const T &at(const size_t rowIndex, const size_t colIndex) const;
 		iter insert(const_iter pos, const std::vector<T>& val, const size_t n = 0);
+		iter insert(const_iter pos, std::vector<T>&& val, const size_t n = 0);
 		iter insert(const_iter pos, inputIter first, inputIter last);
 
 		iter begin() noexcept;
@@ -83,7 +88,7 @@ namespace sys {
 	private:
 		class Proxy {
 		public:
-			Proxy(std::vector<T>& inputVector);
+			Proxy(const std::vector<T>& inputVector);
 			T & operator [](const size_t col) noexcept;
 		private:
 			std::vector<T>& outputVector;

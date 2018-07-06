@@ -23,7 +23,4 @@ enum class GameState {
 
 namespace game {
 	extern GameState currentState;
-	extern sf::RectangleShape wallArea;
-	extern sf::RectangleShape obstacleArea;
-	extern sf::RectangleShape playerArea;
 };

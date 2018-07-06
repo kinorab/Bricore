@@ -5,6 +5,7 @@
 #include "component/brick.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
+#include "../gameSys/area/area.h"
 #include "../gameSys/LVDeploy.h"
 #include <SFML/Graphics.hpp>
 
@@ -158,7 +159,8 @@ void Wall::settlePlace() {
 				element->setFrameColor(Color::Black);
 			}
 		});
-		game::wallArea.setSize(Vector2f(LEVEL_WIDTH, height));
+		using namespace game;
+		Area::getInstance().settleArea(Area::Wall, height);
 		changeEntity = false;
 	}
 	// ensure that total with the intervals should not be out of screen
