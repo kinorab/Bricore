@@ -83,7 +83,7 @@
     <ClCompile Include="source\gameSys\area\arena.cpp" />
     <ClCompile Include="source\event\window\resizedEvent.cpp" />
     <ClCompile Include="source\root.cpp" />
-    <ClCompile Include="source\gameSys\area\area.cpp" />
+    <ClCompile Include="source\gameSys\area\zone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -206,7 +206,7 @@
     <ClInclude Include="source\event\game\pausedEvent.h" />
     <ClInclude Include="source\event\game\startedEvent.h" />
     <ClInclude Include="source\root.h" />
-    <ClInclude Include="source\gameSys\area\area.h" />
+    <ClInclude Include="source\gameSys\area\zone.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

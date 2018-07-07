@@ -5,7 +5,7 @@
 #include "component/brick.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
-#include "../gameSys/area/area.h"
+#include "../gameSys/area/zone.h"
 #include "../gameSys/LVDeploy.h"
 #include <SFML/Graphics.hpp>
 
@@ -160,7 +160,7 @@ void Wall::settlePlace() {
 			}
 		});
 		using namespace game;
-		Area::getInstance().settleArea(Area::Wall, height);
+		Zone::getInstance().settleZone(Zone::Wall, height);
 		bChangeEntity = false;
 	}
 	// ensure that total with the intervals should not be out of screen

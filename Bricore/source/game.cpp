@@ -11,7 +11,7 @@ Game::Game() :
 	stage(new game::Root),
 	mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
-		"BricksEx", sf::Style::Close, graph.getSettings()));
+		"Bricore", sf::Style::Close, graph.getSettings()));
 }
 
 Game::~Game() = default;

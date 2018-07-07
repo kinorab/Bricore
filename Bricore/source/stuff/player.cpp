@@ -2,7 +2,7 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
-#include "../gameSys/area/area.h"
+#include "../gameSys/area/zone.h"
 #include "../manager/audioManager.h"
 #include <SFML/Graphics.hpp>
 
@@ -27,7 +27,7 @@ Player::Player()
 	redRange.setPosition(board.getPosition());
 	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 	using namespace game;
-	Area::getInstance().settleArea(Area::Player, sf::Vector2f(0.0f, LEVEL_HEIGHT - 100.f), 100.f);
+	Zone::getInstance().settleZone(Zone::Player, sf::Vector2f(0.0f, LEVEL_HEIGHT - 100.f), 100.f);
 }
 
 void Player::update(const Vector2f &ballPos, const float ballRadius, const float updateRatio) {

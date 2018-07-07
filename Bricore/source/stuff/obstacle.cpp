@@ -3,7 +3,7 @@
 #include "component/block.h"
 #include "component/globular.h"
 #include "../gameSys/LVDeploy.h"
-#include "../gameSys/area/area.h"
+#include "../gameSys/area/zone.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
@@ -28,9 +28,9 @@ void Obstacle::reset(const std::vector<Vector2f> & position, const std::vector<V
 		blocks.at(i)->setOrigin(blocks.at(i)->getSize() / 2.f);
 	}
 	using namespace game;
-	auto &instance = Area::getInstance();
-	instance.settleArea(Area::Obstacle, Vector2f(0.0f, instance.getArea(Area::Wall).getSize().y + AREAINTERVAL)
-	, LEVEL_HEIGHT - (instance.getArea(Area::Player).getSize().y + instance.getArea(Area::Wall).getSize().y + 2 * AREAINTERVAL));
+	auto &instance = Zone::getInstance();
+	instance.settleZone(Zone::Obstacle, Vector2f(0.0f, instance.getZone(Zone::Wall).getSize().y + AREAINTERVAL)
+	, LEVEL_HEIGHT - (instance.getZone(Zone::Player).getSize().y + instance.getZone(Zone::Wall).getSize().y + 2 * AREAINTERVAL));
 }
 
 
