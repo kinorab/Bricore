@@ -6,9 +6,6 @@ A breakout game on Windows 7/8/10 - x86/x64.
 
 * [Visual Studio](https://www.visualstudio.com/)
 
-[//]: # ([SemVer](http://semver.org/) - for versioning)
-[//]: # (For the versions available, see the [tags on this repository](https://github.com/kinorab/pigject/tags).)
-
 #### ExtendLib
 
 * [SFML](https://www.sfml-dev.org/) - can work with Multimedia
