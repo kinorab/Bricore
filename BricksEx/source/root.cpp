@@ -40,7 +40,7 @@ Root::~Root() {
 
 void Root::update(const float updateRatio) {
 	Container::update(updateRatio);
-	if (!paused) {
+	if (!bPaused) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
 			player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
@@ -63,18 +63,18 @@ void Root::update(const float updateRatio) {
 
 void Root::onKeyPressed(KeyPressedEvent & event) {
 	if (event.code == sf::Keyboard::P) {
-		paused = !paused;
-		if (paused) {
+		bPaused = !bPaused;
+		if (bPaused) {
 			dispatchEvent(PausedEvent());
 		}
 		else {
 			dispatchEvent(UnpausedEvent());
 		}
 
-		locked = !locked;
+		bLocked = !bLocked;
 	}
 
-	if (locked) {
+	if (bLocked) {
 		return;
 	}
 
@@ -100,7 +100,7 @@ void Root::onMouseMoved(MouseMovedEvent & event) {
 }
 
 void Root::onMousePressed(MousePressedEvent & event) {
-	if (!locked) {
+	if (!bLocked) {
 		if (event.button == sf::Mouse::Left) {
 			currentState = GameState::STARTED;
 		}

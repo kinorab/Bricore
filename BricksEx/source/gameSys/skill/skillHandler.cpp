@@ -53,7 +53,7 @@ bool SkillHandler<SubPlayerSkill>::tryAppear(const std::shared_ptr<SubPlayerSkil
 
 template<>
 bool SkillHandler<BallSkill>::tryAppear(const std::shared_ptr<BallSkill> skill) {
-	if (skillRecords.count(State::OnDropping) <= skill->maxDropping) {
+	if (skillRecords.count(State::OnDropping) <= skill->uMaxDropping) {
 		skill->setState(State::OnDropping);
 		return true;
 	}
@@ -71,20 +71,20 @@ bool SkillHandler<BossSkill>::tryAppear(const std::shared_ptr<BossSkill> skill) 
 
 template<typename T>
 bool SkillHandler<T>::tryEnterField(const std::function<void(const State)>& callback) {
-	for (size_t i = T::maxOnField; i >= 1; --i) {
+	for (size_t i = T::uMaxOnField; i >= 1; --i) {
 		State field = static_cast<State>(i);
 		if (skillRecords.count(field) == 0) {
 			callback(field);
 			return true;
 		}
-		else if (!skillRecords.find(field)->second->locked) return false;
+		else if (!skillRecords.find(field)->second->bLocked) return false;
 	}
 	return false;
 }
 
 template<typename T>
 bool SkillHandler<T>::tryForward(const State currentState, const std::function<void (const State)> &callback) {
-	const size_t maxField = T::maxOnField;
+	const size_t maxField = T::uMaxOnField;
 	const size_t currentNumber = static_cast<size_t>(currentState);
 	if (currentNumber > maxField || currentNumber == 0) throw std::out_of_range("State is not onField.");
 	for (size_t i = currentNumber - 1; i > 0; --i) {
@@ -93,7 +93,7 @@ bool SkillHandler<T>::tryForward(const State currentState, const std::function<v
 			callback(field);
 			return true;
 		}
-		else if (!skillRecords.find(field)->second->locked) return false;
+		else if (!skillRecords.find(field)->second->bLocked) return false;
 	}
 	return false;
 }
@@ -104,8 +104,8 @@ bool SkillHandler<T>::trySwap() {
 	auto secondField = skillRecords.find(State::OnSecondField);
 	if (firstField == skillRecords.end()
 		|| secondField == skillRecords.end()
-		|| firstField->second->locked
-		|| secondField->second->locked) return false;
+		|| firstField->second->bLocked
+		|| secondField->second->bLocked) return false;
 	firstField->second->swapSkill(secondField->second);
 	return true;
 }

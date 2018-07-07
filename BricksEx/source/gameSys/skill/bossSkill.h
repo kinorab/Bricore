@@ -32,21 +32,24 @@ namespace game {
 			, const std::vector<Attribute::Kind> &attributes = { Attribute::None });
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
-		virtual void loadPreview(const std::string &fileName);
+		void loadPreview(const std::string &fileName);
 
-		virtual State getState() const;
-		virtual Kind getSkillName() const;
+		State getState() const;
+		Kind getSkillName() const;
 		virtual ~BossSkill();
-	private:
-		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		virtual void setState(const State state);
 
-		std::shared_ptr<sf::Texture> cache;
-		struct Content {
+	protected:
+		struct SkillContent {
 			State currentState;
 			std::shared_ptr<sf::Sprite> preview;
 		};
-		std::pair<Kind, Content> skill;
+
+	private:
+		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		void setState(const State state);
+
 		static SkillHandler<BossSkill> handler;
+		std::shared_ptr<sf::Texture> cache;
+		std::pair<Kind, SkillContent> skill;
 	};
 }

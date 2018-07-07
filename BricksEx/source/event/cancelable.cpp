@@ -2,10 +2,10 @@
 
 namespace game {
 	bool Cancelable::getDefaultPrevented() const {
-		return defaultPrevented;
+		return bDefaultPrevented;
 	}
 
 	void Cancelable::preventDefault() {
-		defaultPrevented = true;
+		bDefaultPrevented = true;
 	}
 }

@@ -11,6 +11,3 @@ void RageBar::handleBar(const sf::Event * const event) {
 
 RageBar::~RageBar() {
 }
-
-void RageBar::clearBar() {
-}

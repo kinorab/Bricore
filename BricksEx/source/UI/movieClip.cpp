@@ -8,11 +8,11 @@ namespace game {
 	}
 
 	int MovieClip::getCurrentFrame() const {
-		return currentFrame;
+		return iCurrentFrame;
 	}
 
 	bool MovieClip::isPlaying() const {
-		return playing;
+		return bPlay;
 	}
 
 	void MovieClip::gotoAndPlay(int frame) {

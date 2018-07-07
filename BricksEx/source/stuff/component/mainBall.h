@@ -8,13 +8,14 @@ namespace item {
 		MainBall();
 		virtual bool isCollidedObstacle(const Block * block) override;
 		virtual bool isCollidedWall(const Brick * brick) override;
-		virtual void initialize();
-		virtual void resettle();
-		virtual bool isSettle() const;
+		void initialize();
+		void resettle();
+
+		bool isSettle() const;
 		virtual ~MainBall();
 
 	private:
-		virtual void determineUpdate() override;
-		bool settle;
+		virtual void determineHitDirect() override;
+		bool bSettle;
 	};
 }

@@ -31,7 +31,7 @@ namespace game {
 			, const std::vector<Attribute::Kind> &attributes = { Attribute::None }, const bool autoUse = false);
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
-		virtual void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
+		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
 		static void loadFrame(const std::vector<std::string> &fileName, const bool isSmooth = false);
 		static void extendField(size_t number);
 		static void extendDropping(size_t number);
@@ -41,26 +41,28 @@ namespace game {
 		static size_t getCurrentCarry();
 		static size_t getMaxOnField();
 		static size_t getCurrentOnField();
-		virtual State getState() const;
-		virtual Kind getSkillName() const;
+		State getState() const;
+		Kind getSkillName() const;
 		virtual ~BallSkill();
-	private:
-		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		virtual void setState(const State state);
-		virtual void swapSkill(const std::shared_ptr<BallSkill> other);
-
-		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
-		struct Content {
+	protected:
+		struct SkillContent {
 			State currentState;
 			std::shared_ptr<sf::Sprite> frame;
 			std::shared_ptr<sf::Sprite> context;
 		};
-		std::pair<Kind, Content> skill;
-		static size_t maxDropping;
-		static size_t currentCarry;
-		static size_t maxOnField;
-		static size_t currentOnField;
+
+	private:
+		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		void setState(const State state);
+		void swapSkill(const std::shared_ptr<BallSkill> other);
+
+		static size_t uMaxDropping;
+		static size_t uCurrentCarry;
+		static size_t uMaxOnField;
+		static size_t uCurrentOnField;
 		static std::map<std::string, std::shared_ptr<sf::Texture>> framePreviews;
 		static SkillHandler<BallSkill> handler;
+		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
+		std::pair<Kind, SkillContent> skill;
 	};
 }

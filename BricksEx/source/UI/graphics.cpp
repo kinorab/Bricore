@@ -16,7 +16,7 @@ const sf::ContextSettings & Graphics::getSettings() const {
 }
 
 const float Graphics::getFrameSpan() const {
-	return frameSpan;
+	return fFrameSpan;
 }
 
 const sf::Uint8 * Graphics::getIcon() const {
@@ -31,13 +31,13 @@ void Graphics::setFps(const FrameRate Fps) {
 	currentFps = Fps;
 	switch (currentFps) {
 	case FrameRate::Fps30:
-		frameSpan = (1.f / 30.f) * 1000.f;
+		fFrameSpan = (1.f / 30.f) * 1000.f;
 		break;
 	case FrameRate::Fps60:
-		frameSpan = (1.f / 60.f) * 1000.f;
+		fFrameSpan = (1.f / 60.f) * 1000.f;
 		break;
 	case FrameRate::NoLimit:
-		frameSpan = 0.0f;
+		fFrameSpan = 0.0f;
 		break;
 	}
 }

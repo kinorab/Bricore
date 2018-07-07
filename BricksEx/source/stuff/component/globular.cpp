@@ -30,13 +30,10 @@ bool Globular::isEnteredWallArea() const {
 }
 
 Globular::Globular()
-	: left(false)
-	, right(false)
-	, bottom(false)
-	, top(false)
-	, broke(false)
-	, CD(false)
-	, active(false)
+	: hitside{ false, false, false, false }
+	, bBroke(false)
+	, bCD(false)
+	, bActive(false)
 	, ball(new CircleShape) {
 	ball->setFillColor(Color::White);
 	ball->setOutlineColor(Color::Black);
@@ -46,7 +43,7 @@ Globular::Globular()
 }
 
 void Globular::setActive(const bool active) {
-	this->active = active;
+	bActive = active;
 }
 
 void Globular::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -56,10 +53,10 @@ void Globular::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 void Globular::move(const sys::DPointf &DP, const float playerSpeed, const float updateRatio) {
 	const Vector2f ballPos(getPosition());
 	const float radius = getRadius();
-	if (!active) {
+	if (!bActive) {
 		oriSpeed = ballSpeed;
 		countTime.restart();
-		active = true;
+		bActive = true;
 	}
 	else if (countTime.getElapsedTime().asSeconds() > RESETTIME) {
 		// preserve last speed then add 60% extra origin speed to new speed
@@ -75,7 +72,7 @@ void Globular::move(const sys::DPointf &DP, const float playerSpeed, const float
 
 	// out of bottom bound, reset the mainBall
 	if (ballPos.y - radius > LEVEL_HEIGHT) {
-		broke = true;
+		bBroke = true;
 	}
 	// window's right bound
 	else if (ballPos.x + radius >= LEVEL_WIDTH) {
@@ -91,18 +88,18 @@ void Globular::move(const sys::DPointf &DP, const float playerSpeed, const float
 	}
 	// the collision between mainBall and player
 	else if (sys::ballRectINCIntersects(ballPos, radius, DP)) {
-		if (!CD) {
+		if (!bCD) {
 			countTime.restart();
 			if (ballSpeed.x == 0.0f) {
 				ballSpeed.x = oriSpeed.x;
 			}
 			hitByPlayer(DP, playerSpeed, false);
-			CD = true;
+			bCD = true;
 			CDTime.restart();
 		}
 		else if (CDTime.getElapsedTime().asSeconds() > 0.1f) {
 			hitByPlayer(DP, playerSpeed, true);
-			CD = false;
+			bCD = false;
 		}
 		// prevent speed too fast
 		if (abs(ballSpeed.x) >= MAXSPEED) {
@@ -114,17 +111,17 @@ void Globular::move(const sys::DPointf &DP, const float playerSpeed, const float
 			}
 		}
 	}
-	determineUpdate();
+	determineHitDirect();
 	ball->move(ballSpeed / static_cast<float>(SLICE) * updateRatio);
 }
 
-void Globular::hitByPlayer(const sys::DPointf &DP, const float playerSpeed, const bool isContinuousCollision) {
+void Globular::hitByPlayer(const sys::DPointf &DP, const float playerSpeed, const bool continuousCollision) {
 	const Vector2f ballPos(getPosition());
 	const Vector2f LT(DP.dot1);
 	const Vector2f RB(DP.dot2);
 	const float width = RB.x - LT.x;
 	ballSpeed.y = -abs(ballSpeed.y);
-	if (isContinuousCollision) {
+	if (continuousCollision) {
 		if (ballPos.x > LT.x + width / 2) {
 			ballSpeed.x = abs(ballSpeed.x);
 		}
@@ -213,7 +210,7 @@ void Globular::setRadius(const float radius) {
 }
 
 bool Globular::isBroke() const {
-	return broke;
+	return bBroke;
 }
 
 const Vector2f & Globular::getSpeed() const {
@@ -235,4 +232,11 @@ Vector2f Globular::getPreviousPos() const {
 void Globular::resetBall() {
 	ballSpeed.x = (prng(150) % 150 * .01f + 1.5f) * (rng() < 0 ? 1 : -1);
 	ballSpeed.y = 1.5f * (rng() < 0 ? 1 : -1);
+}
+
+void Globular::Side::reset() {
+	bLeft = false;
+	bRight = false;
+	bTop = false;
+	bBottom = false;
 }

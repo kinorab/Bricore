@@ -5,7 +5,7 @@ namespace item {
 	class Chip :
 		public ItemKind<Chip> {
 	public:
-		explicit Chip(const Kind kind);
+		explicit Chip(const Kind kind) noexcept;
 		virtual ~Chip();
 		const Kind chip;
 		Chip(const Chip &) = delete;

@@ -9,10 +9,10 @@ namespace game {
 	}
 
 	int EventSubject::addListener(std::shared_ptr<EventListenerBase> listener, std::weak_ptr<EventSubject> trackedSubject) {
-		listeners.emplace(listener->getEventType(), std::make_tuple(idCount, std::move(listener), std::move(trackedSubject)));
-		int returnId = idCount;
-		idCount += 1;
-		return returnId;
+		listeners.emplace(listener->getEventType(), std::make_tuple(iIdCount, std::move(listener), std::move(trackedSubject)));
+		int returnId = iIdCount;
+		iIdCount += 1;
+		return iIdCount;
 	}
 
 	void EventSubject::dispatchEvent(Event & event) {

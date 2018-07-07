@@ -4,42 +4,42 @@
 
 using namespace game;
 
-BarSystem::BarSystem(const size_t maxCount, const bool debut, const bool numberVisible, const bool exist)
+BarSystem::BarSystem(const size_t maxCount, const bool appear, const bool numberVisible, const bool exist)
 	: System(false)
-	, maxCount(maxCount)
-	, currentCount(0)
-	, statisticVisible(numberVisible)
-	, debut(debut)
-	, exist(exist) {
+	, uMaxCount(maxCount)
+	, uCurrentCount(0)
+	, bStatisticVisible(numberVisible)
+	, bAppear(appear)
+	, bExist(exist) {
 }
 
 void BarSystem::setStatisticVisible(const bool visible) {
-	statisticVisible = visible;
+	bStatisticVisible = visible;
 }
 
 void BarSystem::extendMaxCount(const size_t count) {
-	maxCount += count;
+	uMaxCount += count;
 }
 
 bool BarSystem::isFull() const {
-	if (currentCount == maxCount) return true;
+	if (uCurrentCount == uMaxCount) return true;
 	return false;
 }
 
 bool BarSystem::isExist() const {
-	return exist;
+	return bExist;
 }
 
 size_t BarSystem::getMaxCount() const {
-	return maxCount;
+	return uMaxCount;
 }
 
 size_t BarSystem::getCurrentCount() const {
-	return currentCount;
+	return uCurrentCount;
 }
 
 float BarSystem::getCountPercentage() const {
-	return (static_cast<float>(currentCount) / static_cast<float>(maxCount)) * 100.f;
+	return (static_cast<float>(uCurrentCount) / static_cast<float>(uMaxCount)) * 100.f;
 }
 
 BarSystem::~BarSystem() {
@@ -47,7 +47,7 @@ BarSystem::~BarSystem() {
 
 
 void BarSystem::setEnable(const bool enable) {
-	if (!exist) throw std::invalid_argument("Bar not exist.");
+	if (!bExist) throw std::invalid_argument("Bar not exist.");
 	if (isEnable() == enable) return;
 	System::setEnable(enable);
 }
@@ -55,10 +55,14 @@ void BarSystem::setEnable(const bool enable) {
 void BarSystem::setExist(const bool exist) {
 	try {
 		if (isEnable()) throw std::invalid_argument("Bar is still enabled.");
-		this->exist = exist;
+		this->bExist = exist;
 	}
 	catch (std::invalid_argument &ex) {
 		std::cout << ex.what() << std::endl;
 		setEnable(false);
 	}
+}
+
+void BarSystem::clearBar() {
+	uCurrentCount = 0;
 }

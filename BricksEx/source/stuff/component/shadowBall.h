@@ -11,7 +11,8 @@ namespace item {
 		virtual bool isCollidedObstacle(const Block * block) override;
 		virtual bool isCollidedWall(const Brick * brick) override;
 		virtual ~ShadowBall();
+
 	private:
-		virtual void determineUpdate() override;
+		virtual void determineHitDirect() override;
 	};
 }

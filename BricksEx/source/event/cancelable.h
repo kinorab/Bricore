@@ -9,6 +9,6 @@ namespace game {
 	protected:
 		Cancelable() = default;
 	private:
-		bool defaultPrevented = false;
+		bool bDefaultPrevented = false;
 	};
 }

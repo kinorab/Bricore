@@ -21,22 +21,22 @@ namespace item {
 	public:
 		explicit Brick(const sf::Vector2f & size, const float frameSize = 0);
 		explicit Brick(const Brick &copy);
-		virtual void update(const float updateRatio);
-		virtual void loadTexture(const std::string & fileName);
-		virtual void setPosition(const sf::Vector2f &position);
-		virtual void setBrickSize(const sf::Vector2f &sideLength);
-		virtual void setBrickColor(const sf::Color & color);
-		virtual void setFrameSize(const float frame);
-		virtual void setFrameColor(const sf::Color & color);
+		void update(const float updateRatio);
+		void loadTexture(const std::string & fileName);
+		void setPosition(const sf::Vector2f &position);
+		void setBrickSize(const sf::Vector2f &sideLength);
+		void setBrickColor(const sf::Color & color);
+		void setFrameSize(const float frame);
+		void setFrameColor(const sf::Color & color);
 
-		virtual sys::DPointf getDP() const;
-		virtual sf::FloatRect getGlobalBounds() const;
-		virtual const sf::Vector2f & getBrickSize() const;
-		virtual const sf::Color & getBrickColor() const;
-		virtual float getFrameSize() const;
-		virtual const sf::Color & getFrameColor() const;
-		virtual const sf::Vector2f & getPosition() const;
-		virtual Brick & operator =(Brick right);
+		sys::DPointf getDP() const;
+		sf::FloatRect getGlobalBounds() const;
+		const sf::Vector2f & getBrickSize() const;
+		const sf::Color & getBrickColor() const;
+		float getFrameSize() const;
+		const sf::Color & getFrameColor() const;
+		const sf::Vector2f & getPosition() const;
+		Brick & operator =(Brick right);
 		virtual ~Brick();
 
 	private:

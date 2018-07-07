@@ -8,11 +8,11 @@ const sf::Time & EffectSystem::getDuration() const {
 }
 
 bool EffectSystem::isBelongToSkill() const {
-	return belongToSkill;
+	return bBelongToSkill;
 }
 
 bool EffectSystem::isExist() const {
-	return exist;
+	return bExist;
 }
 
 EffectSystem::~EffectSystem() {
@@ -22,12 +22,12 @@ EffectSystem::EffectSystem(const sf::Time &duration, const bool belongToSkill, c
 	: System(enable)
 	, duration(duration)
 	, elapsedTime(sf::seconds(0))
-	, belongToSkill(belongToSkill)
-	, exist(true) {
+	, bBelongToSkill(belongToSkill)
+	, bExist(true) {
 }
 
 void EffectSystem::setEnable(const bool enable) {
-	if (!exist) {
+	if (!bExist) {
 		throw std::invalid_argument("Effect not exist.");
 	}
 	if (isEnable() == enable) return;

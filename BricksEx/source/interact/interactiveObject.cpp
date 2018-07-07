@@ -9,7 +9,7 @@
 
 namespace game {
 	InteractiveObject::InteractiveObject() :
-		enabled(true) {
+		bEnabled(true) {
 		onEnabled();
 	}
 
@@ -47,7 +47,7 @@ namespace game {
 	}
 
 	bool InteractiveObject::getEnabled() const {
-		return enabled;
+		return bEnabled;
 	}
 
 	Container * InteractiveObject::getParent() {
@@ -61,7 +61,7 @@ namespace game {
 	}
 
 	void InteractiveObject::setEnabled(bool value) {
-		if (value == enabled) {
+		if (value == bEnabled) {
 			return;
 		}
 
@@ -72,7 +72,7 @@ namespace game {
 			onDisabled();
 		}
 
-		enabled = value;
+		bEnabled = value;
 	}
 
 	void InteractiveObject::setParent(Container * container) {

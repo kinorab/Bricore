@@ -13,12 +13,12 @@ public:
 private:
 	struct Particle {
 		sf::Vector2f velocity;
-		float lifeTime;
+		float fLifeTime;
 	};
 	virtual void resetParticle(size_t);
-	bool emitting = true;
+	bool bEmit = true;
+	float fMaxLifeTime;
 	sf::Vector2f emitPosition{ 0, 0 };
-	float maxLifeTime;
 	std::vector<Particle> particles;
 	std::shared_ptr<sf::VertexArray> vertices;
 };

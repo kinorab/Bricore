@@ -7,7 +7,7 @@ namespace game {
 	}
 
 	bool DispatchHelper::isPropagationStopped() {
-		return event.propagationStopped;
+		return event.bPropagationStopped;
 	}
 
 	void DispatchHelper::setCurrentTarget(EventSubject * target) {

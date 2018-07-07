@@ -12,8 +12,8 @@ using namespace sf;
 using namespace item;
 
 Ball::Ball()
-	: multiple(false)
-	, collision(false)
+	: bMultiple(false)
+	, bCollision(false)
 	, mainBall(new MainBall) {
 }
 
@@ -24,7 +24,7 @@ void Ball::update(const sys::DPointf &playerDP, const float playerSpeed, const f
 		if (shadowBalls.at(i)->isBroke()) {
 			shadowBalls.erase(shadowBalls.begin() + i);
 		}
-		if (multiple) {
+		if (bMultiple) {
 			ballsCollision(i);
 		}
 	}
@@ -77,8 +77,8 @@ void Ball::ballDivided(const size_t numbers) {
 	for (size_t i = 0; i < numbers; ++i) {
 		shadowBalls.push_back(std::shared_ptr<ShadowBall>(new ShadowBall(mainBall.get())));
 	}
-	collision = false;
-	multiple = true;
+	bCollision = false;
+	bMultiple = true;
 }
 
 float Ball::getMainBallRadius() const {
@@ -113,7 +113,7 @@ void Ball::ballsCollision(const size_t number) {
 		const float AR = balls.at(number)->getRadius();
 		const Vector2f BPos = balls.at(j)->getPosition();
 		const float BR = balls.at(j)->getRadius();
-		if (collision && sys::ballsIntersects(APos, AR, BPos, BR)) {
+		if (bCollision && sys::ballsIntersects(APos, AR, BPos, BR)) {
 			const float avarageSpeedX = (abs(balls.at(number)->getSpeed().x) + abs(balls.at(j)->getSpeed().x)) / 2;
 			const float ASpeedY = balls.at(number)->getSpeed().y;
 			const float BSpeedY = balls.at(j)->getSpeed().y;
@@ -144,7 +144,7 @@ void Ball::ballsCollision(const size_t number) {
 			return;
 		}
 	}
-	if (!collision) {
-		collision = true;
+	if (!bCollision) {
+		bCollision = true;
 	}
 }

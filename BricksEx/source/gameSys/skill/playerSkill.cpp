@@ -6,22 +6,22 @@
 
 using namespace game;
 
-size_t PlayerSkill::maxCarry(3);
-size_t PlayerSkill::currentCarry(0);
-size_t PlayerSkill::maxOnField(2);
-size_t PlayerSkill::currentOnField(0);
+size_t PlayerSkill::uMaxCarry(3);
+size_t PlayerSkill::uCurrentCarry(0);
+size_t PlayerSkill::uMaxOnField(2);
+size_t PlayerSkill::uCurrentOnField(0);
 SkillHandler<PlayerSkill> PlayerSkill::handler(sf::Keyboard::F, sf::Keyboard::R);
 
 PlayerSkill::PlayerSkill(const Kind skillName, const sf::Time duration
 	, const std::vector<Effect::Kind> &effects
 	, const std::vector<Attribute::Kind> &attributes, const bool autoUse)
-	: skill(skillName, Content{ State::None, nullptr })
+	: skill(skillName, SkillContent{ State::None, nullptr })
 	, SkillSystem(duration, autoUse) {
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
-		skillEffects.push_back(std::shared_ptr<EntireEffect>(new EntireEffect(effect, this)));
+		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
-		skillAttributes.push_back(std::shared_ptr<Attribute>(new Attribute(element)));
+		skillAttributes.push_back(std::make_shared<Attribute>(element));
 	});
 	handler.insert(shared_from_this());
 }
@@ -32,25 +32,25 @@ void PlayerSkill::handleSkill(const sf::Event * const event) {
 	State currentState = skill.second.currentState;
 	switch (currentState) {
 	case State::OnCharging:
-		if (/*!energyBar.full() ||*/locked) break;
+		if (/*!energyBar.full() ||*/bLocked) break;
 		if (handler.tryEnterField(std::bind(&PlayerSkill::setState, this, _1))) {
 			// energyBar.clear();
 		}
 		break;
 	case State::OnFirstField:
-		if (silenced) break;
-		if (event->key.code == handler.useKey || autoUse) setState(State::Using);
+		if (bSilenced) break;
+		if (event->key.code == handler.useKey || bAutoUse) setState(State::Using);
 		break;
 	case State::OnSecondField:
-		if (locked) break;
+		if (bLocked) break;
 		if (handler.tryForward(currentState, std::bind(&PlayerSkill::setState, this, _1))) {}
 		break;
 	case State::OnThirdField:
-		if (locked) break;
+		if (bLocked) break;
 		if (handler.tryForward(currentState, std::bind(&PlayerSkill::setState, this, _1))) {}
 		break;
 	case State::OnFourthField:
-		if (locked) break;
+		if (bLocked) break;
 		if (handler.tryForward(currentState, std::bind(&PlayerSkill::setState, this, _1))) {}
 		break;
 	case State::None:
@@ -77,15 +77,16 @@ void PlayerSkill::handleSkill(const sf::Event * const event) {
 }
 
 void PlayerSkill::handleSelect(const sf::Event * const event) {
-	if (status == Status::None || event->type != sf::Event::MouseButtonPressed || game::currentState != GameState::LEVEL_FINISHED) return;
+	if (status == Status::None || event->type != sf::Event::MouseButtonPressed 
+		|| game::currentState != GameState::LEVEL_FINISHED) return;
 	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
 		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
-		if (currentCarry < maxCarry && selectOn()) {
-			++currentCarry;
+		if (uCurrentCarry < uMaxCarry && selectOn()) {
+			++uCurrentCarry;
 			return;
 		}
 		if (selectOff()) {
-			--currentCarry;
+			--uCurrentCarry;
 			return;
 		}
 	}
@@ -93,21 +94,21 @@ void PlayerSkill::handleSelect(const sf::Event * const event) {
 
 void PlayerSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> &file) {
-		statePreviews.emplace(file.first, std::shared_ptr<sf::Texture>(new sf::Texture));
+		statePreviews.emplace(file.first, std::make_shared<sf::Texture>());
 		statePreviews.at(file.first)->loadFromFile(file.second);
 		statePreviews.at(file.first)->setSmooth(isSmooth);
 	});
 }
 
 void PlayerSkill::extendCarry(const size_t number) {
-	maxCarry += number;
+	uMaxCarry += number;
 }
 
 void PlayerSkill::extendField(const size_t number) {
-	if (number + maxOnField > static_cast<size_t> (maxField)) {
+	if (number + uMaxOnField > static_cast<size_t> (maxField)) {
 		throw std::out_of_range("Excess max field number");
 	}
-	maxOnField += number;
+	uMaxOnField += number;
 }
 
 void PlayerSkill::resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::Key swapKey) {
@@ -117,12 +118,12 @@ void PlayerSkill::resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::K
 
 void PlayerSkill::setState(const State state) {
 	if (skill.second.currentState == State::OnCharging) {
-		if (currentOnField > maxOnField) throw std::invalid_argument("Too many skills on field.");
-		++currentOnField;
+		if (uCurrentOnField > uMaxOnField) throw std::invalid_argument("Too many skills on field.");
+		++uCurrentOnField;
 	}
 	else if (state == State::Using) {
-		if (currentOnField == 0) throw std::invalid_argument("Field no have any skills.");
-		--currentOnField;
+		if (uCurrentOnField == 0) throw std::invalid_argument("Field no have any skills.");
+		--uCurrentOnField;
 	}
 	skill.second.currentState = state;
 	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
@@ -138,19 +139,19 @@ void PlayerSkill::swapSkill(const std::shared_ptr<PlayerSkill> other) {
 }
 
 size_t PlayerSkill::getMaxCarry() {
-	return maxCarry;
+	return uMaxCarry;
 }
 
 size_t PlayerSkill::getCurrentCarry() {
-	return currentCarry;
+	return uCurrentCarry;
 }
 
 size_t PlayerSkill::getMaxOnField() {
-	return maxOnField;
+	return uMaxOnField;
 }
 
 size_t PlayerSkill::getCurrentOnField() {
-	return currentOnField;
+	return uCurrentOnField;
 }
 
 PlayerSkill::State PlayerSkill::getState() const {

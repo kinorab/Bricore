@@ -23,12 +23,12 @@ namespace game {
 	protected:
 		virtual void update(const float updateRatio) override;
 	private:
-		virtual void onKeyPressed(KeyPressedEvent & event);
-		virtual void onKeyReleased(KeyReleasedEvent & event);
-		virtual void onMouseEntered();
-		virtual void onMouseLeft();
-		virtual void onMouseMoved(MouseMovedEvent & event);
-		virtual void onMousePressed(MousePressedEvent & event);
+		void onKeyPressed(KeyPressedEvent & event);
+		void onKeyReleased(KeyReleasedEvent & event);
+		void onMouseEntered();
+		void onMouseLeft();
+		void onMouseMoved(MouseMovedEvent & event);
+		void onMousePressed(MousePressedEvent & event);
 
 		std::shared_ptr<HUD> hud;
 		std::shared_ptr<ParticleSystem> mouseLight;
@@ -36,7 +36,7 @@ namespace game {
 		std::shared_ptr<Ball> ball;
 		std::shared_ptr<Wall> wall;
 		std::shared_ptr<Obstacle> obstacle;
-		bool paused = false;
-		bool locked = false;
+		bool bPaused = false;
+		bool bLocked = false;
 	};
 }

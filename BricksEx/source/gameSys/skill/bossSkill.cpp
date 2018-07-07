@@ -12,13 +12,13 @@ BossSkill::BossSkill(const Kind skillName, const sf::Time &duration
 	, const std::vector<Effect::Kind> &effects
 	, const std::vector<Attribute::Kind> &attributes)
 	: SkillSystem(duration, true)
-	, skill(skillName, Content{ State::None, nullptr })
+	, skill(skillName, SkillContent{ State::None, nullptr })
 	, cache(nullptr) {
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
-		skillEffects.push_back(std::shared_ptr<EntireEffect>(new EntireEffect(effect, this)));
+		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
-		skillAttributes.push_back(std::shared_ptr<Attribute>(new Attribute(element)));
+		skillAttributes.push_back(std::make_shared<Attribute>(element));
 	});
 	handler.insert(shared_from_this());
 }

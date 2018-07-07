@@ -19,7 +19,7 @@ void EllipseShape::setRadius(const Vector2f &radius) {
 }
 
 void EllipseShape::setPointCount(size_t count) {
-	pointCount = count;
+	uPointCount = count;
 }
 
 const Vector2f & EllipseShape::getRadius() const {
@@ -27,7 +27,7 @@ const Vector2f & EllipseShape::getRadius() const {
 }
 
 size_t EllipseShape::getPointCount() const {
-	return pointCount;
+	return uPointCount;
 }
 
 Vector2f EllipseShape::getPoint(size_t index)  const {

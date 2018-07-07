@@ -11,8 +11,8 @@ Boss::Boss(const std::string name, const Attribute::Kind &attribute
 	, const std::vector<BossSkill> &skills, const size_t maxOnUsingSkill)
 	: boss(CoreType{ name, nullptr, nullptr }
 		, Content{ maxOnUsingSkill, std::shared_ptr<Attribute>(new Attribute(attribute)), {}, {}, {} })
-	, exist(false)
-	, moving(false) {
+	, bExist(false)
+	, bMove(false) {
 	std::for_each(skills.begin(), skills.end(), [&](const BossSkill &skill) {
 		boss.second.skills.push_back(std::shared_ptr<BossSkill>(new BossSkill(skill)));
 	});
@@ -122,7 +122,7 @@ size_t Boss::getCoreTypeAmount() {
 }
 
 bool Boss::isExist() const {
-	return exist;
+	return bExist;
 }
 
 Boss::~Boss() {
@@ -138,7 +138,7 @@ Boss & Boss::operator =(Boss copy) {
 }
 
 void Boss::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	if (exist) {
+	if (bExist) {
 		states.transform *= getTransform();
 		target.draw(*boss.first.context, states);
 		std::for_each(boss.second.parts.begin(), boss.second.parts.end()
@@ -178,11 +178,11 @@ void Boss::debut(const item::Core::Kind type) {
 	auto core = boss.first.context;
 	core->setOrigin(core->getTextureRect().width / 2.f, core->getTextureRect().height / 2.f);
 	clock.restart();
-	exist = true;
+	bExist = true;
 }
 
 void Boss::changeCoreType(const item::Core::Kind type) {
-	if (!exist) throw std::invalid_argument("Boss not exist.");
+	if (!bExist) throw std::invalid_argument("Boss not exist.");
 	boss.first.context.reset(new sf::Sprite(*coreTypePreviews.at(type)));
 	boss.first.core.reset(new item::Core(type));
 	auto core = boss.first.context;

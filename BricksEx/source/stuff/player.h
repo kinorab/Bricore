@@ -22,28 +22,28 @@ class Player :
 
 public:
 	Player();
-	virtual void update(const sf::Vector2f &ballPos, const float ballRadius, const float updateRatio);
-	virtual void setPlayerKey(const sf::Keyboard::Key left, const sf::Keyboard::Key right);
+	void update(const sf::Vector2f &ballPos, const float ballRadius, const float updateRatio);
+	void setPlayerKey(const sf::Keyboard::Key left, const sf::Keyboard::Key right);
 
-	virtual float getSpeed() const;
-	virtual const sf::Vector2f & getPosition() const;
-	virtual sf::Vector2f getTopCenterPos() const;
-	virtual sf::FloatRect getGlobalBounds() const;
-	virtual sys::DPointf getDP() const;
+	float getSpeed() const;
+	const sf::Vector2f & getPosition() const;
+	sf::Vector2f getTopCenterPos() const;
+	sf::FloatRect getGlobalBounds() const;
+	sys::DPointf getDP() const;
 	virtual ~Player();
 
 protected:
-	virtual void setFlashPosition(const sf::Vector2f &);
-	virtual void setFlashFillColor(const sf::Color &);
-	virtual void flashElapsed();
-	virtual void flashRange(sf::Sound &, const sf::Vector2f, const float);
+	void setFlashPosition(const sf::Vector2f &);
+	void setFlashFillColor(const sf::Color &);
+	void flashElapsed();
+	void flashRange(sf::Sound & sound, const sf::Vector2f ballPos, const float radius);
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
-	bool flash;
-	bool flashCD;
-	float speed;
+	bool bFlash;
+	bool bFlashCD;
+	float fSpeed;
 	sf::Clock CDTime;
 	sf::Clock elapsed;
 	sf::RectangleShape board;

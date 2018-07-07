@@ -5,20 +5,20 @@
 namespace game {
 	class EffectSystem : public System {
 	public:
-		virtual bool isExist() const;
-		virtual const sf::Time & getDuration() const;
-		virtual bool isBelongToSkill() const;
+		bool isExist() const;
+		const sf::Time & getDuration() const;
+		bool isBelongToSkill() const;
 		virtual ~EffectSystem();
 
 	protected:
 		explicit EffectSystem(const sf::Time &duration, const bool belongToSkill, const bool enable);
-		virtual void setEnable(const bool) override;
+		void setEnable(const bool enable);
 		sf::Time duration;
 		sf::Time elapsedTime;
 
 	private:
-		bool belongToSkill;
+		bool bBelongToSkill;
 		// used to checkout in particular mode
-		bool exist;
+		bool bExist;
 	};
 }

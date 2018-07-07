@@ -12,6 +12,3 @@ void EnergeBar::handleBar(const sf::Event * const event) {
 
 EnergeBar::~EnergeBar() {
 }
-
-void EnergeBar::clearBar() {
-}

@@ -37,7 +37,7 @@ namespace game {
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 		virtual void update(const float updateRatio);
 	private:
-		bool enabled;
+		bool bEnabled;
 		Container * parent;
 	};
 }

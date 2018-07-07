@@ -28,35 +28,35 @@ namespace game {
 	public:
 		explicit Boss(const std::string name, const Attribute::Kind &attribute
 			, const std::vector<BossSkill> &skills, const size_t maxSkillUsing);
-		virtual void loadPartPreviews(const std::vector<std::string> &fileName, const bool isSmooth = false);
-		virtual void update(const float updateRatio);
-		virtual void handle(const sf::Event * const event) override;
-		virtual void extendMaxOnUsing(const size_t number);
-		virtual void offset(const sf::Vector2f &offset, const sf::Time &moveTime);
-		virtual void moveTo(const sf::Vector2f &coordinate, const sf::Time &moveTime);
+		void loadPartPreviews(const std::vector<std::string> &fileName, const bool isSmooth = false);
+		void update(const float updateRatio);
+		void handle(const sf::Event * const event) override;
+		void extendMaxOnUsing(const size_t number);
+		void offset(const sf::Vector2f &offset, const sf::Time &moveTime);
+		void moveTo(const sf::Vector2f &coordinate, const sf::Time &moveTime);
 		static void loadCoreTypePreviews(const std::map<item::Core::Kind, std::string> &fileName, const bool isSmooth = false);
 
 		static size_t getCoreTypeAmount();
-		virtual Attribute::Kind getAttribute() const;
-		virtual item::Core::Kind getBossCoreType() const;
-		virtual const std::string & getBossName() const;
-		virtual size_t getMaxOnUsing() const;
-		virtual size_t getPartAmount() const;
-		virtual size_t getIntensifiedPartAmount() const;
-		virtual size_t getWeakPartAmount() const;
-		virtual size_t getBrokenPartAmount() const;
-		virtual bool isExist() const;
+		Attribute::Kind getAttribute() const;
+		item::Core::Kind getBossCoreType() const;
+		const std::string & getBossName() const;
+		size_t getMaxOnUsing() const;
+		size_t getPartAmount() const;
+		size_t getIntensifiedPartAmount() const;
+		size_t getWeakPartAmount() const;
+		size_t getBrokenPartAmount() const;
+		bool isExist() const;
 		virtual ~Boss();
 		explicit Boss(const Boss &copy);
 		Boss &operator =(Boss copy);
 
 	protected:
-		virtual void debut(const item::Core::Kind type);
-		virtual void changeCoreType(const item::Core::Kind type);
-		virtual void weakPartBreak(const std::string &weak_partName);
-		virtual void weakPartRecover(const std::string &weak_partName);
-		virtual void partIntensify(const std::string &partName);
-		virtual void partRecover(const std::string &partName);
+		void debut(const item::Core::Kind type);
+		void changeCoreType(const item::Core::Kind type);
+		void weakPartBreak(const std::string &weak_partName);
+		void weakPartRecover(const std::string &weak_partName);
+		void partIntensify(const std::string &partName);
+		void partRecover(const std::string &partName);
 		struct Part {
 			std::shared_ptr<sf::Sprite> context;
 			bool intensified;
@@ -74,6 +74,9 @@ namespace game {
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		static std::map<item::Core::Kind, std::shared_ptr<sf::Texture>> coreTypePreviews;
+
+		bool bMove;
+		bool bExist;
 		// partName & partName_intense & weak_partname & weak_partName_broke
 		std::map<std::string, std::shared_ptr<sf::Texture>> partPreviews;
 		struct Content {
@@ -87,7 +90,5 @@ namespace game {
 		};
 		// CoreType / Content
 		std::pair<CoreType, Content> boss;
-		bool moving;
-		bool exist;
 	};
 }

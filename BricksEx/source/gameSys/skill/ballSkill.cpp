@@ -6,30 +6,30 @@
 
 using namespace game;
 
-size_t BallSkill::maxDropping(5);
-size_t BallSkill::currentCarry(0);
-size_t BallSkill::maxOnField(2);
-size_t BallSkill::currentOnField(0);
+size_t BallSkill::uMaxDropping(5);
+size_t BallSkill::uCurrentCarry(0);
+size_t BallSkill::uMaxOnField(2);
+size_t BallSkill::uCurrentOnField(0);
 std::map<std::string, std::shared_ptr<sf::Texture>> BallSkill::framePreviews;
 SkillHandler<BallSkill> BallSkill::handler(sf::Keyboard::D, sf::Keyboard::E);
 
 BallSkill::BallSkill(const Kind skillName, const sf::Time duration
 	, const std::vector<Effect::Kind> &effects
 	, const std::vector<Attribute::Kind> &attributes, const bool autoUse)
-	: skill(skillName, Content{ State::None, nullptr, nullptr })
+	: skill(skillName, SkillContent{ State::None, nullptr, nullptr })
 	, SkillSystem(duration, autoUse) {
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
-		skillEffects.push_back(std::shared_ptr<EntireEffect>(new EntireEffect(effect, this)));
+		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
-		skillAttributes.push_back(std::shared_ptr<Attribute>(new Attribute(element)));
+		skillAttributes.push_back(std::make_shared<Attribute>(element));
 	});
 	handler.insert(shared_from_this());
 }
 
 void BallSkill::loadFrame(const std::vector<std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
-		framePreviews.emplace(file, std::shared_ptr<sf::Texture>(new sf::Texture));
+		framePreviews.emplace(file, std::make_shared<sf::Texture>());
 		framePreviews.at(file)->loadFromFile(file);
 		framePreviews.at(file)->setSmooth(isSmooth);
 	});
@@ -46,19 +46,19 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 		}
 		break;
 	case State::OnFirstField:
-		if (silenced) break;
-		if (event->key.code == handler.useKey || autoUse) setState(State::Using);
+		if (bSilenced) break;
+		if (event->key.code == handler.useKey || bAutoUse) setState(State::Using);
 		break;
 	case State::OnSecondField:
-		if (locked) break;
+		if (bLocked) break;
 		handler.tryForward(currentState, std::bind(&BallSkill::setState, this, _1));
 		break;
 	case State::OnThirdField:
-		if (locked) break;
+		if (bLocked) break;
 		handler.tryForward(currentState, std::bind(&BallSkill::setState, this, _1));
 		break;
 	case State::OnFourthField:
-		if (locked) break;
+		if (bLocked) break;
 		handler.tryForward(currentState, std::bind(&BallSkill::setState, this, _1));
 		break;
 	case State::None:
@@ -85,15 +85,16 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 }
 
 void BallSkill::handleSelect(const sf::Event * const event) {
-	if (status == Status::None || event->type != sf::Event::MouseButtonPressed || game::currentState != GameState::LEVEL_FINISHED) return;
+	if (status == Status::None || event->type != sf::Event::MouseButtonPressed
+		|| game::currentState != GameState::LEVEL_FINISHED) return;
 	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
 		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
 		if (selectOn()) {
-			++currentCarry;
+			++uCurrentCarry;
 			return;
 		}
 		if (selectOff()) {
-			--currentCarry;
+			--uCurrentCarry;
 			return;
 		}
 	}
@@ -101,7 +102,7 @@ void BallSkill::handleSelect(const sf::Event * const event) {
 
 void BallSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> &file) {
-		statePreviews.emplace(file.first, std::shared_ptr<sf::Texture>(new sf::Texture));
+		statePreviews.emplace(file.first, std::make_shared<sf::Texture>());
 		statePreviews.at(file.first)->loadFromFile(file.second);
 		statePreviews.at(file.first)->setSmooth(isSmooth);
 	});
@@ -109,12 +110,12 @@ void BallSkill::loadStatePreview(const std::map<State, std::string> &fileName, c
 
 void BallSkill::setState(const State state) {
 	if (skill.second.currentState == State::OnDropping) {
-		if (currentOnField > maxOnField) throw std::invalid_argument("Too many skills on field.");
-		++currentOnField;
+		if (uCurrentOnField > uMaxOnField) throw std::invalid_argument("Too many skills on field.");
+		++uCurrentOnField;
 	}
 	else if (state == State::Using) {
-		if (currentOnField == 0) throw std::invalid_argument("Field no have any skills.");
-		--currentOnField;
+		if (uCurrentOnField == 0) throw std::invalid_argument("Field no have any skills.");
+		--uCurrentOnField;
 	}
 	skill.second.currentState = state;
 	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
@@ -124,7 +125,7 @@ void BallSkill::setState(const State state) {
 	context.reset(new sf::Sprite(*statePreviews.at(state)));
 	if (state == State::OnDropping) {
 		for (auto iter = framePreviews.begin(); iter != framePreviews.end(); ++iter) {
-			if (iter->first.find(std::to_string(level)) != std::string::npos) {
+			if (iter->first.find(std::to_string(uLevel)) != std::string::npos) {
 				frame.reset(new sf::Sprite(*framePreviews.at(iter->first)));
 				frame->setOrigin(frame->getTextureRect().width / 2.f, frame->getTextureRect().height / 2.f);
 				break;
@@ -148,14 +149,14 @@ void BallSkill::swapSkill(const std::shared_ptr<BallSkill> other) {
 }
 
 void BallSkill::extendField(size_t number) {
-	if (number + maxOnField > static_cast<size_t> (maxField)) {
+	if (number + uMaxOnField > static_cast<size_t> (maxField)) {
 		throw std::out_of_range("Excess max field number");
 	}
-	maxOnField += number;
+	uMaxOnField += number;
 }
 
 void BallSkill::extendDropping(size_t number) {
-	maxDropping += number;
+	uMaxDropping += number;
 }
 
 void BallSkill::resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::Key swapKey) {
@@ -164,19 +165,19 @@ void BallSkill::resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::Key
 }
 
 size_t BallSkill::getMaxDropping() {
-	return maxDropping;
+	return uMaxDropping;
 }
 
 size_t BallSkill::getCurrentCarry() {
-	return currentCarry;
+	return uCurrentCarry;
 }
 
 size_t BallSkill::getMaxOnField() {
-	return maxOnField;
+	return uMaxOnField;
 }
 
 size_t BallSkill::getCurrentOnField() {
-	return currentOnField;
+	return uCurrentOnField;
 }
 
 BallSkill::State BallSkill::getState() const {

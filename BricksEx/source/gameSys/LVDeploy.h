@@ -24,9 +24,9 @@ public:
 	static const std::vector<float> getBrickD() noexcept;
 
 private:
-	static float blockLength;
-	static float incre1;
-	static size_t level;
+	static float fBlockLength;
+	static float fSpan;
+	static size_t uLevel;
 	static sys::Matrix<sf::Vector2f> blockPositionDeploy;
 	static sys::Matrix<sf::Vector2f> blockSideLengthDeploy;
 	static sys::Matrix<sf::Color> blockColorDeploy;

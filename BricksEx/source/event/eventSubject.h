@@ -18,8 +18,8 @@ namespace game {
 		virtual void removeListener(std::type_index eventType, int id);
 	protected:
 		EventSubject() = default;
+		int iIdCount = 0;
 		std::multimap<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<EventSubject>>> listeners;
-		int idCount = 0;
 	};
 }
 

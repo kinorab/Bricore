@@ -31,7 +31,7 @@ namespace game {
 			, const std::vector<Attribute::Kind> &attributes = { Attribute::None }, const bool autoUse = false);
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
-		virtual void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
+		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
 		static void extendCarry(const size_t number);
 		static void extendField(const size_t number);
 		static void resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::Key swapKey);
@@ -40,25 +40,27 @@ namespace game {
 		static size_t getCurrentCarry();
 		static size_t getMaxOnField();
 		static size_t getCurrentOnField();
-		virtual State getState() const;
-		virtual Kind getSkillName() const;
+		State getState() const;
+		Kind getSkillName() const;
 		virtual ~SubPlayerSkill();
 
-	private:
-		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		virtual void setState(const State state);
-		virtual void swapSkill(const std::shared_ptr<SubPlayerSkill> other);
-
-		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
-		struct Content {
+	protected:
+		struct SkillContent {
 			State currentState;
 			std::shared_ptr<sf::Sprite> context;
 		};
-		std::pair<Kind, Content> skill;
-		static size_t maxCarry;
-		static size_t currentCarry;
-		static size_t maxOnField;
-		static size_t currentOnField;
+
+	private:
+		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		void setState(const State state);
+		void swapSkill(const std::shared_ptr<SubPlayerSkill> other);
+
+		static size_t uMaxCarry;
+		static size_t uCurrentCarry;
+		static size_t uMaxOnField;
+		static size_t uCurrentOnField;
 		static SkillHandler<SubPlayerSkill> handler;
+		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
+		std::pair<Kind, SkillContent> skill;
 	};
 }

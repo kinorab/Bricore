@@ -7,7 +7,7 @@ Enerma::Enerma(const Kind kind)
 }
 
 void Enerma::setAppear(const bool isAppear) {
-	appear = isAppear;
+	bAppear = isAppear;
 }
 
 Enerma::~Enerma() {

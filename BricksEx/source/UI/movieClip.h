@@ -18,7 +18,7 @@ namespace game {
 		virtual void stop();
 		virtual int totalFrames();
 	private:
-		int currentFrame;
-		bool playing;
+		int iCurrentFrame;
+		bool bPlay;
 	};
 }

@@ -16,7 +16,7 @@ namespace game {
 			subject.removeEventListener(typeid(Type), listenerId);
 		};
 	private:
-		int listenerId;
+		int iListenerId;
 		EventListener<Type> eventListener;
 		EventSubject & subject;
 	};

@@ -6,14 +6,14 @@ namespace game {
 	class System {
 	public:
 		virtual ~System();
-		virtual const bool & isEnable() const;
+		const bool & isEnable() const;
 
 	protected:
-		System(const bool);
-		virtual void setEnable(const bool enable);
+		explicit System(const bool enable);
+		void setEnable(const bool enable);
 		sf::Clock clock;
 
 	private:
-		bool enable;
+		bool bEnable;
 	};
 };

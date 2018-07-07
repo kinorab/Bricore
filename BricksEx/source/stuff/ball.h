@@ -27,28 +27,28 @@ class Ball :
 
 public:
 	Ball();
-	virtual void update(const sys::DPointf &playerDP, const float playerSpeed, const float updateRatio);
-	virtual void initializeBall();
-	virtual void followPlayer(const sf::Vector2f &pos);
+	void update(const sys::DPointf &playerDP, const float playerSpeed, const float updateRatio);
+	void initializeBall();
+	void followPlayer(const sf::Vector2f &pos);
 	// return the balls of entered obstacleArea
-	virtual std::vector<std::shared_ptr<item::Globular>> enteredObstacleArea() const;
+	std::vector<std::shared_ptr<item::Globular>> enteredObstacleArea() const;
 	// return the balls of entered wallArea
-	virtual std::vector<std::shared_ptr<item::Globular>> enteredWallArea() const;
-	virtual void ballDivided(const size_t numbers);
+	std::vector<std::shared_ptr<item::Globular>> enteredWallArea() const;
+	void ballDivided(const size_t numbers);
 
-	virtual float getMainBallRadius() const;
-	virtual size_t getBallsAmount() const;
-	virtual const sf::Vector2f & getMainBallPosition() const;
+	float getMainBallRadius() const;
+	size_t getBallsAmount() const;
+	const sf::Vector2f & getMainBallPosition() const;
 	virtual ~Ball();
 
 protected:
-	virtual void ballsCollision(const size_t);
+	void ballsCollision(const size_t);
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
-	bool multiple;
-	bool collision;
+	bool bMultiple;
+	bool bCollision;
 	std::shared_ptr<item::MainBall> mainBall;
 	std::vector<std::shared_ptr<item::ShadowBall>> shadowBalls;
 };

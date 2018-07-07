@@ -19,18 +19,18 @@ namespace game {
 			Wall
 		};
 		// area's position
-		virtual void settleArea(const Label name, const sf::Vector2f &position);
+		void settleArea(const Label name, const sf::Vector2f &position);
 		// area's height
-		virtual void settleArea(const Label name, const float height);
+		void settleArea(const Label name, const float height);
 		// area's position and height
-		virtual void settleArea(const Label name, const sf::Vector2f &position, const float height);
+		void settleArea(const Label name, const sf::Vector2f &position, const float height);
 		// outline color
-		virtual void setAreaOutline(const Label name, const sf::Color &color);
+		void setAreaOutline(const Label name, const sf::Color &color);
 		// outline thickness
-		virtual void setAreaOutline(const Label name, const float thickness);
+		void setAreaOutline(const Label name, const float thickness);
 		// outline color and thickness
-		virtual void setAreaOutline(const Label name, const float thickness, const sf::Color &color);
-		virtual const sf::RectangleShape & getArea(const Label name) const;
+		void setAreaOutline(const Label name, const float thickness, const sf::Color &color);
+		const sf::RectangleShape & getArea(const Label name) const;
 
 	protected:
 		Area();

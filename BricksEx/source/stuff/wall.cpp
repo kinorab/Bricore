@@ -14,7 +14,7 @@ using namespace item;
 
 Wall::Wall()
 	: whiteSpace(0.0f, 0.0f)
-	, changeEntity(false) {
+	, bChangeEntity(false) {
 	reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))
 		, LVDeploy::getBrickD().at(1)
 		, LVDeploy::getBrickD().at(2)
@@ -71,7 +71,7 @@ void Wall::setFramesColor(const Color &color) {
 void Wall::setBricksSize(const Vector2f & sideLength) {
 	if (sideLength.x <= 0 || sideLength.y <= 0) throw std::invalid_argument("Side-length cannot be negative.");
 	this->sideLength = sideLength;
-	changeEntity = true;
+	bChangeEntity = true;
 	settlePlace();
 }
 
@@ -83,8 +83,8 @@ void Wall::setInterval(const Vector2f &interval) {
 
 void Wall::setFrameSize(const float frameSize) {
 	if (frameSize < 0.0f) throw std::invalid_argument("Frame size cannot be negative.");
-	this->frameSize = frameSize;
-	changeEntity = true;
+	this->fFrameSize = frameSize;
+	bChangeEntity = true;
 	settlePlace();
 }
 
@@ -97,28 +97,28 @@ void Wall::reset(const size_t rowCount, const float wid, const float hei
 		throw std::invalid_argument("Invaild brick initialization.");
 	}
 	sideLength = Vector2f(wid, hei);
-	this->rowCount = rowCount;
-	this->frameSize = frameSize;
+	this->uRowCount = rowCount;
+	this->fFrameSize = frameSize;
 	this->interval = interval;
-	amount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + sideLength.x + this->frameSize * 2));
-	whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + this->frameSize * 2) * amount - this->interval.x)) / 2;
+	uAmount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + sideLength.x + this->fFrameSize * 2));
+	whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + this->fFrameSize * 2) * uAmount - this->interval.x)) / 2;
 	whiteSpace.y = whiteSpaceY;
-	bricks.resize(this->rowCount * amount);
+	bricks.resize(this->uRowCount * uAmount);
 
-	if (getBrickAmount() != this->rowCount * amount) {
+	if (getBrickAmount() != this->uRowCount * uAmount) {
 		throw std::out_of_range("The subscripts are out of range.");
 	}
-	changeEntity = true;
+	bChangeEntity = true;
 	settlePlace();
 }
 
 void Wall::reset(const size_t rowCount) {
-	this->rowCount = rowCount;
-	bricks.resize(this->rowCount * amount);
-	if (getBrickAmount() != this->rowCount * amount) {
+	this->uRowCount = rowCount;
+	bricks.resize(this->uRowCount * uAmount);
+	if (getBrickAmount() != this->uRowCount * uAmount) {
 		throw std::out_of_range("The subscripts are out of range.");
 	}
-	changeEntity = true;
+	bChangeEntity = true;
 	settlePlace();
 }
 
@@ -149,19 +149,19 @@ const Color & Wall::getBrickColor(const size_t number) const {
 Wall::~Wall() { }
 
 void Wall::settlePlace() {
-	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + frameSize, interval.y + frameSize + sideLength.y / 2);
+	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + fFrameSize, interval.y + fFrameSize + sideLength.y / 2);
 	Vector2f tempPos = Vector2f(initialPos.x, initialPos.y + whiteSpace.y);
-	const float height = rowCount * (sideLength.y + frameSize * 2 + interval.y) + interval.y + whiteSpace.y;
-	if (changeEntity) {
+	const float height = uRowCount * (sideLength.y + fFrameSize * 2 + interval.y) + interval.y + whiteSpace.y;
+	if (bChangeEntity) {
 		std::for_each(bricks.begin(), bricks.end(), [this](std::shared_ptr<Brick> &element) {
-			element.reset(new Brick(sideLength, frameSize));
-			if (frameSize > 0.0f) {
+			element.reset(new Brick(sideLength, fFrameSize));
+			if (fFrameSize > 0.0f) {
 				element->setFrameColor(Color::Black);
 			}
 		});
 		using namespace game;
 		Area::getInstance().settleArea(Area::Wall, height);
-		changeEntity = false;
+		bChangeEntity = false;
 	}
 	// ensure that total with the intervals should not be out of screen
 	if (whiteSpace.x < 0.0f) throw std::domain_error("Intervals are too large to place.");
@@ -170,7 +170,7 @@ void Wall::settlePlace() {
 	std::for_each(bricks.begin(), bricks.end(), [&](const std::shared_ptr<Brick> &element) {
 		const FloatRect bounds = element->getGlobalBounds();
 		element->setPosition(tempPos);
-		if (tempCount < amount) {
+		if (tempCount < uAmount) {
 			tempPos += Vector2f(interval.x + bounds.width, 0);
 			++tempCount;
 		}

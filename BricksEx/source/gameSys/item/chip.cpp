@@ -2,7 +2,7 @@
 
 using namespace item;
 
-Chip::Chip(const Kind kind) 
+Chip::Chip(const Kind kind) noexcept
 	: chip(kind) {
 }
 

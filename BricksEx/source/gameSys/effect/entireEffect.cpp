@@ -15,8 +15,8 @@ EntireEffect::EntireEffect(const EffectKind<Effect>::Kind effect, const SkillSys
 	: EffectSystem(skill->getDuration(), true, skill->isEnable()) {
 }
 
-EffectKind<Effect>::Kind EntireEffect::getEffect() const {
-	return effect->getEffect();
+const EffectKind<Effect>::Kind EntireEffect::getEffect() const {
+	return effect->content;
 }
 
 EntireEffect::~EntireEffect() {

@@ -35,7 +35,7 @@ protected:
 	virtual void setDpi(const Resolution Dpi);
 
 private:
-	float frameSpan;
+	float fFrameSpan;
 	sf::Image icon;
 	sf::ContextSettings currentSettings;
 	FrameRate currentFps;

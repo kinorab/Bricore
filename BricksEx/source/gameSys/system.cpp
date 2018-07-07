@@ -6,13 +6,13 @@ System::~System() {
 }
 
 const bool & System::isEnable() const {
-	return enable;
+	return bEnable;
 }
 
 System::System(const bool enable) 
-	: enable(enable) {
+	: bEnable(enable) {
 }
 
 void System::setEnable(const bool enable) {
-	this->enable = enable;
+	this->bEnable = enable;
 }

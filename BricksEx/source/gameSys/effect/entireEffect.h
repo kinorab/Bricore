@@ -12,11 +12,11 @@ namespace game {
 	public:
 		explicit EntireEffect(const EffectKind<Effect>::Kind effect, const sf::Time &duration);
 		explicit EntireEffect(const EffectKind<Effect>::Kind effect, const SkillSystem * const skill);
-		virtual EffectKind<Effect>::Kind getEffect() const;
+		const EffectKind<Effect>::Kind getEffect() const;
 		virtual ~EntireEffect();
 
 	private:
-		virtual void setEnable(const bool) override;
+		void setEnable(const bool enable);
 		std::shared_ptr<Effect> effect;
 	};
 }

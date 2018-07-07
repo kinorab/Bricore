@@ -7,10 +7,9 @@ AudioManager::~AudioManager() {
 }
 
 void AudioManager::initialize() {
-	// if memory violation happen, reset the lib connector of project (-d have something bug)
 	const std::vector<std::string> fileNames = { "res/audio/sound/hitBoard.wav", "res/audio/bgm/bg.wav" };
 	if (!buffer1.loadFromFile(fileNames[0])) {
-		std::cout << "Cannot load " << fileNames[0] <<  std::endl;
+		std::cout << "Cannot load " << fileNames[0] << std::endl;
 	}
 
 	if (!AudioManager::bgmusic.openFromFile(fileNames[1])) {

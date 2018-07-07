@@ -12,10 +12,9 @@ class SubPlayer :
 	, public sf::Transformable {
 public:
 	explicit SubPlayer();
-	virtual void update(const float intervalRate);
+	void update(const float updateRatio);
 	virtual ~SubPlayer();
 
 private:
 	void draw(sf::RenderTarget &, sf::RenderStates) const override;
-
 };

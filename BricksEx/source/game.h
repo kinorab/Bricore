@@ -21,12 +21,12 @@ class Game {
 public:
 	Game();
 	virtual ~Game();
-	virtual void run();
+	void run();
 
 private:
-	virtual void settleWindow();
-	virtual void renderFunc();
-	virtual void handleEvents(bool & finishing);
+	void settleWindow();
+	void renderFunc();
+	void handleEvents(bool & finishing);
 	game::SFMLEventQueue eventQueue;
 	game::SFMLMouseHandler mouseHandler;
 	game::SFMLKeyboardHandler keyboardHandler;

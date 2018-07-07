@@ -7,12 +7,13 @@ using namespace game;
 
 SkillSystem::SkillSystem(const sf::Time &duration, bool autoUse, const bool exist)
 	: System(false)
-	, autoUse(autoUse)
-	, silenced(false)
-	, locked(false)
-	, exist(exist)
+	, bAutoUse(autoUse)
+	, bSilenced(false)
+	, bLocked(false)
+	, bExist(exist)
+	, uLevel(0)
+	, uMaxLevel(10)
 	, duration(duration)
-	, level(0)
 	, status(None)
 	, elapsedTime(sf::seconds(0)){
 }
@@ -30,16 +31,16 @@ bool SkillSystem::selectOff() {
 }
 
 void SkillSystem::upgradeSkill(const size_t number) {
-	if (level + number > maxLevel) throw std::out_of_range("Upgrade level over the max level.");
-	level += number;
+	if (uLevel + number > uMaxLevel) throw std::out_of_range("Upgrade level over the max level.");
+	uLevel += number;
 }
 
 void SkillSystem::extendMaxLevel(const size_t number) {
-	maxLevel += number;
+	uMaxLevel += number;
 }
 
 void SkillSystem::setOwnToPlayer(const bool giveOwn) {
-	if (!exist) throw std::invalid_argument("Skill not exist in setOwn.");
+	if (!bExist) throw std::invalid_argument("Skill not exist in setOwn.");
 
 	if (giveOwn) {
 		status = UnSelected;
@@ -50,15 +51,15 @@ void SkillSystem::setOwnToPlayer(const bool giveOwn) {
 }
 
 void SkillSystem::setAutoUse(const bool autoUse) {
-	this->autoUse = autoUse;
+	bAutoUse = autoUse;
 }
 
 bool SkillSystem::isExist() const {
-	return exist;
+	return bExist;
 }
 
 bool SkillSystem::isAutoUse() const {
-	return autoUse;
+	return bAutoUse;
 }
 
 const sf::Time & SkillSystem::getDuration() const {
@@ -66,11 +67,11 @@ const sf::Time & SkillSystem::getDuration() const {
 }
 
 size_t SkillSystem::getLevel() const {
-	return level;
+	return uLevel;
 }
 
 size_t SkillSystem::getmaxLevel() const {
-	return maxLevel;
+	return uMaxLevel;
 }
 
 SkillSystem::~SkillSystem() {
@@ -103,7 +104,7 @@ void SkillSystem::exhausted() {
 }
 
 void SkillSystem::setEnable(const bool enable) {
-	if (!exist) {
+	if (!bExist) {
 		throw std::invalid_argument("Skill not exist in setEnable.");
 	}
 	System::setEnable(enable);

@@ -2,10 +2,10 @@
 
 namespace game {
 	bool UIComponent::getEnabled() const {
-		return enabled;
+		return bEnabled;
 	}
 
 	void UIComponent::setEnabled(bool value) {
-		enabled = value;
+		bEnabled = value;
 	}
 }

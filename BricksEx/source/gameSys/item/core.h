@@ -5,7 +5,7 @@ namespace item {
 	class Core :
 		public ItemKind<Core> {
 	public:
-		explicit Core(const Kind kind);
+		explicit Core(const Kind kind) noexcept;
 		virtual ~Core();
 		const Kind type;
 		Core(const Core &) = delete;

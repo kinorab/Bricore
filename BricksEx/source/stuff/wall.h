@@ -20,39 +20,39 @@ class Wall :
 	, public sf::Transformable {
 public:
 	Wall();
-	virtual void update(Ball &ball, const float updateRatio);
-	virtual void loadTexture(const std::string & fileName);
-	virtual void setBricksColor(const sf::Color & color);
-	virtual void setFramesColor(const sf::Color & color);
-	virtual void setBricksSize(const sf::Vector2f &sideLength);
-	virtual void setInterval(const sf::Vector2f &interval);
-	virtual void setFrameSize(const float frame);
+	void update(Ball &ball, const float updateRatio);
+	void loadTexture(const std::string & fileName);
+	void setBricksColor(const sf::Color & color);
+	void setFramesColor(const sf::Color & color);
+	void setBricksSize(const sf::Vector2f &sideLength);
+	void setInterval(const sf::Vector2f &interval);
+	void setFrameSize(const float frame);
 
-	virtual void reset(const size_t rowCount, const float width, const float height
+	void reset(const size_t rowCount, const float width, const float height
 		, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
-	virtual void reset(const size_t rowCount);
+	void reset(const size_t rowCount);
 
-	virtual size_t getBrickAmount() const;
-	virtual sys::DPointf getDP(const size_t number) const;
-	virtual float getFrameSize(const size_t number) const;
-	virtual const sf::Vector2f & getBrickSize(const size_t number) const;
-	virtual const sf::Color & getBrickColor(const size_t number) const;
-	virtual const sf::Vector2f & getInterval() const;
+	size_t getBrickAmount() const;
+	sys::DPointf getDP(const size_t number) const;
+	float getFrameSize(const size_t number) const;
+	const sf::Vector2f & getBrickSize(const size_t number) const;
+	const sf::Color & getBrickColor(const size_t number) const;
+	const sf::Vector2f & getInterval() const;
 	virtual ~Wall();
 
 protected:
-	virtual void settlePlace();
+	void settlePlace();
 
 private:
 	virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 	std::vector<std::shared_ptr<item::Brick>> bricks;
 	// bricks on every row
-	size_t amount;
-	size_t rowCount;
-	float frameSize;
+	size_t uAmount;
+	size_t uRowCount;
+	float fFrameSize;
+	bool bChangeEntity;
 	sf::Vector2f sideLength;
 	sf::Vector2f interval;
 	sf::Vector2f whiteSpace;
-	bool changeEntity;
 };

@@ -19,9 +19,9 @@ namespace game {
 	protected:
 		UIEvent() = default;
 	private:
-		EventSubject * currentTarget;
+		bool bPropagationStopped = false;
 		EventPhase phase = EventPhase::NONE;
-		bool propagationStopped = false;
+		EventSubject * currentTarget;
 		EventSubject * target;
 	};
 }

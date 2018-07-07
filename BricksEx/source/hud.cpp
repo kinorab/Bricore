@@ -3,28 +3,30 @@
 #include "definition/utility.h"
 #include <SFML/Graphics.hpp>
 
-HUD::HUD() {
-	// interface
-	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(LEVEL_WIDTH, LEVEL_HEIGHT))));
-	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 200.f))));
-	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 300.f))));
-	interface.push_back(std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(GAME_WIDTH - LEVEL_WIDTH, 400.f))));
-	interface.at(0)->setFillColor(sf::Color(180, 180, 180));
-	interface.at(1)->setFillColor(sf::Color::Blue);
-	interface.at(1)->setPosition({ LEVEL_WIDTH, 0.f });
-	interface.at(2)->setFillColor(sf::Color::Green);
-	interface.at(2)->setPosition({ LEVEL_WIDTH, 200.f });
-	interface.at(3)->setFillColor(sf::Color::Cyan);
-	interface.at(3)->setPosition({ LEVEL_WIDTH, 500.f });
-	addChild({ interface.at(0), interface.at(1), interface.at(2), interface.at(3) });
+float panelWidth = GAME_WIDTH - LEVEL_WIDTH;
+
+HUD::HUD()
+	: bossPanel{ false, std::make_shared<sf::RectangleShape>(sf::Vector2f(panelWidth, 200.f)), {} }
+	, scorePanel{ true, std::make_shared<sf::RectangleShape>(sf::Vector2f(panelWidth, 300.f)), {} }
+	, playerPanel{ true, std::make_shared<sf::RectangleShape>(sf::Vector2f(panelWidth, 400.f)), {} } {
+	// interfaces
+	interfaces.emplace(BattleArea, std::make_shared<sf::RectangleShape>(sf::Vector2f(LEVEL_WIDTH, LEVEL_HEIGHT)));
+	interfaces.at(BattleArea)->setFillColor(sf::Color(180, 180, 180));
+	// panels
+	bossPanel.background->setFillColor(sf::Color::Blue);
+	bossPanel.background->setPosition({ LEVEL_WIDTH, 0.f });
+	scorePanel.background->setFillColor(sf::Color::Green);
+	scorePanel.background->setPosition({ LEVEL_WIDTH, 200.f });
+	playerPanel.background->setFillColor(sf::Color::Cyan);
+	playerPanel.background->setPosition({ LEVEL_WIDTH, 500.f });
+	addChild({ interfaces.at(BattleArea), bossPanel.background, scorePanel.background, playerPanel.background });
 	// button
 	// addChild({ button });
 }
 
-void HUD::setBackgroundColor(const sf::Color &color) {
-	interface.at(0)->setFillColor(color);
-}
-
 bool HUD::containsPoint(const sf::Vector2f & point) const {
 	return Container::containsPoint(point);
+}
+
+HUD::~HUD() {
 }

@@ -18,5 +18,5 @@ public:
 private:
 
 	sf::Vector2f m_radius;
-	size_t pointCount = 30;
+	size_t uPointCount = 30;
 };

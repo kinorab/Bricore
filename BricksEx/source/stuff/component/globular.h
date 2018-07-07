@@ -20,37 +20,40 @@ namespace item {
 		public sf::Drawable
 		, public sf::Transformable {
 	public:
-		virtual void move(const sys::DPointf &DP, const float playerSpeed, const float updateRatio);
-		virtual void setSpeedX(const float speedX);
-		virtual void setSpeedY(const float speedY);
-		virtual void setSpeed(const sf::Vector2f &speed);
-		virtual void setPosition(const sf::Vector2f &pos);
-		virtual void setPosition(const float posX, const float posY);
-		virtual void setRadius(const float radius);
-		virtual void setColor(const sf::Color &color);
-		virtual void restartClock();
 		virtual bool isCollidedObstacle(const Block * block) = 0;
 		virtual bool isCollidedWall(const Brick * brick) = 0;
-		virtual bool isEnteredObstacleArea() const;
-		virtual bool isEnteredWallArea() const;
+		void move(const sys::DPointf &DP, const float playerSpeed, const float updateRatio);
+		void setSpeedX(const float speedX);
+		void setSpeedY(const float speedY);
+		void setSpeed(const sf::Vector2f &speed);
+		void setPosition(const sf::Vector2f &pos);
+		void setPosition(const float posX, const float posY);
+		void setRadius(const float radius);
+		void setColor(const sf::Color &color);
+		void restartClock();
+		bool isEnteredObstacleArea() const;
+		bool isEnteredWallArea() const;
 
-		virtual bool isBroke() const;
+		bool isBroke() const;
 		// include outlineThickness
-		virtual float getRadius() const;
-		virtual const sf::Vector2f & getSpeed() const;
-		virtual const sf::Vector2f & getPosition() const;
-		virtual sf::Vector2f getPreviousPos() const;
+		float getRadius() const;
+		const sf::Vector2f & getSpeed() const;
+		const sf::Vector2f & getPosition() const;
+		sf::Vector2f getPreviousPos() const;
 
 	protected:
 		Globular();
-		virtual void determineUpdate() = 0;
-		virtual void setActive(const bool active);
-		bool broke;
-		bool left;
-		bool right;
-		bool bottom;
-		bool top;
-		bool CD;
+		virtual void determineHitDirect() = 0;
+		void setActive(const bool active);
+		struct Side {
+			void reset();
+			bool bLeft;
+			bool bRight;
+			bool bBottom;
+			bool bTop;
+		} hitside;
+		bool bBroke;
+		bool bCD;
 		sf::Vector2f ballSpeed;
 		sf::Vector2f oriSpeed;
 		sf::Clock CDTime;
@@ -58,10 +61,10 @@ namespace item {
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		virtual void hitByPlayer(const sys::DPointf &, const float, const bool);
-		virtual void resetBall();
+		void hitByPlayer(const sys::DPointf &DP, const float playerSpeed, const bool continuousCollision);
+		void resetBall();
 
-		bool active;
+		bool bActive;
 		std::shared_ptr<sf::CircleShape> ball;
 	};
 }

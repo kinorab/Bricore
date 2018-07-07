@@ -14,6 +14,6 @@ namespace game {
 	}
 
 	void UIEvent::stopPropagation() {
-		propagationStopped = true;
+		bPropagationStopped = true;
 	}
 }

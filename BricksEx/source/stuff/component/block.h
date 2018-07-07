@@ -19,31 +19,31 @@ namespace item {
 	public:
 		explicit Block(const sf::Vector2f &position, const sf::Vector2f &size);
 		explicit Block(const Block &copy);
-		virtual void update(const float updateRatio);
-		virtual void loadTexture(const std::string &fileName);
-		virtual void setOrigin(const sf::Vector2f & position);
-		virtual void setPosition(const sf::Vector2f &position);
-		virtual void setVerticeColor(const sf::Color &);
-		virtual void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
-		virtual void setSize(const sf::Vector2f &size);
-		virtual void setSpeed(const float speedX, const float speedY = 0.0f);
-		virtual void setSpeed(const sf::Vector2f &speed);
-		virtual void resetPosition();
+		void update(const float updateRatio);
+		void loadTexture(const std::string &fileName);
+		void setOrigin(const sf::Vector2f & position);
+		void setPosition(const sf::Vector2f &position);
+		void setVerticeColor(const sf::Color &);
+		void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
+		void setSize(const sf::Vector2f &size);
+		void setSpeed(const float speedX, const float speedY = 0.0f);
+		void setSpeed(const sf::Vector2f &speed);
+		void resetPosition();
 
-		virtual sys::DPointf getDP() const;
-		virtual sf::Vector2u getTextureSize() const;
-		virtual const sf::Vector2f & getSize() const;
-		virtual const sf::Color & getVerticeColor(const size_t index) const;
-		virtual const sf::Vector2f & getOrigin() const;
-		virtual const sf::Vector2f & getPosition() const;
-		virtual const sf::Vector2f & getInitialPosition() const;
-		virtual const sf::Vector2f & getSpeed() const;
-		virtual Block & operator =(Block right);
+		sys::DPointf getDP() const;
+		sf::Vector2u getTextureSize() const;
+		const sf::Vector2f & getSize() const;
+		const sf::Color & getVerticeColor(const size_t index) const;
+		const sf::Vector2f & getOrigin() const;
+		const sf::Vector2f & getPosition() const;
+		const sf::Vector2f & getInitialPosition() const;
+		const sf::Vector2f & getSpeed() const;
+		Block & operator =(Block right);
 		virtual ~Block();
 
 	protected:
-		virtual void setBlockVertice();
-		virtual void moveEntity(const float updateRatio);
+		void setBlockVertice();
+		void moveEntity(const float updateRatio);
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const;

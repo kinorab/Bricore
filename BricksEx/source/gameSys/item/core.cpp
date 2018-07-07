@@ -2,7 +2,7 @@
 
 using namespace item;
 
-Core::Core(const Kind kind)
+Core::Core(const Kind kind) noexcept
 	: type(kind) {
 }
 

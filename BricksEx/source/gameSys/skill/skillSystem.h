@@ -20,16 +20,16 @@ namespace game {
 		virtual void handleSkill(const sf::Event * const event) = 0;
 		// interact before entering level
 		virtual void handleSelect(const sf::Event * const event) = 0;
-		virtual void upgradeSkill(const size_t number);
-		virtual void extendMaxLevel(const size_t number);
-		virtual void setOwnToPlayer(const bool giveOwn);
-		virtual void setAutoUse(const bool autoUse);
+		void upgradeSkill(const size_t number);
+		void extendMaxLevel(const size_t number);
+		void setOwnToPlayer(const bool giveOwn);
+		void setAutoUse(const bool autoUse);
 
-		virtual bool isExist() const;
-		virtual bool isAutoUse() const;
-		virtual const sf::Time & getDuration() const;
-		virtual size_t getLevel() const;
-		virtual size_t getmaxLevel() const;
+		bool isExist() const;
+		bool isAutoUse() const;
+		const sf::Time & getDuration() const;
+		size_t getLevel() const;
+		size_t getmaxLevel() const;
 		virtual ~SkillSystem();
 
 	protected:
@@ -42,28 +42,28 @@ namespace game {
 			UnSelected		// unselected skill in current level
 		};
 		explicit SkillSystem(const sf::Time &duration, bool autoUse = false, const bool exist = true);
-		virtual bool selectOn();
-		virtual bool selectOff();
-		virtual void useSkill();
-		virtual bool elapsed();
-		virtual void exhausted();
+		bool selectOn();
+		bool selectOff();
+		void useSkill();
+		bool elapsed();
+		void exhausted();
 		
+		size_t uLevel;
+		size_t uMaxLevel;
+		bool bAutoUse;
+		// cannot swap, move to another field
+		bool bLocked;
+		// cannot use
+		bool bSilenced;
 		sf::Time duration;
 		sf::Time elapsedTime;
-		size_t level;
-		size_t maxLevel;
+		Status status;
 		std::vector<std::shared_ptr<EntireEffect>> skillEffects;
 		std::vector<std::shared_ptr<Attribute>> skillAttributes;
-		Status status;
-		bool autoUse;
-		// cannot swap, move to another field
-		bool locked;
-		// cannot use
-		bool silenced;
 
 	private:
-		virtual void setEnable(const bool enable) override;
+		void setEnable(const bool enable);
 		// used to checkout in particular mode
-		bool exist;
+		bool bExist;
 	};
 }
