@@ -13,13 +13,17 @@ namespace sf {
 	class Color;
 }
 
+namespace game {
+	class Level;
+}
+
 class Ball;
 
 class Wall :
 	public sf::Drawable
 	, public sf::Transformable {
 public:
-	Wall();
+	explicit Wall(const std::shared_ptr<game::Level> level);
 	void update(Ball &ball, const float updateRatio);
 	void loadTexture(const std::string & fileName);
 	void setBricksColor(const sf::Color & color);
@@ -28,9 +32,7 @@ public:
 	void setInterval(const sf::Vector2f &interval);
 	void setFrameSize(const float frame);
 
-	void reset(const size_t rowCount, const float width, const float height
-		, const sf::Vector2f &interval = sf::Vector2f(0.0f, 0.0f), const float frameSize = 0.0f, const float whiteSpaceY = 0.0f);
-	void reset(const size_t rowCount);
+	void resettle();
 
 	size_t getBrickAmount() const;
 	sys::DPointf getDP(const size_t number) const;
@@ -55,4 +57,5 @@ private:
 	sf::Vector2f sideLength;
 	sf::Vector2f interval;
 	sf::Vector2f whiteSpace;
+	std::shared_ptr<game::Level> level;
 };

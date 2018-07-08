@@ -11,10 +11,11 @@
 using namespace sf;
 using namespace item;
 
-Ball::Ball()
+Ball::Ball(const std::shared_ptr<game::Level> level)
 	: bMultiple(false)
 	, bCollision(false)
-	, mainBall(new MainBall) {
+	, mainBall(new MainBall)
+	, level(std::move(level)){
 }
 
 void Ball::update(const sys::DPointf &playerDP, const float playerSpeed, const float updateRatio) {

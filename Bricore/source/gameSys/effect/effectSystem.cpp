@@ -18,12 +18,12 @@ bool EffectSystem::isExist() const {
 EffectSystem::~EffectSystem() {
 }
 
-EffectSystem::EffectSystem(const sf::Time &duration, const bool belongToSkill, const bool enable)
+EffectSystem::EffectSystem(const sf::Time &duration, const bool belongToSkill, const bool enable, const bool exist)
 	: System(enable)
 	, duration(duration)
 	, elapsedTime(sf::seconds(0))
 	, bBelongToSkill(belongToSkill)
-	, bExist(true) {
+	, bExist(exist) {
 }
 
 void EffectSystem::setEnable(const bool enable) {

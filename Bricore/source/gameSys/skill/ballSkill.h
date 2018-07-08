@@ -28,7 +28,8 @@ namespace game {
 	public:
 		explicit BallSkill(const Kind skillName, const sf::Time duration
 			, const std::vector<Effect::Kind> &effects
-			, const std::vector<Attribute::Kind> &attributes = { Attribute::None }, const bool autoUse = false);
+			, const bool autoUse, const std::vector<Attribute::Kind> &attributes
+			, const bool exist);
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
 		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
@@ -54,7 +55,7 @@ namespace game {
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		void setState(const State state);
-		void swapSkill(const std::shared_ptr<BallSkill> other);
+		void swapSkill(const std::shared_ptr<BallSkill> & other);
 
 		static size_t uMaxDropping;
 		static size_t uCurrentCarry;

@@ -15,6 +15,9 @@ namespace sf {
 	class RenderStates;
 	class Color;
 }
+namespace game {
+	class Level;
+}
 
 class Player :
 	public sf::Drawable

@@ -16,10 +16,11 @@ namespace game {
 	class SkillSystem : 
 		public System {
 	public:
-		// interact on level
+		// interact on battle area
 		virtual void handleSkill(const sf::Event * const event) = 0;
-		// interact before entering level
+		// interact before entering next level
 		virtual void handleSelect(const sf::Event * const event) = 0;
+		void setExist(const bool exist);
 		void upgradeSkill(const size_t number);
 		void extendMaxLevel(const size_t number);
 		void setOwnToPlayer(const bool giveOwn);
@@ -41,7 +42,7 @@ namespace game {
 			Selected,		// selected skill in current level
 			UnSelected		// unselected skill in current level
 		};
-		explicit SkillSystem(const sf::Time &duration, bool autoUse = false, const bool exist = true);
+		explicit SkillSystem(const sf::Time &duration, const bool autoUse, const bool exist);
 		bool selectOn();
 		bool selectOff();
 		void useSkill();
@@ -63,7 +64,7 @@ namespace game {
 
 	private:
 		void setEnable(const bool enable);
-		// used to checkout in particular mode
+		// In particular mode will use
 		bool bExist;
 	};
 }

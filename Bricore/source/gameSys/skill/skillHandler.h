@@ -1,9 +1,8 @@
 #pragma once
 #include "bossSkill.h"
 #include <SFML/Window/Keyboard.hpp>
-#include <map>
-#include <memory>
 #include <functional>
+#include <map>
 
 namespace game {
 	template<typename T> class SkillState;

@@ -6,34 +6,23 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../gameSys/area/zone.h"
-#include "../gameSys/LVDeploy.h"
+#include "../gameSys/level/level.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
 using namespace item;
 
-Wall::Wall()
+Wall::Wall(const std::shared_ptr<game::Level> level)
 	: whiteSpace(0.0f, 0.0f)
-	, bChangeEntity(false) {
-	reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))
-		, LVDeploy::getBrickD().at(1)
-		, LVDeploy::getBrickD().at(2)
-		, sf::Vector2f(LVDeploy::getBrickD().at(3), LVDeploy::getBrickD().at(4))
-		, LVDeploy::getBrickD().at(5)
-		, LVDeploy::getBrickD().at(6));
-	setBricksColor(LVDeploy::getBrickCD().at(0));
+	, bChangeEntity(false)
+	, level(std::move(level)) {
+	resettle();
 }
 
 void Wall::update(Ball &ball, const float updateRatio) {
 	if (bricks.empty()) {
-		LVDeploy::finishLevel();
-		reset(static_cast<size_t>(LVDeploy::getBrickD().at(0))
-			, LVDeploy::getBrickD().at(1)
-			, LVDeploy::getBrickD().at(2)
-			, sf::Vector2f(LVDeploy::getBrickD().at(3), LVDeploy::getBrickD().at(4))
-			, LVDeploy::getBrickD().at(5)
-			, LVDeploy::getBrickD().at(6));
-		setBricksColor(LVDeploy::getBrickCD().at(0));
+		level->finishLevel();
+		resettle();
 		return;
 	}
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
@@ -88,8 +77,14 @@ void Wall::setFrameSize(const float frameSize) {
 	settlePlace();
 }
 
-void Wall::reset(const size_t rowCount, const float wid, const float hei
-	, const Vector2f &interval, const float frameSize, const float whiteSpaceY) {
+void Wall::resettle() {
+	const size_t rowCount = static_cast<size_t>(level->deploy->getBrickDeploy().it.at(0));
+	const float wid = level->deploy->getBrickDeploy().it.at(1);
+	const float hei = level->deploy->getBrickDeploy().it.at(2);
+	const Vector2f &interval = sf::Vector2f(level->deploy->getBrickDeploy().it.at(3)
+		, level->deploy->getBrickDeploy().it.at(4));
+	const float frameSize = level->deploy->getBrickDeploy().it.at(5);
+	const float whiteSpaceY = level->deploy->getBrickDeploy().it.at(6);
 
 	if (wid <= 0.0f || hei <= 0.0f
 		|| interval.x < 0.0f || interval.y < 0.0f
@@ -110,16 +105,7 @@ void Wall::reset(const size_t rowCount, const float wid, const float hei
 	}
 	bChangeEntity = true;
 	settlePlace();
-}
-
-void Wall::reset(const size_t rowCount) {
-	this->uRowCount = rowCount;
-	bricks.resize(this->uRowCount * uAmount);
-	if (getBrickAmount() != this->uRowCount * uAmount) {
-		throw std::out_of_range("The subscripts are out of range.");
-	}
-	bChangeEntity = true;
-	settlePlace();
+	setBricksColor(level->deploy->getBrickDeploy().color.at(0));
 }
 
 size_t Wall::getBrickAmount() const {

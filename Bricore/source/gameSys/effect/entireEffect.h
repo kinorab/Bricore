@@ -1,7 +1,6 @@
 #pragma once
 #include "effectSystem.h"
 #include "effect.h"
-#include <memory>
 
 namespace game {
 	class SkillSystem;
@@ -16,7 +15,6 @@ namespace game {
 		virtual ~EntireEffect();
 
 	private:
-		void setEnable(const bool enable);
 		std::shared_ptr<Effect> effect;
 	};
 }

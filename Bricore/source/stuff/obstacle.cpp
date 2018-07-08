@@ -2,7 +2,8 @@
 #include "ball.h"
 #include "component/block.h"
 #include "component/globular.h"
-#include "../gameSys/LVDeploy.h"
+#include "../gameSys/level/level.h"
+#include "../gameSys/level/deploy.h"
 #include "../gameSys/area/zone.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
@@ -12,13 +13,14 @@
 using namespace sf;
 using namespace item;
 
-Obstacle::Obstacle() {
-	reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
-	setAllVerticeColor(LVDeploy::getBlockCD());
-	setAllSpeed(LVDeploy::getBlockSD());
+Obstacle::Obstacle(const std::shared_ptr<game::Level> level) 
+	: level(std::move(level)) {
+	resettle();
 }
 
-void Obstacle::reset(const std::vector<Vector2f> & position, const std::vector<Vector2f> & sideLength) {
+void Obstacle::resettle() {
+	const std::vector<Vector2f> & position = level->deploy->getBlockDeploy().position;
+	const std::vector<Vector2f> & sideLength = level->deploy->getBlockDeploy().sideLength;
 	if (position.size() != sideLength.size()) {
 		throw std::out_of_range("Position size not equal to side-length size.");
 	}
@@ -31,6 +33,8 @@ void Obstacle::reset(const std::vector<Vector2f> & position, const std::vector<V
 	auto &instance = Zone::getInstance();
 	instance.settleZone(Zone::Obstacle, Vector2f(0.0f, instance.getZone(Zone::Wall).getSize().y + AREAINTERVAL)
 	, LEVEL_HEIGHT - (instance.getZone(Zone::Player).getSize().y + instance.getZone(Zone::Wall).getSize().y + 2 * AREAINTERVAL));
+	setAllVerticeColor(level->deploy->getBlockDeploy().color);
+	setAllSpeed(level->deploy->getBlockDeploy().speed);
 }
 
 
@@ -43,9 +47,7 @@ void Obstacle::update(Ball &ball, const float updateRatio) {
 		}
 	}
 	if (game::currentState == GameState::LEVEL_FINISHED) {
-		reset(LVDeploy::getBlockPD(), LVDeploy::getBlockSLD());
-		setAllVerticeColor(LVDeploy::getBlockCD());
-		setAllSpeed(LVDeploy::getBlockSD());
+		resettle();
 	}
 }
 

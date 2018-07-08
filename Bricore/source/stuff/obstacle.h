@@ -15,6 +15,10 @@ namespace sf {
 	class RenderStates;
 	class Color;
 }
+namespace game {
+	class Level;
+}
+
 class Ball;
 
 class Obstacle :
@@ -22,9 +26,9 @@ class Obstacle :
 	, public sf::Transformable {
 
 public:
-	Obstacle();
+	explicit Obstacle(const std::shared_ptr<game::Level> level);
 	void update(Ball &ball, const float updateRatio);
-	void reset(const std::vector <sf::Vector2f> &position, const std::vector <sf::Vector2f> &sideLength);
+	void resettle();
 	void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
 	void setBlockColor(const size_t number, const sf::Color &all);
 	void setAllColor(const std::vector <sf::Color> &color);
@@ -46,4 +50,5 @@ private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 	std::vector <std::shared_ptr<item::Block>> blocks;
+	std::shared_ptr<game::Level> level;
 };

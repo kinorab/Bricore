@@ -6,7 +6,6 @@
     <ClCompile Include="source\definition\utility.cpp" />
     <ClCompile Include="source\stuff\ellipse.cpp" />
     <ClCompile Include="source\game.cpp" />
-    <ClCompile Include="source\gameSys\LVDeploy.cpp" />
     <ClCompile Include="source\particleSystem.cpp" />
     <ClCompile Include="source\gameSys\skill\skillSystem.cpp" />
     <ClCompile Include="source\gameSys\skill\ballSkill.cpp" />
@@ -60,7 +59,6 @@
     <ClCompile Include="source\event\touch\touchEndedEvent.cpp" />
     <ClCompile Include="source\gameSys\skill\skillHandler.cpp" />
     <ClCompile Include="source\gameSys\bar\barSystem.cpp" />
-    <ClCompile Include="source\gameSys\bar\energeBar.cpp" />
     <ClCompile Include="source\gameSys\bar\rageBar.cpp" />
     <ClCompile Include="source\gameSys\bar\lifeBar.cpp" />
     <ClCompile Include="source\gameSys\AI\AISystem.cpp" />
@@ -82,8 +80,13 @@
     <ClCompile Include="source\stuff\component\brick.cpp" />
     <ClCompile Include="source\gameSys\area\arena.cpp" />
     <ClCompile Include="source\event\window\resizedEvent.cpp" />
-    <ClCompile Include="source\root.cpp" />
     <ClCompile Include="source\gameSys\area\zone.cpp" />
+    <ClCompile Include="source\gameSys\bar\energyBar.cpp" />
+    <ClCompile Include="source\gameSys\level\level.cpp" />
+    <ClCompile Include="source\gameSys\level\deploy.cpp" />
+    <ClCompile Include="source\stage.cpp" />
+    <ClCompile Include="source\root.cpp" />
+    <ClCompile Include="source\gameSys\data\data.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -94,7 +97,6 @@
     <ClInclude Include="source\definition\utility.h" />
     <ClInclude Include="source\stuff\ellipse.h" />
     <ClInclude Include="source\game.h" />
-    <ClInclude Include="source\gameSys\LVDeploy.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\gameSys\skill\skillSystem.h" />
     <ClInclude Include="source\gameSys\skill\ballSkill.h" />
@@ -168,7 +170,6 @@
     <ClInclude Include="source\gameSys\skill\skillState.h" />
     <ClInclude Include="source\gameSys\skill\skillHandler.h" />
     <ClInclude Include="source\gameSys\bar\barSystem.h" />
-    <ClInclude Include="source\gameSys\bar\energeBar.h" />
     <ClInclude Include="source\gameSys\bar\rageBar.h" />
     <ClInclude Include="source\gameSys\skill\skillKind.h" />
     <ClInclude Include="source\gameSys\effect\effectKind.h" />
@@ -205,8 +206,13 @@
     <ClInclude Include="source\event\game\unpausedEvent.h" />
     <ClInclude Include="source\event\game\pausedEvent.h" />
     <ClInclude Include="source\event\game\startedEvent.h" />
-    <ClInclude Include="source\root.h" />
     <ClInclude Include="source\gameSys\area\zone.h" />
+    <ClInclude Include="source\gameSys\bar\energyBar.h" />
+    <ClInclude Include="source\gameSys\level\level.h" />
+    <ClInclude Include="source\gameSys\level\deploy.h" />
+    <ClInclude Include="source\stage.h" />
+    <ClInclude Include="source\root.h" />
+    <ClInclude Include="source\gameSys\data\data.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

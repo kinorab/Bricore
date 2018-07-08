@@ -63,6 +63,7 @@ void BarSystem::setExist(const bool exist) {
 	}
 }
 
-void BarSystem::clearBar() {
+void BarSystem::clear() {
+	if (!bExist) throw std::invalid_argument("Bar not exist.");
 	uCurrentCount = 0;
 }

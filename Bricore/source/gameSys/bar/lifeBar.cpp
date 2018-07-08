@@ -2,8 +2,8 @@
 
 using namespace game;
 
-LifeBar::LifeBar(const size_t maxCount, const bool debut, const bool numberVisible) 
-	: BarSystem(maxCount, debut, numberVisible) {
+LifeBar::LifeBar(const size_t maxCount, const bool appear, const bool exist, const bool numberVisible)
+	: BarSystem(maxCount, appear && exist, numberVisible && exist, exist) {
 }
 
 void LifeBar::handleBar(const sf::Event * const event) {

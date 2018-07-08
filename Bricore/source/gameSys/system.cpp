@@ -14,5 +14,6 @@ System::System(const bool enable)
 }
 
 void System::setEnable(const bool enable) {
+	if (bEnable == enable) return;
 	this->bEnable = enable;
 }

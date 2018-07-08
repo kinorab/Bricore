@@ -78,7 +78,7 @@ void Boss::extendMaxOnUsing(const size_t number) {
 }
 
 Attribute::Kind Boss::getAttribute() const {
-	return boss.second.attribute->element;
+	return boss.second.attribute->it;
 }
 
 item::Core::Kind Boss::getBossCoreType() const {

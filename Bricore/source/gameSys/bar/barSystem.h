@@ -13,6 +13,8 @@ namespace game {
 		virtual void handleBar(const sf::Event * const event) = 0;
 		void setStatisticVisible(const bool visible);
 		void extendMaxCount(const size_t count);
+		void clear();
+
 		bool isFull() const;
 		bool isExist() const;
 		size_t getMaxCount() const;
@@ -21,10 +23,9 @@ namespace game {
 		virtual ~BarSystem();
 
 	protected:
-		BarSystem(const size_t maxCount, const bool appear, const bool numberVisible, const bool exist = true);
+		explicit BarSystem(const size_t maxCount, const bool appear, const bool numberVisible, const bool exist);
 		void setEnable(const bool enable);
 		void setExist(const bool exist);
-		void clearBar();
 		bool bAppear;
 
 	private:

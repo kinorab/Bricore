@@ -3,6 +3,7 @@
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
 #include "../gameSys/area/zone.h"
+#include "../gameSys/level/level.h"
 #include "../manager/audioManager.h"
 #include <SFML/Graphics.hpp>
 

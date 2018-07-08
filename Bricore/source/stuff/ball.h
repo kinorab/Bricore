@@ -21,12 +21,16 @@ namespace item {
 	class Brick;
 }
 
+namespace game {
+	class Level;
+}
+
 class Ball :
 	public sf::Drawable
 	, public sf::Transformable {
 
 public:
-	Ball();
+	explicit Ball(const std::shared_ptr<game::Level> level);
 	void update(const sys::DPointf &playerDP, const float playerSpeed, const float updateRatio);
 	void initializeBall();
 	void followPlayer(const sf::Vector2f &pos);
@@ -51,4 +55,5 @@ private:
 	bool bCollision;
 	std::shared_ptr<item::MainBall> mainBall;
 	std::vector<std::shared_ptr<item::ShadowBall>> shadowBalls;
+	std::shared_ptr<game::Level> level;
 };

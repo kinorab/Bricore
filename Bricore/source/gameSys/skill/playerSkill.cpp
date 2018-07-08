@@ -1,6 +1,7 @@
 #include "playerSkill.h"
 #include "skillHandler.h"
 #include "../effect/entireEffect.h"
+#include "../bar/energyBar.h"
 #include "../../definition/gameState.h"
 #include <SFML/Graphics.hpp>
 
@@ -13,10 +14,12 @@ size_t PlayerSkill::uCurrentOnField(0);
 SkillHandler<PlayerSkill> PlayerSkill::handler(sf::Keyboard::F, sf::Keyboard::R);
 
 PlayerSkill::PlayerSkill(const Kind skillName, const sf::Time duration
-	, const std::vector<Effect::Kind> &effects
-	, const std::vector<Attribute::Kind> &attributes, const bool autoUse)
+	, const std::vector<Effect::Kind> &effects, const bool autoUse
+	, const std::vector<Attribute::Kind> &attributes, const std::shared_ptr<EnergyBar> energyBar
+	, const bool exist)
 	: skill(skillName, SkillContent{ State::None, nullptr })
-	, SkillSystem(duration, autoUse) {
+	, SkillSystem(duration, autoUse, exist)
+	, energyBar(std::move(energyBar)) {
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
 		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
@@ -27,14 +30,14 @@ PlayerSkill::PlayerSkill(const Kind skillName, const sf::Time duration
 }
 
 void PlayerSkill::handleSkill(const sf::Event * const event) {
-	if (status != Status::Selected || game::currentState == GameState::LEVEL_FINISHED) return;
+	if (status != Status::Selected || currentState == GameState::LEVEL_FINISHED) return;
 	using namespace std::placeholders;
 	State currentState = skill.second.currentState;
 	switch (currentState) {
 	case State::OnCharging:
-		if (/*!energyBar.full() ||*/bLocked) break;
+		if (!energyBar->isFull() || bLocked) break;
 		if (handler.tryEnterField(std::bind(&PlayerSkill::setState, this, _1))) {
-			// energyBar.clear();
+			energyBar->clear();
 		}
 		break;
 	case State::OnFirstField:
@@ -78,14 +81,14 @@ void PlayerSkill::handleSkill(const sf::Event * const event) {
 
 void PlayerSkill::handleSelect(const sf::Event * const event) {
 	if (status == Status::None || event->type != sf::Event::MouseButtonPressed 
-		|| game::currentState != GameState::LEVEL_FINISHED) return;
+		|| currentState != GameState::LEVEL_FINISHED) return;
 	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
 		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
-		if (uCurrentCarry < uMaxCarry && selectOn()) {
+		if (uCurrentCarry < uMaxCarry && SkillSystem::selectOn()) {
 			++uCurrentCarry;
 			return;
 		}
-		if (selectOff()) {
+		if (SkillSystem::selectOff()) {
 			--uCurrentCarry;
 			return;
 		}
@@ -129,7 +132,7 @@ void PlayerSkill::setState(const State state) {
 	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
 }
 
-void PlayerSkill::swapSkill(const std::shared_ptr<PlayerSkill> other) {
+void PlayerSkill::swapSkill(const std::shared_ptr<PlayerSkill> & other) {
 	State state = skill.second.currentState;
 	State inputState = other->skill.second.currentState;
 	statePreviews.swap(other->statePreviews);

@@ -4,7 +4,6 @@
 #include "skillState.h"
 #include "../effect/effect.h"
 #include "../effect/attribute.h"
-#include <memory>
 #include <vector>
 
 namespace sf {
@@ -17,6 +16,7 @@ namespace sf {
 
 namespace game {
 	template<typename T> class SkillHandler;
+	class RageBar;
 
 	class BossSkill :
 		public SkillSystem
@@ -29,7 +29,8 @@ namespace game {
 	public:
 		explicit BossSkill(const Kind skillName, const sf::Time &duration
 			, const std::vector<Effect::Kind> &effects
-			, const std::vector<Attribute::Kind> &attributes = { Attribute::None });
+			, const std::vector<Attribute::Kind> &attributes, const std::shared_ptr<RageBar> rageBar
+			, const bool exist);
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
 		void loadPreview(const std::string &fileName);
@@ -50,6 +51,7 @@ namespace game {
 
 		static SkillHandler<BossSkill> handler;
 		std::shared_ptr<sf::Texture> cache;
+		std::shared_ptr<RageBar> rageBar;
 		std::pair<Kind, SkillContent> skill;
 	};
 }

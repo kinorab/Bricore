@@ -15,9 +15,10 @@ SkillHandler<BallSkill> BallSkill::handler(sf::Keyboard::D, sf::Keyboard::E);
 
 BallSkill::BallSkill(const Kind skillName, const sf::Time duration
 	, const std::vector<Effect::Kind> &effects
-	, const std::vector<Attribute::Kind> &attributes, const bool autoUse)
+	, const bool autoUse, const std::vector<Attribute::Kind> &attributes
+	, const bool exist)
 	: skill(skillName, SkillContent{ State::None, nullptr, nullptr })
-	, SkillSystem(duration, autoUse) {
+	, SkillSystem(duration, autoUse, exist) {
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
 		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
@@ -86,14 +87,14 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 
 void BallSkill::handleSelect(const sf::Event * const event) {
 	if (status == Status::None || event->type != sf::Event::MouseButtonPressed
-		|| game::currentState != GameState::LEVEL_FINISHED) return;
+		|| currentState != GameState::LEVEL_FINISHED) return;
 	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
 		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
-		if (selectOn()) {
+		if (SkillSystem::selectOn()) {
 			++uCurrentCarry;
 			return;
 		}
-		if (selectOff()) {
+		if (SkillSystem::selectOff()) {
 			--uCurrentCarry;
 			return;
 		}
@@ -139,7 +140,7 @@ void BallSkill::setState(const State state) {
 	}
 }
 
-void BallSkill::swapSkill(const std::shared_ptr<BallSkill> other) {
+void BallSkill::swapSkill(const std::shared_ptr<BallSkill> & other) {
 	State state = skill.second.currentState;
 	State inputState = other->skill.second.currentState;
 	statePreviews.swap(other->statePreviews);

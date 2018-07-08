@@ -16,7 +16,7 @@ namespace game {
 			Poison,
 		};
 		explicit Attribute(const Kind element);
-		const Kind element;
+		const Kind it;
 		const Effect effect;
 		Attribute(const Attribute &) = delete;
 		Attribute &operator =(const Attribute &) = delete;

@@ -5,9 +5,9 @@
 
 using namespace game;
 
-SkillSystem::SkillSystem(const sf::Time &duration, bool autoUse, const bool exist)
+SkillSystem::SkillSystem(const sf::Time &duration, const bool autoUse, const bool exist)
 	: System(false)
-	, bAutoUse(autoUse)
+	, bAutoUse(autoUse && exist)
 	, bSilenced(false)
 	, bLocked(false)
 	, bExist(exist)
@@ -28,6 +28,12 @@ bool SkillSystem::selectOff() {
 	if (status != Selected) return false;
 	status = UnSelected;
 	return true;
+}
+
+void SkillSystem::setExist(const bool exist) {
+	if (bExist == exist) throw std::invalid_argument("Exist state equal to parameter.");
+	setEnable(isEnable() && exist);
+	bExist = exist;
 }
 
 void SkillSystem::upgradeSkill(const size_t number) {
@@ -75,6 +81,7 @@ size_t SkillSystem::getmaxLevel() const {
 }
 
 SkillSystem::~SkillSystem() {
+	bExist = false;
 }
 
 void SkillSystem::useSkill() {

@@ -1,17 +1,28 @@
 #include "game.h"
+#include "stage.h"
+#include "root.h"
+#include "UI/graphics.h"
 #include "manager/audioManager.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
-#include "root.h"
+#include "gameSys/level/level.h"
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <future>
 
-Game::Game() :
-	stage(new game::Root),
-	mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }) {
+Game::Game()
+	: mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) })
+	, graph(new Graphics)
+	, root(new game::Root) {
+	//if (saveData.exist() && root.chooseSave(saveData)) {
+	//	level.reset(saveData);
+	//}
+	//else { 
+	level.reset(new game::Level(game::Mode::NoChoose, game::Diffculty::NoChoose));
+	//}
+	stage.reset(new game::Stage(level));
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
-		"Bricore", sf::Style::Close, graph.getSettings()));
+		"Bricore", sf::Style::Close, graph->getSettings()));
 }
 
 Game::~Game() = default;
@@ -53,11 +64,11 @@ void Game::renderFunc() {
 			elapsed -= updateSpan * updateRatio;
 		}
 		// maximum render elapsed cap
-		renderElapsed = std::min<float>(renderElapsed + distribute, graph.getFrameSpan() * 1.5f);
-		if (renderElapsed >= graph.getFrameSpan()) {
+		renderElapsed = std::min<float>(renderElapsed + distribute, graph->getFrameSpan() * 1.5f);
+		if (renderElapsed >= graph->getFrameSpan()) {
 			window->draw(*stage);
 			window->display();
-			renderElapsed -= graph.getFrameSpan();
+			renderElapsed -= graph->getFrameSpan();
 		}
 	}
 	// finalize...

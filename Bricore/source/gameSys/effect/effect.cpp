@@ -2,8 +2,8 @@
 
 using namespace game;
 
-Effect::Effect(const Kind kind) noexcept
-	: content(kind) {
+Effect::Effect(const Kind effect) noexcept
+	: it(effect) {
 }
 
 Effect::~Effect() {
