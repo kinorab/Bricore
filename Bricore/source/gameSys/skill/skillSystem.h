@@ -28,6 +28,8 @@ namespace game {
 
 		bool isExist() const;
 		bool isAutoUse() const;
+		bool isLocked() const;
+		bool isSilenced() const;
 		const sf::Time & getDuration() const;
 		size_t getLevel() const;
 		size_t getmaxLevel() const;

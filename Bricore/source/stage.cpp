@@ -1,39 +1,37 @@
 #include "stage.h"
 #include "hud.h"
-#include "particleSystem.h"
-#include "event/mouse/mouseEvent.h"
-#include "event/keyboard/keyEvent.h"
-#include "event/eventListener.h"
-#include "definition/gameState.h"
-#include "definition/utility.h"
+#include "stuff/stuff.h"
 #include "manager/audioManager.h"
 #include "gameSys/level/level.h"
-#include "stuff/obstacle.h"
-#include "stuff/ball.h"
-#include "stuff/player.h"
-#include "stuff/subPlayer.h"
-#include "stuff/wall.h"
+#include "definition/gameState.h"
+#include "definition/utility.h"
+#include "event/eventListener.h"
+#include "event/SFMLMouseHandler.h"
+#include "event/SFMLKeyboardHandler.h"
+#include "event/mouse/mouseEvent.h"
+#include "event/keyboard/keyEvent.h"
 
 using namespace game;
 
 Stage::Stage(const std::shared_ptr<Level> & level)
-	: hud(new HUD)
-	, player(new Player)
+	: player(new Player)
 	, subPlayer(new SubPlayer)
 	, ball(new Ball(level))
 	, wall(new Wall(level))
 	, obstacle(new Obstacle(level))
-	, mouseLight(new ParticleSystem(2000)) {
+	, mouseHandler(new SFMLMouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }))
+	, keyboardHandler(new SFMLKeyboardHandler) {
 	// presettle mainBall's position
 	ball->followPlayer(player->getTopCenterPos());
-	addChild({ hud, player, ball, wall, obstacle, mouseLight });
-	using namespace std::placeholders;
-	addListener(std::make_shared<EventListener<KeyPressedEvent>>([&](auto & event) { onKeyPressed(event); }));
-	addListener(std::make_shared<EventListener<KeyReleasedEvent>>([&](auto & event) { onKeyReleased(event); }));
-	addListener(std::make_shared<EmptyListener<MouseEnteredEvent>>([&] { onMouseEntered(); }));
-	addListener(std::make_shared<EmptyListener<MouseLeftEvent>>([&] { onMouseLeft(); }));
-	addListener(std::make_shared<EventListener<MouseMovedEvent>>([&](auto & event) { onMouseMoved(event); }));
-	addListener(std::make_shared<EventListener<MousePressedEvent>>([&](auto & event) { onMousePressed(event); }));
+	addChild({ player, ball, wall, obstacle });
+	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
+	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
+	addListener(std::make_shared<EventListener<KeyReleasedEvent>>([this](auto & event) { onKeyReleased(event); }));
+}
+
+void Stage::handle(const sf::Event & event) {
+	mouseHandler->handle(event, *this);
+	keyboardHandler->handle(event, *this);
 }
 
 Stage::~Stage() {
@@ -47,11 +45,10 @@ void Stage::update(const float updateRatio) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
 			player->update(ball->getMainBallPosition(), ball->getMainBallRadius(), updateRatio);
-			if (game::currentState == GameState::NOT_READY) {
+			if (currentState == GameState::NOT_READY) {
 				obstacle->resetPosition();
-				game::currentState = GameState::READY;
+				currentState = GameState::READY;
 			}
-
 			if (currentState == GameState::STARTED) {
 				wall->update(*ball, updateRatio);
 				obstacle->update(*ball, updateRatio);
@@ -73,14 +70,9 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 		else {
 			dispatchEvent(UnpausedEvent());
 		}
-
-		bLocked = !bLocked;
 	}
 
-	if (bLocked) {
-		return;
-	}
-
+	if (bPaused) return;
 	if (event.code == sf::Keyboard::G) {
 		currentState = GameState::STARTED;
 	}
@@ -90,27 +82,13 @@ void Stage::onKeyReleased(KeyReleasedEvent & event) {
 
 }
 
-void Stage::onMouseEntered() {
-	mouseLight->startEmit();
-}
-
-void Stage::onMouseLeft() {
-	mouseLight->stopEmit();
-}
-
-void Stage::onMouseMoved(MouseMovedEvent & event) {
-	mouseLight->setEmitPosition(sf::Vector2f(static_cast<float>(event.x), static_cast<float>(event.y)));
-}
-
 void Stage::onMousePressed(MousePressedEvent & event) {
-	if (!bLocked) {
-		if (event.button == sf::Mouse::Left) {
-			currentState = GameState::STARTED;
-		}
+	if (bPaused) return;
+	if (event.button == sf::Mouse::Left) {
+		currentState = GameState::STARTED;
+	}
+	else if (event.button == sf::Mouse::Right) {
 		// debugging feature
-		else if (event.button == sf::Mouse::Right) {
-			currentState = GameState::NOT_READY;
-
-		}
+		currentState = GameState::NOT_READY;
 	}
 }

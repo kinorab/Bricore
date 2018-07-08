@@ -4,7 +4,6 @@
     <ClCompile Include="source\stuff\ball.cpp" />
     <ClCompile Include="source\interact\container.cpp" />
     <ClCompile Include="source\definition\utility.cpp" />
-    <ClCompile Include="source\stuff\ellipse.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\particleSystem.cpp" />
     <ClCompile Include="source\gameSys\skill\skillSystem.cpp" />
@@ -95,7 +94,6 @@
     <ClInclude Include="source\definition\intersects.h" />
     <ClInclude Include="source\definition\matrix.h" />
     <ClInclude Include="source\definition\utility.h" />
-    <ClInclude Include="source\stuff\ellipse.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\gameSys\skill\skillSystem.h" />
@@ -213,6 +211,7 @@
     <ClInclude Include="source\stage.h" />
     <ClInclude Include="source\root.h" />
     <ClInclude Include="source\gameSys\data\data.h" />
+    <ClInclude Include="source\stuff\stuff.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

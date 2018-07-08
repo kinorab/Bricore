@@ -10,17 +10,18 @@
 #include <Windows.h>
 #include <future>
 
+using namespace game;
+
 Game::Game()
-	: mouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) })
-	, graph(new Graphics)
-	, root(new game::Root) {
+	: graph(new Graphics)
+	, root(new Root) {
 	//if (saveData.exist() && root.chooseSave(saveData)) {
 	//	level.reset(saveData);
 	//}
 	//else { 
-	level.reset(new game::Level(game::Mode::NoChoose, game::Diffculty::NoChoose));
+	level.reset(new Level(Mode::NoChoose, Diffculty::NoChoose));
 	//}
-	stage.reset(new game::Stage(level));
+	stage.reset(new Stage(level));
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
 }
@@ -43,7 +44,7 @@ void Game::settleWindow() {
 	window->setVerticalSyncEnabled(true);
 	window->setPosition(sf::Vector2i(window->getPosition().x, 20));
 	ImmAssociateContext(window->getSystemHandle(), 0);
-	//window.setIcon(graph.getIconSize().x, graph.getIconSize().y, graph.getIcon());
+	//window.setIcon(graph->getIconSize().x, graph->getIconSize().y, graph->getIcon());
 	window->setActive(false);
 }
 
@@ -60,12 +61,14 @@ void Game::renderFunc() {
 		elapsed = std::min<float>(elapsed + distribute, updateSpan * 1.5f);
 		while (elapsed > 0.0f) {
 			float updateRatio = std::min<float>(elapsed, updateSpan) / updateSpan;
+			root->tryUpdate(updateRatio);
 			stage->tryUpdate(updateRatio);
 			elapsed -= updateSpan * updateRatio;
 		}
 		// maximum render elapsed cap
 		renderElapsed = std::min<float>(renderElapsed + distribute, graph->getFrameSpan() * 1.5f);
 		if (renderElapsed >= graph->getFrameSpan()) {
+			window->draw(*root);
 			window->draw(*stage);
 			window->display();
 			renderElapsed -= graph->getFrameSpan();
@@ -78,8 +81,8 @@ void Game::renderFunc() {
 void Game::handleEvents(bool & finishing) {
 	while (!eventQueue.empty()) {
 		sf::Event currentEvent = eventQueue.pop();
-		mouseHandler.handle(currentEvent, *stage);
-		keyboardHandler.handle(currentEvent, *stage);
+		root->handle(currentEvent);
+		stage->handle(currentEvent);
 		if (currentEvent.type == sf::Event::Closed) {
 			finishing = true;
 		}

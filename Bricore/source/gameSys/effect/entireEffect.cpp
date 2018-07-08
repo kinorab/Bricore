@@ -6,8 +6,8 @@
 
 using namespace game;
 
-EntireEffect::EntireEffect(const EffectKind<Effect>::Kind effect, const sf::Time &duration)
-	: EffectSystem(duration, false, false, true)
+EntireEffect::EntireEffect(const EffectKind<Effect>::Kind effect, const sf::Time &duration, const bool exist)
+	: EffectSystem(duration, false, false, exist)
 	, effect(std::shared_ptr<Effect>(new Effect(effect))){
 }
 

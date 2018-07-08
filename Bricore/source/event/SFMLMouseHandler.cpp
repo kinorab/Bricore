@@ -7,22 +7,22 @@ namespace game {
 		clientSize(clientSize) {
 	}
 
-	void SFMLMouseHandler::handle(const sf::Event & event, Container & root) {
+	void SFMLMouseHandler::handle(const sf::Event & event, Container & thing) {
 		if (event.type == sf::Event::MouseMoved) {
-			handleMouseMove(event, root);
+			handleMouseMove(event, thing);
 		}
 		else if (event.type == sf::Event::MouseButtonPressed) {
-			handleMouseButtonPressed(event, root);
+			handleMouseButtonPressed(event, thing);
 		}
 		else if (event.type == sf::Event::MouseButtonReleased) {
-			handleMouseButtonReleased(event, root);
+			handleMouseButtonReleased(event, thing);
 		}
 		else if (event.type == sf::Event::MouseLeft) {
-			handleMouseLeft(event, root);
+			handleMouseLeft(event, thing);
 		}
 	}
 
-	void SFMLMouseHandler::handleMouseButtonPressed(const sf::Event & event, Container & root) {
+	void SFMLMouseHandler::handleMouseButtonPressed(const sf::Event & event, Container & thing) {
 		if (!previousContactNode) {
 			return;
 		}
@@ -30,7 +30,7 @@ namespace game {
 		previousContactNode->dispatchEvent(MousePressedEvent(event.mouseButton));
 	}
 
-	void SFMLMouseHandler::handleMouseButtonReleased(const sf::Event & event, Container & root) {
+	void SFMLMouseHandler::handleMouseButtonReleased(const sf::Event & event, Container & thing) {
 		if (!previousContactNode) {
 			return;
 		}
@@ -38,22 +38,22 @@ namespace game {
 		previousContactNode->dispatchEvent(MouseReleasedEvent(event.mouseButton));
 	}
 
-	void SFMLMouseHandler::handleMouseLeft(const sf::Event & event, Container & root) {
+	void SFMLMouseHandler::handleMouseLeft(const sf::Event & event, Container & thing) {
 		sf::Event newEvent;
 		newEvent.type = sf::Event::MouseMoved;
 		newEvent.mouseMove = { -1, -1 };
-		handleMouseMove(newEvent, root);
+		handleMouseMove(newEvent, thing);
 	}
 
-	void SFMLMouseHandler::handleMouseMove(const sf::Event & event, Container & root) {
-		sf::Vector2i mousePosition = { event.mouseMove.x, event.mouseMove.y };
+	void SFMLMouseHandler::handleMouseMove(const sf::Event & event, Container & thing) {
+		const sf::Vector2i & mousePosition{ event.mouseMove.x, event.mouseMove.y };
 		std::shared_ptr<InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > clientSize.x
 			|| mousePosition.y < 0 || mousePosition.y > clientSize.y) {
 			contactNode = nullptr;
 		}
 		else {
-			contactNode = root.getObjectUnderPoint(sf::Vector2f(mousePosition));
+			contactNode = thing.getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
 				contactNode->dispatchEvent(MouseMovedEvent(event.mouseMove));
 			}

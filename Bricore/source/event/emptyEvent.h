@@ -1,6 +1,5 @@
 #pragma once
 
-#include "event.h"
 #include "emptyListener.h"
 
 namespace game {

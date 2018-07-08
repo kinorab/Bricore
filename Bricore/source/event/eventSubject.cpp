@@ -44,5 +44,9 @@ namespace game {
 			return std::get<0>(listener.second) == id;
 		}));
 	}
+
+	int EventSubject::getIdCount() const {
+		return iIdCount;
+	}
 }
 

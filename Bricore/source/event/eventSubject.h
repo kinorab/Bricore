@@ -16,6 +16,8 @@ namespace game {
 		virtual void dispatchEvent(Event & event);
 		virtual void dispatchEvent(Event && event);
 		virtual void removeListener(std::type_index eventType, int id);
+		virtual int getIdCount() const;
+
 	protected:
 		EventSubject() = default;
 		int iIdCount = 0;

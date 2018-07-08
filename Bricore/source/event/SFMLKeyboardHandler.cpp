@@ -11,30 +11,30 @@ namespace game {
 		}
 	}
 
-	void SFMLKeyboardHandler::handle(const sf::Event & event, Container & root) {
+	void SFMLKeyboardHandler::handle(const sf::Event & event, Container & thing) {
 		if (event.type == sf::Event::KeyPressed) {
-			handleKeyPressed(event, root);
+			handleKeyPressed(event, thing);
 		}
 		else if (event.type == sf::Event::KeyReleased) {
-			handleKeyReleased(event, root);
+			handleKeyReleased(event, thing);
 		}
 	}
 
-	void SFMLKeyboardHandler::handleKeyPressed(const sf::Event & event, Container & root) {
+	void SFMLKeyboardHandler::handleKeyPressed(const sf::Event & event, Container & thing) {
 		if (keyDown[event.key.code]) {
 			return;
 		}
 
 		keyDown[event.key.code] = true;
-		root.dispatchEvent(KeyPressedEvent(event.key));
+		thing.dispatchEvent(KeyPressedEvent(event.key));
 	}
 
-	void SFMLKeyboardHandler::handleKeyReleased(const sf::Event & event, Container & root) {
+	void SFMLKeyboardHandler::handleKeyReleased(const sf::Event & event, Container & thing) {
 		if (!keyDown[event.key.code]) {
 			return;
 		}
 
 		keyDown[event.key.code] = false;
-		root.dispatchEvent(KeyReleasedEvent(event.key));
+		thing.dispatchEvent(KeyReleasedEvent(event.key));
 	}
 }

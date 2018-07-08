@@ -68,6 +68,14 @@ bool SkillSystem::isAutoUse() const {
 	return bAutoUse;
 }
 
+bool SkillSystem::isLocked() const {
+	return bLocked;
+}
+
+bool SkillSystem::isSilenced() const {
+	return bSilenced;
+}
+
 const sf::Time & SkillSystem::getDuration() const {
 	return duration;
 }
