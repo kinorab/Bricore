@@ -1,30 +1,25 @@
 #pragma once
+#include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 #include <memory>
-#include <vector>
 
 namespace item {
 	class Brick;
 }
-
 namespace sf {
 	class Color;
+	class Event;
 }
-
 namespace game {
 	class Level;
 }
-
 class Ball;
 
 class Wall :
-	public sf::Drawable
-	, public sf::Transformable {
+	public game::Container {
 public:
 	explicit Wall(const std::shared_ptr<game::Level> level);
-	void update(Ball &ball, const float updateRatio);
+	void resetCopyTarget(const std::shared_ptr<Ball> ball);
 	void loadTexture(const std::string & fileName);
 	void setBricksColor(const sf::Color & color);
 	void setFramesColor(const sf::Color & color);
@@ -43,6 +38,8 @@ public:
 	virtual ~Wall();
 
 protected:
+	virtual void update(const float updateRatio) override;
+	virtual void handle(const sf::Event & event) override;
 	void settlePlace();
 
 private:
@@ -57,5 +54,6 @@ private:
 	sf::Vector2f sideLength;
 	sf::Vector2f interval;
 	sf::Vector2f whiteSpace;
-	std::shared_ptr<game::Level> level;
+	std::shared_ptr<game::Level> m_level;
+	std::shared_ptr<Ball> m_ball;
 };

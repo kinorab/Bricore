@@ -10,23 +10,27 @@
 #include "event/keyboard/keyEvent.h"
 
 using namespace game;
+bool Root::bInstance(false);
 
 Root::Root()
 	: hud(new HUD)
 	, mouseLight(new ParticleSystem(2000))
 	, mouseHandler(new SFMLMouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }))
 	, keyboardHandler(new SFMLKeyboardHandler) {
+	assert(!bInstance);
 	addChild({ hud, mouseLight });
 	addListener(std::make_shared<EmptyListener<MouseEnteredEvent>>([this] { onMouseEntered(); }));
 	addListener(std::make_shared<EmptyListener<MouseLeftEvent>>([this] { onMouseLeft(); }));
 	addListener(std::make_shared<EventListener<MouseMovedEvent>>([this](auto & event) { onMouseMoved(event); }));
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
+	bInstance = true;
 }
 
 void Root::handle(const sf::Event & event) {
-	mouseHandler->handle(event, *this);
+	mouseHandler->handle(event, *this, true);
 	keyboardHandler->handle(event, *this);
+	Container::handle(event);
 }
 
 Root::~Root() {

@@ -11,8 +11,7 @@ namespace game {
 	class SkillHandler {
 		using State = typename SkillState<T>::State;
 	public:
-		explicit SkillHandler(const sf::Keyboard::Key useKey = sf::Keyboard::Unknown
-			, const sf::Keyboard::Key swapKey = sf::Keyboard::Unknown);
+		SkillHandler();
 		// insert a skill record
 		void insert(const std::shared_ptr<T> skill);
 		// remove a skill record
@@ -32,9 +31,6 @@ namespace game {
 		// false will warn user
 		bool trySwap();
 		~SkillHandler() = default;
-
-		sf::Keyboard::Key useKey;
-		sf::Keyboard::Key swapKey;
 
 	private:
 		std::multimap<State, std::shared_ptr<T>> skillRecords;

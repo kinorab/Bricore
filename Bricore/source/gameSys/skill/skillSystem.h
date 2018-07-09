@@ -16,6 +16,8 @@ namespace game {
 	class SkillSystem : 
 		public System {
 	public:
+		// apply handler to insert
+		virtual void initialize() = 0;
 		// interact on battle area
 		virtual void handleSkill(const sf::Event * const event) = 0;
 		// interact before entering next level

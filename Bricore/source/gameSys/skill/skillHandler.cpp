@@ -13,9 +13,7 @@ template class SkillHandler<BallSkill>;
 template class SkillHandler<BossSkill>;
 
 template<typename T>
-SkillHandler<T>::SkillHandler(const sf::Keyboard::Key useKey, const sf::Keyboard::Key swapKey) 
-	: useKey(useKey)
-	, swapKey(swapKey) {
+SkillHandler<T>::SkillHandler() {
 }
 
 template<typename T>

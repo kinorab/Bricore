@@ -48,9 +48,10 @@ namespace game {
 				node.reset(new DrawableNode(element));
 			}
 
-			if (node->getParent() != nullptr) {
+			// cannot give copy children from root to stage(two parents)
+			/*if (node->getParent() != nullptr) {
 				node->getParent()->removeChild({ node });
-			}
+			}*/
 
 			node->setParent(this);
 			return node;
@@ -198,6 +199,13 @@ namespace game {
 		std::for_each(children.begin(), children.end(),
 			[&](const std::shared_ptr<InteractiveObject> & child) {
 			child->tryUpdate(updateRatio);
+		});
+	}
+
+	void Container::handle(const sf::Event & event) {
+		std::for_each(children.begin(), children.end(),
+			[&](const std::shared_ptr<InteractiveObject> & child) {
+			child->tryHandle(event);
 		});
 	}
 

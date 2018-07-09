@@ -1,10 +1,7 @@
 #pragma once
-
+#include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 #include <memory>
-#include <vector>
 
 namespace item {
 	class Block;
@@ -14,21 +11,19 @@ namespace sf {
 	class RenderTarget;
 	class RenderStates;
 	class Color;
+	class Event;
 }
 namespace game {
 	class Level;
 }
-
+class SubPlayer;
 class Ball;
 
 class Obstacle :
-	public sf::Drawable
-	, public sf::Transformable {
-
+	public game::Container {
 public:
 	explicit Obstacle(const std::shared_ptr<game::Level> level);
-	void update(Ball &ball, const float updateRatio);
-	void resettle();
+	void resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer, const std::shared_ptr<Ball> ball);
 	void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
 	void setBlockColor(const size_t number, const sf::Color &all);
 	void setAllColor(const std::vector <sf::Color> &color);
@@ -44,11 +39,16 @@ public:
 	const sf::Vector2f & getSpeed(const size_t number) const;
 
 protected:
+	virtual void update(const float updateRatio) override;
+	virtual void handle(const sf::Event & event) override;
 	void blocksCollision(const size_t);
+	void resettle();
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 	std::vector <std::shared_ptr<item::Block>> blocks;
-	std::shared_ptr<game::Level> level;
+	std::shared_ptr<game::Level> m_level;
+	std::shared_ptr<Ball> m_ball;
+	std::shared_ptr<const SubPlayer> c_subPlayer;
 };

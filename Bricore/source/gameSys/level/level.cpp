@@ -12,7 +12,8 @@ Level::Level(const Mode mode, const Diffculty diffculty, const size_t level)
 	: uTotalLevel(100)
 	, mode(mode)
 	, diffculty(diffculty)
-	, currentKind(NoChoose) {
+	, currentKind(NoChoose)
+	, bDefaultControlKeySettled(false) {
 	// instance is only one
 	assert(!bInstance);
 	bInstance = true;
@@ -39,6 +40,10 @@ void Level::finishLevel() {
 	else {
 		throw std::out_of_range("Is out of total level.");
 	}
+}
+
+bool Level::isDefaultControlKeySettled() const {
+	return bDefaultControlKeySettled;
 }
 
 size_t Level::getcurrentLevel() const {

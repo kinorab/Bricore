@@ -1,5 +1,6 @@
 #include "obstacle.h"
 #include "ball.h"
+#include "subPlayer.h"
 #include "component/block.h"
 #include "component/globular.h"
 #include "../gameSys/level/level.h"
@@ -14,13 +15,13 @@ using namespace sf;
 using namespace item;
 
 Obstacle::Obstacle(const std::shared_ptr<game::Level> level) 
-	: level(std::move(level)) {
+	: m_level(std::move(level)) {
 	resettle();
 }
 
 void Obstacle::resettle() {
-	const std::vector<Vector2f> & position = level->deploy->getBlockDeploy().position;
-	const std::vector<Vector2f> & sideLength = level->deploy->getBlockDeploy().sideLength;
+	const std::vector<Vector2f> & position = m_level->deploy->getBlockDeploy().position;
+	const std::vector<Vector2f> & sideLength = m_level->deploy->getBlockDeploy().sideLength;
 	if (position.size() != sideLength.size()) {
 		throw std::out_of_range("Position size not equal to side-length size.");
 	}
@@ -33,22 +34,30 @@ void Obstacle::resettle() {
 	auto &instance = Zone::getInstance();
 	instance.settleZone(Zone::Obstacle, Vector2f(0.0f, instance.getZone(Zone::Wall).getSize().y + AREAINTERVAL)
 	, LEVEL_HEIGHT - (instance.getZone(Zone::Player).getSize().y + instance.getZone(Zone::Wall).getSize().y + 2 * AREAINTERVAL));
-	setAllVerticeColor(level->deploy->getBlockDeploy().color);
-	setAllSpeed(level->deploy->getBlockDeploy().speed);
+	setAllVerticeColor(m_level->deploy->getBlockDeploy().color);
+	setAllSpeed(m_level->deploy->getBlockDeploy().speed);
 }
 
 
-void Obstacle::update(Ball &ball, const float updateRatio) {
+void Obstacle::update(const float updateRatio) {
 	for (size_t i = 0; i < blocks.size(); ++i) {
 		blocks.at(i)->update(updateRatio);
 		blocksCollision(i);
-		for (auto element : ball.enteredObstacleArea()) {
+		for (auto element : m_ball->enteredObstacleArea()) {
 			element->isCollidedObstacle(blocks.at(i).get());
 		}
 	}
 	if (game::currentState == GameState::LEVEL_FINISHED) {
 		resettle();
 	}
+}
+
+void Obstacle::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer, const std::shared_ptr<Ball> ball) {
+	m_ball = std::move(ball);
+	c_subPlayer = std::move(subPlayer);
+}
+
+void Obstacle::handle(const sf::Event & event) {
 }
 
 void Obstacle::setBlockColor(const size_t number, const Color &c1, const Color &c2, const Color &c3, const Color &c4) {

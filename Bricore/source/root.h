@@ -19,11 +19,11 @@ namespace game {
 		public Container {
 	public:
 		Root();
-		void handle(const sf::Event & event);
 		virtual ~Root();
 
 	protected:
 		virtual void update(const float updateRatio) override;
+		virtual void handle(const sf::Event & event) override;
 		void onMouseEntered();
 		void onMouseLeft();
 		void onMouseMoved(MouseMovedEvent & event);
@@ -33,6 +33,7 @@ namespace game {
 		std::unique_ptr<SFMLKeyboardHandler> keyboardHandler;
 
 	private:
+		static bool bInstance;
 		std::shared_ptr<HUD> hud;
 		std::shared_ptr<ParticleSystem> mouseLight;
 	};

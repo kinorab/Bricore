@@ -11,3 +11,6 @@ void LifeBar::handleBar(const sf::Event * const event) {
 
 LifeBar::~LifeBar() {
 }
+
+void LifeBar::draw(sf::RenderTarget &, sf::RenderStates) const {
+}

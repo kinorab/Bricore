@@ -85,7 +85,16 @@ namespace game {
 		}
 	}
 
+	void InteractiveObject::tryHandle(const sf::Event & event) {
+		if (getEnabled()) {
+			handle(event);
+		}
+	}
+
 	void InteractiveObject::update(const float) {
+	}
+
+	void InteractiveObject::handle(const sf::Event & event) {
 	}
 
 	void InteractiveObject::draw(sf::RenderTarget & target, sf::RenderStates states) const {

@@ -12,7 +12,7 @@ namespace game {
 	class Deploy {
 		class ProxyBlock {
 		public:
-			ProxyBlock(const sys::Matrix<sf::Vector2f> & positionDeploy
+			explicit ProxyBlock(const sys::Matrix<sf::Vector2f> & positionDeploy
 				, const sys::Matrix<sf::Vector2f> & sideLengthDeploy
 				, const sys::Matrix<sf::Color> & colorDeploy
 				, const sys::Matrix<sf::Vector2f> & speedDeploy
@@ -24,7 +24,7 @@ namespace game {
 		};
 		class ProxyBrick {
 		public:
-			ProxyBrick(const sys::Matrix<sf::Color> & colorDeploy
+			explicit ProxyBrick(const sys::Matrix<sf::Color> & colorDeploy
 				, const sys::Matrix<float> & brickDeploy
 				, const size_t currentLevel);
 			std::vector<sf::Color> color;

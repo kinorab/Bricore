@@ -1,4 +1,6 @@
 #include "ball.h"
+#include "player.h"
+#include "subPlayer.h"
 #include "component/block.h"
 #include "component/mainBall.h"
 #include "component/shadowBall.h"
@@ -15,10 +17,12 @@ Ball::Ball(const std::shared_ptr<game::Level> level)
 	: bMultiple(false)
 	, bCollision(false)
 	, mainBall(new MainBall)
-	, level(std::move(level)){
+	, m_level(std::move(level)){
 }
 
-void Ball::update(const sys::DPointf &playerDP, const float playerSpeed, const float updateRatio) {
+void Ball::update(const float updateRatio) {
+	const sys::DPointf playerDP(c_player->getDP());
+	const float playerSpeed = c_player->getSpeed();
 	mainBall->move(playerDP, playerSpeed, updateRatio);
 	for (size_t i = 0; i < shadowBalls.size(); ++i) {
 		shadowBalls.at(i)->move(playerDP, playerSpeed, updateRatio);
@@ -29,6 +33,16 @@ void Ball::update(const sys::DPointf &playerDP, const float playerSpeed, const f
 			ballsCollision(i);
 		}
 	}
+}
+
+void Ball::resetCopyTarget(const std::shared_ptr<const Player> player
+	, const std::shared_ptr<const SubPlayer> subPlayer) {
+	c_player = std::move(player);
+	c_subPlayer = std::move(subPlayer);
+	followPlayer();
+}
+
+void Ball::handle(const sf::Event & event) {
 }
 
 void Ball::initializeBall() {
@@ -42,7 +56,8 @@ void Ball::initializeBall() {
 	}
 }
 
-void Ball::followPlayer(const Vector2f &pos) {
+void Ball::followPlayer() {
+	sf::Vector2f pos{ c_player->getTopCenterPos() };
 	mainBall->setPosition(pos.x, pos.y - mainBall->getRadius() - 1.f);
 }
 

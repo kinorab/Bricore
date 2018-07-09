@@ -37,6 +37,8 @@ namespace game {
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 		virtual void update(const float updateRatio) override;
+		virtual void handle(const sf::Event &event) override;
+
 	private:
 		std::vector<std::shared_ptr<InteractiveObject>> children;
 	};

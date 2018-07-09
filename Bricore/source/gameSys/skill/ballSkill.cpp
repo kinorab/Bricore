@@ -11,14 +11,15 @@ size_t BallSkill::uCurrentCarry(0);
 size_t BallSkill::uMaxOnField(2);
 size_t BallSkill::uCurrentOnField(0);
 std::map<std::string, std::shared_ptr<sf::Texture>> BallSkill::framePreviews;
-SkillHandler<BallSkill> BallSkill::handler(sf::Keyboard::D, sf::Keyboard::E);
+SkillHandler<BallSkill> BallSkill::handler;
+BallSkill::SkillKey BallSkill::key;
 
 BallSkill::BallSkill(const Kind skillName, const sf::Time duration
-	, const std::vector<Effect::Kind> &effects
-	, const bool autoUse, const std::vector<Attribute::Kind> &attributes
-	, const bool exist)
+	, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
+	, const bool autoUse, const bool exist)
 	: skill(skillName, SkillContent{ State::None, nullptr, nullptr })
-	, SkillSystem(duration, autoUse, exist) {
+	, SkillSystem(duration, autoUse, exist)
+	, bInitialize(false) {
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
 		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
@@ -26,6 +27,12 @@ BallSkill::BallSkill(const Kind skillName, const sf::Time duration
 		skillAttributes.push_back(std::make_shared<Attribute>(element));
 	});
 	handler.insert(shared_from_this());
+}
+
+void BallSkill::initialize() {
+	if (bInitialize) return;
+	handler.insert(shared_from_this());
+	bInitialize = true;
 }
 
 void BallSkill::loadFrame(const std::vector<std::string> &fileName, const bool isSmooth) {
@@ -48,7 +55,7 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 		break;
 	case State::OnFirstField:
 		if (bSilenced) break;
-		if (event->key.code == handler.useKey || bAutoUse) setState(State::Using);
+		if (event->key.code == key.ballSkill || bAutoUse) setState(State::Using);
 		break;
 	case State::OnSecondField:
 		if (bLocked) break;
@@ -77,7 +84,7 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 		break;
 	}
 	if (event->type != sf::Event::KeyPressed) return;
-	if (event->key.code == handler.swapKey) {
+	if (event->key.code == key.ballSkillSwap) {
 		if (handler.trySwap()) {
 		}
 		else {
@@ -160,9 +167,8 @@ void BallSkill::extendDropping(size_t number) {
 	uMaxDropping += number;
 }
 
-void BallSkill::resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::Key swapKey) {
-	handler.useKey = useKey;
-	handler.swapKey = swapKey;
+void BallSkill::resetKey(const sf::Keyboard::Key ballSkill, const sf::Keyboard::Key ballSkillSwap) {
+	key = { ballSkill, ballSkillSwap };
 }
 
 size_t BallSkill::getMaxDropping() {
@@ -179,6 +185,10 @@ size_t BallSkill::getMaxOnField() {
 
 size_t BallSkill::getCurrentOnField() {
 	return uCurrentOnField;
+}
+
+bool BallSkill::isInitialize() const {
+	return bInitialize;
 }
 
 BallSkill::State BallSkill::getState() const {

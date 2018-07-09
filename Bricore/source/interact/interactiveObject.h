@@ -7,6 +7,7 @@
 namespace sf {
 	class RenderTarget;
 	class RenderStates;
+	class Event;
 }
 
 namespace game {
@@ -32,10 +33,12 @@ namespace game {
 		virtual void setEnabled(bool value);
 		virtual void setParent(Container * parent);
 		virtual void tryUpdate(const float updateRatio);
+		virtual void tryHandle(const sf::Event &event);
 	protected:
 		InteractiveObject();
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 		virtual void update(const float updateRatio);
+		virtual void handle(const sf::Event &event);
 	private:
 		bool bEnabled;
 		Container * parent;

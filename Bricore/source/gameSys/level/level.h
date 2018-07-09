@@ -2,6 +2,8 @@
 #include "deploy.h"
 #include <memory>
 
+class Game;
+
 namespace game {
 	enum class Diffculty {
 		NoChoose,
@@ -17,6 +19,7 @@ namespace game {
 		_VSMode		// defender vs defender or pioneer vs pioneer
 	};
 	class Level {
+		friend class Game;
 	public:
 		enum Kind {
 			NoChoose,
@@ -31,6 +34,7 @@ namespace game {
 		void changeSetting(const Mode mode, const Diffculty difficulty, const size_t level);
 		void finishLevel();
 
+		bool isDefaultControlKeySettled() const;
 		size_t getcurrentLevel() const;
 		size_t getTotalLevel() const;
 		Mode getMode() const;
@@ -45,6 +49,7 @@ namespace game {
 		void settleKind();
 
 		static bool bInstance;
+		bool bDefaultControlKeySettled;
 		size_t uCurrentLevel;
 		size_t uTotalLevel;
 		Mode mode;

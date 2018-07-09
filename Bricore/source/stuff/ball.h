@@ -1,18 +1,16 @@
 #pragma once
+#include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/System/Clock.hpp>
-#include <vector>
 #include <memory>
 
 namespace sf {
 	class RenderTarget;
 	class RenderStates;
+	class Event;
 	class Color;
 }
-
 namespace item {
 	class MainBall;
 	class ShadowBall;
@@ -20,25 +18,24 @@ namespace item {
 	class Block;
 	class Brick;
 }
-
 namespace game {
 	class Level;
 }
+class Player;
+class SubPlayer;
 
 class Ball :
-	public sf::Drawable
-	, public sf::Transformable {
-
+	public game::Container {
 public:
 	explicit Ball(const std::shared_ptr<game::Level> level);
-	void update(const sys::DPointf &playerDP, const float playerSpeed, const float updateRatio);
+	void resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<const SubPlayer> subPlayer);
 	void initializeBall();
-	void followPlayer(const sf::Vector2f &pos);
+	void followPlayer();
+	void ballDivided(const size_t numbers);
 	// return the balls of entered obstacleArea
 	std::vector<std::shared_ptr<item::Globular>> enteredObstacleArea() const;
 	// return the balls of entered wallArea
 	std::vector<std::shared_ptr<item::Globular>> enteredWallArea() const;
-	void ballDivided(const size_t numbers);
 
 	float getMainBallRadius() const;
 	size_t getBallsAmount() const;
@@ -46,6 +43,8 @@ public:
 	virtual ~Ball();
 
 protected:
+	virtual void update(const float updateRatio) override;
+	virtual void handle(const sf::Event & event) override;
 	void ballsCollision(const size_t);
 
 private:
@@ -55,5 +54,7 @@ private:
 	bool bCollision;
 	std::shared_ptr<item::MainBall> mainBall;
 	std::vector<std::shared_ptr<item::ShadowBall>> shadowBalls;
-	std::shared_ptr<game::Level> level;
+	std::shared_ptr<game::Level> m_level;
+	std::shared_ptr<const Player> c_player;
+	std::shared_ptr<const SubPlayer> c_subPlayer;
 };

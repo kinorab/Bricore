@@ -21,9 +21,10 @@ Game::Game()
 	//else { 
 	level.reset(new Level(Mode::NoChoose, Diffculty::NoChoose));
 	//}
-	stage.reset(new Stage(level));
+	stage.reset(new Stage(level, root));
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
+	level->bDefaultControlKeySettled = true;
 }
 
 Game::~Game() = default;
@@ -68,7 +69,6 @@ void Game::renderFunc() {
 		// maximum render elapsed cap
 		renderElapsed = std::min<float>(renderElapsed + distribute, graph->getFrameSpan() * 1.5f);
 		if (renderElapsed >= graph->getFrameSpan()) {
-			window->draw(*root);
 			window->draw(*stage);
 			window->display();
 			renderElapsed -= graph->getFrameSpan();
@@ -81,8 +81,8 @@ void Game::renderFunc() {
 void Game::handleEvents(bool & finishing) {
 	while (!eventQueue.empty()) {
 		sf::Event currentEvent = eventQueue.pop();
-		root->handle(currentEvent);
-		stage->handle(currentEvent);
+		root->tryHandle(currentEvent);
+		stage->tryHandle(currentEvent);
 		if (currentEvent.type == sf::Event::Closed) {
 			finishing = true;
 		}

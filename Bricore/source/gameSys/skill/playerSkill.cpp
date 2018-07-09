@@ -11,22 +11,28 @@ size_t PlayerSkill::uMaxCarry(3);
 size_t PlayerSkill::uCurrentCarry(0);
 size_t PlayerSkill::uMaxOnField(2);
 size_t PlayerSkill::uCurrentOnField(0);
-SkillHandler<PlayerSkill> PlayerSkill::handler(sf::Keyboard::F, sf::Keyboard::R);
+SkillHandler<PlayerSkill> PlayerSkill::handler;
+PlayerSkill::SkillKey PlayerSkill::key;
 
 PlayerSkill::PlayerSkill(const Kind skillName, const sf::Time duration
-	, const std::vector<Effect::Kind> &effects, const bool autoUse
-	, const std::vector<Attribute::Kind> &attributes, const std::shared_ptr<EnergyBar> energyBar
-	, const bool exist)
+	, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
+	, const bool autoUse, const bool exist, const std::shared_ptr<EnergyBar> energyBar)
 	: skill(skillName, SkillContent{ State::None, nullptr })
 	, SkillSystem(duration, autoUse, exist)
-	, energyBar(std::move(energyBar)) {
+	, m_energyBar(std::move(energyBar))
+	, bInitialize(false) {
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
 		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
 		skillAttributes.push_back(std::make_shared<Attribute>(element));
 	});
+}
+
+void PlayerSkill::initialize() {
+	if (bInitialize) return;
 	handler.insert(shared_from_this());
+	bInitialize = true;
 }
 
 void PlayerSkill::handleSkill(const sf::Event * const event) {
@@ -35,14 +41,14 @@ void PlayerSkill::handleSkill(const sf::Event * const event) {
 	State currentState = skill.second.currentState;
 	switch (currentState) {
 	case State::OnCharging:
-		if (!energyBar->isFull() || bLocked) break;
+		if (!m_energyBar->isFull() || bLocked) break;
 		if (handler.tryEnterField(std::bind(&PlayerSkill::setState, this, _1))) {
-			energyBar->clear();
+			m_energyBar->clear();
 		}
 		break;
 	case State::OnFirstField:
 		if (bSilenced) break;
-		if (event->key.code == handler.useKey || bAutoUse) setState(State::Using);
+		if (event->key.code == key.playerSkill || bAutoUse) setState(State::Using);
 		break;
 	case State::OnSecondField:
 		if (bLocked) break;
@@ -71,7 +77,7 @@ void PlayerSkill::handleSkill(const sf::Event * const event) {
 		break;
 	}
 	if (event->type != sf::Event::KeyPressed) return;
-	if (event->key.code == handler.swapKey) {
+	if (event->key.code == key.playerSkillSwap) {
 		if (handler.trySwap()) {
 		}
 		else {
@@ -114,9 +120,9 @@ void PlayerSkill::extendField(const size_t number) {
 	uMaxOnField += number;
 }
 
-void PlayerSkill::resetKey(const sf::Keyboard::Key useKey, const sf::Keyboard::Key swapKey) {
-	handler.useKey = useKey;
-	handler.swapKey = swapKey;
+void PlayerSkill::resetKey(const sf::Keyboard::Key playerSkill, const sf::Keyboard::Key playerSkillSwap
+	, const sf::Keyboard::Key switchToPrevChargingSkill, const sf::Keyboard::Key switchToNextChargingSkill) {
+	key = { playerSkill, playerSkillSwap, switchToPrevChargingSkill, switchToNextChargingSkill };
 }
 
 void PlayerSkill::setState(const State state) {
@@ -155,6 +161,10 @@ size_t PlayerSkill::getMaxOnField() {
 
 size_t PlayerSkill::getCurrentOnField() {
 	return uCurrentOnField;
+}
+
+bool PlayerSkill::isInitialize() const {
+	return bInitialize;
 }
 
 PlayerSkill::State PlayerSkill::getState() const {

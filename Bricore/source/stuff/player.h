@@ -1,9 +1,6 @@
 #pragma once
-
+#include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -14,19 +11,27 @@ namespace sf {
 	class RenderTarget;
 	class RenderStates;
 	class Color;
+	class Event;
 }
 namespace game {
 	class Level;
+	class PlayerSkill;
+	class BallSkill;
+	class EnergyBar;
 }
+class Ball;
+class SubPlayer;
 
 class Player :
-	public sf::Drawable
-	, public sf::Transformable {
-
+	public game::Container {
 public:
-	Player();
-	void update(const sf::Vector2f &ballPos, const float ballRadius, const float updateRatio);
-	void setPlayerKey(const sf::Keyboard::Key left, const sf::Keyboard::Key right);
+	explicit Player(const std::shared_ptr<game::Level> level);
+	void resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer, const std::shared_ptr<Ball> ball);
+	void setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Keyboard::Key rightMove
+		, const sf::Keyboard::Key shot, const sf::Keyboard::Key playerSkill
+		, const sf::Keyboard::Key playerSkillSwap, const sf::Keyboard::Key ballSkill
+		, const sf::Keyboard::Key ballSkillSwap, const sf::Keyboard::Key switchToPrevChargingSkill
+		, const sf::Keyboard::Key switchToNextChargingSkill);
 
 	float getSpeed() const;
 	const sf::Vector2f & getPosition() const;
@@ -36,23 +41,36 @@ public:
 	virtual ~Player();
 
 protected:
+	virtual void update(const float updateRatio) override;
+	virtual void handle(const sf::Event & event) override;
 	void setFlashPosition(const sf::Vector2f &);
 	void setFlashFillColor(const sf::Color &);
 	void flashElapsed();
 	void flashRange(sf::Sound & sound, const sf::Vector2f ballPos, const float radius);
+	struct ControlKey {
+		sf::Keyboard::Key leftMove;
+		sf::Keyboard::Key rightMove;
+		sf::Keyboard::Key shot;
+	};
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+	virtual void defaultKeySettle();
 
 	bool bFlash;
 	bool bFlashCD;
 	float fSpeed;
+	ControlKey key;
 	sf::Clock CDTime;
 	sf::Clock elapsed;
 	sf::RectangleShape board;
 	sf::RectangleShape redRange;
 	sf::RectangleShape yellowRange;
-	sf::Keyboard::Key leftMoveKey;
-	sf::Keyboard::Key rightMoveKey;
+	std::shared_ptr<game::EnergyBar> energyBar;
+	std::vector<std::shared_ptr<game::PlayerSkill>> playerSkills;
+	std::vector<std::shared_ptr<game::BallSkill>> ballSkills;
+	std::shared_ptr<game::Level> m_level;
+	std::shared_ptr<Ball> m_ball;
+	std::shared_ptr<const SubPlayer> c_subPlayer;
 };
 

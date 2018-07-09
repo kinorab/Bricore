@@ -15,21 +15,21 @@ using namespace item;
 Wall::Wall(const std::shared_ptr<game::Level> level)
 	: whiteSpace(0.0f, 0.0f)
 	, bChangeEntity(false)
-	, level(std::move(level)) {
+	, m_level(std::move(level)) {
 	resettle();
 }
 
-void Wall::update(Ball &ball, const float updateRatio) {
+void Wall::update(const float updateRatio) {
 	if (bricks.empty()) {
-		level->finishLevel();
+		m_level->finishLevel();
 		resettle();
 		return;
 	}
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
-		for (auto element : ball.enteredWallArea()) {
+		for (auto element : m_ball->enteredWallArea()) {
 			if (element->isCollidedWall(bricks.at(i).get())) {
 				if (std::dynamic_pointer_cast<MainBall>(element)) {
-					ball.ballDivided(10);
+					m_ball->ballDivided(10);
 				}
 				bricks.erase(bricks.begin() + i);
 				--i;
@@ -37,6 +37,13 @@ void Wall::update(Ball &ball, const float updateRatio) {
 			}
 		}
 	}
+}
+
+void Wall::resetCopyTarget(const std::shared_ptr<Ball> ball) {
+	m_ball = std::move(ball);
+}
+
+void Wall::handle(const sf::Event & event) {
 }
 
 void Wall::loadTexture(const std::string & fileName) {
@@ -78,13 +85,13 @@ void Wall::setFrameSize(const float frameSize) {
 }
 
 void Wall::resettle() {
-	const size_t rowCount = static_cast<size_t>(level->deploy->getBrickDeploy().it.at(0));
-	const float wid = level->deploy->getBrickDeploy().it.at(1);
-	const float hei = level->deploy->getBrickDeploy().it.at(2);
-	const Vector2f &interval = sf::Vector2f(level->deploy->getBrickDeploy().it.at(3)
-		, level->deploy->getBrickDeploy().it.at(4));
-	const float frameSize = level->deploy->getBrickDeploy().it.at(5);
-	const float whiteSpaceY = level->deploy->getBrickDeploy().it.at(6);
+	const size_t rowCount = static_cast<size_t>(m_level->deploy->getBrickDeploy().it.at(0));
+	const float wid = m_level->deploy->getBrickDeploy().it.at(1);
+	const float hei = m_level->deploy->getBrickDeploy().it.at(2);
+	const Vector2f &interval = sf::Vector2f(m_level->deploy->getBrickDeploy().it.at(3)
+		, m_level->deploy->getBrickDeploy().it.at(4));
+	const float frameSize = m_level->deploy->getBrickDeploy().it.at(5);
+	const float whiteSpaceY = m_level->deploy->getBrickDeploy().it.at(6);
 
 	if (wid <= 0.0f || hei <= 0.0f
 		|| interval.x < 0.0f || interval.y < 0.0f
@@ -105,7 +112,7 @@ void Wall::resettle() {
 	}
 	bChangeEntity = true;
 	settlePlace();
-	setBricksColor(level->deploy->getBrickDeploy().color.at(0));
+	setBricksColor(m_level->deploy->getBrickDeploy().color.at(0));
 }
 
 size_t Wall::getBrickAmount() const {

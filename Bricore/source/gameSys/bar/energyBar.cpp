@@ -12,3 +12,7 @@ void EnergyBar::handleBar(const sf::Event * const event) {
 
 EnergyBar::~EnergyBar() {
 }
+
+void EnergyBar::draw(sf::RenderTarget &, sf::RenderStates) const {
+
+}

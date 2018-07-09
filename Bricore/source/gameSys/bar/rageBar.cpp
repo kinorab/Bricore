@@ -11,3 +11,6 @@ void RageBar::handleBar(const sf::Event * const event) {
 
 RageBar::~RageBar() {
 }
+
+void RageBar::draw(sf::RenderTarget &, sf::RenderStates) const {
+}
