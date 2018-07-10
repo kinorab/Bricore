@@ -1,6 +1,6 @@
 #pragma once
-#include "../system.h"
-#include "../item/enerma.h"
+#include "../../system.h"
+#include "../../item/enerma.h"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <memory>

@@ -1,12 +1,13 @@
 #include "ball.h"
 #include "player.h"
 #include "subPlayer.h"
-#include "component/block.h"
 #include "component/mainBall.h"
 #include "component/shadowBall.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
+#include "../event/SFMLKeyboardHandler.h"
+#include "../event/SFMLMouseHandler.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 
@@ -17,7 +18,7 @@ Ball::Ball(const std::shared_ptr<game::Level> level)
 	: bMultiple(false)
 	, bCollision(false)
 	, mainBall(new MainBall)
-	, m_level(std::move(level)){
+	, m_level(std::move(level)) {
 }
 
 void Ball::update(const float updateRatio) {
@@ -27,6 +28,8 @@ void Ball::update(const float updateRatio) {
 	for (size_t i = 0; i < shadowBalls.size(); ++i) {
 		shadowBalls.at(i)->move(playerDP, playerSpeed, updateRatio);
 		if (shadowBalls.at(i)->isBroke()) {
+			// remove need to be first
+			removeChild({ shadowBalls.at(i) });
 			shadowBalls.erase(shadowBalls.begin() + i);
 		}
 		if (bMultiple) {
@@ -43,10 +46,14 @@ void Ball::resetCopyTarget(const std::shared_ptr<const Player> player
 }
 
 void Ball::handle(const sf::Event & event) {
+	mouseHandler->handle(event, *this, false);
+	keyboardHandler->handle(event, *this);
 }
 
 void Ball::initializeBall() {
 	if (!mainBall->isSettle()) {
+		removeAllChildren();
+		addChild({ mainBall });
 		shadowBalls.clear();
 		mainBall->initialize();
 	}
@@ -91,7 +98,9 @@ std::vector<std::shared_ptr<item::Globular>> Ball::enteredWallArea() const {
 
 void Ball::ballDivided(const size_t numbers) {
 	for (size_t i = 0; i < numbers; ++i) {
-		shadowBalls.push_back(std::shared_ptr<ShadowBall>(new ShadowBall(mainBall.get())));
+		auto shadowBall = std::make_shared<ShadowBall>(mainBall.get());
+		addChild({ shadowBall });
+		shadowBalls.push_back(shadowBall);
 	}
 	bCollision = false;
 	bMultiple = true;
@@ -109,14 +118,13 @@ size_t Ball::getBallsAmount() const {
 	return shadowBalls.size() + 1;
 }
 
-Ball::~Ball() { }
+Ball::~Ball() {
+	removeAllChildren();
+}
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
 	states.transform *= getTransform();
-	target.draw(*mainBall, states);
-	for (size_t i = 0; i < shadowBalls.size(); ++i) {
-		target.draw(*shadowBalls.at(i), states);
-	}
+	Container::draw(target, states);
 }
 
 void Ball::ballsCollision(const size_t number) {

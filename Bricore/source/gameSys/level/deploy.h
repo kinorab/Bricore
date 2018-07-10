@@ -33,8 +33,8 @@ namespace game {
 	public:
 		explicit Deploy(Level * level);
 		// deployment component
-		const ProxyBlock getBlockDeploy() const noexcept;
-		const ProxyBrick getBrickDeploy() const noexcept;
+		const ProxyBlock getBlock() const noexcept;
+		const ProxyBrick getBrick() const noexcept;
 		virtual ~Deploy();
 
 	private:

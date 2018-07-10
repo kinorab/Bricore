@@ -62,8 +62,8 @@ void Game::renderFunc() {
 		elapsed = std::min<float>(elapsed + distribute, updateSpan * 1.5f);
 		while (elapsed > 0.0f) {
 			float updateRatio = std::min<float>(elapsed, updateSpan) / updateSpan;
-			root->tryUpdate(updateRatio);
-			stage->tryUpdate(updateRatio);
+			auto rootFunc = std::async(std::launch::async, &Root::update, root, updateRatio);
+			auto stageFunc = std::async(std::launch::async, &Stage::update, stage, updateRatio);
 			elapsed -= updateSpan * updateRatio;
 		}
 		// maximum render elapsed cap
@@ -81,8 +81,8 @@ void Game::renderFunc() {
 void Game::handleEvents(bool & finishing) {
 	while (!eventQueue.empty()) {
 		sf::Event currentEvent = eventQueue.pop();
-		root->tryHandle(currentEvent);
-		stage->tryHandle(currentEvent);
+		root->handle(currentEvent);
+		stage->handle(currentEvent);
 		if (currentEvent.type == sf::Event::Closed) {
 			finishing = true;
 		}

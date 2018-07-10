@@ -22,23 +22,21 @@ namespace game {
 		virtual ~InteractiveObject();
 		using EventSubject::addListener;
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
 		using EventSubject::dispatchEvent;
 		virtual void dispatchEvent(UIEvent & event);
 		virtual void dispatchEvent(UIEvent && event);
-		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
 		virtual bool getEnabled() const;
 		virtual Container * getParent();
 		virtual void onDisabled();
 		virtual void onEnabled();
 		virtual void setEnabled(bool value);
 		virtual void setParent(Container * parent);
-		virtual void tryUpdate(const float updateRatio);
-		virtual void tryHandle(const sf::Event &event);
+
 	protected:
 		InteractiveObject();
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-		virtual void update(const float updateRatio);
-		virtual void handle(const sf::Event &event);
+
 	private:
 		bool bEnabled;
 		Container * parent;

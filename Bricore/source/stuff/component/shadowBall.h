@@ -5,7 +5,7 @@ namespace item {
 	class MainBall;
 
 	class ShadowBall :
-		public Globular {
+		public Globular  {
 	public:
 		explicit ShadowBall(const MainBall * main);
 		virtual bool isCollidedObstacle(const Block * block) override;
@@ -14,5 +14,6 @@ namespace item {
 
 	private:
 		virtual void determineHitDirect() override;
+		const MainBall * c_main;
 	};
 }

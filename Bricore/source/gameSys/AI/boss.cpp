@@ -10,17 +10,17 @@ std::map<item::Core::Kind, std::shared_ptr<sf::Texture>> Boss::coreTypePreviews;
 Boss::Boss(const std::string name, const Attribute::Kind &attribute
 	, const std::vector<BossSkill> &skills, const size_t maxOnUsingSkill)
 	: boss(CoreType{ name, nullptr, nullptr }
-		, Content{ maxOnUsingSkill, std::shared_ptr<Attribute>(new Attribute(attribute)), {}, {}, {} })
+		, Content{ maxOnUsingSkill, std::make_shared<Attribute>(attribute), {}, {}, {} })
 	, bExist(false)
 	, bMove(false) {
 	std::for_each(skills.begin(), skills.end(), [&](const BossSkill &skill) {
-		boss.second.skills.push_back(std::shared_ptr<BossSkill>(new BossSkill(skill)));
+		boss.second.skills.push_back(std::make_shared<BossSkill>(skill));
 	});
 }
 
 void Boss::loadCoreTypePreviews(const std::map<item::Core::Kind, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<item::Core::Kind, std::string> &file) {
-		coreTypePreviews.emplace(file.first, std::shared_ptr<sf::Texture>(new sf::Texture));
+		coreTypePreviews.emplace(file.first, std::make_shared<sf::Texture>());
 		coreTypePreviews.at(file.first)->loadFromFile(file.second);
 		coreTypePreviews.at(file.first)->setSmooth(isSmooth);
 	});
@@ -28,7 +28,7 @@ void Boss::loadCoreTypePreviews(const std::map<item::Core::Kind, std::string> &f
 
 void Boss::loadPartPreviews(const std::vector<std::string>& fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
-		partPreviews.emplace(file, std::shared_ptr<sf::Texture>(new sf::Texture));
+		partPreviews.emplace(file, std::make_shared<sf::Texture>());
 		partPreviews.at(file)->loadFromFile(file);
 		partPreviews.at(file)->setSmooth(isSmooth);
 	});
@@ -37,7 +37,7 @@ void Boss::loadPartPreviews(const std::vector<std::string>& fileName, const bool
 void Boss::update(const float updateRatio) {
 }
 
-void Boss::handle(const sf::Event * const event) {
+void Boss::handle(const sf::Event & event) {
 
 }
 
@@ -73,8 +73,12 @@ void Boss::moveTo(const sf::Vector2f &coordinate, const sf::Time &moveTime) {
 	duration -= clock.restart();
 }
 
+void Boss::addBossSkill(BossSkill && bossSkill) {
+	boss.second.skills.push_back(std::make_shared<BossSkill>(bossSkill));
+}
+
 void Boss::extendMaxOnUsing(const size_t number) {
-	boss.second.maxOnUsing += number;
+	boss.second.maxOnUsingSkill += number;
 }
 
 Attribute::Kind Boss::getAttribute() const {
@@ -90,7 +94,7 @@ const std::string & Boss::getBossName() const {
 }
 
 size_t Boss::getMaxOnUsing() const {
-	return boss.second.maxOnUsing;
+	return boss.second.maxOnUsingSkill;
 }
 
 size_t Boss::getPartAmount() const {

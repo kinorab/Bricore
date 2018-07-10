@@ -18,6 +18,14 @@ Brick::Brick(const Brick & copy)
 	: brick(new RectangleShape(*copy.brick)){
 }
 
+bool Brick::containsPoint(const sf::Vector2f & point) const {
+	return brick->getGlobalBounds().contains(getTransform().transformPoint(point));
+}
+
+std::shared_ptr<sf::Drawable> Brick::getDrawable() const {
+	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
+}
+
 void Brick::update(const float updateRatio) {
 
 }

@@ -1,7 +1,6 @@
 #pragma once
+#include "../../interact/interactiveObject.h"
 #include "../../definition/diagonalPoint.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 #include <memory>
 #include <map>
 
@@ -14,11 +13,13 @@ namespace sf {
 
 namespace item {
 	class Block : 
-		public sf::Drawable
-		, public sf::Transformable {
+		public game::InteractiveObject
+		, public std::enable_shared_from_this<Block> {
 	public:
 		explicit Block(const sf::Vector2f &position, const sf::Vector2f &size);
 		explicit Block(const Block &copy);
+		virtual bool containsPoint(const sf::Vector2f & point) const override;
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void update(const float updateRatio);
 		void loadTexture(const std::string &fileName);
 		void setOrigin(const sf::Vector2f & position);

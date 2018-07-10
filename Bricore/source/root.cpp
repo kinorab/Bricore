@@ -14,9 +14,7 @@ bool Root::bInstance(false);
 
 Root::Root()
 	: hud(new HUD)
-	, mouseLight(new ParticleSystem(2000))
-	, mouseHandler(new SFMLMouseHandler({ static_cast<int>(GAME_WIDTH), static_cast<int>(GAME_HEIGHT) }))
-	, keyboardHandler(new SFMLKeyboardHandler) {
+	, mouseLight(new ParticleSystem(2000)) {
 	assert(!bInstance);
 	addChild({ hud, mouseLight });
 	addListener(std::make_shared<EmptyListener<MouseEnteredEvent>>([this] { onMouseEntered(); }));
@@ -30,14 +28,14 @@ Root::Root()
 void Root::handle(const sf::Event & event) {
 	mouseHandler->handle(event, *this, true);
 	keyboardHandler->handle(event, *this);
-	Container::handle(event);
 }
 
 Root::~Root() {
+	removeAllChildren();
 }
 
 void Root::update(const float updateRatio) {
-	Container::update(updateRatio);
+	mouseLight->update(updateRatio);
 }
 
 void Root::onMouseEntered() {

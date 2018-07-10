@@ -5,8 +5,10 @@
 #include "component/brick.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
-#include "../gameSys/area/zone.h"
 #include "../gameSys/level/level.h"
+#include "../gameSys/level/area/zone.h"
+#include "../event/SFMLMouseHandler.h"
+#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -31,6 +33,7 @@ void Wall::update(const float updateRatio) {
 				if (std::dynamic_pointer_cast<MainBall>(element)) {
 					m_ball->ballDivided(10);
 				}
+				removeChild({ bricks.at(i) });
 				bricks.erase(bricks.begin() + i);
 				--i;
 				break;
@@ -39,11 +42,13 @@ void Wall::update(const float updateRatio) {
 	}
 }
 
-void Wall::resetCopyTarget(const std::shared_ptr<Ball> ball) {
-	m_ball = std::move(ball);
+void Wall::handle(const sf::Event & event) {
+	mouseHandler->handle(event, *this, false);
+	keyboardHandler->handle(event, *this);
 }
 
-void Wall::handle(const sf::Event & event) {
+void Wall::resetCopyTarget(const std::shared_ptr<Ball> ball) {
+	m_ball = std::move(ball);
 }
 
 void Wall::loadTexture(const std::string & fileName) {
@@ -85,13 +90,13 @@ void Wall::setFrameSize(const float frameSize) {
 }
 
 void Wall::resettle() {
-	const size_t rowCount = static_cast<size_t>(m_level->deploy->getBrickDeploy().it.at(0));
-	const float wid = m_level->deploy->getBrickDeploy().it.at(1);
-	const float hei = m_level->deploy->getBrickDeploy().it.at(2);
-	const Vector2f &interval = sf::Vector2f(m_level->deploy->getBrickDeploy().it.at(3)
-		, m_level->deploy->getBrickDeploy().it.at(4));
-	const float frameSize = m_level->deploy->getBrickDeploy().it.at(5);
-	const float whiteSpaceY = m_level->deploy->getBrickDeploy().it.at(6);
+	const size_t rowCount = static_cast<size_t>(m_level->deploy->getBrick().it.at(0));
+	const float wid = m_level->deploy->getBrick().it.at(1);
+	const float hei = m_level->deploy->getBrick().it.at(2);
+	const Vector2f &interval = sf::Vector2f(m_level->deploy->getBrick().it.at(3)
+		, m_level->deploy->getBrick().it.at(4));
+	const float frameSize = m_level->deploy->getBrick().it.at(5);
+	const float whiteSpaceY = m_level->deploy->getBrick().it.at(6);
 
 	if (wid <= 0.0f || hei <= 0.0f
 		|| interval.x < 0.0f || interval.y < 0.0f
@@ -105,14 +110,15 @@ void Wall::resettle() {
 	uAmount = static_cast<size_t>((LEVEL_WIDTH - getInterval().x) / (getInterval().x + sideLength.x + this->fFrameSize * 2));
 	whiteSpace.x = (LEVEL_WIDTH - ((this->interval.x + sideLength.x + this->fFrameSize * 2) * uAmount - this->interval.x)) / 2;
 	whiteSpace.y = whiteSpaceY;
-	bricks.resize(this->uRowCount * uAmount);
+	bricks.resize(uRowCount * uAmount);
 
-	if (getBrickAmount() != this->uRowCount * uAmount) {
+	if (getBrickAmount() != uRowCount * uAmount) {
 		throw std::out_of_range("The subscripts are out of range.");
 	}
 	bChangeEntity = true;
+	removeAllChildren();
 	settlePlace();
-	setBricksColor(m_level->deploy->getBrickDeploy().color.at(0));
+	setBricksColor(m_level->deploy->getBrick().color.at(0));
 }
 
 size_t Wall::getBrickAmount() const {
@@ -139,7 +145,9 @@ const Color & Wall::getBrickColor(const size_t number) const {
 	return bricks.at(number)->getBrickColor();
 }
 
-Wall::~Wall() { }
+Wall::~Wall() { 
+	removeAllChildren();
+}
 
 void Wall::settlePlace() {
 	const Vector2f initialPos(whiteSpace.x + sideLength.x / 2 + fFrameSize, interval.y + fFrameSize + sideLength.y / 2);
@@ -148,6 +156,7 @@ void Wall::settlePlace() {
 	if (bChangeEntity) {
 		std::for_each(bricks.begin(), bricks.end(), [this](std::shared_ptr<Brick> &element) {
 			element.reset(new Brick(sideLength, fFrameSize));
+			addChild({ element });
 			if (fFrameSize > 0.0f) {
 				element->setFrameColor(Color::Black);
 			}
@@ -176,7 +185,5 @@ void Wall::settlePlace() {
 
 void Wall::draw(RenderTarget &target, RenderStates states) const {
 	states.transform *= getTransform();
-	for (size_t i = 0; i < getBrickAmount(); ++i) {
-		target.draw(*bricks.at(i), states);
-	}
+	Container::draw(target, states);
 }

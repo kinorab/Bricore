@@ -4,11 +4,12 @@
 #include "component/block.h"
 #include "component/globular.h"
 #include "../gameSys/level/level.h"
-#include "../gameSys/level/deploy.h"
-#include "../gameSys/area/zone.h"
+#include "../gameSys/level/area/zone.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
+#include "../event/SFMLMouseHandler.h"
+#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -20,22 +21,26 @@ Obstacle::Obstacle(const std::shared_ptr<game::Level> level)
 }
 
 void Obstacle::resettle() {
-	const std::vector<Vector2f> & position = m_level->deploy->getBlockDeploy().position;
-	const std::vector<Vector2f> & sideLength = m_level->deploy->getBlockDeploy().sideLength;
+	const std::vector<Vector2f> & position = m_level->deploy->getBlock().position;
+	const std::vector<Vector2f> & sideLength = m_level->deploy->getBlock().sideLength;
+	const size_t newSize = position.size();
 	if (position.size() != sideLength.size()) {
 		throw std::out_of_range("Position size not equal to side-length size.");
 	}
-	blocks.resize(position.size());
-	for (size_t i = 0; i < blocks.size(); ++i) {
-		blocks.at(i) = std::shared_ptr<Block>(new Block(position.at(i), sideLength.at(i)));
-		blocks.at(i)->setOrigin(blocks.at(i)->getSize() / 2.f);
+	removeAllChildren();
+	blocks.clear();
+	for (size_t i = 0; i < newSize; ++i) {
+		auto block = std::make_shared<Block>(position.at(i), sideLength.at(i));
+		block->setOrigin(block->getSize() / 2.f);
+		addChild({ block });
+		blocks.push_back(block);
 	}
 	using namespace game;
 	auto &instance = Zone::getInstance();
 	instance.settleZone(Zone::Obstacle, Vector2f(0.0f, instance.getZone(Zone::Wall).getSize().y + AREAINTERVAL)
 	, LEVEL_HEIGHT - (instance.getZone(Zone::Player).getSize().y + instance.getZone(Zone::Wall).getSize().y + 2 * AREAINTERVAL));
-	setAllVerticeColor(m_level->deploy->getBlockDeploy().color);
-	setAllSpeed(m_level->deploy->getBlockDeploy().speed);
+	setAllVerticeColor(m_level->deploy->getBlock().color);
+	setAllSpeed(m_level->deploy->getBlock().speed);
 }
 
 
@@ -58,6 +63,8 @@ void Obstacle::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer,
 }
 
 void Obstacle::handle(const sf::Event & event) {
+	mouseHandler->handle(event, *this, false);
+	keyboardHandler->handle(event, *this);
 }
 
 void Obstacle::setBlockColor(const size_t number, const Color &c1, const Color &c2, const Color &c3, const Color &c4) {
@@ -101,6 +108,7 @@ void Obstacle::resetPosition() {
 }
 
 Obstacle::~Obstacle() {
+	removeAllChildren();
 }
 
 const Vector2f & Obstacle::getSpeed(const size_t number) const {
@@ -117,9 +125,7 @@ sys::DPointf Obstacle::getDP(const size_t number) const {
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 	states.transform *= getTransform();
-	for (size_t i = 0; i < blocks.size(); ++i) {
-		target.draw(*blocks.at(i), states);
-	}
+	Container::draw(target, states);
 }
 
 void Obstacle::blocksCollision(const size_t number) {

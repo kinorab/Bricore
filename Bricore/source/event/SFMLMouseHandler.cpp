@@ -1,11 +1,11 @@
 #include "SFMLMouseHandler.h"
 #include "../definition/utility.h"
+#include "../definition/gameState.h"
 #include "mouse/mouseEvent.h"
 #include <SFML/Graphics/RectangleShape.hpp>
 
 namespace game {
-	SFMLMouseHandler::SFMLMouseHandler(const sf::Vector2i clientSize) :
-		clientSize(clientSize) {
+	SFMLMouseHandler::SFMLMouseHandler() {
 	}
 
 	void SFMLMouseHandler::handle(const sf::Event & event, Container & target, const bool isTargetFullScreen) {
@@ -49,14 +49,14 @@ namespace game {
 	void SFMLMouseHandler::handleMouseMove(const sf::Event & event, Container & target, const bool isTargetFullScreen) {
 		const sf::Vector2i & mousePosition{ event.mouseMove.x, event.mouseMove.y };
 		std::shared_ptr<InteractiveObject> contactNode;
-		if (mousePosition.x < 0 || mousePosition.x > clientSize.x
-			|| mousePosition.y < 0 || mousePosition.y > clientSize.y) {
+		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
+			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
 			contactNode = nullptr;
 		}
 		else if (isTargetFullScreen) {
 			target.dispatchEvent(MouseMovedEvent(event.mouseMove));
 			contactNode.reset(new RectangleShapeNode(
-				std::make_shared<sf::RectangleShape>(static_cast<sf::Vector2f>(clientSize)
+				std::make_shared<sf::RectangleShape>(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT)
 					)));
 		}
 		else {

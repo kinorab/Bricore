@@ -21,17 +21,18 @@ class SubPlayer :
 	public game::Container {
 public:
 	explicit SubPlayer(const std::shared_ptr<game::Level> level);
+	void update(const float updateRatio);
+	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<Ball> ball);
 	void setSubPlayerControlKey(const sf::Keyboard::Key upMove, const sf::Keyboard::Key downMove
 		, const sf::Keyboard::Key leftMove, const sf::Keyboard::Key rightMove
 		, const sf::Keyboard::Key attack, const sf::Keyboard::Key subSkill
 		, const sf::Keyboard::Key subSkillSwap, const sf::Keyboard::Key turnSkillToTypeSkill
 		, const sf::Keyboard::Key switchToPrevChargingSkill, const sf::Keyboard::Key switchToNextChargingSkill);
+	void addSubPlayerSkill(game::SubPlayerSkill && subPlayerSkill);
 	virtual ~SubPlayer();
 
 protected:
-	virtual void update(const float updateRatio) override;
-	virtual void handle(const sf::Event & event) override;
 	struct ControlKey {
 		sf::Keyboard::Key upMove;
 		sf::Keyboard::Key downMove;

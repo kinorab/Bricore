@@ -287,12 +287,12 @@ Deploy::Deploy(Level * level)
 
 
 
-const Deploy::ProxyBlock Deploy::getBlockDeploy() const noexcept {
+const Deploy::ProxyBlock Deploy::getBlock() const noexcept {
 	return ProxyBlock(blockPositionDeploy, blockSideLengthDeploy
 		, blockColorDeploy, blockSpeedDeploy, level->getcurrentLevel());
 }
 
-const Deploy::ProxyBrick Deploy::getBrickDeploy() const noexcept {
+const Deploy::ProxyBrick Deploy::getBrick() const noexcept {
 	return ProxyBrick(brickColorDeploy, brickDeploy, level->getcurrentLevel());
 }
 

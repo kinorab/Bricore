@@ -1,9 +1,7 @@
 #pragma once
+#include "../../interact/interactiveObject.h"
 #include "../../definition/diagonalPoint.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 #include <SFML/System/Clock.hpp>
-#include <functional>
 
 namespace sf {
 	class RenderTarget;
@@ -17,11 +15,13 @@ namespace item {
 	class Brick;
 
 	class Globular :
-		public sf::Drawable
-		, public sf::Transformable {
+		public game::InteractiveObject
+		, public std::enable_shared_from_this<Globular> {
 	public:
 		virtual bool isCollidedObstacle(const Block * block) = 0;
 		virtual bool isCollidedWall(const Brick * brick) = 0;
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
+		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		void move(const sys::DPointf &DP, const float playerSpeed, const float updateRatio);
 		void setSpeedX(const float speedX);
 		void setSpeedY(const float speedY);

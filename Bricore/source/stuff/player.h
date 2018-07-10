@@ -26,12 +26,16 @@ class Player :
 	public game::Container {
 public:
 	explicit Player(const std::shared_ptr<game::Level> level);
+	void update(const float updateRatio);
+	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer, const std::shared_ptr<Ball> ball);
 	void setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Keyboard::Key rightMove
 		, const sf::Keyboard::Key shot, const sf::Keyboard::Key playerSkill
 		, const sf::Keyboard::Key playerSkillSwap, const sf::Keyboard::Key ballSkill
 		, const sf::Keyboard::Key ballSkillSwap, const sf::Keyboard::Key switchToPrevChargingSkill
 		, const sf::Keyboard::Key switchToNextChargingSkill);
+	void addPlayerSkill(game::PlayerSkill && playerSkill);
+	void addBallSkill(game::BallSkill && ballSkill);
 
 	float getSpeed() const;
 	const sf::Vector2f & getPosition() const;
@@ -41,8 +45,6 @@ public:
 	virtual ~Player();
 
 protected:
-	virtual void update(const float updateRatio) override;
-	virtual void handle(const sf::Event & event) override;
 	void setFlashPosition(const sf::Vector2f &);
 	void setFlashFillColor(const sf::Color &);
 	void flashElapsed();
@@ -63,9 +65,9 @@ private:
 	ControlKey key;
 	sf::Clock CDTime;
 	sf::Clock elapsed;
-	sf::RectangleShape board;
-	sf::RectangleShape redRange;
-	sf::RectangleShape yellowRange;
+	std::shared_ptr<sf::RectangleShape> board;
+	std::shared_ptr<sf::RectangleShape> redRange;
+	std::shared_ptr<sf::RectangleShape> yellowRange;
 	std::shared_ptr<game::EnergyBar> energyBar;
 	std::vector<std::shared_ptr<game::PlayerSkill>> playerSkills;
 	std::vector<std::shared_ptr<game::BallSkill>> ballSkills;

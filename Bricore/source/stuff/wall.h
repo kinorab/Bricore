@@ -19,6 +19,8 @@ class Wall :
 	public game::Container {
 public:
 	explicit Wall(const std::shared_ptr<game::Level> level);
+	void update(const float updateRatio);
+	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<Ball> ball);
 	void loadTexture(const std::string & fileName);
 	void setBricksColor(const sf::Color & color);
@@ -26,7 +28,6 @@ public:
 	void setBricksSize(const sf::Vector2f &sideLength);
 	void setInterval(const sf::Vector2f &interval);
 	void setFrameSize(const float frame);
-
 	void resettle();
 
 	size_t getBrickAmount() const;
@@ -38,8 +39,6 @@ public:
 	virtual ~Wall();
 
 protected:
-	virtual void update(const float updateRatio) override;
-	virtual void handle(const sf::Event & event) override;
 	void settlePlace();
 
 private:

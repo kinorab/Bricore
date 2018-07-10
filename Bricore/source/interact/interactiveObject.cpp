@@ -8,8 +8,9 @@
 #include <algorithm>
 
 namespace game {
-	InteractiveObject::InteractiveObject() :
-		bEnabled(true) {
+	InteractiveObject::InteractiveObject()
+		: bEnabled(true)
+		, parent(nullptr) {
 		onEnabled();
 	}
 
@@ -25,7 +26,7 @@ namespace game {
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		dispatchEvent(static_cast<Event &>(event));
+		EventSubject::dispatchEvent(static_cast<Event &>(event));
 		if (event.getPhase() == EventPhase::AT_TARGET) {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}
@@ -77,24 +78,6 @@ namespace game {
 
 	void InteractiveObject::setParent(Container * container) {
 		parent = container;
-	}
-
-	void InteractiveObject::tryUpdate(const float updateRatio) {
-		if (getEnabled()) {
-			update(updateRatio);
-		}
-	}
-
-	void InteractiveObject::tryHandle(const sf::Event & event) {
-		if (getEnabled()) {
-			handle(event);
-		}
-	}
-
-	void InteractiveObject::update(const float) {
-	}
-
-	void InteractiveObject::handle(const sf::Event & event) {
 	}
 
 	void InteractiveObject::draw(sf::RenderTarget & target, sf::RenderStates states) const {

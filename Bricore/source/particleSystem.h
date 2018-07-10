@@ -6,16 +6,19 @@ class ParticleSystem :
 	public game::Container {
 public:
 	explicit ParticleSystem(const unsigned int count);
-	virtual void setEmitPosition(const sf::Vector2f & position);
-	virtual void startEmit();
-	virtual void stopEmit();
-	virtual void update(const float updateRatio) override;
+	void update(const float updateRatio);
+	void setEmitPosition(const sf::Vector2f & position);
+	void startEmit();
+	void stopEmit();
+
+protected:
+	void resetParticle(size_t);
+
 private:
 	struct Particle {
 		sf::Vector2f velocity;
 		float fLifeTime;
 	};
-	virtual void resetParticle(size_t);
 	bool bEmit = true;
 	float fMaxLifeTime;
 	sf::Vector2f emitPosition{ 0, 0 };

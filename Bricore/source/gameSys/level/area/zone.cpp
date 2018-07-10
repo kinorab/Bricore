@@ -1,5 +1,5 @@
 #include "zone.h"
-#include "../../definition/gameState.h"
+#include "../../../definition/gameState.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;

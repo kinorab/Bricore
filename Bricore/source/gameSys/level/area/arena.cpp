@@ -1,5 +1,5 @@
 #include "arena.h"
-#include "../effect/entireEffect.h"
+#include "../../effect/entireEffect.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;

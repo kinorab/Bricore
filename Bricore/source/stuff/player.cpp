@@ -4,21 +4,21 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
-#include "../gameSys/area/zone.h"
 #include "../gameSys/level/level.h"
+#include "../gameSys/level/area/zone.h"
 #include "../gameSys/bar/energyBar.h"
 #include "../gameSys/skill/playerSkill.h"
 #include "../gameSys/skill/ballSkill.h"
 #include "../manager/audioManager.h"
+#include "../event/SFMLMouseHandler.h"
+#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
 using namespace game;
 
 Player::Player(const std::shared_ptr<Level> level)
-	: board(RectangleShape(Vector2f(240.f, 12.f)))
-	, yellowRange(RectangleShape(Vector2f(board.getSize().x * 0.1f, board.getSize().y)))
-	, redRange(RectangleShape(Vector2f(board.getSize().x * 0.05f, board.getSize().y)))
+	: board(new RectangleShape(Vector2f(240.f, 12.f)))
 	, bFlash(false)
 	, bFlashCD(false)
 	, fSpeed(4.5f)
@@ -39,42 +39,47 @@ Player::Player(const std::shared_ptr<Level> level)
 	};
 	ballSkills = {
 	};
-	board.setOrigin(Vector2f(board.getSize().x / 2, board.getSize().y / 2));
-	board.setFillColor(Color::Green);
-	board.setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - board.getSize().y));
-	yellowRange.setOrigin(Vector2f(yellowRange.getSize().x / 2, yellowRange.getSize().y / 2));
-	yellowRange.setPosition(board.getPosition());
-	yellowRange.setFillColor(Color::Yellow);
-	redRange.setOrigin(Vector2f(redRange.getSize().x / 2, redRange.getSize().y / 2));
-	redRange.setPosition(board.getPosition());
-	redRange.setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
+	yellowRange.reset(new RectangleShape(Vector2f(board->getSize().x * 0.1f, board->getSize().y)));
+	redRange.reset(new RectangleShape(Vector2f(board->getSize().x * 0.05f, board->getSize().y)));
+	board->setOrigin(Vector2f(board->getSize().x / 2, board->getSize().y / 2));
+	board->setFillColor(Color::Green);
+	board->setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - board->getSize().y));
+	yellowRange->setOrigin(Vector2f(yellowRange->getSize().x / 2, yellowRange->getSize().y / 2));
+	yellowRange->setPosition(board->getPosition());
+	yellowRange->setFillColor(Color::Yellow);
+	redRange->setOrigin(Vector2f(redRange->getSize().x / 2, redRange->getSize().y / 2));
+	redRange->setPosition(board->getPosition());
+	redRange->setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
 	using namespace game;
 	Zone::getInstance().settleZone(Zone::Player, sf::Vector2f(0.0f, LEVEL_HEIGHT - 100.f), 100.f);
-	std::for_each(playerSkills.begin(), playerSkills.end()
-		, [&](const std::shared_ptr<PlayerSkill> & skill) {
-		skill->initialize();
-	});
+	addChild({ board, yellowRange, redRange });
 	std::for_each(ballSkills.begin(), ballSkills.end()
 		, [&](const std::shared_ptr<BallSkill> & skill) {
 		skill->initialize();
+		addChild({ skill });
+	});
+	std::for_each(playerSkills.begin(), playerSkills.end()
+		, [&](const std::shared_ptr<PlayerSkill> & skill) {
+		skill->initialize();
+		addChild({ skill });
 	});
 }
 
 void Player::update(const float updateRatio) {
 	const Vector2f &mainBallPos{ m_ball->getMainBallPosition() };
 	const float mainBallRadius = m_ball->getMainBallRadius();
-	const FloatRect playerBound = board.getGlobalBounds();
+	const FloatRect playerBound = board->getGlobalBounds();
 	if (playerBound.left >= 0
 		&& (Keyboard::isKeyPressed(key.leftMove))
 		) {
-		board.move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
-		redRange.move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
+		board->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
+		redRange->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
 	}
 	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(key.rightMove))
 		) {
-		board.move(Vector2f(fSpeed / SLICE * updateRatio, 0));
-		redRange.move(Vector2f(fSpeed / SLICE * updateRatio, 0));
+		board->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
+		redRange->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
 	}
 	if (currentState == GameState::STARTED) {
 		flashRange(AudioManager::getInstance().sound1, mainBallPos, mainBallRadius);
@@ -82,7 +87,7 @@ void Player::update(const float updateRatio) {
 	if (bFlash) {
 		flashElapsed();
 	}
-	yellowRange.setPosition(board.getPosition());
+	yellowRange->setPosition(board->getPosition());
 }
 
 void Player::setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Keyboard::Key rightMove
@@ -95,6 +100,14 @@ void Player::setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Key
 	BallSkill::resetKey(ballSkill, ballSkillSwap);
 }
 
+void Player::addPlayerSkill(PlayerSkill && playerSkill) {
+	playerSkills.push_back(std::make_shared<PlayerSkill>(playerSkill));
+}
+
+void Player::addBallSkill(BallSkill && ballSkill) {
+	ballSkills.push_back(std::make_shared<BallSkill>(ballSkill));
+}
+
 void Player::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer
 	, const std::shared_ptr<Ball> ball) {
 	c_subPlayer = std::move(subPlayer);
@@ -102,6 +115,8 @@ void Player::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer
 }
 
 void Player::handle(const sf::Event & event) {
+	mouseHandler->handle(event, *this, false);
+	keyboardHandler->handle(event, *this);
 	std::for_each(playerSkills.begin(), playerSkills.end()
 		, [&](const std::shared_ptr<PlayerSkill> & skill) {
 		assert(skill->isInitialize());
@@ -121,28 +136,28 @@ float Player::getSpeed() const {
 }
 
 const Vector2f & Player::getPosition() const {
-	return board.getPosition();
+	return board->getPosition();
 }
 
 Vector2f Player::getTopCenterPos() const {
-	return Vector2f(board.getPosition().x, board.getGlobalBounds().top);
+	return Vector2f(board->getPosition().x, board->getGlobalBounds().top);
 }
 
 FloatRect Player::getGlobalBounds() const {
-	return board.getGlobalBounds();
+	return board->getGlobalBounds();
 }
 
 sys::DPointf Player::getDP() const {
-	return sys::DPointf(board.getGlobalBounds());
+	return sys::DPointf(board->getGlobalBounds());
 }
 
-Player::~Player() { }
+Player::~Player() {
+	removeAllChildren();
+}
 
 void Player::draw(RenderTarget &target, RenderStates states) const {
 	states.transform *= getTransform();
-	target.draw(board, states);
-	target.draw(yellowRange, states);
-	target.draw(redRange, states);
+	Container::draw(target, states);
 }
 
 void Player::defaultKeySettle() {
@@ -161,11 +176,11 @@ void Player::defaultKeySettle() {
 }
 
 void Player::setFlashPosition(const Vector2f & position) {
-	redRange.setPosition(position);
+	redRange->setPosition(position);
 }
 
 void Player::setFlashFillColor(const sf::Color & color) {
-	redRange.setFillColor(color);
+	redRange->setFillColor(color);
 }
 
 void Player::flashElapsed() {
@@ -181,7 +196,7 @@ void Player::flashElapsed() {
 
 void Player::flashRange(Sound & sound, const Vector2f ballPos, const float radius) {
 	const FloatRect playerBounds = getGlobalBounds();
-	const FloatRect rangeBounds = redRange.getGlobalBounds();
+	const FloatRect rangeBounds = redRange->getGlobalBounds();
 	const Vector2f pos1P = getPosition();
 
 	if (!bFlashCD) {

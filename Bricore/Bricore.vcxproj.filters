@@ -77,15 +77,15 @@
     <ClCompile Include="source\stuff\component\globular.cpp" />
     <ClCompile Include="source\stuff\wall.cpp" />
     <ClCompile Include="source\stuff\component\brick.cpp" />
-    <ClCompile Include="source\gameSys\area\arena.cpp" />
     <ClCompile Include="source\event\window\resizedEvent.cpp" />
-    <ClCompile Include="source\gameSys\area\zone.cpp" />
     <ClCompile Include="source\gameSys\bar\energyBar.cpp" />
     <ClCompile Include="source\gameSys\level\level.cpp" />
     <ClCompile Include="source\gameSys\level\deploy.cpp" />
     <ClCompile Include="source\stage.cpp" />
     <ClCompile Include="source\root.cpp" />
     <ClCompile Include="source\gameSys\data\data.cpp" />
+    <ClCompile Include="source\gameSys\level\area\arena.cpp" />
+    <ClCompile Include="source\gameSys\level\area\zone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -192,7 +192,6 @@
     <ClInclude Include="source\stuff\component\globular.h" />
     <ClInclude Include="source\stuff\wall.h" />
     <ClInclude Include="source\stuff\component\brick.h" />
-    <ClInclude Include="source\gameSys\area\arena.h" />
     <ClInclude Include="source\event\eventType.h" />
     <ClInclude Include="source\singleton.h" />
     <ClInclude Include="source\event\eventSlot.h" />
@@ -204,7 +203,6 @@
     <ClInclude Include="source\event\game\unpausedEvent.h" />
     <ClInclude Include="source\event\game\pausedEvent.h" />
     <ClInclude Include="source\event\game\startedEvent.h" />
-    <ClInclude Include="source\gameSys\area\zone.h" />
     <ClInclude Include="source\gameSys\bar\energyBar.h" />
     <ClInclude Include="source\gameSys\level\level.h" />
     <ClInclude Include="source\gameSys\level\deploy.h" />
@@ -212,6 +210,8 @@
     <ClInclude Include="source\root.h" />
     <ClInclude Include="source\gameSys\data\data.h" />
     <ClInclude Include="source\stuff\stuff.h" />
+    <ClInclude Include="source\gameSys\level\area\arena.h" />
+    <ClInclude Include="source\gameSys\level\area\zone.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

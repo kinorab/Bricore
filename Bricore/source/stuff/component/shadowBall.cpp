@@ -8,10 +8,11 @@
 using namespace item;
 using namespace sf;
 
-ShadowBall::ShadowBall(const MainBall * main) {
-	setPosition(main->getPosition());
-	setSpeedX(main->getSpeed().x * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
-	setSpeedY(main->getSpeed().y * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
+ShadowBall::ShadowBall(const MainBall * main)
+	: c_main(main) {
+	setPosition(c_main->getPosition());
+	setSpeedX(c_main->getSpeed().x * ((prng(50) % 50 + 50) * .01f * (rng() < 0 ? -1 : 1)));
+	setSpeedY(c_main->getSpeed().y * ((prng(20) % 20 + 80) * .01f * (rng() < 0 ? -1 : 1)));
 }
 
 bool ShadowBall::isCollidedObstacle(const Block * block) {

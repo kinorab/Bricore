@@ -1,11 +1,15 @@
 #include "container.h"
 #include "../definition/utility.h"
+#include "../event/SFMLMouseHandler.h"
+#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <map>
 
 namespace game {
-	Container::Container() {
+	Container::Container() 
+		: mouseHandler(new SFMLMouseHandler)
+		, keyboardHandler(new SFMLKeyboardHandler) {
 
 	}
 
@@ -48,10 +52,9 @@ namespace game {
 				node.reset(new DrawableNode(element));
 			}
 
-			// cannot give copy children from root to stage(two parents)
-			/*if (node->getParent() != nullptr) {
+			if (node->getParent() != nullptr) {
 				node->getParent()->removeChild({ node });
-			}*/
+			}
 
 			node->setParent(this);
 			return node;
@@ -69,7 +72,7 @@ namespace game {
 	bool Container::containsPoint(const sf::Vector2f & point) const {
 		return std::any_of(children.begin(), children.end(),
 			[&](const std::shared_ptr<InteractiveObject> & child) {
-			return child->containsPoint(getTransform().getInverse().transformPoint(point));
+			return child->containsPoint(getInverseTransform().transformPoint(point));
 		});
 	}
 
@@ -169,6 +172,14 @@ namespace game {
 		children.shrink_to_fit();
 	}
 
+	void Container::removeInvalidChildren() {
+		children.erase(std::remove_if(children.begin(), children.end(),
+			[&](const std::shared_ptr<InteractiveObject> & child) {
+			if (!child) return true;
+			return false;
+		}), children.end());
+	}
+
 	void Container::replaceChild(const std::vector<std::shared_ptr<sf::Drawable>>& elements, const std::vector<int> indexes) {
 		std::map<int, std::shared_ptr<sf::Drawable>> elementMap;
 		std::transform(indexes.begin(), indexes.end(), elements.begin(), std::inserter(elementMap, elementMap.end()),
@@ -193,20 +204,6 @@ namespace game {
 
 	void Container::swapChildrenAt(const int indexA, const int indexB) {
 		std::swap(children.at(indexA), children.at(indexB));
-	}
-
-	void Container::update(const float updateRatio)	{
-		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<InteractiveObject> & child) {
-			child->tryUpdate(updateRatio);
-		});
-	}
-
-	void Container::handle(const sf::Event & event) {
-		std::for_each(children.begin(), children.end(),
-			[&](const std::shared_ptr<InteractiveObject> & child) {
-			child->tryHandle(event);
-		});
 	}
 
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {

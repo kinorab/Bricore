@@ -2,11 +2,8 @@
 #include "AISystem.h"
 #include "../item/core.h"
 #include "../effect/attribute.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
-#include <vector>
+#include "../../interact/container.h"
 #include <memory>
-#include <mutex>
 #include <map>
 
 namespace sf {
@@ -23,17 +20,17 @@ namespace game {
 
 	class Boss :
 		public AISystem
-		, public sf::Drawable
-		, public sf::Transformable {
+		, public Container {
 	public:
 		explicit Boss(const std::string name, const Attribute::Kind &attribute
 			, const std::vector<BossSkill> &skills, const size_t maxSkillUsing);
 		void loadPartPreviews(const std::vector<std::string> &fileName, const bool isSmooth = false);
 		void update(const float updateRatio);
-		void handle(const sf::Event * const event) override;
+		void handle(const sf::Event & event);
 		void extendMaxOnUsing(const size_t number);
 		void offset(const sf::Vector2f &offset, const sf::Time &moveTime);
 		void moveTo(const sf::Vector2f &coordinate, const sf::Time &moveTime);
+		void addBossSkill(BossSkill && bossSkill);
 		static void loadCoreTypePreviews(const std::map<item::Core::Kind, std::string> &fileName, const bool isSmooth = false);
 
 		static size_t getCoreTypeAmount();
@@ -80,7 +77,7 @@ namespace game {
 		// partName & partName_intense & weak_partname & weak_partName_broke
 		std::map<std::string, std::shared_ptr<sf::Texture>> partPreviews;
 		struct Content {
-			size_t maxOnUsing;
+			size_t maxOnUsingSkill;
 			std::shared_ptr<Attribute> attribute;
 			std::vector<std::shared_ptr<BossSkill>> skills;
 			// partName

@@ -5,6 +5,8 @@
 #include "../gameSys/bar/energyBar.h"
 #include "../gameSys/bar/lifeBar.h"
 #include "../gameSys/skill/subPlayerSkill.h"
+#include "../event/SFMLMouseHandler.h"
+#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
@@ -31,12 +33,18 @@ void SubPlayer::setSubPlayerControlKey(const sf::Keyboard::Key upMove, const sf:
 		, switchToPrevChargingSkill, switchToNextChargingSkill);
 }
 
+void SubPlayer::addSubPlayerSkill(game::SubPlayerSkill && subPlayerSkill) {
+	subPlayerSkills.push_back(std::make_shared<SubPlayerSkill>(subPlayerSkill));
+}
+
 void SubPlayer::resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<Ball> ball) {
 	c_player = std::move(player);
 	m_ball = std::move(ball);
 }
 
 void SubPlayer::handle(const sf::Event & event) {
+	mouseHandler->handle(event, *this, false);
+	keyboardHandler->handle(event, *this);
 	std::for_each(subPlayerSkills.begin(), subPlayerSkills.end()
 		, [&](const std::shared_ptr<SubPlayerSkill> skill) {
 		skill->handleSelect(&event);
@@ -45,6 +53,7 @@ void SubPlayer::handle(const sf::Event & event) {
 }
 
 SubPlayer::~SubPlayer() {
+	removeAllChildren();
 }
 
 void SubPlayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {

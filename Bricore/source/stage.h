@@ -11,10 +11,6 @@ class Player;
 class SubPlayer;
 class HUD;
 
-namespace sf {
-	class Event;
-}
-
 namespace game {
 	class KeyPressedEvent;
 	class KeyReleasedEvent;
@@ -28,13 +24,13 @@ namespace game {
 		public Container {
 	public:
 		explicit Stage(const std::shared_ptr<Level> & level, const std::shared_ptr<const game::Root> root);
+		void update(const float updateRatio);
+		void handle(const sf::Event & event);
 		void resetChildrenCopyTarget();
 		void resetKey(const sf::Keyboard::Key pause, const sf::Keyboard::Key menu);
 		virtual ~Stage();
 
 	protected:
-		virtual void update(const float updateRatio) override;
-		virtual void handle(const sf::Event & event) override;
 		void onKeyPressed(KeyPressedEvent & event);
 		void onKeyReleased(KeyReleasedEvent & event);
 		// only control on battleArea when no paused
@@ -43,10 +39,9 @@ namespace game {
 			sf::Keyboard::Key pause;
 			sf::Keyboard::Key menu;
 		};
-		std::unique_ptr<SFMLMouseHandler> mouseHandler;
-		std::unique_ptr<SFMLKeyboardHandler> keyboardHandler;
 
 	private:
+		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		static bool bInstance;
 		bool bPaused = false;
 		StageKey key;

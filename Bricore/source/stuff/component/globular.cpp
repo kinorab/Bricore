@@ -1,7 +1,8 @@
 #include "globular.h"
 #include "../../definition/gameState.h"
 #include "../../definition/intersects.h"
-#include "../../gameSys/area/zone.h"
+#include "../../gameSys/level/level.h"
+#include "../../gameSys/level/area/zone.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -47,7 +48,22 @@ void Globular::setActive(const bool active) {
 }
 
 void Globular::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+	states.transform *= getTransform();
 	target.draw(*ball, states);
+}
+
+bool Globular::containsPoint(const sf::Vector2f & point) const { 
+	const sf::Vector2f displacement = getPosition()
+		+ sf::Vector2f(getRadius(), getRadius())
+		- getInverseTransform().transformPoint(point);
+	if (pow(displacement.x, 2) + pow(displacement.y, 2) <= pow(getRadius(), 2)) {
+		return true;
+	}
+	return false;;
+}
+
+std::shared_ptr<sf::Drawable> Globular::getDrawable() const {
+	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
 }
 
 void Globular::move(const sys::DPointf &DP, const float playerSpeed, const float updateRatio) {

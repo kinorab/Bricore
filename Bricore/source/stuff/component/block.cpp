@@ -26,6 +26,14 @@ Block::Block(const Block & copy)
 	setBlockVertice();
 }
 
+bool Block::containsPoint(const sf::Vector2f & point) const {
+	return block->getBounds().contains(getTransform().transformPoint(point));
+}
+
+std::shared_ptr<sf::Drawable> Block::getDrawable() const {
+	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
+}
+
 void Block::setVerticeColor(const Color & color) {
 	for (size_t i = 0; i < block->getVertexCount(); ++i) {
 		(*block)[i].color = color;
@@ -80,9 +88,9 @@ void Block::update(const float updateRatio) {
 
 void Block::loadTexture(const std::string & fileName) {
 	texture.reset(TextureManager::getInstance().get(fileName));
-	(*block)[1].texCoords += Vector2f(size.x, 0.0f);
-	(*block)[2].texCoords += Vector2f(size);
-	(*block)[3].texCoords += Vector2f(0.0f, size.y);
+	(*block)[1].texCoords = Vector2f(size.x, 0.0f);
+	(*block)[2].texCoords = Vector2f(size);
+	(*block)[3].texCoords = Vector2f(0.0f, size.y);
 }
 
 void Block::setOrigin(const sf::Vector2f & position) {
@@ -148,8 +156,11 @@ void Block::setBlockVertice() {
 		(*block)[i].position = position - origin;
 	}
 	(*block)[1].position += Vector2f(size.x, 0.0f);
+	(*block)[1].texCoords = Vector2f(size.x, 0.0f);
 	(*block)[2].position += Vector2f(size);
+	(*block)[2].texCoords = Vector2f(size);
 	(*block)[3].position += Vector2f(0.0f, size.y);
+	(*block)[3].texCoords = Vector2f(0.0f, size.y);
 }
 
 void Block::moveEntity(const float updateRatio) {

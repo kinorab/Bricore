@@ -9,6 +9,8 @@
 #include <memory>
 
 namespace game {
+	class SFMLMouseHandler;
+	class SFMLKeyboardHandler;
 	class Container :
 		public std::enable_shared_from_this<Container>,
 		public InteractiveObject {
@@ -30,14 +32,17 @@ namespace game {
 		virtual std::vector<int> removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
 		virtual void removeChildAt(std::vector<int> indexes);
 		virtual void removeChildren(const int beginIndex, const int endIndex);
+		virtual void removeInvalidChildren();
 		virtual void replaceChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements, const std::vector<int> indexes);
 		virtual void setChildIndex(const sf::Drawable * element, const int index);
 		virtual void swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB);
 		virtual void swapChildrenAt(const int indexA, const int indexB);
+
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-		virtual void update(const float updateRatio) override;
-		virtual void handle(const sf::Event &event) override;
+
+		std::shared_ptr<SFMLMouseHandler> mouseHandler;
+		std::shared_ptr<SFMLKeyboardHandler> keyboardHandler;
 
 	private:
 		std::vector<std::shared_ptr<InteractiveObject>> children;

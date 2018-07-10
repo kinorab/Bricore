@@ -28,6 +28,8 @@ class Ball :
 	public game::Container {
 public:
 	explicit Ball(const std::shared_ptr<game::Level> level);
+	void update(const float updateRatio);
+	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<const SubPlayer> subPlayer);
 	void initializeBall();
 	void followPlayer();
@@ -43,8 +45,6 @@ public:
 	virtual ~Ball();
 
 protected:
-	virtual void update(const float updateRatio) override;
-	virtual void handle(const sf::Event & event) override;
 	void ballsCollision(const size_t);
 
 private:
