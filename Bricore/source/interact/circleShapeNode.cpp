@@ -11,9 +11,7 @@ namespace game {
 	}
 
 	bool CircleShapeNode::containsPoint(const sf::Vector2f & point) const {
-		sf::Vector2f displacement = circleShape->getPosition() 
-			+ sf::Vector2f(circleShape->getRadius(), circleShape->getRadius()) 
-			- getTransform().transformPoint(point);
+		const sf::Vector2f displacement = point - circleShape->getPosition();
 		if (pow(displacement.x, 2) + pow(displacement.y, 2) <= pow(circleShape->getRadius(), 2)) {
 			return true;
 		}

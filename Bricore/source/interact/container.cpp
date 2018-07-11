@@ -72,7 +72,7 @@ namespace game {
 	bool Container::containsPoint(const sf::Vector2f & point) const {
 		return std::any_of(children.begin(), children.end(),
 			[&](const std::shared_ptr<InteractiveObject> & child) {
-			return child->containsPoint(getInverseTransform().transformPoint(point));
+			return child->containsPoint(point);
 		});
 	}
 
@@ -207,7 +207,6 @@ namespace game {
 	}
 
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-		states.transform = states.transform.combine(getTransform());
 		std::for_each(children.begin(), children.end(),
 			[&](const std::shared_ptr<InteractiveObject> & child) {
 			target.draw(*child, states);

@@ -2,26 +2,76 @@
 #include "../definition/utility.h"
 #include <string>
 
-AudioManager::~AudioManager() {
-
+void AudioManager::initialize() {
+	loadSound("res/audio/sound/hitBoard.wav");
+	loadMusic("res/audio/bgm/bg.wav");
 }
 
-void AudioManager::initialize() {
-	const std::vector<std::string> fileNames = { "res/audio/sound/hitBoard.wav", "res/audio/bgm/bg.wav" };
-	if (!buffer1.loadFromFile(fileNames[0])) {
-		std::cout << "Cannot load " << fileNames[0] << std::endl;
+void AudioManager::loadSound(const std::string & directory) {
+	buffers.emplace(directory, new sf::SoundBuffer);
+	if (!buffers.at(directory)->loadFromFile(directory)) {
+		std::cout << "Cannot load " << directory << std::endl;
 	}
+	sounds.emplace(directory, new sf::Sound(*buffers.at(directory)));
+}
 
-	if (!AudioManager::bgmusic.openFromFile(fileNames[1])) {
-		std::cout << "Cannot load " << fileNames[1] << std::endl;
+void AudioManager::unloadSound(const std::string & directory) {
+	if (sounds.erase(directory) == 0) {
+		throw std::out_of_range("Sound not found.");
 	}
+}
 
-	const float bufferBgVolume = 100.0f;
-	const float bufferVolume1 = 50.0f;
-	AudioManager::sound1.setBuffer(buffer1);
-	AudioManager::sound1.setVolume(bufferVolume1);
+void AudioManager::loadMusic(const std::string & directory) {
+	musics.emplace(directory, new sf::Music);
+	if (!musics.at(directory)->openFromFile(directory)) {
+		std::cout << "Cannot open " << directory << std::endl;
+	}
+}
+
+void AudioManager::unloadMusic(const std::string & directory) {
+	if (musics.erase(directory) == 0) {
+		throw std::out_of_range("Music not found.");
+	}
+}
+
+const sf::SoundBuffer * AudioManager::getBuffer(const std::string & fileName) {
+	for (auto & buffer : buffers) {
+		if (buffer.first.find("/" + fileName + ".wav") != std::string::npos) {
+			return buffer.second.get();
+		}
+		if (buffer.first.find("/" + fileName) != std::string::npos) {
+			return buffer.second.get();
+		}
+	}
+	throw std::invalid_argument("Sound not found.");
+}
+
+sf::Sound * AudioManager::getSound(const std::string & fileName) {
+	for (auto & sound : sounds) {
+		if (sound.first.find("/" + fileName + ".wav") != std::string::npos) {
+			return sound.second.get();
+		}
+		if (sound.first.find("/" + fileName) != std::string::npos) {
+			return sound.second.get();
+		}
+	}
+	throw std::invalid_argument("Sound not found.");
+}
+
+sf::Music * AudioManager::getMusic(const std::string & fileName) {
+	for (auto & music : musics) {
+		if (music.first.find("/" + fileName + ".wav") != std::string::npos) {
+			return music.second.get();
+		}
+		if (music.first.find("/" + fileName) != std::string::npos) {
+			return music.second.get();
+		}
+	}
+	throw std::invalid_argument("Music not found.");
 }
 
 AudioManager::AudioManager() {
+}
 
+AudioManager::~AudioManager() {
 }

@@ -81,6 +81,6 @@ namespace game {
 	}
 
 	void InteractiveObject::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-		target.draw(*getDrawable(), states.transform.combine(getTransform()));
+		target.draw(*getDrawable(), states);
 	}
 }

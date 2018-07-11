@@ -32,7 +32,7 @@ void Level::changeSetting(const Mode mode, const Diffculty difficulty, const siz
 }
 
 void Level::finishLevel() {
-	currentState = GameState::LEVEL_FINISHED;
+	currentGameState = GameState::LEVEL_FINISHED;
 	if (uCurrentLevel < uTotalLevel) {
 		std::cout << "Finished level: " << ++uCurrentLevel << "!!!" << std::endl;
 		settleKind();

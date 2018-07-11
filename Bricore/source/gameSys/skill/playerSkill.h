@@ -1,4 +1,5 @@
 #pragma once
+#include "../../interact/interactiveObject.h"
 #include "skillSystem.h"
 #include "skillState.h"
 #include "skillKind.h"
@@ -23,8 +24,7 @@ namespace game {
 		, public SkillKind<PlayerSkill>
 		, public SkillState<PlayerSkill>
 		, public std::enable_shared_from_this<PlayerSkill>
-		, public sf::Drawable
-		, public sf::Transformable {
+		, public InteractiveObject {
 		friend class SkillHandler<PlayerSkill>;
 	public:
 		explicit PlayerSkill(const Kind skillName, const sf::Time duration
@@ -33,6 +33,8 @@ namespace game {
 		virtual void initialize() override;
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
+		virtual bool containsPoint(const sf::Vector2f & point) const override;
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
 		static void extendCarry(const size_t number);
 		static void extendField(const size_t number);
@@ -50,6 +52,7 @@ namespace game {
 
 	protected:
 		struct SkillContent {
+			Kind name;
 			State currentState;
 			std::shared_ptr<sf::Sprite> context;
 		};
@@ -61,8 +64,9 @@ namespace game {
 		};
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		void setState(const State state);
+		void setState(const State nextState);
 		void swapSkill(const std::shared_ptr<PlayerSkill> & other);
+
 		static size_t uMaxCarry;
 		static size_t uCurrentCarry;
 		static size_t uMaxOnField;
@@ -71,7 +75,7 @@ namespace game {
 		static SkillHandler<PlayerSkill> handler;
 		bool bInitialize;
 		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
-		std::pair<Kind, SkillContent> skill;
+		SkillContent skill;
 		std::shared_ptr<EnergyBar> m_energyBar;
 	};
 }

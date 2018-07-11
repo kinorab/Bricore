@@ -75,7 +75,7 @@ void MainBall::initialize() {
 }
 
 void MainBall::resettle() {
-	if (game::currentState != GameState::LEVEL_FINISHED) throw std::invalid_argument("Level not finished.");
+	if (game::currentGameState != GameState::LEVEL_FINISHED) throw std::invalid_argument("Level not finished.");
 	bSettle = false;
 }
 
@@ -109,7 +109,7 @@ void MainBall::determineHitDirect() {
 	if (bBroke) {
 		bBroke = false;
 		bSettle = false;
-		game::currentState = GameState::NOT_READY;
+		game::currentGameState = GameState::NOT_READY;
 	}
 	hitside.reset();
 }

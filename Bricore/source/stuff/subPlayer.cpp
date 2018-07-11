@@ -7,15 +7,22 @@
 #include "../gameSys/skill/subPlayerSkill.h"
 #include "../event/SFMLMouseHandler.h"
 #include "../event/SFMLKeyboardHandler.h"
+#include "../manager/textureManager.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
+
+std::map<item::Chip::Kind, std::shared_ptr<sf::Texture>> SubPlayer::chipPreviews;
 
 SubPlayer::SubPlayer(const std::shared_ptr<Level> level)
 	: energyBar(new EnergyBar(100, false, false, false))
 	, lifeBar(new LifeBar(200, false, false, false))
 	, m_level(level) {
+	// set default type and chip setting
+	changeType(item::Chip::None);
+	// set default key setting
 	defaultKeySettle();
+	// set subPlayer skill
 	subPlayerSkills = {
 	};
 }
@@ -33,8 +40,47 @@ void SubPlayer::setSubPlayerControlKey(const sf::Keyboard::Key upMove, const sf:
 		, switchToPrevChargingSkill, switchToNextChargingSkill);
 }
 
+void SubPlayer::changeType(const item::Chip::Kind chip) {
+	using namespace item;
+	// set pioneer type
+	switch (chip) {
+	case Chip::None:
+		pioneer.currentType = Prototype;
+		break;
+	case Chip::BurstChip:
+		break;
+	case Chip::FirearmChip:
+		break;
+	case Chip::GuardChip:
+		break;
+	case Chip::HeraldChip:
+		break;
+	case Chip::LaserChip:
+		break;
+	default:
+		throw std::invalid_argument("Wrong kind of chip");
+	}
+	// set pioneer chip
+	//pioneer.chip.reset(new Chip(chip, chipPreviews.at(chip)));
+}
+
 void SubPlayer::addSubPlayerSkill(game::SubPlayerSkill && subPlayerSkill) {
 	subPlayerSkills.push_back(std::make_shared<SubPlayerSkill>(subPlayerSkill));
+}
+
+void SubPlayer::loadChipPreviews(const std::map<item::Chip::Kind, std::string> & fileName, const bool isSmooth) {
+	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<item::Chip::Kind, std::string> & file) {
+		chipPreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
+		chipPreviews.at(file.first)->setSmooth(isSmooth);
+	});
+}
+
+SubPlayer::Type SubPlayer::getType() const {
+	return pioneer.currentType;
+}
+
+item::Chip::Kind SubPlayer::getChip() const {
+	return pioneer.chip->it;
 }
 
 void SubPlayer::resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<Ball> ball) {
@@ -57,7 +103,7 @@ SubPlayer::~SubPlayer() {
 }
 
 void SubPlayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	states.transform *= getTransform();
+	Container::draw(target, states);
 }
 
 void SubPlayer::defaultKeySettle() {

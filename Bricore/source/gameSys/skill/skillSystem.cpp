@@ -2,6 +2,7 @@
 #include "../effect/entireEffect.h"
 #include "../effect/attribute.h"
 #include <stdexcept>
+#include <algorithm>
 
 using namespace game;
 

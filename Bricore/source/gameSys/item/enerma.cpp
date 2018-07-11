@@ -2,8 +2,8 @@
 
 using namespace item;
 
-Enerma::Enerma(const Kind kind) 
-	: enerma(kind) {
+Enerma::Enerma(const Kind enerma) 
+	: it(enerma) {
 }
 
 void Enerma::setAppear(const bool isAppear) {

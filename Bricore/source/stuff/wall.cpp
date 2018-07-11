@@ -184,6 +184,5 @@ void Wall::settlePlace() {
 }
 
 void Wall::draw(RenderTarget &target, RenderStates states) const {
-	states.transform *= getTransform();
 	Container::draw(target, states);
 }

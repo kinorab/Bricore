@@ -55,8 +55,8 @@ void Stage::handle(const sf::Event & event) {
 
 Stage::~Stage() {
 	removeAllChildren();
-	AudioManager::getInstance().bgmusic.stop();
-	AudioManager::getInstance().sound1.stop();
+	AudioManager::getInstance().getMusic("bg")->stop();
+	AudioManager::getInstance().getSound("hitBoard")->stop();
 }
 
 void Stage::update(const float updateRatio) {
@@ -65,11 +65,11 @@ void Stage::update(const float updateRatio) {
 		for (size_t i = 0; i < SLICE; ++i) {
 			player->update(updateRatio);
 			subPlayer->update(updateRatio);
-			if (currentState == GameState::NOT_READY) {
+			if (currentGameState == GameState::NOT_READY) {
 				obstacle->resetPosition();
-				currentState = GameState::READY;
+				currentGameState = GameState::READY;
 			}
-			if (currentState == GameState::STARTED) {
+			if (currentGameState == GameState::STARTED) {
 				wall->update(updateRatio);
 				obstacle->update(updateRatio);
 				ball->update(updateRatio);
@@ -94,7 +94,7 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 
 	if (bPaused) return;
 	if (event.code == sf::Keyboard::G) {
-		currentState = GameState::STARTED;
+		currentGameState = GameState::STARTED;
 	}
 }
 
@@ -105,16 +105,15 @@ void Stage::onKeyReleased(KeyReleasedEvent & event) {
 void Stage::onMousePressed(MousePressedEvent & event) {
 	if (bPaused) return;
 	if (event.button == sf::Mouse::Left) {
-		currentState = GameState::STARTED;
+		currentGameState = GameState::STARTED;
 	}
 	else if (event.button == sf::Mouse::Right) {
 		// debugging feature
-		currentState = GameState::NOT_READY;
+		currentGameState = GameState::NOT_READY;
 	}
 }
 
 void Stage::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	states.transform *= getTransform();
 	target.draw(*c_root->getChildAt(0), states);
 	Container::draw(target, states);
 	target.draw(*c_root->getChildAt(1), states);

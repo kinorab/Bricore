@@ -5,10 +5,10 @@ namespace item {
 	class Enerma :
 		public ItemKind<Enerma> {
 	public:
-		explicit Enerma(const Kind kind);
+		explicit Enerma(const Kind enerma);
 		void setAppear(const bool isAppear);
 		virtual ~Enerma();
-		const Kind enerma;
+		const Kind it;
 		Enerma(const Enerma &) = delete;
 		Enerma & operator =(const Enerma &) = delete;
 	private:

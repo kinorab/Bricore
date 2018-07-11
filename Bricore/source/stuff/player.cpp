@@ -10,6 +10,7 @@
 #include "../gameSys/skill/playerSkill.h"
 #include "../gameSys/skill/ballSkill.h"
 #include "../manager/audioManager.h"
+#include "../manager/textureManager.h"
 #include "../event/SFMLMouseHandler.h"
 #include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
@@ -18,14 +19,33 @@ using namespace sf;
 using namespace game;
 
 Player::Player(const std::shared_ptr<Level> level)
-	: board(new RectangleShape(Vector2f(240.f, 12.f)))
-	, bFlash(false)
+	: bFlash(false)
 	, bFlashCD(false)
 	, fSpeed(4.5f)
 	, energyBar(new EnergyBar(100, false, false, false))
 	, m_level(level) {
+	// set fundamental size setting
+	defender.board.reset(new RectangleShape(Vector2f(240.f, 12.f)));
+	defender.absorbEngine.reset(new RectangleShape(Vector2f(defender.board->getSize().x * 0.1f
+		, defender.board->getSize().y)));
+	defender.hitLight.reset(new RectangleShape(Vector2f(defender.board->getSize().x * 0.05f
+		, defender.board->getSize().y)));
+	defender.board->setOrigin(Vector2f(defender.board->getSize().x / 2
+		, defender.board->getSize().y / 2));
+	defender.board->setPosition(Vector2f(LEVEL_WIDTH / 2
+		, LEVEL_HEIGHT - defender.board->getSize().y));
+	defender.absorbEngine->setOrigin(Vector2f(defender.absorbEngine->getSize().x / 2
+		, defender.absorbEngine->getSize().y / 2));
+	defender.absorbEngine->setPosition(defender.board->getPosition());
+	defender.hitLight->setOrigin(Vector2f(defender.hitLight->getSize().x / 2
+		, defender.hitLight->getSize().y / 2));
+	defender.hitLight->setPosition(defender.board->getPosition());
+	// set default key setting
 	defaultKeySettle();
-	playerSkills = {
+	// set default model setting
+	changeModel(Classic);
+	// set player skill
+	defender.playerSkills = {
 		std::make_shared<PlayerSkill>(
 		PlayerSkill::AmbitGuard, sf::seconds(8)
 		, std::vector<Effect::Kind>({ Effect::Invincible, Effect::Sturdy })
@@ -37,28 +57,19 @@ Player::Player(const std::shared_ptr<Level> level)
 		, std::vector<Attribute::Kind>({ Attribute::None })
 		, false, true, energyBar)
 	};
-	ballSkills = {
+	// set ball skill
+	defender.ballSkills = {
 	};
-	yellowRange.reset(new RectangleShape(Vector2f(board->getSize().x * 0.1f, board->getSize().y)));
-	redRange.reset(new RectangleShape(Vector2f(board->getSize().x * 0.05f, board->getSize().y)));
-	board->setOrigin(Vector2f(board->getSize().x / 2, board->getSize().y / 2));
-	board->setFillColor(Color::Green);
-	board->setPosition(Vector2f(LEVEL_WIDTH / 2, LEVEL_HEIGHT - board->getSize().y));
-	yellowRange->setOrigin(Vector2f(yellowRange->getSize().x / 2, yellowRange->getSize().y / 2));
-	yellowRange->setPosition(board->getPosition());
-	yellowRange->setFillColor(Color::Yellow);
-	redRange->setOrigin(Vector2f(redRange->getSize().x / 2, redRange->getSize().y / 2));
-	redRange->setPosition(board->getPosition());
-	redRange->setFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(0)));
+	// set player zone
 	using namespace game;
 	Zone::getInstance().settleZone(Zone::Player, sf::Vector2f(0.0f, LEVEL_HEIGHT - 100.f), 100.f);
-	addChild({ board, yellowRange, redRange });
-	std::for_each(ballSkills.begin(), ballSkills.end()
+	addChild({ defender.board, defender.absorbEngine, defender.hitLight });
+	std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
 		, [&](const std::shared_ptr<BallSkill> & skill) {
 		skill->initialize();
 		addChild({ skill });
 	});
-	std::for_each(playerSkills.begin(), playerSkills.end()
+	std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
 		, [&](const std::shared_ptr<PlayerSkill> & skill) {
 		skill->initialize();
 		addChild({ skill });
@@ -68,26 +79,26 @@ Player::Player(const std::shared_ptr<Level> level)
 void Player::update(const float updateRatio) {
 	const Vector2f &mainBallPos{ m_ball->getMainBallPosition() };
 	const float mainBallRadius = m_ball->getMainBallRadius();
-	const FloatRect playerBound = board->getGlobalBounds();
-	if (playerBound.left >= 0
+	const FloatRect playerBoardBound = defender.board->getGlobalBounds();
+	if (playerBoardBound.left >= 0
 		&& (Keyboard::isKeyPressed(key.leftMove))
 		) {
-		board->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
-		redRange->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
+		defender.board->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
+		defender.hitLight->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
 	}
-	if (playerBound.left + playerBound.width <= LEVEL_WIDTH
+	if (playerBoardBound.left + playerBoardBound.width <= LEVEL_WIDTH
 		&& (Keyboard::isKeyPressed(key.rightMove))
 		) {
-		board->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
-		redRange->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
+		defender.board->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
+		defender.hitLight->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
 	}
-	if (currentState == GameState::STARTED) {
-		flashRange(AudioManager::getInstance().sound1, mainBallPos, mainBallRadius);
+	if (currentGameState == GameState::STARTED) {
+		flashRange(mainBallPos, mainBallRadius);
 	}
 	if (bFlash) {
 		flashElapsed();
 	}
-	yellowRange->setPosition(board->getPosition());
+	defender.absorbEngine->setPosition(defender.board->getPosition());
 }
 
 void Player::setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Keyboard::Key rightMove
@@ -100,12 +111,65 @@ void Player::setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Key
 	BallSkill::resetKey(ballSkill, ballSkillSwap);
 }
 
+void Player::loadPlayerModelPreview(const std::map<Model, BoardFile> & fileName, const bool isSmooth) {
+	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<Model, BoardFile> & file) {
+		modelPreviews.emplace(file.first, new BoardTexture);
+		modelPreviews.at(file.first)->board.reset(TextureManager::getInstance().get(file.second.board));
+		modelPreviews.at(file.first)->absorbEngine.reset(TextureManager::getInstance().get(file.second.absorbEngine));
+		modelPreviews.at(file.first)->hitLight.reset(TextureManager::getInstance().get(file.second.hitLight));
+		modelPreviews.at(file.first)->board->setSmooth(isSmooth);
+		modelPreviews.at(file.first)->absorbEngine->setSmooth(isSmooth);
+		modelPreviews.at(file.first)->hitLight->setSmooth(isSmooth);
+	});
+}
+
+void Player::changeModel(const Model model) {
+	// set defender context
+	if (model == Classic) {
+		defender.board->setTexture(nullptr);
+		defender.absorbEngine->setTexture(nullptr);
+		defender.hitLight->setTexture(nullptr);
+		defender.board->setFillColor(Color::Green);
+		defender.absorbEngine->setFillColor(Color::Yellow);
+		defender.hitLight->setFillColor(Color(Color::Red.r, Color::Red.b, Color::Red.g, Color::Transparent.a));
+	}
+	else {
+		defender.board->setFillColor(Color::Transparent);
+		defender.absorbEngine->setFillColor(Color::Transparent);
+		defender.hitLight->setFillColor(Color::Transparent);
+		defender.board->setTexture(modelPreviews.at(model)->board.get());
+		defender.absorbEngine->setTexture(modelPreviews.at(model)->absorbEngine.get());
+		defender.hitLight->setTexture(modelPreviews.at(model)->hitLight.get());
+	}
+	// set defender model
+	defender.currentModel = model;
+}
+
 void Player::addPlayerSkill(PlayerSkill && playerSkill) {
-	playerSkills.push_back(std::make_shared<PlayerSkill>(playerSkill));
+	defender.playerSkills.push_back(std::make_shared<PlayerSkill>(playerSkill));
 }
 
 void Player::addBallSkill(BallSkill && ballSkill) {
-	ballSkills.push_back(std::make_shared<BallSkill>(ballSkill));
+	defender.ballSkills.push_back(std::make_shared<BallSkill>(ballSkill));
+}
+
+void Player::setAutoUse(const SkillChoose skill, const bool autoUse) {
+	switch (skill) {
+	case SkillChoose::_Ball:
+		std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
+			, [=](const std::shared_ptr<BallSkill> & skill) {
+			skill->setAutoUse(autoUse);
+		});
+		break;
+	case SkillChoose::_Player:
+		std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
+			, [=](const std::shared_ptr<PlayerSkill> & skill) {
+			skill->setAutoUse(autoUse);
+		});
+		break;
+	default:
+		throw std::invalid_argument("Invalid skill kind.");
+	}
 }
 
 void Player::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer
@@ -117,13 +181,13 @@ void Player::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer
 void Player::handle(const sf::Event & event) {
 	mouseHandler->handle(event, *this, false);
 	keyboardHandler->handle(event, *this);
-	std::for_each(playerSkills.begin(), playerSkills.end()
+	std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
 		, [&](const std::shared_ptr<PlayerSkill> & skill) {
 		assert(skill->isInitialize());
 		skill->handleSkill(&event);
 		skill->handleSelect(&event);
 	});
-	std::for_each(ballSkills.begin(), ballSkills.end()
+	std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
 		, [&](const std::shared_ptr<BallSkill> & skill) {
 		assert(skill->isInitialize());
 		skill->handleSkill(&event);
@@ -136,19 +200,23 @@ float Player::getSpeed() const {
 }
 
 const Vector2f & Player::getPosition() const {
-	return board->getPosition();
+	return defender.board->getPosition();
 }
 
 Vector2f Player::getTopCenterPos() const {
-	return Vector2f(board->getPosition().x, board->getGlobalBounds().top);
+	return Vector2f(defender.board->getPosition().x, defender.board->getGlobalBounds().top);
 }
 
 FloatRect Player::getGlobalBounds() const {
-	return board->getGlobalBounds();
+	return defender.board->getGlobalBounds();
 }
 
 sys::DPointf Player::getDP() const {
-	return sys::DPointf(board->getGlobalBounds());
+	return sys::DPointf(defender.board->getGlobalBounds());
+}
+
+Player::Model Player::getModel() const {
+	return defender.currentModel;
 }
 
 Player::~Player() {
@@ -156,7 +224,6 @@ Player::~Player() {
 }
 
 void Player::draw(RenderTarget &target, RenderStates states) const {
-	states.transform *= getTransform();
 	Container::draw(target, states);
 }
 
@@ -176,38 +243,41 @@ void Player::defaultKeySettle() {
 }
 
 void Player::setFlashPosition(const Vector2f & position) {
-	redRange->setPosition(position);
+	defender.hitLight->setPosition(position);
 }
 
 void Player::setFlashFillColor(const sf::Color & color) {
-	redRange->setFillColor(color);
+	defender.hitLight->setFillColor(color);
 }
 
 void Player::flashElapsed() {
 	const float time = static_cast<float>(elapsed.getElapsedTime().asMilliseconds());
 	if (time <= 1500.f) {
 		const float rate = (1.f - time / 1500.f);
-		setFlashFillColor(Color(static_cast<Uint8>(255), static_cast<Uint8>(0), static_cast<Uint8>(0), static_cast<Uint8>(rate * 255)));
+		setFlashFillColor(Color(defender.hitLight->getFillColor().r
+			, defender.hitLight->getFillColor().b
+			, defender.hitLight->getFillColor().g
+			, static_cast<Uint8>(rate * 255)));
 	}
 	else {
 		bFlash = false;
 	}
 }
 
-void Player::flashRange(Sound & sound, const Vector2f ballPos, const float radius) {
+void Player::flashRange(const Vector2f ballPos, const float radius) {
 	const FloatRect playerBounds = getGlobalBounds();
-	const FloatRect rangeBounds = redRange->getGlobalBounds();
+	const FloatRect hitLightBounds = defender.hitLight->getGlobalBounds();
 	const Vector2f pos1P = getPosition();
 
 	if (!bFlashCD) {
 		if (sys::ballRectINCIntersects(ballPos, radius, playerBounds)) {
 			elapsed.restart();
-			sound.play();
+			AudioManager::getInstance().getSound("hitBoard")->play();
 			if (ballPos.x - radius <= playerBounds.left) {
-				setFlashPosition(Vector2f(playerBounds.left + rangeBounds.width / 2, pos1P.y));
+				setFlashPosition(Vector2f(playerBounds.left + hitLightBounds.width / 2, pos1P.y));
 			}
 			else if (ballPos.x + radius >= playerBounds.left + playerBounds.width) {
-				setFlashPosition(Vector2f(playerBounds.left + playerBounds.width - rangeBounds.width / 2, pos1P.y));
+				setFlashPosition(Vector2f(playerBounds.left + playerBounds.width - hitLightBounds.width / 2, pos1P.y));
 			}
 			else {
 				setFlashPosition(Vector2f(ballPos.x, pos1P.y));

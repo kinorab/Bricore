@@ -52,7 +52,7 @@ void Obstacle::update(const float updateRatio) {
 			element->isCollidedObstacle(blocks.at(i).get());
 		}
 	}
-	if (game::currentState == GameState::LEVEL_FINISHED) {
+	if (game::currentGameState == GameState::LEVEL_FINISHED) {
 		resettle();
 	}
 }
@@ -124,7 +124,6 @@ sys::DPointf Obstacle::getDP(const size_t number) const {
 }
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
-	states.transform *= getTransform();
 	Container::draw(target, states);
 }
 

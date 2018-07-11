@@ -19,7 +19,7 @@ Brick::Brick(const Brick & copy)
 }
 
 bool Brick::containsPoint(const sf::Vector2f & point) const {
-	return brick->getGlobalBounds().contains(getTransform().transformPoint(point));
+	return brick->getGlobalBounds().contains(point);
 }
 
 std::shared_ptr<sf::Drawable> Brick::getDrawable() const {
@@ -93,6 +93,5 @@ Brick & Brick::operator=(Brick right) {
 }
 
 void Brick::draw(RenderTarget &target, RenderStates states) const {
-	states.transform *= getTransform();
 	target.draw(*brick, states);
 }

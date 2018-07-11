@@ -22,7 +22,7 @@ namespace game {
 	}
 
 	bool Button::containsPoint(const sf::Vector2f & point) const {
-		return hitObject->containsPoint(getTransform().getInverse().transformPoint(point));
+		return hitObject->containsPoint(point);
 	}
 
 	std::shared_ptr<sf::Drawable> Button::getDrawable() const {
@@ -37,8 +37,7 @@ namespace game {
 			return downObject;
 			break;
 		default:
-			return nullptr;
-			break;
+			throw std::exception("Unexcept error");
 		}
 	}
 

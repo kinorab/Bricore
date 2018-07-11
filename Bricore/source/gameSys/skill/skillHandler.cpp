@@ -18,7 +18,7 @@ SkillHandler<T>::SkillHandler() {
 
 template<typename T>
 void SkillHandler<T>::insert(const std::shared_ptr<T> skill) {
-	skillRecords.emplace(skill->skill.second.currentState, skill);
+	skillRecords.emplace(skill->skill.currentState, skill);
 }
 
 template<typename T>

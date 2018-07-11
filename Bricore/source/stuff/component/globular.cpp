@@ -48,14 +48,11 @@ void Globular::setActive(const bool active) {
 }
 
 void Globular::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	states.transform *= getTransform();
 	target.draw(*ball, states);
 }
 
 bool Globular::containsPoint(const sf::Vector2f & point) const { 
-	const sf::Vector2f displacement = getPosition()
-		+ sf::Vector2f(getRadius(), getRadius())
-		- getInverseTransform().transformPoint(point);
+	const sf::Vector2f displacement = point - getPosition();
 	if (pow(displacement.x, 2) + pow(displacement.y, 2) <= pow(getRadius(), 2)) {
 		return true;
 	}

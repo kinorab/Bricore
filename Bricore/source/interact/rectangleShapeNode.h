@@ -14,7 +14,7 @@ namespace game {
 		virtual ~RectangleShapeNode();
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
-	private:
+	protected:
 		std::shared_ptr<sf::RectangleShape> rectangleShape;
 	};
 }

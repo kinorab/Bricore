@@ -1,6 +1,7 @@
 #include "ballSkill.h"
 #include "skillHandler.h"
 #include "../effect/entireEffect.h"
+#include "../../manager/textureManager.h"
 #include "../../definition/gameState.h"
 #include <SFML/Graphics.hpp>
 
@@ -17,16 +18,17 @@ BallSkill::SkillKey BallSkill::key;
 BallSkill::BallSkill(const Kind skillName, const sf::Time duration
 	, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
 	, const bool autoUse, const bool exist)
-	: skill(skillName, SkillContent{ State::None, nullptr, nullptr })
-	, SkillSystem(duration, autoUse, exist)
+	: SkillSystem(duration, autoUse, exist)
+	, skill(SkillContent{ skillName, State::None, nullptr, nullptr })
 	, bInitialize(false) {
+	// initialize effects
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
 		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
+	// initialize attribute
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
 		skillAttributes.push_back(std::make_shared<Attribute>(element));
 	});
-	handler.insert(shared_from_this());
 }
 
 void BallSkill::initialize() {
@@ -37,16 +39,15 @@ void BallSkill::initialize() {
 
 void BallSkill::loadFrame(const std::vector<std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
-		framePreviews.emplace(file, std::make_shared<sf::Texture>());
-		framePreviews.at(file)->loadFromFile(file);
+		framePreviews.emplace(file, TextureManager::getInstance().get(file));
 		framePreviews.at(file)->setSmooth(isSmooth);
 	});
 }
 
 void BallSkill::handleSkill(const sf::Event * const event) {
-	if (status != Status::Selected || game::currentState == GameState::LEVEL_FINISHED) return;
+	if (status != Status::Selected || currentGameState == GameState::LEVEL_FINISHED) return;
 	using namespace std::placeholders;
-	State currentState = skill.second.currentState;
+	State currentState = skill.currentState;
 	switch (currentState) {
 	case State::OnDropping:
 		if (handler.tryEnterField(std::bind(&BallSkill::setState, this, _1))) {
@@ -94,9 +95,9 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 
 void BallSkill::handleSelect(const sf::Event * const event) {
 	if (status == Status::None || event->type != sf::Event::MouseButtonPressed
-		|| currentState != GameState::LEVEL_FINISHED) return;
-	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
-		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
+		|| currentGameState != GameState::LEVEL_FINISHED) return;
+	if (skill.context->getGlobalBounds().contains(static_cast<float>(event->mouseButton.x)
+		, static_cast<float>(event->mouseButton.y))) {
 		if (SkillSystem::selectOn()) {
 			++uCurrentCarry;
 			return;
@@ -108,50 +109,69 @@ void BallSkill::handleSelect(const sf::Event * const event) {
 	}
 }
 
+bool BallSkill::containsPoint(const sf::Vector2f & point) const {
+	if (skill.currentState == State::None) return false;
+	if (skill.frame) {
+		return skill.frame->getGlobalBounds().contains(point);
+	}
+	return skill.context->getGlobalBounds().contains(point);
+}
+
+std::shared_ptr<sf::Drawable> BallSkill::getDrawable() const {
+	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
+}
+
 void BallSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
-	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> &file) {
-		statePreviews.emplace(file.first, std::make_shared<sf::Texture>());
-		statePreviews.at(file.first)->loadFromFile(file.second);
+	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> & file) {
+		statePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
 		statePreviews.at(file.first)->setSmooth(isSmooth);
 	});
 }
 
-void BallSkill::setState(const State state) {
-	if (skill.second.currentState == State::OnDropping) {
+void BallSkill::setState(const State nextState) {
+	// set field number
+	if (skill.currentState == State::OnDropping) {
 		if (uCurrentOnField > uMaxOnField) throw std::invalid_argument("Too many skills on field.");
 		++uCurrentOnField;
 	}
-	else if (state == State::Using) {
+	else if (nextState == State::Using) {
 		if (uCurrentOnField == 0) throw std::invalid_argument("Field no have any skills.");
 		--uCurrentOnField;
 	}
-	skill.second.currentState = state;
-	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
-	auto context = skill.second.context;
-	auto frame = skill.second.frame;
-	skill.second.currentState = state;
-	context.reset(new sf::Sprite(*statePreviews.at(state)));
-	if (state == State::OnDropping) {
+	// set skill context
+	if (nextState == State::None) {
+		skill.context = nullptr;
+	}
+	else {
+		skill.context.reset(new sf::Sprite(*statePreviews.at(nextState)));
+		skill.context->setOrigin(skill.context->getLocalBounds().width / 2.f
+			, skill.context->getLocalBounds().height / 2.f);
+		skill.context->setPosition(skill.frame->getPosition());
+	}
+	// set frame context
+	if (nextState == State::OnDropping) {
 		for (auto iter = framePreviews.begin(); iter != framePreviews.end(); ++iter) {
 			if (iter->first.find(std::to_string(uLevel)) != std::string::npos) {
-				frame.reset(new sf::Sprite(*framePreviews.at(iter->first)));
-				frame->setOrigin(frame->getTextureRect().width / 2.f, frame->getTextureRect().height / 2.f);
+				skill.frame.reset(new sf::Sprite(*framePreviews.at(iter->first)));
+				skill.frame->setOrigin(skill.frame->getLocalBounds().width / 2.f
+					, skill.frame->getLocalBounds().height / 2.f);
 				break;
 			}
 		}
-		context->setOrigin(context->getTextureRect().width / 2.f, context->getTextureRect().height / 2.f);
-		context->setPosition(frame->getPosition());
+
 	}
-	else if (frame) {
-		frame = nullptr;
+	else if (skill.frame) {
+		skill.frame = nullptr;
 	}
+	// set skill state
+	skill.currentState = nextState;
 }
 
 void BallSkill::swapSkill(const std::shared_ptr<BallSkill> & other) {
-	State state = skill.second.currentState;
-	State inputState = other->skill.second.currentState;
+	State state = skill.currentState;
+	State inputState = other->skill.currentState;
 	statePreviews.swap(other->statePreviews);
-	skill.swap(other->skill);
+	std::swap(skill, other->skill);
 	setState(inputState);
 	other->setState(state);
 }
@@ -192,21 +212,20 @@ bool BallSkill::isInitialize() const {
 }
 
 BallSkill::State BallSkill::getState() const {
-	return skill.second.currentState;
+	return skill.currentState;
 }
 
 SkillKind<BallSkill>::Kind BallSkill::getSkillName() const {
-	return skill.first;
+	return skill.name;
 }
 
 BallSkill::~BallSkill() {
 }
 
 void BallSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	if (skill.second.currentState == State::None) return;
-	states.transform *= getTransform();
-	target.draw(*skill.second.context, states);
-	if (skill.second.frame) {
-		target.draw(*skill.second.frame, states);
+	if (skill.currentState == State::None) return;
+	target.draw(*skill.context, states);
+	if (skill.frame) {
+		target.draw(*skill.frame, states);
 	}
 }

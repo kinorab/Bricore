@@ -16,7 +16,8 @@ namespace game {
 			OnThirdField,	// on player third skill field
 			OnFourthField,	// on player fourth skill field
 			None = 100,		// no appear on stage
-			Using			// when using it
+			Using,			// when using it
+			Display			// display on store, illustration etc..
 		};
 		static const State maxField = OnFourthField;
 	};
@@ -28,7 +29,8 @@ namespace game {
 			OnSecondField,	// on subplayer second skill field
 			OnThirdField,	// on subplayer third skill field
 			None = 100,		// no appear on stage
-			Using			// when using it
+			Using,			// when using it
+			Display			// display on store, illustration etc..
 		};
 		static const State maxField = OnThirdField;
 	};
@@ -42,14 +44,16 @@ namespace game {
 			OnFourthField,	// on ball fourth skill field
 			None = 100,		// no appear on stage
 			Using,			// when using it
+			Display			// display on store, illustration etc..
 		};
 		static const State maxField = OnFourthField;
 	};
 	template<> class SkillState<BossSkill> {
 	public:
 		enum State {
-			None,
-			Using
+			None,			// no use
+			Using,			// when using it
+			Display			// display on information to let player know, illustration etc..
 		};
 	};
 }

@@ -1,7 +1,5 @@
 #pragma once
 #include "../system.h"
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 #include <memory>
 #include <vector>
 

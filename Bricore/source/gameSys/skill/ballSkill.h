@@ -1,4 +1,5 @@
 #pragma once
+#include "../../interact/interactiveObject.h"
 #include "skillSystem.h"
 #include "skillState.h"
 #include "skillKind.h"
@@ -22,8 +23,7 @@ namespace game {
 		, public SkillKind<BallSkill>
 		, public SkillState<BallSkill>
 		, public std::enable_shared_from_this<BallSkill>
-		, public sf::Drawable
-		, public sf::Transformable {
+		, public InteractiveObject {
 		friend class SkillHandler<BallSkill>;
 	public:
 		explicit BallSkill(const Kind skillName, const sf::Time duration
@@ -32,6 +32,8 @@ namespace game {
 		virtual void initialize() override;
 		virtual void handleSkill(const sf::Event * const event) override;
 		virtual void handleSelect(const sf::Event * const event) override;
+		virtual bool containsPoint(const sf::Vector2f & point) const override;
+		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
 		static void loadFrame(const std::vector<std::string> &fileName, const bool isSmooth = false);
 		static void extendField(size_t number);
@@ -49,6 +51,7 @@ namespace game {
 
 	protected:
 		struct SkillContent {
+			Kind name;
 			State currentState;
 			std::shared_ptr<sf::Sprite> frame;
 			std::shared_ptr<sf::Sprite> context;
@@ -60,7 +63,7 @@ namespace game {
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
-		void setState(const State state);
+		void setState(const State nextState);
 		void swapSkill(const std::shared_ptr<BallSkill> & other);
 
 		static size_t uMaxDropping;
@@ -72,6 +75,6 @@ namespace game {
 		static SkillHandler<BallSkill> handler;
 		bool bInitialize;
 		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
-		std::pair<Kind, SkillContent> skill;
+		SkillContent skill;
 	};
 }

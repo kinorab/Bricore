@@ -2,6 +2,7 @@
 #include "skillHandler.h"
 #include "../effect/entireEffect.h"
 #include "../bar/energyBar.h"
+#include "../../manager/textureManager.h"
 #include "../../definition/gameState.h"
 #include <SFML/Graphics.hpp>
 
@@ -17,18 +18,19 @@ SubPlayerSkill::SkillKey SubPlayerSkill::key;
 SubPlayerSkill::SubPlayerSkill(const Kind skillName, const sf::Time duration
 	, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
 	, const bool autoUse, const bool exist, const std::shared_ptr<EnergyBar> energyBar)
-	: skill(skillName, SkillContent{ State::None, nullptr })
+	: skill(SkillContent{ skillName, State::None, nullptr })
 	, SkillSystem(duration, autoUse, exist)
-	, energyBar(std::move(energyBar))
+	, m_energyBar(std::move(energyBar))
 	, bInitialize(false)
 	, bTypeSkill(false) {
+	// initialize effects
 	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
 		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
 	});
+	// initialize attributes
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
 		skillAttributes.push_back(std::make_shared<Attribute>(element));
 	});
-	handler.insert(shared_from_this());
 }
 
 void SubPlayerSkill::initialize() {
@@ -38,14 +40,14 @@ void SubPlayerSkill::initialize() {
 }
 
 void SubPlayerSkill::handleSkill(const sf::Event * const event) {
-	if (status != Status::Selected || game::currentState == GameState::LEVEL_FINISHED) return;
+	if (status != Status::Selected || currentGameState == GameState::LEVEL_FINISHED) return;
 	using namespace std::placeholders;
-	State currentState = skill.second.currentState;
+	State currentState = skill.currentState;
 	switch (currentState) {
 	case State::OnCharging:
-		if (!energyBar->isFull() || bLocked) break;
+		if (!m_energyBar->isFull() || bLocked) break;
 		if (handler.tryEnterField(std::bind(&SubPlayerSkill::setState, this, _1))) {
-			energyBar->clear();
+			m_energyBar->clear();
 		}
 		break;
 	case State::OnFirstField:
@@ -88,9 +90,9 @@ void SubPlayerSkill::handleSkill(const sf::Event * const event) {
 
 void SubPlayerSkill::handleSelect(const sf::Event * const event) {
 	if (status == Status::None || event->type != sf::Event::MouseButtonPressed
-		|| currentState != GameState::LEVEL_FINISHED) return;
-	if (skill.second.context->getGlobalBounds().contains(getTransform().getInverse().transformPoint(
-		static_cast<float>(event->mouseButton.x), static_cast<float>(event->mouseButton.y)))) {
+		|| currentGameState != GameState::LEVEL_FINISHED) return;
+	if (skill.context->getGlobalBounds().contains(static_cast<float>(event->mouseButton.x)
+		, static_cast<float>(event->mouseButton.y))) {
 		if (uCurrentCarry < uMaxCarry && SkillSystem::selectOn()) {
 			++uCurrentCarry;
 			return;
@@ -102,10 +104,18 @@ void SubPlayerSkill::handleSelect(const sf::Event * const event) {
 	}
 }
 
+bool SubPlayerSkill::containsPoint(const sf::Vector2f & point) const {
+	if (skill.currentState == State::None) return false;
+	return skill.context->getGlobalBounds().contains(point);
+}
+
+std::shared_ptr<sf::Drawable> SubPlayerSkill::getDrawable() const {
+	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
+}
+
 void SubPlayerSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
-	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> &file) {
-		statePreviews.emplace(file.first, std::make_shared<sf::Texture>());
-		statePreviews.at(file.first)->loadFromFile(file.second);
+	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> & file) {
+		statePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
 		statePreviews.at(file.first)->setSmooth(isSmooth);
 	});
 }
@@ -127,24 +137,32 @@ void SubPlayerSkill::resetKey(const sf::Keyboard::Key subSkill, const sf::Keyboa
 	key = { subSkill, subSkillSwap, turnSkillToTypeSkill, switchToPrevChargingSkill, switchToNextChargingSkill };
 }
 
-void SubPlayerSkill::setState(const State state) {
-	if (skill.second.currentState == State::OnCharging) {
+void SubPlayerSkill::setState(const State nextState) {
+	// set field number
+	if (skill.currentState == State::OnCharging) {
 		if (uCurrentOnField > uMaxOnField) throw std::invalid_argument("Too many skills on field.");
 		++uCurrentOnField;
 	}
-	else if (state == State::Using) {
+	else if (nextState == State::Using) {
 		if (uCurrentOnField == 0) throw std::invalid_argument("Field not have any skills.");
 		--uCurrentOnField;
 	}
-	skill.second.currentState = state;
-	skill.second.context.reset(new sf::Sprite(*statePreviews.at(state)));
+	// set skill context
+	if (nextState == State::None) {
+		skill.context = nullptr;
+	}
+	else {
+		skill.context.reset(new sf::Sprite(*statePreviews.at(nextState)));
+	}
+	// set skill state
+	skill.currentState = nextState;
 }
 
 void SubPlayerSkill::swapSkill(const std::shared_ptr<SubPlayerSkill> & other) {
-	State state = skill.second.currentState;
-	State inputState = other->skill.second.currentState;
+	State state = skill.currentState;
+	State inputState = other->skill.currentState;
 	statePreviews.swap(other->statePreviews);
-	skill.swap(other->skill);
+	std::swap(skill, other->skill);
 	setState(inputState);
 	other->setState(state);
 }
@@ -170,18 +188,17 @@ bool SubPlayerSkill::isInitialize() const {
 }
 
 SubPlayerSkill::State SubPlayerSkill::getState() const {
-	return skill.second.currentState;
+	return skill.currentState;
 }
 
 SkillKind<SubPlayerSkill>::Kind SubPlayerSkill::getSkillName() const {
-	return skill.first;
+	return skill.name;
 }
 
 SubPlayerSkill::~SubPlayerSkill() {
 }
 
 void SubPlayerSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	if (skill.second.currentState == State::None) return;
-	states.transform *= getTransform();
-	target.draw(*skill.second.context, states);
+	if (skill.currentState == State::None) return;
+	target.draw(*skill.context, states);
 }

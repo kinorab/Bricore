@@ -57,9 +57,9 @@ void Ball::initializeBall() {
 		shadowBalls.clear();
 		mainBall->initialize();
 	}
-	else if (game::currentState == GameState::LEVEL_FINISHED) {
+	else if (game::currentGameState == GameState::LEVEL_FINISHED) {
 		mainBall->resettle();
-		game::currentState = GameState::NOT_READY;
+		game::currentGameState = GameState::NOT_READY;
 	}
 }
 
@@ -123,7 +123,6 @@ Ball::~Ball() {
 }
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
-	states.transform *= getTransform();
 	Container::draw(target, states);
 }
 

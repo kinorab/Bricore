@@ -11,7 +11,7 @@ namespace game {
 	}
 
 	bool RectangleShapeNode::containsPoint(const sf::Vector2f & point) const {
-		return rectangleShape->getGlobalBounds().contains(getTransform().getInverse().transformPoint(point));
+		return rectangleShape->getGlobalBounds().contains(point);
 	}
 
 	std::shared_ptr<sf::Drawable> RectangleShapeNode::getDrawable() const {

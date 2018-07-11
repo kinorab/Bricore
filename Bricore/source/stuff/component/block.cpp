@@ -27,7 +27,7 @@ Block::Block(const Block & copy)
 }
 
 bool Block::containsPoint(const sf::Vector2f & point) const {
-	return block->getBounds().contains(getTransform().transformPoint(point));
+	return block->getBounds().contains(point);
 }
 
 std::shared_ptr<sf::Drawable> Block::getDrawable() const {
@@ -171,7 +171,6 @@ void Block::moveEntity(const float updateRatio) {
 }
 
 void Block::draw(RenderTarget &target, RenderStates states) const {
-	states.transform *= getTransform();
 	states.texture = texture.get();
 	target.draw(*block, states);
 }

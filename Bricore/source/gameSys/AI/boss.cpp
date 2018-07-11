@@ -1,35 +1,47 @@
 #include "boss.h"
 #include "../skill/bossSkill.h"
+#include "../../manager/textureManager.h"
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
 
 using namespace game;
 
-std::map<item::Core::Kind, std::shared_ptr<sf::Texture>> Boss::coreTypePreviews;
+std::map<item::Core::Kind, std::shared_ptr<sf::Texture>> Boss::corePreviews;
 
 Boss::Boss(const std::string name, const Attribute::Kind &attribute
-	, const std::vector<BossSkill> &skills, const size_t maxOnUsingSkill)
-	: boss(CoreType{ name, nullptr, nullptr }
-		, Content{ maxOnUsingSkill, std::make_shared<Attribute>(attribute), {}, {}, {} })
+	, const std::vector<BossSkill> &skills, const size_t maxSkillOnUsing)
+	: boss(BossContent{ name, maxSkillOnUsing, nullptr
+		, std::make_shared<Attribute>(attribute), {}, {}, {} })
 	, bExist(false)
 	, bMove(false) {
+	// initialize skills
 	std::for_each(skills.begin(), skills.end(), [&](const BossSkill &skill) {
-		boss.second.skills.push_back(std::make_shared<BossSkill>(skill));
+		boss.skills.push_back(std::make_shared<BossSkill>(skill));
 	});
 }
 
-void Boss::loadCoreTypePreviews(const std::map<item::Core::Kind, std::string> &fileName, const bool isSmooth) {
+bool Boss::containsPoint(const sf::Vector2f & point) const {
+	if (!bExist) return false;
+	if (boss.core->containsPoint(point)) return true;
+	for (auto & part : boss.parts) {
+		if (part.second.context->getGlobalBounds().contains(point)) return true;
+	}
+	for (auto & weakPart : boss.weakParts) {
+		if (weakPart.second.context->getGlobalBounds().contains(point)) return true;
+	}
+	return false;
+}
+
+void Boss::loadCorePreviews(const std::map<item::Core::Kind, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<item::Core::Kind, std::string> &file) {
-		coreTypePreviews.emplace(file.first, std::make_shared<sf::Texture>());
-		coreTypePreviews.at(file.first)->loadFromFile(file.second);
-		coreTypePreviews.at(file.first)->setSmooth(isSmooth);
+		corePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
+		corePreviews.at(file.first)->setSmooth(isSmooth);
 	});
 }
 
 void Boss::loadPartPreviews(const std::vector<std::string>& fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
-		partPreviews.emplace(file, std::make_shared<sf::Texture>());
-		partPreviews.at(file)->loadFromFile(file);
+		partPreviews.emplace(file, TextureManager::getInstance().get(file));
 		partPreviews.at(file)->setSmooth(isSmooth);
 	});
 }
@@ -44,12 +56,12 @@ void Boss::handle(const sf::Event & event) {
 void Boss::offset(const sf::Vector2f &offset, const sf::Time &moveTime) {
 	static sf::Time duration = sf::seconds(0);
 	if (duration <= sf::seconds(0)) duration = moveTime;
-	boss.first.context->setPosition(boss.first.context->getPosition() + offset);
-	std::for_each(boss.second.parts.begin(), boss.second.parts.end()
+	boss.core->setPosition(boss.core->getPosition() + offset);
+	std::for_each(boss.parts.begin(), boss.parts.end()
 		, [=](const std::pair<std::string, Part> &element) {
 		element.second.context->setPosition(element.second.context->getPosition() + offset);
 	});
-	std::for_each(boss.second.weakParts.begin(), boss.second.weakParts.end()
+	std::for_each(boss.weakParts.begin(), boss.weakParts.end()
 		, [=](const std::pair<std::string, WeakPart> &element) {
 		element.second.context->setPosition(element.second.context->getPosition() + offset);
 	});
@@ -59,14 +71,14 @@ void Boss::offset(const sf::Vector2f &offset, const sf::Time &moveTime) {
 void Boss::moveTo(const sf::Vector2f &coordinate, const sf::Time &moveTime) {
 	static sf::Time duration = sf::seconds(0);
 
-	if (boss.first.context->getPosition() == coordinate) return;
-	sf::Vector2f displacement = coordinate - boss.first.context->getPosition();
-	boss.first.context->setPosition(boss.first.context->getPosition() + displacement);
-	std::for_each(boss.second.parts.begin(), boss.second.parts.end()
+	if (boss.core->getPosition() == coordinate) return;
+	sf::Vector2f displacement = coordinate - boss.core->getPosition();
+	boss.core->setPosition(boss.core->getPosition() + displacement);
+	std::for_each(boss.parts.begin(), boss.parts.end()
 		, [=](const std::pair<std::string, Part> &element) {
 		element.second.context->setPosition(element.second.context->getPosition() + displacement);
 	});
-	std::for_each(boss.second.weakParts.begin(), boss.second.weakParts.end()
+	std::for_each(boss.weakParts.begin(), boss.weakParts.end()
 		, [=](const std::pair<std::string, WeakPart> &element) {
 		element.second.context->setPosition(element.second.context->getPosition() + displacement);
 	});
@@ -74,55 +86,51 @@ void Boss::moveTo(const sf::Vector2f &coordinate, const sf::Time &moveTime) {
 }
 
 void Boss::addBossSkill(BossSkill && bossSkill) {
-	boss.second.skills.push_back(std::make_shared<BossSkill>(bossSkill));
+	boss.skills.push_back(std::make_shared<BossSkill>(bossSkill));
 }
 
 void Boss::extendMaxOnUsing(const size_t number) {
-	boss.second.maxOnUsingSkill += number;
+	boss.maxOnUsingSkill += number;
 }
 
 Attribute::Kind Boss::getAttribute() const {
-	return boss.second.attribute->it;
+	return boss.attribute->it;
 }
 
-item::Core::Kind Boss::getBossCoreType() const {
-	return boss.first.core->type;
+item::Core::Kind Boss::getBossCore() const {
+	return boss.core->it;
 }
 
 const std::string & Boss::getBossName() const {
-	return boss.first.bossName;
+	return boss.bossName;
 }
 
 size_t Boss::getMaxOnUsing() const {
-	return boss.second.maxOnUsingSkill;
+	return boss.maxOnUsingSkill;
 }
 
 size_t Boss::getPartAmount() const {
-	return boss.second.parts.size();
+	return boss.parts.size();
 }
 
 size_t Boss::getIntensifiedPartAmount() const {
 	size_t number = 0;
-	for (const auto &element : boss.second.parts) {
-		if (element.second.intensified) ++number;
+	for (const auto &element : boss.parts) {
+		if (element.second.bIntensified) ++number;
 	}
 	return number;
 }
 
 size_t Boss::getWeakPartAmount() const {
-	return boss.second.weakParts.size();
+	return boss.weakParts.size();
 }
 
 size_t Boss::getBrokenPartAmount() const {
 	size_t number = 0;
-	for (const auto &element : boss.second.weakParts) {
-		if (element.second.broke) ++number;
+	for (const auto &element : boss.weakParts) {
+		if (element.second.bBroke) ++number;
 	}
 	return number;
-}
-
-size_t Boss::getCoreTypeAmount() {
-	return coreTypePreviews.size();
 }
 
 bool Boss::isExist() const {
@@ -133,31 +141,35 @@ Boss::~Boss() {
 }
 
 Boss::Boss(const Boss & copy)
-	: boss(copy.boss) {
+	: boss(copy.boss)
+	, partPreviews(copy.partPreviews)
+	, bMove(copy.bMove)
+	, bExist(copy.bExist) {
 }
 
 Boss & Boss::operator =(Boss copy) {
-	boss.swap(copy.boss);
+	boss = std::move(copy.boss);
+	partPreviews.swap(copy.partPreviews);
+	bMove = copy.bMove;
+	bExist = copy.bExist;
 	return *this;
 }
 
 void Boss::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	if (bExist) {
-		states.transform *= getTransform();
-		target.draw(*boss.first.context, states);
-		std::for_each(boss.second.parts.begin(), boss.second.parts.end()
-			, [&](const std::pair<std::string, Part> &element) {
-			target.draw(*element.second.context, states);
-		});
-		std::for_each(boss.second.weakParts.begin(), boss.second.weakParts.end()
-			, [&](const std::pair<std::string, WeakPart> &element) {
-			target.draw(*element.second.context, states);
-		});
-		std::for_each(boss.second.skills.begin(), boss.second.skills.end()
-			, [&](const std::shared_ptr<BossSkill> skill) {
-			target.draw(*skill, states);
-		});
-	}
+	if (bExist) return;
+	target.draw(*boss.core, states);
+	std::for_each(boss.parts.begin(), boss.parts.end()
+		, [&](const std::pair<std::string, Part> &element) {
+		target.draw(*element.second.context, states);
+	});
+	std::for_each(boss.weakParts.begin(), boss.weakParts.end()
+		, [&](const std::pair<std::string, WeakPart> &element) {
+		target.draw(*element.second.context, states);
+	});
+	std::for_each(boss.skills.begin(), boss.skills.end()
+		, [&](const std::shared_ptr<BossSkill> skill) {
+		target.draw(*skill, states);
+	});
 }
 
 void Boss::debut(const item::Core::Kind type) {
@@ -166,61 +178,58 @@ void Boss::debut(const item::Core::Kind type) {
 		if (element.first.find("_broke") != std::string::npos
 			|| element.first.find("_intense") != std::string::npos) return;
 		if (element.first.find("weak_") == std::string::npos) {
-			boss.second.parts.emplace(element.first
-				, Part{ std::shared_ptr<sf::Sprite>(new sf::Sprite(*element.second)), false });
-			auto part = boss.second.parts.at(element.first).context;
-			part->setOrigin(part->getTextureRect().width / 2.f, part->getTextureRect().height / 2.f);
+			boss.parts.emplace(element.first
+				, Part{ std::make_shared<sf::Sprite>(*element.second), false });
+			auto & part = boss.parts.at(element.first).context;
+			part->setOrigin(part->getLocalBounds().width / 2.f, part->getLocalBounds().height / 2.f);
 			return;
 		}
-		boss.second.weakParts.emplace(element.first
-			, WeakPart{ std::shared_ptr<sf::Sprite>(new sf::Sprite(*element.second)), false });
-		auto weakPart = boss.second.weakParts.at(element.first).context;
-		weakPart->setOrigin(weakPart->getTextureRect().width / 2.f, weakPart->getTextureRect().height / 2.f);
+		boss.weakParts.emplace(element.first
+			, WeakPart{ std::make_shared<sf::Sprite>(*element.second), false });
+		auto & weakPart = boss.weakParts.at(element.first).context;
+		weakPart->setOrigin(weakPart->getLocalBounds().width / 2.f, weakPart->getLocalBounds().height / 2.f);
 	});
-	boss.first.context.reset(new sf::Sprite(*coreTypePreviews.at(type)));
-	boss.first.core.reset(new item::Core(type));
-	auto core = boss.first.context;
-	core->setOrigin(core->getTextureRect().width / 2.f, core->getTextureRect().height / 2.f);
+	boss.core.reset(new item::Core(type, corePreviews.at(type)));
+	boss.core->setOrigin( boss.core->getLocalBounds().width / 2.f
+		, boss.core->getLocalBounds().height / 2.f );
 	clock.restart();
 	bExist = true;
 }
 
-void Boss::changeCoreType(const item::Core::Kind type) {
+void Boss::changeCore(const item::Core::Kind type) {
 	if (!bExist) throw std::invalid_argument("Boss not exist.");
-	boss.first.context.reset(new sf::Sprite(*coreTypePreviews.at(type)));
-	boss.first.core.reset(new item::Core(type));
-	auto core = boss.first.context;
-	core->setOrigin(core->getTextureRect().width / 2.f, core->getTextureRect().height / 2.f);
+	boss.core.reset(new item::Core(type, corePreviews.at(type)));
+	boss.core->setOrigin( boss.core->getLocalBounds().width / 2.f, boss.core->getLocalBounds().height / 2.f );
 }
 
 void Boss::weakPartBreak(const std::string & weak_partName) {
-	auto iter = boss.second.weakParts.find(weak_partName);
-	if (iter == boss.second.weakParts.end()) throw std::invalid_argument("Weak part no found.");
-	if (iter->second.broke) throw std::exception("Weak part was already broken.");
-	iter->second.broke = true;
+	auto iter = boss.weakParts.find(weak_partName);
+	if (iter == boss.weakParts.end()) throw std::invalid_argument("Weak part no found.");
+	if (iter->second.bBroke) throw std::exception("Weak part was already broken.");
+	iter->second.bBroke = true;
 	iter->second.context.reset(new sf::Sprite(*partPreviews.at(weak_partName + "_broke")));
 }
 
 void Boss::weakPartRecover(const std::string & weak_partName) {
-	auto iter = boss.second.weakParts.find(weak_partName);
-	if (iter == boss.second.weakParts.end()) throw std::invalid_argument("Weak part no found.");
-	if (!iter->second.broke) throw std::exception("Weak part was already recovered.");
-	iter->second.broke = false;
+	auto iter = boss.weakParts.find(weak_partName);
+	if (iter == boss.weakParts.end()) throw std::invalid_argument("Weak part no found.");
+	if (!iter->second.bBroke) throw std::exception("Weak part was already recovered.");
+	iter->second.bBroke = false;
 	iter->second.context.reset(new sf::Sprite(*partPreviews.at(weak_partName)));
 }
 
 void Boss::partIntensify(const std::string & partName) {
-	auto iter = boss.second.parts.find(partName);
-	if (iter == boss.second.parts.end()) throw std::invalid_argument("Part no found.");
-	if (iter->second.intensified) throw std::exception("Part was already intensified.");
-	iter->second.intensified = true;
+	auto iter = boss.parts.find(partName);
+	if (iter == boss.parts.end()) throw std::invalid_argument("Part no found.");
+	if (iter->second.bIntensified) throw std::exception("Part was already intensified.");
+	iter->second.bIntensified = true;
 	iter->second.context.reset(new sf::Sprite(*partPreviews.at(partName + "_intense")));
 }
 
 void Boss::partRecover(const std::string & partName) {
-	auto iter = boss.second.parts.find(partName);
-	if (iter == boss.second.parts.end()) throw std::invalid_argument("Part no found.");
-	if (!iter->second.intensified) throw std::exception("Part was already recovered.");
-	iter->second.intensified = false;
+	auto iter = boss.parts.find(partName);
+	if (iter == boss.parts.end()) throw std::invalid_argument("Part no found.");
+	if (!iter->second.bIntensified) throw std::exception("Part was already recovered.");
+	iter->second.bIntensified = false;
 	iter->second.context.reset(new sf::Sprite(*partPreviews.at(partName)));
 }

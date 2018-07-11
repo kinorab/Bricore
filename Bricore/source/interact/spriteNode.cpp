@@ -11,7 +11,7 @@ namespace game {
 	}
 
 	bool SpriteNode::containsPoint(const sf::Vector2f & point) const {
-		return sprite->getGlobalBounds().contains(getTransform().getInverse().transformPoint(point));
+		return sprite->getGlobalBounds().contains(point);
 	}
 
 	std::shared_ptr<sf::Drawable> SpriteNode::getDrawable() const {

@@ -16,8 +16,7 @@ namespace game {
 
 	class InteractiveObject :
 		public EventSubject,
-		public sf::Drawable,
-		public sf::Transformable {
+		public sf::Drawable {
 	public:
 		virtual ~InteractiveObject();
 		using EventSubject::addListener;

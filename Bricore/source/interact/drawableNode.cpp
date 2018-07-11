@@ -9,7 +9,7 @@ namespace game {
 
 	}
 
-	bool DrawableNode::containsPoint(const sf::Vector2f &) const {
+	bool DrawableNode::containsPoint(const sf::Vector2f & point) const {
 		return false;
 	}
 

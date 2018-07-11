@@ -10,8 +10,8 @@ namespace game {
 
 	}
 
-	bool VertexArrayNode::containsPoint(const sf::Vector2f &) const {
-		return false;
+	bool VertexArrayNode::containsPoint(const sf::Vector2f & point) const {
+		return vertexArray->getBounds().contains(point);
 	}
 
 	std::shared_ptr<sf::Drawable> VertexArrayNode::getDrawable() const	{

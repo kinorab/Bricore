@@ -22,5 +22,5 @@ enum class GameState {
 };
 
 namespace game {
-	extern GameState currentState;
+	extern GameState currentGameState;
 };
