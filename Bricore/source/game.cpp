@@ -1,7 +1,7 @@
 #include "game.h"
 #include "stage.h"
 #include "root.h"
-#include "UI/graphics.h"
+#include "graphics.h"
 #include "gameSys/level/level.h"
 #include "manager/audioManager.h"
 #include "definition/gameState.h"
@@ -13,8 +13,10 @@
 using namespace game;
 
 Game::Game()
-	: graph(new Graphics)
-	, root(new Root) {
+	: graph(new Graphics) {
+	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
+		"Bricore", sf::Style::Close, graph->getSettings()));
+	root.reset(new Root(graph, window));
 	//if (saveData.exist() && root.chooseSave(saveData)) {
 	//	level.reset(saveData);
 	//}
@@ -22,8 +24,6 @@ Game::Game()
 	level.reset(new Level(Mode::NoChoose, Diffculty::NoChoose));
 	//}
 	stage.reset(new Stage(level, root));
-	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
-		"Bricore", sf::Style::Close, graph->getSettings()));
 	level->bDefaultControlKeySettled = true;
 }
 
@@ -81,8 +81,8 @@ void Game::renderFunc() {
 void Game::handleEvents(bool & finishing) {
 	while (!eventQueue.empty()) {
 		sf::Event currentEvent = eventQueue.pop();
-		root->handle(currentEvent);
-		stage->handle(currentEvent);
+		auto rootFunc = std::async(std::launch::async, &Root::handle, root, currentEvent);
+		auto stageFunc = std::async(std::launch::async, &Stage::handle, stage, currentEvent);
 		if (currentEvent.type == sf::Event::Closed) {
 			finishing = true;
 		}

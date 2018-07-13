@@ -1,9 +1,11 @@
 #pragma once
 #include "interact/container.h"
+#include "graphics.h"
 
 namespace sf {
 	class Color;
 	class RectangleShape;
+	class RenderWindow;
 }
 namespace game {
 	class Button;
@@ -21,9 +23,12 @@ public:
 		IllustratedList,	// give player to browse list of illustration
 		BattleArea			// battle interface in level or vsmode
 	};
-	explicit HUD(const InterfaceCategory interface = Main);
+	explicit HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> graph
+		, const std::shared_ptr<sf::RenderWindow> window);
 	virtual bool containsPoint(const sf::Vector2f & point) const override;
 	virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
+	void changeGraphicsSetting(const Graphics::FrameRate fps, const Graphics::Resolution dpi
+		, const Graphics::ResidueShadow afterimage);
 	void changeInterface(const InterfaceCategory nextInterface);
 	virtual ~HUD();
 
@@ -39,15 +44,18 @@ protected:
 		// name compnonent
 		std::map<std::string, Compnonent> compnonents;
 	};
+	void setResidueShadow(const Graphics::ResidueShadow afterimage);
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 	InterfaceCategory currentInterface;
 	std::map<InterfaceCategory, std::shared_ptr<sf::RectangleShape>> interfaces;
-	// buttonName, button()
+	// buttonName, button
 	std::map<std::string, std::shared_ptr<game::Button>> buttons;
 	Panel bossPanel;
 	Panel scorePanel;
 	Panel playerPanel;
+	std::shared_ptr<Graphics> m_graph;
+	const std::shared_ptr<sf::RenderWindow> cm_window;
 };

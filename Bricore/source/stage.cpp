@@ -16,7 +16,7 @@ using namespace game;
 
 bool Stage::bInstance(false);
 
-Stage::Stage(const std::shared_ptr<Level> & level, const std::shared_ptr<const Root> root)
+Stage::Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Root> root)
 	: player(new Player(level))
 	, subPlayer(new SubPlayer(level))
 	, ball(new Ball(level))
@@ -26,7 +26,7 @@ Stage::Stage(const std::shared_ptr<Level> & level, const std::shared_ptr<const R
 	, mouseHandler(new MouseHandler)
 	, keyboardHandler(new KeyboardHandler)
 	, c_root(std::move(root))
-	, m_level(level) {
+	, m_level(std::move(level)) {
 	assert(!bInstance);
 	resetChildrenCopyTarget();
 	addChild({ player, subPlayer, ball, wall, obstacle });
@@ -60,6 +60,7 @@ void Stage::handle(const sf::Event & event) {
 
 Stage::~Stage() {
 	removeAllChildren();
+	removeAllListener();
 	AudioManager::getInstance().getMusic("bg")->stop();
 	AudioManager::getInstance().getSound("hitBoard")->stop();
 }

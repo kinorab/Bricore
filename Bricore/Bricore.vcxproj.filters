@@ -11,7 +11,6 @@
     <ClCompile Include="source\gameSys\skill\playerSkill.cpp" />
     <ClCompile Include="source\gameSys\skill\subPlayerSkill.cpp" />
     <ClCompile Include="source\gameSys\system.cpp" />
-    <ClCompile Include="source\UI\graphics.cpp" />
     <ClCompile Include="source\hud.cpp" />
     <ClCompile Include="source\interact\interactiveObject.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -98,6 +97,7 @@
     <ClCompile Include="source\event\game\gameStartedEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseEnteredEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseLeftEvent.cpp" />
+    <ClCompile Include="source\graphics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -113,7 +113,6 @@
     <ClInclude Include="source\gameSys\skill\playerSkill.h" />
     <ClInclude Include="source\gameSys\skill\subPlayerSkill.h" />
     <ClInclude Include="source\gameSys\system.h" />
-    <ClInclude Include="source\UI\graphics.h" />
     <ClInclude Include="source\hud.h" />
     <ClInclude Include="source\interact\interactiveObject.h" />
     <ClInclude Include="source\manager\audioManager.h" />
@@ -229,6 +228,7 @@
     <ClInclude Include="source\event\window\windowGainedFocusEvent.h" />
     <ClInclude Include="source\event\window\windowClosedEvent.h" />
     <ClInclude Include="source\event\sensor\sensorEvent.h" />
+    <ClInclude Include="source\graphics.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

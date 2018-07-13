@@ -27,8 +27,8 @@ private:
 	void renderFunc();
 	void handleEvents(bool & finishing);
 	game::EventQueue eventQueue;
-	std::unique_ptr<Graphics> graph;
-	std::unique_ptr<sf::RenderWindow> window;
+	std::shared_ptr<sf::RenderWindow> window;
+	std::shared_ptr<Graphics> graph;
 	std::shared_ptr<game::Stage> stage;
 	std::shared_ptr<game::Root> root;
 	std::shared_ptr<game::Level> level;

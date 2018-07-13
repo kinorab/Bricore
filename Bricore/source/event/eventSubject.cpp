@@ -45,6 +45,10 @@ namespace game {
 		}));
 	}
 
+	void EventSubject::removeAllListener() {
+		listeners.clear();
+	}
+
 	int EventSubject::getIdCount() const {
 		return iIdCount;
 	}

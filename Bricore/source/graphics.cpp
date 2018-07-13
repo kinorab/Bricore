@@ -1,21 +1,16 @@
 #include "graphics.h"
 
-Graphics::Graphics(const FrameRate Fps, const Resolution Dpi) {
+Graphics::Graphics(const FrameRate Fps, const Resolution Dpi, const ResidueShadow afterimage) {
 	//icon.loadFromFile("");
 	setDpi(Dpi);
 	setFps(Fps);
-}
-
-void Graphics::handleSettle(const FrameRate Fps, const Resolution Dpi) {
-	if(currentFps != Fps) setFps(Fps);
-	if(currentDpi != Dpi) setDpi(Dpi);
 }
 
 const sf::ContextSettings & Graphics::getSettings() const {
 	return currentSettings;
 }
 
-const float Graphics::getFrameSpan() const {
+float Graphics::getFrameSpan() const {
 	return fFrameSpan;
 }
 
@@ -23,8 +18,20 @@ const sf::Uint8 * Graphics::getIcon() const {
 	return icon.getPixelsPtr();
 }
 
-const sf::Vector2u Graphics::getIconSize() const {
+sf::Vector2u Graphics::getIconSize() const {
 	return icon.getSize();
+}
+
+Graphics::FrameRate Graphics::getCurrentFps() const {
+	return currentFps;
+}
+
+Graphics::Resolution Graphics::getCurrnetDpi() const {
+	return currentDpi;
+}
+
+Graphics::ResidueShadow Graphics::getCurrentAfterimage() const {
+	return currentAfterimage;
 }
 
 void Graphics::setFps(const FrameRate Fps) {

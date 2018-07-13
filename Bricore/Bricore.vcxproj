@@ -96,7 +96,7 @@
     <ClCompile Include="source\gameSys\system.cpp" />
     <ClCompile Include="source\stuff\subPlayer.cpp" />
     <ClCompile Include="source\stuff\wall.cpp" />
-    <ClCompile Include="source\UI\graphics.cpp" />
+    <ClCompile Include="source\graphics.cpp" />
     <ClCompile Include="source\hud.cpp" />
     <ClCompile Include="source\interact\interactiveObject.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -221,7 +221,7 @@
     <ClInclude Include="source\gameSys\skill\playerSkill.h" />
     <ClInclude Include="source\gameSys\skill\subPlayerSkill.h" />
     <ClInclude Include="source\gameSys\system.h" />
-    <ClInclude Include="source\UI\graphics.h" />
+    <ClInclude Include="source\graphics.h" />
     <ClInclude Include="source\hud.h" />
     <ClInclude Include="source\interact\interactiveObject.h" />
     <ClInclude Include="source\manager\audioManager.h" />

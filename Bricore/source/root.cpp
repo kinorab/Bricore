@@ -1,5 +1,6 @@
 #include "root.h"
 #include "hud.h"
+#include "graphics.h"
 #include "particleSystem.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
@@ -10,11 +11,13 @@
 using namespace game;
 bool Root::bInstance(false);
 
-Root::Root()
-	: hud(new HUD(HUD::BattleArea))
+Root::Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<sf::RenderWindow> window)
+	: hud(new HUD(HUD::BattleArea, graph, window))
 	, mouseLight(new ParticleSystem(2000))
 	, mouseHandler(new MouseHandler)
-	, keyboardHandler(new KeyboardHandler) {
+	, keyboardHandler(new KeyboardHandler)
+	, m_graph(std::move(graph))
+	, cm_window(std::move(window)){
 	assert(!bInstance);
 	addChild({ hud, mouseLight });
 	addListener(std::make_shared<EventListener<MouseEnteredEvent>>([this]() { onMouseEntered(); }));
@@ -36,6 +39,7 @@ void Root::handle(const sf::Event & event) {
 
 Root::~Root() {
 	removeAllChildren();
+	removeAllListener();
 }
 
 void Root::update(const float updateRatio) {
@@ -55,7 +59,12 @@ void Root::onMouseMoved(MouseMovedEvent & event) {
 }
 
 void Root::onMousePressed(MousePressedEvent & event) {
-
+	if (event.pressed.button == sf::Mouse::Left) {
+		hud->changeGraphicsSetting(GFps::Fps30, GDpi::Low, GAI::None);
+	}
+	else if (event.pressed.button == sf::Mouse::Right) {
+		hud->changeGraphicsSetting(GFps::NoLimit, GDpi::Quality, GAI::Much);
+	}
 }
 
 void Root::onKeyPressed(KeyPressedEvent & event) {

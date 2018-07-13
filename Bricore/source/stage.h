@@ -21,7 +21,7 @@ namespace game {
 	class Stage :
 		public Container {
 	public:
-		explicit Stage(const std::shared_ptr<Level> & level, const std::shared_ptr<const game::Root> root);
+		explicit Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const game::Root> root);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);
