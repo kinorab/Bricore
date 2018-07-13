@@ -14,14 +14,12 @@ using namespace game;
 
 float panelWidth = GAME_WIDTH - LEVEL_WIDTH;
 
-HUD::HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> graph
-	, const std::shared_ptr<sf::RenderWindow> window)
+HUD::HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> graph)
 	: bossPanel{ false, std::make_shared<sf::RectangleShape>(sf::Vector2f(panelWidth, 200.f)), {} }
 	, scorePanel{ false, std::make_shared<sf::RectangleShape>(sf::Vector2f(panelWidth, 300.f)), {} }
 	, playerPanel{ false, std::make_shared<sf::RectangleShape>(sf::Vector2f(panelWidth, 400.f)), {} }
 	, currentInterface(interface)
-	, m_graph(std::move(graph))
-	, cm_window(std::move(window)){
+	, m_graph(std::move(graph)) {
 	// initialize interfaces
 	interfaces.emplace(Main, std::make_shared<sf::RectangleShape>(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT)));
 	interfaces.at(Main)->setFillColor(sf::Color::White);

@@ -11,13 +11,12 @@
 using namespace game;
 bool Root::bInstance(false);
 
-Root::Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<sf::RenderWindow> window)
-	: hud(new HUD(HUD::BattleArea, graph, window))
+Root::Root(const std::shared_ptr<Graphics> graph)
+	: hud(new HUD(HUD::BattleArea, graph))
 	, mouseLight(new ParticleSystem(2000))
 	, mouseHandler(new MouseHandler)
 	, keyboardHandler(new KeyboardHandler)
-	, m_graph(std::move(graph))
-	, cm_window(std::move(window)){
+	, m_graph(std::move(graph)) {
 	assert(!bInstance);
 	addChild({ hud, mouseLight });
 	addListener(std::make_shared<EventListener<MouseEnteredEvent>>([this]() { onMouseEntered(); }));

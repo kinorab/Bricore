@@ -16,7 +16,7 @@ Game::Game()
 	: graph(new Graphics) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
-	root.reset(new Root(graph, window));
+	root.reset(new Root(graph));
 	//if (saveData.exist() && root.chooseSave(saveData)) {
 	//	level.reset(saveData);
 	//}

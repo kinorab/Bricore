@@ -5,7 +5,6 @@
 namespace sf {
 	class Color;
 	class RectangleShape;
-	class RenderWindow;
 }
 namespace game {
 	class Button;
@@ -23,8 +22,7 @@ public:
 		IllustratedList,	// give player to browse list of illustration
 		BattleArea			// battle interface in level or vsmode
 	};
-	explicit HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> graph
-		, const std::shared_ptr<sf::RenderWindow> window);
+	explicit HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> graph);
 	virtual bool containsPoint(const sf::Vector2f & point) const override;
 	virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 	void changeGraphicsSetting(const Graphics::FrameRate fps, const Graphics::Resolution dpi
@@ -57,5 +55,4 @@ private:
 	Panel scorePanel;
 	Panel playerPanel;
 	std::shared_ptr<Graphics> m_graph;
-	const std::shared_ptr<sf::RenderWindow> cm_window;
 };
