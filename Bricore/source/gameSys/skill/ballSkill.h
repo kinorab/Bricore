@@ -27,11 +27,10 @@ namespace game {
 		friend class SkillHandler<BallSkill>;
 	public:
 		explicit BallSkill(const Kind skillName, const sf::Time duration
-			, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
+			, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 			, const bool autoUse, const bool exist);
 		virtual void initialize() override;
-		virtual void handleSkill(const sf::Event * const event) override;
-		virtual void handleSelect(const sf::Event * const event) override;
+		virtual void update() override;
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
@@ -60,6 +59,8 @@ namespace game {
 			sf::Keyboard::Key ballSkill;
 			sf::Keyboard::Key ballSkillSwap;
 		};
+		void onKeyPressed(KeyPressedEvent & event);
+		void onMousePressed(MousePressedEvent & event);
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;

@@ -3,7 +3,7 @@
 
 namespace game {
 	TouchBeganEvent::TouchBeganEvent(sf::Event::TouchEvent eventData) :
-		sf::Event::TouchEvent(eventData) {
+		began(eventData) {
 	}
 
 	void TouchBeganEvent::accept(EventListenerBase & visitor) {

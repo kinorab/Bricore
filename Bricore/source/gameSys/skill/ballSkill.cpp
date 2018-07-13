@@ -3,6 +3,7 @@
 #include "../effect/entireEffect.h"
 #include "../../manager/textureManager.h"
 #include "../../definition/gameState.h"
+#include "../../event/eventListener.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
@@ -16,14 +17,14 @@ SkillHandler<BallSkill> BallSkill::handler;
 BallSkill::SkillKey BallSkill::key;
 
 BallSkill::BallSkill(const Kind skillName, const sf::Time duration
-	, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
+	, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 	, const bool autoUse, const bool exist)
 	: SkillSystem(duration, autoUse, exist)
 	, skill(SkillContent{ skillName, State::None, nullptr, nullptr })
 	, bInitialize(false) {
 	// initialize effects
-	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
-		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
+	std::for_each(effects.begin(), effects.end(), [&](const std::pair<Effect::Kind, bool> & effect) {
+		skillEffects.push_back(std::make_shared<EntireEffect>(effect.first, this, effect.second));
 	});
 	// initialize attribute
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
@@ -34,17 +35,12 @@ BallSkill::BallSkill(const Kind skillName, const sf::Time duration
 void BallSkill::initialize() {
 	if (bInitialize) return;
 	handler.insert(shared_from_this());
+	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
+	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
 	bInitialize = true;
 }
 
-void BallSkill::loadFrame(const std::vector<std::string> &fileName, const bool isSmooth) {
-	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
-		framePreviews.emplace(file, TextureManager::getInstance().get(file));
-		framePreviews.at(file)->setSmooth(isSmooth);
-	});
-}
-
-void BallSkill::handleSkill(const sf::Event * const event) {
+void BallSkill::update() {
 	if (status != Status::Selected || currentGameState == GameState::LEVEL_FINISHED) return;
 	using namespace std::placeholders;
 	State currentState = skill.currentState;
@@ -53,10 +49,6 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 		if (handler.tryEnterField(std::bind(&BallSkill::setState, this, _1))) {
 
 		}
-		break;
-	case State::OnFirstField:
-		if (bSilenced) break;
-		if (event->key.code == key.ballSkill || bAutoUse) setState(State::Using);
 		break;
 	case State::OnSecondField:
 		if (bLocked) break;
@@ -81,32 +73,15 @@ void BallSkill::handleSkill(const sf::Event * const event) {
 		}
 		break;
 	default:
-		throw std::exception("Some bug in handleSkill.");
 		break;
-	}
-	if (event->type != sf::Event::KeyPressed) return;
-	if (event->key.code == key.ballSkillSwap) {
-		if (handler.trySwap()) {
-		}
-		else {
-		}
 	}
 }
 
-void BallSkill::handleSelect(const sf::Event * const event) {
-	if (status == Status::None || event->type != sf::Event::MouseButtonPressed
-		|| currentGameState != GameState::LEVEL_FINISHED) return;
-	if (skill.context->getGlobalBounds().contains(static_cast<float>(event->mouseButton.x)
-		, static_cast<float>(event->mouseButton.y))) {
-		if (SkillSystem::selectOn()) {
-			++uCurrentCarry;
-			return;
-		}
-		if (SkillSystem::selectOff()) {
-			--uCurrentCarry;
-			return;
-		}
-	}
+void BallSkill::loadFrame(const std::vector<std::string> &fileName, const bool isSmooth) {
+	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
+		framePreviews.emplace(file, TextureManager::getInstance().get(file));
+		framePreviews.at(file)->setSmooth(isSmooth);
+	});
 }
 
 bool BallSkill::containsPoint(const sf::Vector2f & point) const {
@@ -220,6 +195,37 @@ SkillKind<BallSkill>::Kind BallSkill::getSkillName() const {
 }
 
 BallSkill::~BallSkill() {
+}
+
+void BallSkill::onKeyPressed(KeyPressedEvent & event) {
+	if (skill.currentState == State::OnFirstField) {
+		if (bSilenced) return;
+		if (event.pressed.code == key.ballSkill || bAutoUse) setState(State::Using);
+	}
+	if (event.pressed.code != key.ballSkillSwap) return;
+	if (handler.trySwap()) {
+
+	}
+	else {
+
+	}
+}
+
+void BallSkill::onMousePressed(MousePressedEvent & event) {
+	if (currentGameState != GameState::LEVEL_FINISHED
+		|| containsPoint(sf::Vector2f(static_cast<float>(event.pressed.x)
+			, static_cast<float>(event.pressed.y)))) return;
+	// left mouse to choose
+	if (SkillSystem::selectOn() && event.pressed.button == sf::Mouse::Left) {
+		++uCurrentCarry;
+		return;
+	}
+	// left or right mouse to cancel choose
+	if (SkillSystem::selectOff() &&
+		(event.pressed.button == sf::Mouse::Left || event.pressed.button == sf::Mouse::Right)) {
+		--uCurrentCarry;
+		return;
+	}
 }
 
 void BallSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {

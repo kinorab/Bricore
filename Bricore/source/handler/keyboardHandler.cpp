@@ -1,9 +1,9 @@
-#include "SFMLKeyboardHandler.h"
+#include "keyboardHandler.h"
 #include "../definition/utility.h"
-#include "keyboard/keyEvent.h"
+#include "../interact/container.h"
 
 namespace game {
-	SFMLKeyboardHandler::SFMLKeyboardHandler() {
+	KeyboardHandler::KeyboardHandler() {
 		for (sf::Keyboard::Key i = sf::Keyboard::Unknown;
 			i < sf::Keyboard::Unknown + sf::Keyboard::KeyCount;
 			i = static_cast<sf::Keyboard::Key>(i + 1)) {
@@ -11,7 +11,7 @@ namespace game {
 		}
 	}
 
-	void SFMLKeyboardHandler::handle(const sf::Event & event, Container & thing) {
+	void KeyboardHandler::handle(const sf::Event & event, Container & thing) {
 		if (event.type == sf::Event::KeyPressed) {
 			handleKeyPressed(event, thing);
 		}
@@ -20,7 +20,7 @@ namespace game {
 		}
 	}
 
-	void SFMLKeyboardHandler::handleKeyPressed(const sf::Event & event, Container & thing) {
+	void KeyboardHandler::handleKeyPressed(const sf::Event & event, Container & thing) {
 		if (keyDown[event.key.code]) {
 			return;
 		}
@@ -29,7 +29,7 @@ namespace game {
 		thing.dispatchEvent(KeyPressedEvent(event.key));
 	}
 
-	void SFMLKeyboardHandler::handleKeyReleased(const sf::Event & event, Container & thing) {
+	void KeyboardHandler::handleKeyReleased(const sf::Event & event, Container & thing) {
 		if (!keyDown[event.key.code]) {
 			return;
 		}

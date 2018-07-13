@@ -16,13 +16,14 @@ namespace item {
 		public game::InteractiveObject
 		, public std::enable_shared_from_this<Block> {
 	public:
+		// origin in center
 		explicit Block(const sf::Vector2f &position, const sf::Vector2f &size);
 		explicit Block(const Block &copy);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void update(const float updateRatio);
 		void loadTexture(const std::string &fileName);
-		void setOrigin(const sf::Vector2f & position);
+		void setOrigin(const sf::Vector2f & origin);
 		void setPosition(const sf::Vector2f &position);
 		void setVerticeColor(const sf::Color &);
 		void setVerticeColor(const sf::Color &, const sf::Color &, const sf::Color &, const sf::Color &);
@@ -33,17 +34,19 @@ namespace item {
 
 		sys::DPointf getDP() const;
 		sf::Vector2u getTextureSize() const;
+		sf::FloatRect getLocalBounds() const;
+		sf::FloatRect getGlobalBounds() const;
+		sf::Vector2f getPosition() const;
 		const sf::Vector2f & getSize() const;
 		const sf::Color & getVerticeColor(const size_t index) const;
 		const sf::Vector2f & getOrigin() const;
-		const sf::Vector2f & getPosition() const;
 		const sf::Vector2f & getInitialPosition() const;
 		const sf::Vector2f & getSpeed() const;
 		Block & operator =(Block right);
 		virtual ~Block();
 
 	protected:
-		void setBlockVertice();
+		void settleBlockVertice();
 		void moveEntity(const float updateRatio);
 
 	private:

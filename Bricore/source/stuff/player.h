@@ -39,7 +39,6 @@ public:
 	};
 	explicit Player(const std::shared_ptr<game::Level> level);
 	void update(const float updateRatio);
-	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer, const std::shared_ptr<Ball> ball);
 	void setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Keyboard::Key rightMove
 		, const sf::Keyboard::Key shot, const sf::Keyboard::Key playerSkill

@@ -1,13 +1,20 @@
 #include "chip.h"
+#include <SFML/Graphics.hpp>
 
 using namespace item;
 
-Chip::Chip(const Kind chip, const std::shared_ptr<sf::Texture> & texture) 
+Chip::Chip(const Kind chip)
+	: it(chip) 
+	, context(nullptr) {
+}
+
+Chip::Chip(const Kind chip, const std::shared_ptr<sf::Texture> & texture)
 	: it(chip) 
 	, context(new sf::Sprite(*texture)) {
 }
 
 bool Chip::containsPoint(const sf::Vector2f & point) const {
+	if (!context) return false;
 	return context->getGlobalBounds().contains(point);
 }
 
@@ -44,4 +51,9 @@ sf::FloatRect Chip::getGlobalBounds() const {
 }
 
 Chip::~Chip(){
+}
+
+void Chip::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+	if (!context) return;
+	target.draw(*context, states);
 }

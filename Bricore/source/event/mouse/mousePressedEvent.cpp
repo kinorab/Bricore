@@ -3,7 +3,7 @@
 
 namespace game {
 	MousePressedEvent::MousePressedEvent(sf::Event::MouseButtonEvent eventData) :
-		sf::Event::MouseButtonEvent(eventData) {
+		pressed(eventData) {
 	}
 
 	void MousePressedEvent::accept(EventListenerBase & visitor) {

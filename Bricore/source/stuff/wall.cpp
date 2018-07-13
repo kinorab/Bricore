@@ -7,8 +7,6 @@
 #include "../definition/utility.h"
 #include "../gameSys/level/level.h"
 #include "../gameSys/level/area/zone.h"
-#include "../event/SFMLMouseHandler.h"
-#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -42,11 +40,6 @@ void Wall::update(const float updateRatio) {
 	}
 }
 
-void Wall::handle(const sf::Event & event) {
-	mouseHandler->handle(event, *this, false);
-	keyboardHandler->handle(event, *this);
-}
-
 void Wall::resetCopyTarget(const std::shared_ptr<Ball> ball) {
 	m_ball = std::move(ball);
 }
@@ -59,7 +52,7 @@ void Wall::loadTexture(const std::string & fileName) {
 
 void Wall::setBricksColor(const Color &color) {
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
-		bricks.at(i)->setBrickColor(color);
+		bricks.at(i)->setFillColor(color);
 	}
 }
 

@@ -1,13 +1,13 @@
 #pragma once
-
 #include <SFML/Window/Event.hpp>
 #include <queue>
 #include <mutex>
 
 namespace game {
-	class SFMLEventQueue {
+	class EventQueue {
 	public:
-		virtual ~SFMLEventQueue() = default;
+		EventQueue() = default;
+		virtual ~EventQueue() = default;
 		virtual bool empty();
 		virtual void push(const sf::Event & event);
 		virtual sf::Event pop();

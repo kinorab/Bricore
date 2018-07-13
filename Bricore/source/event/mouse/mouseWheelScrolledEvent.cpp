@@ -3,7 +3,7 @@
 
 namespace game {
 	MouseWheelScrolledEvent::MouseWheelScrolledEvent(sf::Event::MouseWheelScrollEvent eventData) :
-		sf::Event::MouseWheelScrollEvent(eventData) {
+		scrolled(eventData) {
 	}
 
 	void MouseWheelScrolledEvent::accept(EventListenerBase & visitor) {

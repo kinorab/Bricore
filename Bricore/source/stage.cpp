@@ -6,11 +6,10 @@
 #include "gameSys/level/level.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
+#include "handler/mouseHandler.h"
+#include "handler/keyboardHandler.h"
 #include "event/eventListener.h"
-#include "event/SFMLMouseHandler.h"
-#include "event/SFMLKeyboardHandler.h"
-#include "event/mouse/mouseEvent.h"
-#include "event/keyboard/keyEvent.h"
+#include "event/game/gameEvent.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
@@ -23,9 +22,11 @@ Stage::Stage(const std::shared_ptr<Level> & level, const std::shared_ptr<const R
 	, ball(new Ball(level))
 	, wall(new Wall(level))
 	, obstacle(new Obstacle(level))
+	, key({ sf::Keyboard::Key::P, sf::Keyboard::Key::Escape })
+	, mouseHandler(new MouseHandler)
+	, keyboardHandler(new KeyboardHandler)
 	, c_root(std::move(root))
-	, m_level(level)
-	, key({ sf::Keyboard::Key::P, sf::Keyboard::Key::Escape }) {
+	, m_level(level) {
 	assert(!bInstance);
 	resetChildrenCopyTarget();
 	addChild({ player, subPlayer, ball, wall, obstacle });
@@ -33,6 +34,10 @@ Stage::Stage(const std::shared_ptr<Level> & level, const std::shared_ptr<const R
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
 	addListener(std::make_shared<EventListener<KeyReleasedEvent>>([this](auto & event) { onKeyReleased(event); }));
 	bInstance = true;
+}
+
+bool Stage::containsPoint(const sf::Vector2f & point) const {
+	return true;
 }
 
 void Stage::resetChildrenCopyTarget() {
@@ -49,7 +54,7 @@ void Stage::resetKey(const sf::Keyboard::Key pause, const sf::Keyboard::Key menu
 }
 
 void Stage::handle(const sf::Event & event) {
-	mouseHandler->handle(event, *this, true);
+	mouseHandler->handle(event, *this);
 	keyboardHandler->handle(event, *this);
 }
 
@@ -82,18 +87,18 @@ void Stage::update(const float updateRatio) {
 }
 
 void Stage::onKeyPressed(KeyPressedEvent & event) {
-	if (event.code == key.pause) {
+	if (event.pressed.code == key.pause) {
 		bPaused = !bPaused;
 		if (bPaused) {
-			dispatchEvent(PausedEvent());
+			dispatchEvent(GamePausedEvent());
 		}
 		else {
-			dispatchEvent(UnpausedEvent());
+			dispatchEvent(GameUnpausedEvent());
 		}
 	}
 
 	if (bPaused) return;
-	if (event.code == sf::Keyboard::G) {
+	if (event.pressed.code == sf::Keyboard::G) {
 		currentGameState = GameState::STARTED;
 	}
 }
@@ -104,10 +109,10 @@ void Stage::onKeyReleased(KeyReleasedEvent & event) {
 
 void Stage::onMousePressed(MousePressedEvent & event) {
 	if (bPaused) return;
-	if (event.button == sf::Mouse::Left) {
+	if (event.pressed.button == sf::Mouse::Left) {
 		currentGameState = GameState::STARTED;
 	}
-	else if (event.button == sf::Mouse::Right) {
+	else if (event.pressed.button == sf::Mouse::Right) {
 		// debugging feature
 		currentGameState = GameState::NOT_READY;
 	}

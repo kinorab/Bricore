@@ -9,10 +9,10 @@ namespace game {
 	public:
 		enum Kind {
 			None,
-			Gravitational,
-			Invisible,
-			Invulnerable,
-			Magnetic,
+			Gravitational,		// let target be gravitational(some already have gravity things can be turn to target's gravity)
+			Invisible,			// let target be invisible
+			Invulnerable,		// let target be invulnerable
+			Magnetic,			// let target be magnetic
 			Fragile,
 			SlowDown,
 			Hugify,
@@ -26,7 +26,7 @@ namespace game {
 	template<> class EffectKind<Attribute> {
 	protected:
 		// for stable version release
-		enum Effect {
+		enum AttributeEffect {
 			None,
 			Combustion,			// flame
 			Frozen,				// ice

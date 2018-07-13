@@ -2,10 +2,10 @@
 #include "stage.h"
 #include "root.h"
 #include "UI/graphics.h"
+#include "gameSys/level/level.h"
 #include "manager/audioManager.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
-#include "gameSys/level/level.h"
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <future>

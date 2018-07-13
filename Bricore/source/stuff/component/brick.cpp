@@ -9,7 +9,7 @@ using namespace item;
 
 Brick::Brick(const sf::Vector2f & size, const float frameSize)
 	: brick(new RectangleShape){
-	setBrickSize(size);
+	setSize(size);
 	brick->setOrigin(brick->getSize() / 2.f);
 	setFrameSize(frameSize);
 }
@@ -27,18 +27,18 @@ std::shared_ptr<sf::Drawable> Brick::getDrawable() const {
 }
 
 void Brick::update(const float updateRatio) {
-
+	brick->move(speed / updateRatio);
 }
 
 void Brick::loadTexture(const std::string & fileName) {
-	brick->setTexture(TextureManager::getInstance().get(fileName));
+	brick->setTexture(TextureManager::getInstance().get(fileName), true);
 }
 
 void Brick::setPosition(const sf::Vector2f & position) {
 	brick->setPosition(position);
 }
 
-void Brick::setBrickColor(const Color &color) {
+void Brick::setFillColor(const Color &color) {
 	brick->setFillColor(color);
 }
 
@@ -47,9 +47,13 @@ void Brick::setFrameColor(const Color &color) {
 	brick->setOutlineColor(color);
 }
 
-void Brick::setBrickSize(const Vector2f & sideLength) {
-	if (sideLength.x <= 0 || sideLength.y <= 0) throw std::invalid_argument("Side-length cannot be negative.");
-	brick->setSize(sideLength);
+void Brick::setSpeed(const sf::Vector2f & speed) {
+	this->speed = speed;
+}
+
+void Brick::setSize(const Vector2f & size) {
+	if (size.x <= 0 || size.y <= 0) throw std::invalid_argument("Side-length cannot be negative.");
+	brick->setSize(size);
 }
 
 void Brick::setFrameSize(const float frameSize) {

@@ -1,15 +1,11 @@
 #include "container.h"
 #include "../definition/utility.h"
-#include "../event/SFMLMouseHandler.h"
-#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <map>
 
 namespace game {
-	Container::Container() 
-		: mouseHandler(new SFMLMouseHandler)
-		, keyboardHandler(new SFMLKeyboardHandler) {
+	Container::Container() {
 
 	}
 

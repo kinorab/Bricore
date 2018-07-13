@@ -3,7 +3,7 @@
 
 namespace game {
 	KeyReleasedEvent::KeyReleasedEvent(sf::Event::KeyEvent eventData) :
-		sf::Event::KeyEvent(eventData) {
+		released(eventData) {
 	}
 
 	void KeyReleasedEvent::accept(EventListenerBase & visitor) {

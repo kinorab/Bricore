@@ -11,8 +11,6 @@
 #include "../gameSys/skill/ballSkill.h"
 #include "../manager/audioManager.h"
 #include "../manager/textureManager.h"
-#include "../event/SFMLMouseHandler.h"
-#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -48,12 +46,17 @@ Player::Player(const std::shared_ptr<Level> level)
 	defender.playerSkills = {
 		std::make_shared<PlayerSkill>(
 		PlayerSkill::AmbitGuard, sf::seconds(8)
-		, std::vector<Effect::Kind>({ Effect::Invincible, Effect::Sturdy })
+		, std::vector<std::pair<Effect::Kind, bool>>({ 
+				std::pair(Effect::Invincible, false)
+				, std::pair(Effect::Sturdy, false) 
+			})
 		, std::vector<Attribute::Kind>({ Attribute::None })
 		, false, true, energyBar)
 		, std::make_shared<PlayerSkill>(
 		PlayerSkill::DropRateUp, sf::seconds(30)
-		, std::vector<Effect::Kind>({ Effect::None })
+		, std::vector<std::pair<Effect::Kind, bool>>({ 
+				std::pair(Effect::None, true)
+			})
 		, std::vector<Attribute::Kind>({ Attribute::None })
 		, false, true, energyBar)
 	};
@@ -77,9 +80,21 @@ Player::Player(const std::shared_ptr<Level> level)
 }
 
 void Player::update(const float updateRatio) {
-	const Vector2f &mainBallPos{ m_ball->getMainBallPosition() };
+	const Vector2f &mainBallPos(m_ball->getMainBallPosition());
 	const float mainBallRadius = m_ball->getMainBallRadius();
 	const FloatRect playerBoardBound = defender.board->getGlobalBounds();
+	// update skills
+	std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
+		, [&](const std::shared_ptr<PlayerSkill> & skill) {
+		assert(skill->isInitialize());
+		skill->update();
+	});
+	std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
+		, [&](const std::shared_ptr<BallSkill> & skill) {
+		assert(skill->isInitialize());
+		skill->update();
+	});
+	// update player
 	if (playerBoardBound.left >= 0
 		&& (Keyboard::isKeyPressed(key.leftMove))
 		) {
@@ -176,23 +191,6 @@ void Player::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer
 	, const std::shared_ptr<Ball> ball) {
 	c_subPlayer = std::move(subPlayer);
 	m_ball = std::move(ball);
-}
-
-void Player::handle(const sf::Event & event) {
-	mouseHandler->handle(event, *this, false);
-	keyboardHandler->handle(event, *this);
-	std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
-		, [&](const std::shared_ptr<PlayerSkill> & skill) {
-		assert(skill->isInitialize());
-		skill->handleSkill(&event);
-		skill->handleSelect(&event);
-	});
-	std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
-		, [&](const std::shared_ptr<BallSkill> & skill) {
-		assert(skill->isInitialize());
-		skill->handleSkill(&event);
-		skill->handleSelect(&event);
-	});
 }
 
 float Player::getSpeed() const {

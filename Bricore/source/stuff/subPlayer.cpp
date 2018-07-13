@@ -5,8 +5,6 @@
 #include "../gameSys/bar/energyBar.h"
 #include "../gameSys/bar/lifeBar.h"
 #include "../gameSys/skill/subPlayerSkill.h"
-#include "../event/SFMLMouseHandler.h"
-#include "../event/SFMLKeyboardHandler.h"
 #include "../manager/textureManager.h"
 #include <SFML/Graphics.hpp>
 
@@ -27,7 +25,11 @@ SubPlayer::SubPlayer(const std::shared_ptr<Level> level)
 	};
 }
 
-void SubPlayer::update(const float intervalRate) {
+void SubPlayer::update(const float updateRatio) {
+	std::for_each(subPlayerSkills.begin(), subPlayerSkills.end()
+		, [&](const std::shared_ptr<SubPlayerSkill> skill) {
+		skill->update();
+	});
 }
 
 void SubPlayer::setSubPlayerControlKey(const sf::Keyboard::Key upMove, const sf::Keyboard::Key downMove
@@ -46,6 +48,7 @@ void SubPlayer::changeType(const item::Chip::Kind chip) {
 	switch (chip) {
 	case Chip::None:
 		pioneer.currentType = Prototype;
+		return;
 		break;
 	case Chip::BurstChip:
 		break;
@@ -61,10 +64,15 @@ void SubPlayer::changeType(const item::Chip::Kind chip) {
 		throw std::invalid_argument("Wrong kind of chip");
 	}
 	// set pioneer chip
-	//pioneer.chip.reset(new Chip(chip, chipPreviews.at(chip)));
+	if (chip == Chip::None) { 
+		pioneer.chip.reset(new Chip(chip));
+	}
+	else {
+		pioneer.chip.reset(new Chip(chip, chipPreviews.at(chip)));
+	}
 }
 
-void SubPlayer::addSubPlayerSkill(game::SubPlayerSkill && subPlayerSkill) {
+void SubPlayer::addSubPlayerSkill(SubPlayerSkill && subPlayerSkill) {
 	subPlayerSkills.push_back(std::make_shared<SubPlayerSkill>(subPlayerSkill));
 }
 
@@ -86,16 +94,6 @@ item::Chip::Kind SubPlayer::getChip() const {
 void SubPlayer::resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<Ball> ball) {
 	c_player = std::move(player);
 	m_ball = std::move(ball);
-}
-
-void SubPlayer::handle(const sf::Event & event) {
-	mouseHandler->handle(event, *this, false);
-	keyboardHandler->handle(event, *this);
-	std::for_each(subPlayerSkills.begin(), subPlayerSkills.end()
-		, [&](const std::shared_ptr<SubPlayerSkill> skill) {
-		skill->handleSelect(&event);
-		skill->handleSkill(&event);
-	});
 }
 
 SubPlayer::~SubPlayer() {

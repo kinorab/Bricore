@@ -12,13 +12,13 @@ namespace game {
 	class MouseMovedEvent;
 	class MousePressedEvent;
 	class KeyPressedEvent;
-	class SFMLMouseHandler;
-	class SFMLKeyboardHandler;
-
+	class KeyboardHandler;
+	class MouseHandler;
 	class Root :
 		public Container {
 	public:
 		Root();
+		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);
 		virtual ~Root();
@@ -32,6 +32,8 @@ namespace game {
 
 	private:
 		static bool bInstance;
+		KeyboardHandler * keyboardHandler;
+		MouseHandler * mouseHandler;
 		std::shared_ptr<HUD> hud;
 		std::shared_ptr<ParticleSystem> mouseLight;
 	};

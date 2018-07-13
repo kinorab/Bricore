@@ -3,7 +3,7 @@
 
 namespace game {
 	SensorChangedEvent::SensorChangedEvent(sf::Event::SensorEvent eventData) :
-		sf::Event::SensorEvent(eventData) {
+		changed(eventData) {
 	}
 
 	void SensorChangedEvent::accept(EventListenerBase & visitor) {

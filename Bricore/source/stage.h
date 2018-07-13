@@ -1,7 +1,5 @@
 #pragma once
 #include "interact/container.h"
-#include "event/game/pausedEvent.h"
-#include "event/game/unpausedEvent.h"
 #include <SFML/Window/Keyboard.hpp>
 
 class Ball;
@@ -15,8 +13,8 @@ namespace game {
 	class KeyPressedEvent;
 	class KeyReleasedEvent;
 	class MousePressedEvent;
-	class SFMLMouseHandler;
-	class SFMLKeyboardHandler;
+	class MouseHandler;
+	class KeyboardHandler;
 	class Level;
 	class Root;
 
@@ -24,10 +22,11 @@ namespace game {
 		public Container {
 	public:
 		explicit Stage(const std::shared_ptr<Level> & level, const std::shared_ptr<const game::Root> root);
+		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);
-		void resetChildrenCopyTarget();
 		void resetKey(const sf::Keyboard::Key pause, const sf::Keyboard::Key menu);
+		void resetChildrenCopyTarget();
 		virtual ~Stage();
 
 	protected:
@@ -42,9 +41,12 @@ namespace game {
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+
 		static bool bInstance;
 		bool bPaused = false;
 		StageKey key;
+		KeyboardHandler * keyboardHandler;
+		MouseHandler * mouseHandler;
 		std::shared_ptr<Player> player;
 		std::shared_ptr<SubPlayer> subPlayer;
 		std::shared_ptr<Ball> ball;

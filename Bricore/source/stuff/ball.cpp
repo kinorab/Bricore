@@ -6,8 +6,6 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
-#include "../event/SFMLKeyboardHandler.h"
-#include "../event/SFMLMouseHandler.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 
@@ -43,11 +41,6 @@ void Ball::resetCopyTarget(const std::shared_ptr<const Player> player
 	c_player = std::move(player);
 	c_subPlayer = std::move(subPlayer);
 	followPlayer();
-}
-
-void Ball::handle(const sf::Event & event) {
-	mouseHandler->handle(event, *this, false);
-	keyboardHandler->handle(event, *this);
 }
 
 void Ball::initializeBall() {

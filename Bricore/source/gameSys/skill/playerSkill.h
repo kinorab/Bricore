@@ -28,11 +28,10 @@ namespace game {
 		friend class SkillHandler<PlayerSkill>;
 	public:
 		explicit PlayerSkill(const Kind skillName, const sf::Time duration
-			, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
+			, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 			, const bool autoUse, const bool exist, const std::shared_ptr<EnergyBar> energyBar);
 		virtual void initialize() override;
-		virtual void handleSkill(const sf::Event * const event) override;
-		virtual void handleSelect(const sf::Event * const event) override;
+		virtual void update() override;
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
@@ -62,6 +61,9 @@ namespace game {
 			sf::Keyboard::Key switchToPrevChargingSkill;
 			sf::Keyboard::Key switchToNextChargingSkill;
 		};
+		void onKeyPressed(KeyPressedEvent & event);
+		void onMousePressed(MousePressedEvent & event);
+
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		void setState(const State nextState);

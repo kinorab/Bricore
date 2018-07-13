@@ -1,6 +1,5 @@
 #include "globular.h"
 #include "../../definition/gameState.h"
-#include "../../definition/intersects.h"
 #include "../../gameSys/level/level.h"
 #include "../../gameSys/level/area/zone.h"
 #include <SFML/Graphics.hpp>
@@ -20,14 +19,46 @@ bool Globular::isEnteredObstacleArea() const {
 	const float radius = getRadius();
 	const Vector2f ballPos = getPosition();
 	auto &obstacleZone = game::Zone::getInstance().getZone(game::Zone::Obstacle);
-	return sys::ballRectINCIntersects(ballPos, radius, obstacleZone.getGlobalBounds());
+	return isIntersect(obstacleZone.getGlobalBounds());
 }
 
 bool Globular::isEnteredWallArea() const {
 	const float radius = getRadius();
 	const Vector2f ballPos = getPosition();
 	auto &wallZone = game::Zone::getInstance().getZone(game::Zone::Wall);
-	return sys::ballRectINCIntersects(ballPos, radius, wallZone.getGlobalBounds());
+	return isIntersect(wallZone.getGlobalBounds());
+}
+
+bool Globular::isIntersect(const sf::FloatRect & rect) const {
+	const sf::Vector2f LT(rect.left, rect.top);
+	const sf::Vector2f RB(rect.left + rect.width, rect.top + rect.height);
+	const sf::Vector2f nearPos(std::max(LT.x, std::min(getPosition().x, RB.x))
+		, std::max(LT.y, std::min(getPosition().y, RB.y)));
+	const float pow2Delta = (nearPos.x - getPosition().x) * (nearPos.x - getPosition().x)
+		+ (nearPos.y - getPosition().y) * (nearPos.y - getPosition().y);
+	const float pow2Distance = getRadius() * getRadius();
+	return pow2Delta <= pow2Distance;
+}
+
+bool Globular::isIntersect(const sys::DPointf & rectDP) const {
+	const sf::Vector2f LT(rectDP.dot1);
+	const sf::Vector2f RB(rectDP.dot2);
+	const sf::Vector2f nearPos(std::max(LT.x, std::min(getPosition().x, RB.x))
+		, std::max(LT.y, std::min(getPosition().y, RB.y)));
+	const float pow2Delta = (nearPos.x - getPosition().x) * (nearPos.x - getPosition().x)
+		+ (nearPos.y - getPosition().y) * (nearPos.y - getPosition().y);
+	const float pow2Distance = getRadius() * getRadius();
+	return pow2Delta <= pow2Distance;
+}
+
+bool Globular::isIntersect(const Globular & ball) const {
+	const sf::Vector2f & APos = getPosition();
+	const sf::Vector2f & BPos = ball.getPosition();
+	const float ARadius = ball.getRadius();
+	const float BRadius = ball.getRadius();
+	const float pow2Delta = (APos.x - BPos.x) * (APos.x - BPos.x) + (APos.y - BPos.y) * (APos.y - BPos.y);
+	const float pow2Distance = (ARadius + BRadius) * (ARadius + BRadius);
+	return pow2Delta <= pow2Distance;
 }
 
 Globular::Globular()
@@ -56,7 +87,7 @@ bool Globular::containsPoint(const sf::Vector2f & point) const {
 	if (pow(displacement.x, 2) + pow(displacement.y, 2) <= pow(getRadius(), 2)) {
 		return true;
 	}
-	return false;;
+	return false;
 }
 
 std::shared_ptr<sf::Drawable> Globular::getDrawable() const {
@@ -100,7 +131,7 @@ void Globular::move(const sys::DPointf &DP, const float playerSpeed, const float
 		ballSpeed.y = abs(ballSpeed.y);
 	}
 	// the collision between mainBall and player
-	else if (sys::ballRectINCIntersects(ballPos, radius, DP)) {
+	else if (isIntersect(DP)) {
 		if (!bCD) {
 			countTime.restart();
 			if (ballSpeed.x == 0.0f) {

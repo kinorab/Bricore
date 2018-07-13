@@ -17,17 +17,19 @@ namespace item {
 		public game::InteractiveObject
 		, public std::enable_shared_from_this<Brick> {
 	public:
+		// origin on center
 		explicit Brick(const sf::Vector2f & size, const float frameSize = 0);
 		explicit Brick(const Brick &copy);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void update(const float updateRatio);
 		void loadTexture(const std::string & fileName);
-		void setPosition(const sf::Vector2f &position);
-		void setBrickSize(const sf::Vector2f &sideLength);
-		void setBrickColor(const sf::Color & color);
+		void setPosition(const sf::Vector2f & position);
+		void setSize(const sf::Vector2f & size);
+		void setFillColor(const sf::Color & color);
 		void setFrameSize(const float frame);
 		void setFrameColor(const sf::Color & color);
+		void setSpeed(const sf::Vector2f & speed);
 
 		sys::DPointf getDP() const;
 		sf::FloatRect getGlobalBounds() const;
@@ -42,6 +44,7 @@ namespace item {
 	private:
 		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
+		sf::Vector2f speed;
 		std::shared_ptr<sf::RectangleShape> brick;
 	};
 }

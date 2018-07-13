@@ -9,6 +9,7 @@ namespace item {
 		, public std::enable_shared_from_this<Chip>
 		, public game::InteractiveObject {
 	public:
+		explicit Chip(const Kind chip);
 		explicit Chip(const Kind chip, const std::shared_ptr<sf::Texture> & texture);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
@@ -27,6 +28,8 @@ namespace item {
 		const Kind it;
 
 	private:
-		std::shared_ptr<sf::Sprite> context;
+		virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
+
+		const std::shared_ptr<sf::Sprite> context;
 	};
 }

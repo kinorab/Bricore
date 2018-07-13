@@ -26,7 +26,6 @@ public:
 	};
 	explicit SubPlayer(const std::shared_ptr<game::Level> level);
 	void update(const float updateRatio);
-	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<Ball> ball);
 	void setSubPlayerControlKey(const sf::Keyboard::Key upMove, const sf::Keyboard::Key downMove
 		, const sf::Keyboard::Key leftMove, const sf::Keyboard::Key rightMove
@@ -51,11 +50,12 @@ protected:
 		sf::Keyboard::Key attack;
 	};
 	struct Part {
-		std::shared_ptr<sf::Sprite> it;
+		std::shared_ptr<sf::Sprite> context;
 	};
 	struct SubPlayerContent {
 		Type currentType;
 		std::shared_ptr<item::Chip> chip;
+		std::map<std::string, Part> parts;
 	};
 
 private:

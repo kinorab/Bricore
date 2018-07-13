@@ -3,7 +3,7 @@
 
 namespace game {
 	MouseMovedEvent::MouseMovedEvent(sf::Event::MouseMoveEvent eventData) :
-		sf::Event::MouseMoveEvent(eventData) {
+		moved(eventData) {
 	}
 
 	void MouseMovedEvent::accept(EventListenerBase & visitor) {

@@ -3,7 +3,7 @@
 
 namespace game {
 	TouchMovedEvent::TouchMovedEvent(sf::Event::TouchEvent eventData) :
-		sf::Event::TouchEvent(eventData) {
+		moved(eventData) {
 	}
 
 	void TouchMovedEvent::accept(EventListenerBase & visitor) {

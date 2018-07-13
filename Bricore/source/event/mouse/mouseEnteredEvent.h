@@ -1,8 +1,12 @@
 #pragma once
-
-#include "../emptyEvent.h"
+#include "../event.h"
 
 namespace game {
 	class MouseEnteredEvent :
-		public EmptyEvent<MouseEnteredEvent> {};
+		public Event {
+	public:
+		MouseEnteredEvent() = default;
+		virtual void accept(EventListenerBase & visitor) override;
+		virtual ~MouseEnteredEvent() = default;
+	};
 }

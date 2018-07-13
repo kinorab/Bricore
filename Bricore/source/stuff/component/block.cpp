@@ -11,8 +11,10 @@ Block::Block(const Vector2f & position, const Vector2f &size)
 	: block(new VertexArray(Quads, 4))
 	, position(position)
 	, initPosition(position)
-	, size(size) {
-	setBlockVertice();
+	, size(size)
+	, texture(nullptr) {
+	setOrigin(getSize() / 2.f);
+	settleBlockVertice();
 }
 
 Block::Block(const Block & copy)
@@ -20,14 +22,15 @@ Block::Block(const Block & copy)
 	, position(copy.position)
 	, initPosition(copy.initPosition)
 	, speed(copy.speed)
-	, size(copy.size) {
+	, size(copy.size) 
+	, texture(copy.texture) {
 	setVerticeColor(copy.getVerticeColor(0), copy.getVerticeColor(1)
 		, copy.getVerticeColor(2), copy.getVerticeColor(3));
-	setBlockVertice();
+	settleBlockVertice();
 }
 
 bool Block::containsPoint(const sf::Vector2f & point) const {
-	return block->getBounds().contains(point);
+	return getGlobalBounds().contains(point);
 }
 
 std::shared_ptr<sf::Drawable> Block::getDrawable() const {
@@ -50,12 +53,12 @@ void Block::setVerticeColor(const Color & c1, const Color & c2, const Color & c3
 void Block::setSize(const sf::Vector2f & size) {
 	if (size.x < 0.0f || size.y < 0.0f) throw std::invalid_argument("SideLength cannot be negetive.");
 	this->size = size;
-	setBlockVertice();
+	settleBlockVertice();
 }
 
 void Block::resetPosition() {
 	position = initPosition;
-	setBlockVertice();
+	settleBlockVertice();
 }
 
 void Block::setSpeed(const float speedX, const float speedY) {
@@ -93,15 +96,13 @@ void Block::loadTexture(const std::string & fileName) {
 	(*block)[3].texCoords = Vector2f(0.0f, size.y);
 }
 
-void Block::setOrigin(const sf::Vector2f & position) {
-	origin = position;
-	this->position += origin;
-	this->initPosition += origin;
+void Block::setOrigin(const sf::Vector2f & origin) {
+	this->origin = origin;
 }
 
 void Block::setPosition(const sf::Vector2f & position) {
-	this->position = position;
-	setBlockVertice();
+	this->position = position + origin;
+	settleBlockVertice();
 }
 
 sys::DPointf Block::getDP() const {
@@ -124,8 +125,16 @@ Vector2u Block::getTextureSize() const {
 	return texture->getSize();
 }
 
-const Vector2f & Block::getPosition() const {
-	return position;
+sf::FloatRect Block::getLocalBounds() const {
+	return block->getBounds();
+}
+
+sf::FloatRect Block::getGlobalBounds() const {
+	return sf::FloatRect((*block)[0].position, getSize());
+}
+
+Vector2f Block::getPosition() const {
+	return position + origin;
 }
 
 const Vector2f & Block::getInitialPosition() const {
@@ -150,10 +159,10 @@ Block & Block::operator=(Block right) {
 Block::~Block() {
 }
 
-void Block::setBlockVertice() {
+void Block::settleBlockVertice() {
 	if (size.x <= 0 && size.y <= 0) throw std::domain_error("Invalid side-length for block.");
 	for (size_t i = 0; i < block->getVertexCount(); ++i) {
-		(*block)[i].position = position - origin;
+		(*block)[i].position = position;
 	}
 	(*block)[1].position += Vector2f(size.x, 0.0f);
 	(*block)[1].texCoords = Vector2f(size.x, 0.0f);

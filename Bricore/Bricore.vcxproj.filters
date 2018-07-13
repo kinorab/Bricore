@@ -39,9 +39,6 @@
     <ClCompile Include="source\event\joystick\joystickMovedEvent.cpp" />
     <ClCompile Include="source\event\sensor\sensorChangedEvent.cpp" />
     <ClCompile Include="source\event\text\textEnteredEvent.cpp" />
-    <ClCompile Include="source\event\SFMLEventQueue.cpp" />
-    <ClCompile Include="source\event\SFMLKeyboardHandler.cpp" />
-    <ClCompile Include="source\event\SFMLMouseHandler.cpp" />
     <ClCompile Include="source\event\cancelable.cpp" />
     <ClCompile Include="source\event\mouse\mouseMovedEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseWheelScrolledEvent.cpp" />
@@ -77,7 +74,6 @@
     <ClCompile Include="source\stuff\component\globular.cpp" />
     <ClCompile Include="source\stuff\wall.cpp" />
     <ClCompile Include="source\stuff\component\brick.cpp" />
-    <ClCompile Include="source\event\window\resizedEvent.cpp" />
     <ClCompile Include="source\gameSys\bar\energyBar.cpp" />
     <ClCompile Include="source\gameSys\level\level.cpp" />
     <ClCompile Include="source\gameSys\level\deploy.cpp" />
@@ -86,6 +82,22 @@
     <ClCompile Include="source\gameSys\data\data.cpp" />
     <ClCompile Include="source\gameSys\level\area\arena.cpp" />
     <ClCompile Include="source\gameSys\level\area\zone.cpp" />
+    <ClCompile Include="source\handler\mouseHandler.cpp" />
+    <ClCompile Include="source\handler\keyboardHandler.cpp" />
+    <ClCompile Include="source\handler\eventQueue.cpp" />
+    <ClCompile Include="source\handler\windowHandler.cpp" />
+    <ClCompile Include="source\handler\joystickHandler.cpp" />
+    <ClCompile Include="source\handler\textHandler.cpp" />
+    <ClCompile Include="source\handler\touchHandler.cpp" />
+    <ClCompile Include="source\event\window\windowClosedEvent.cpp" />
+    <ClCompile Include="source\event\window\windowResizedEvent.cpp" />
+    <ClCompile Include="source\event\window\windowLostFocusEvent.cpp" />
+    <ClCompile Include="source\event\window\windowGainedFocusEvent.cpp" />
+    <ClCompile Include="source\event\game\gamePausedEvent.cpp" />
+    <ClCompile Include="source\event\game\gameUnpausedEvent.cpp" />
+    <ClCompile Include="source\event\game\gameStartedEvent.cpp" />
+    <ClCompile Include="source\event\mouse\mouseEnteredEvent.cpp" />
+    <ClCompile Include="source\event\mouse\mouseLeftEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -135,17 +147,10 @@
     <ClInclude Include="source\template\visitable.h" />
     <ClInclude Include="source\template\visitor.h" />
     <ClInclude Include="source\event\joystick\joystickMovedEvent.h" />
-    <ClInclude Include="source\event\window\closedEvent.h" />
-    <ClInclude Include="source\event\window\gainedFocusEvent.h" />
-    <ClInclude Include="source\event\window\lostFocusEvent.h" />
-    <ClInclude Include="source\event\window\resizedEvent.h" />
     <ClInclude Include="source\event\keyboard\keyEvent.h" />
     <ClInclude Include="source\event\sensor\sensorChangedEvent.h" />
     <ClInclude Include="source\event\text\textEnteredEvent.h" />
     <ClInclude Include="source\event\touch\touchEvent.h" />
-    <ClInclude Include="source\event\SFMLEventQueue.h" />
-    <ClInclude Include="source\event\SFMLKeyboardHandler.h" />
-    <ClInclude Include="source\event\SFMLMouseHandler.h" />
     <ClInclude Include="source\event\joystick\joystickEvent.h" />
     <ClInclude Include="source\event\window\windowEvent.h" />
     <ClInclude Include="source\event\cancelable.h" />
@@ -197,12 +202,7 @@
     <ClInclude Include="source\event\eventSlot.h" />
     <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\event\eventListenerBase.h" />
-    <ClInclude Include="source\event\emptyListener.h" />
-    <ClInclude Include="source\event\emptyEvent.h" />
     <ClInclude Include="source\event\window\windowListener.h" />
-    <ClInclude Include="source\event\game\unpausedEvent.h" />
-    <ClInclude Include="source\event\game\pausedEvent.h" />
-    <ClInclude Include="source\event\game\startedEvent.h" />
     <ClInclude Include="source\gameSys\bar\energyBar.h" />
     <ClInclude Include="source\gameSys\level\level.h" />
     <ClInclude Include="source\gameSys\level\deploy.h" />
@@ -212,6 +212,23 @@
     <ClInclude Include="source\stuff\stuff.h" />
     <ClInclude Include="source\gameSys\level\area\arena.h" />
     <ClInclude Include="source\gameSys\level\area\zone.h" />
+    <ClInclude Include="source\handler\mouseHandler.h" />
+    <ClInclude Include="source\handler\keyboardHandler.h" />
+    <ClInclude Include="source\handler\eventQueue.h" />
+    <ClInclude Include="source\handler\windowHandler.h" />
+    <ClInclude Include="source\handler\joystickHandler.h" />
+    <ClInclude Include="source\handler\textHandler.h" />
+    <ClInclude Include="source\handler\touchHandler.h" />
+    <ClInclude Include="source\event\text\textEvent.h" />
+    <ClInclude Include="source\event\game\gameEvent.h" />
+    <ClInclude Include="source\event\game\gamePausedEvent.h" />
+    <ClInclude Include="source\event\game\gameStartedEvent.h" />
+    <ClInclude Include="source\event\game\gameUnpausedEvent.h" />
+    <ClInclude Include="source\event\window\windowResizedEvent.h" />
+    <ClInclude Include="source\event\window\windowLostFocusEvent.h" />
+    <ClInclude Include="source\event\window\windowGainedFocusEvent.h" />
+    <ClInclude Include="source\event\window\windowClosedEvent.h" />
+    <ClInclude Include="source\event\sensor\sensorEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

@@ -8,8 +8,6 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
-#include "../event/SFMLMouseHandler.h"
-#include "../event/SFMLKeyboardHandler.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -31,7 +29,6 @@ void Obstacle::resettle() {
 	blocks.clear();
 	for (size_t i = 0; i < newSize; ++i) {
 		auto block = std::make_shared<Block>(position.at(i), sideLength.at(i));
-		block->setOrigin(block->getSize() / 2.f);
 		addChild({ block });
 		blocks.push_back(block);
 	}
@@ -60,11 +57,6 @@ void Obstacle::update(const float updateRatio) {
 void Obstacle::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer, const std::shared_ptr<Ball> ball) {
 	m_ball = std::move(ball);
 	c_subPlayer = std::move(subPlayer);
-}
-
-void Obstacle::handle(const sf::Event & event) {
-	mouseHandler->handle(event, *this, false);
-	keyboardHandler->handle(event, *this);
 }
 
 void Obstacle::setBlockColor(const size_t number, const Color &c1, const Color &c2, const Color &c3, const Color &c4) {

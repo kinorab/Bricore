@@ -3,7 +3,7 @@
 
 namespace game {
 	KeyPressedEvent::KeyPressedEvent(sf::Event::KeyEvent eventData) :
-		sf::Event::KeyEvent(eventData) {
+		pressed(eventData) {
 	}
 
 	void KeyPressedEvent::accept(EventListenerBase & visitor) {

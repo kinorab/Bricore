@@ -1,17 +1,18 @@
 #pragma once
-
-#include "../interact/container.h"
+#include "../event/keyboard/keyEvent.h"
 #include <SFML/Window/Event.hpp>
+#include <map>
 
 namespace game {
-	class SFMLKeyboardHandler {
+	class Container;
+	class KeyboardHandler {
 	public:
-		SFMLKeyboardHandler();
-		virtual ~SFMLKeyboardHandler() = default;
+		KeyboardHandler();
+		virtual ~KeyboardHandler() = default;
 		virtual void handle(const sf::Event & event, Container & thing);
 	private:
 		virtual void handleKeyPressed(const sf::Event & event, Container & thing);
 		virtual void handleKeyReleased(const sf::Event & event, Container & thing);
-		std::map<const sf::Keyboard::Key, bool> keyDown;
+		std::map<sf::Keyboard::Key, bool> keyDown;
 	};
 }

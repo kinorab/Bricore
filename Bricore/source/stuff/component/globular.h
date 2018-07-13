@@ -33,6 +33,9 @@ namespace item {
 		void restartClock();
 		bool isEnteredObstacleArea() const;
 		bool isEnteredWallArea() const;
+		bool isIntersect(const sf::FloatRect & rect) const;
+		bool isIntersect(const sys::DPointf & rectDP) const;
+		bool isIntersect(const Globular & ball) const;
 
 		bool isBroke() const;
 		// include outlineThickness

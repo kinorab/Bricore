@@ -3,7 +3,7 @@
 
 namespace game {
 	JoystickPressedEvent::JoystickPressedEvent(sf::Event::JoystickButtonEvent eventData) :
-		sf::Event::JoystickButtonEvent(eventData) {
+		pressed(eventData) {
 	}
 
 	void JoystickPressedEvent::accept(EventListenerBase & visitor) {

@@ -1,6 +1,6 @@
 #pragma once
 #include "interact/interactiveObject.h"
-#include "event/SFMLEventQueue.h"
+#include "handler/eventQueue.h"
 #include <SFML/Window/Export.hpp>
 #include <map>
 
@@ -26,7 +26,7 @@ private:
 	void settleWindow();
 	void renderFunc();
 	void handleEvents(bool & finishing);
-	game::SFMLEventQueue eventQueue;
+	game::EventQueue eventQueue;
 	std::unique_ptr<Graphics> graph;
 	std::unique_ptr<sf::RenderWindow> window;
 	std::shared_ptr<game::Stage> stage;

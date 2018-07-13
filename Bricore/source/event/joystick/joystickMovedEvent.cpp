@@ -3,7 +3,7 @@
 
 namespace game {
 	JoystickMovedEvent::JoystickMovedEvent(sf::Event::JoystickMoveEvent eventData) :
-		sf::Event::JoystickMoveEvent(eventData) {
+		moved(eventData) {
 	}
 
 	void JoystickMovedEvent::accept(EventListenerBase & visitor) {

@@ -20,7 +20,6 @@ class Wall :
 public:
 	explicit Wall(const std::shared_ptr<game::Level> level);
 	void update(const float updateRatio);
-	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<Ball> ball);
 	void loadTexture(const std::string & fileName);
 	void setBricksColor(const sf::Color & color);

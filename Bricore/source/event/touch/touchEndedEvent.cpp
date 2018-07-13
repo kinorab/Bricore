@@ -3,7 +3,7 @@
 
 namespace game {
 	TouchEndedEvent::TouchEndedEvent(sf::Event::TouchEvent eventData) :
-		sf::Event::TouchEvent(eventData) {
+		ended(eventData) {
 	}
 
 	void TouchEndedEvent::accept(EventListenerBase & visitor) {

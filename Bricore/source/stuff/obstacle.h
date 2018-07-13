@@ -24,7 +24,6 @@ class Obstacle :
 public:
 	explicit Obstacle(const std::shared_ptr<game::Level> level);
 	void update(const float updateRatio);
-	void handle(const sf::Event & event);
 	void resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer, const std::shared_ptr<Ball> ball);
 	void setBlockColor(const size_t number, const sf::Color &c1, const sf::Color &c2, const sf::Color &c3, const sf::Color &c4);
 	void setBlockColor(const size_t number, const sf::Color &all);

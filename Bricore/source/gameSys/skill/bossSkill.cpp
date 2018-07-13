@@ -11,15 +11,15 @@ using namespace game;
 SkillHandler<BossSkill> BossSkill::handler;
 
 BossSkill::BossSkill(const Kind skillName, const sf::Time &duration
-	, std::vector<Effect::Kind> && effects, std::vector<Attribute::Kind> && attributes
+	, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 	, const bool exist, const std::shared_ptr<RageBar> rageBar)
 	: SkillSystem(duration, true, exist)
 	, skill(SkillContent{ skillName, State::None, nullptr })
 	, m_rageBar(std::move(rageBar))
 	, bInitialize(false) {
 	// initialize effects
-	std::for_each(effects.begin(), effects.end(), [&](const Effect::Kind effect) {
-		skillEffects.push_back(std::make_shared<EntireEffect>(effect, this));
+	std::for_each(effects.begin(), effects.end(), [&](const std::pair<Effect::Kind, bool> & effect) {
+		skillEffects.push_back(std::make_shared<EntireEffect>(effect.first, this, effect.second));
 	});
 	// initialize attributes
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
@@ -33,10 +33,7 @@ void BossSkill::initialize() {
 	bInitialize = true;
 }
 
-void BossSkill::handleSkill(const sf::Event * const event) {
-}
-
-void BossSkill::handleSelect(const sf::Event * const event) {
+void BossSkill::update() {
 }
 
 bool BossSkill::containsPoint(const sf::Vector2f & point) const {

@@ -6,17 +6,19 @@
 
 using namespace game;
 
-EntireEffect::EntireEffect(const EffectKind<Effect>::Kind effect, const sf::Time &duration, const bool exist)
+EntireEffect::EntireEffect(const EffectKind<Effect>::Kind effect, const sf::Time &duration
+	, const bool isTargetItself, const bool exist)
 	: EffectSystem(duration, false, false, exist)
-	, effect(std::shared_ptr<Effect>(new Effect(effect))){
+	, effect(std::shared_ptr<Effect>(new Effect(effect, isTargetItself))) {
 }
 
-EntireEffect::EntireEffect(const EffectKind<Effect>::Kind effect, const SkillSystem * const skill)
+EntireEffect::EntireEffect(const EffectKind<Effect>::Kind effect, const SkillSystem * const skill
+	, const bool isTargetItself)
 	: EffectSystem(skill->getDuration(), true, skill->isEnable(), skill->isExist()) {
 }
 
-const EffectKind<Effect>::Kind EntireEffect::getEffect() const {
-	return effect->it;
+std::shared_ptr<Effect> EntireEffect::getEffect() const {
+	return effect;
 }
 
 EntireEffect::~EntireEffect() {

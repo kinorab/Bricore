@@ -3,7 +3,7 @@
 
 namespace game {
 	MouseReleasedEvent::MouseReleasedEvent(sf::Event::MouseButtonEvent eventData) :
-		sf::Event::MouseButtonEvent(eventData) {
+		released(eventData) {
 	}
 
 	void MouseReleasedEvent::accept(EventListenerBase & visitor) {

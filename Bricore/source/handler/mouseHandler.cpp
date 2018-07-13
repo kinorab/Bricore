@@ -1,16 +1,16 @@
-#include "SFMLMouseHandler.h"
+#include "mouseHandler.h"
 #include "../definition/utility.h"
 #include "../definition/gameState.h"
-#include "mouse/mouseEvent.h"
-#include <SFML/Graphics/RectangleShape.hpp>
+#include "../interact/container.h"
 
 namespace game {
-	SFMLMouseHandler::SFMLMouseHandler() {
+
+	MouseHandler::MouseHandler() {
 	}
 
-	void SFMLMouseHandler::handle(const sf::Event & event, Container & target, const bool isTargetFullScreen) {
+	void MouseHandler::handle(const sf::Event & event, Container & target) {
 		if (event.type == sf::Event::MouseMoved) {
-			handleMouseMove(event, target, isTargetFullScreen);
+			handleMouseMove(event, target);
 		}
 		else if (event.type == sf::Event::MouseButtonPressed) {
 			handleMouseButtonPressed(event, target);
@@ -19,11 +19,11 @@ namespace game {
 			handleMouseButtonReleased(event, target);
 		}
 		else if (event.type == sf::Event::MouseLeft) {
-			handleMouseLeft(event, target, isTargetFullScreen);
+			handleMouseLeft(event, target);
 		}
 	}
 
-	void SFMLMouseHandler::handleMouseButtonPressed(const sf::Event & event, Container & target) {
+	void MouseHandler::handleMouseButtonPressed(const sf::Event & event, Container & target) {
 		if (!previousContactNode) {
 			return;
 		}
@@ -31,7 +31,7 @@ namespace game {
 		previousContactNode->dispatchEvent(MousePressedEvent(event.mouseButton));
 	}
 
-	void SFMLMouseHandler::handleMouseButtonReleased(const sf::Event & event, Container & target) {
+	void MouseHandler::handleMouseButtonReleased(const sf::Event & event, Container & target) {
 		if (!previousContactNode) {
 			return;
 		}
@@ -39,44 +39,25 @@ namespace game {
 		previousContactNode->dispatchEvent(MouseReleasedEvent(event.mouseButton));
 	}
 
-	void SFMLMouseHandler::handleMouseLeft(const sf::Event & event, Container & target, const bool isTargetFullScreen) {
+	void MouseHandler::handleMouseLeft(const sf::Event & event, Container & target) {
 		sf::Event newEvent;
 		newEvent.type = sf::Event::MouseMoved;
 		newEvent.mouseMove = { -1, -1 };
-		handleMouseMove(newEvent, target, isTargetFullScreen);
+		handleMouseMove(newEvent, target);
 	}
 
-	void SFMLMouseHandler::handleMouseMove(const sf::Event & event, Container & target, const bool isTargetFullScreen) {
+	void MouseHandler::handleMouseMove(const sf::Event & event, Container & target) {
 		const sf::Vector2i & mousePosition{ event.mouseMove.x, event.mouseMove.y };
 		std::shared_ptr<InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
 			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
 			contactNode = nullptr;
 		}
-		else if (isTargetFullScreen) {
-			target.dispatchEvent(MouseMovedEvent(event.mouseMove));
-			contactNode.reset(new RectangleShapeNode(
-				std::make_shared<sf::RectangleShape>(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT)
-					)));
-		}
 		else {
 			contactNode = target.getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
 				contactNode->dispatchEvent(MouseMovedEvent(event.mouseMove));
 			}
-		}
-
-		if (isTargetFullScreen) {
-			if (contactNode) {
-				target.dispatchEvent(MouseEnteredEvent());
-			}
-			else {
-				target.dispatchEvent(MouseLeftEvent());
-			}
-			if (contactNode != previousContactNode) {
-				previousContactNode.reset(new Container(target));
-			}
-			return;
 		}
 
 		if (contactNode != previousContactNode) {

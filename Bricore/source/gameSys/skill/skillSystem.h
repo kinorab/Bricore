@@ -1,5 +1,7 @@
 #pragma once
 #include "../system.h"
+#include "../../event/mouse/mouseEvent.h"
+#include "../../event/keyboard/keyEvent.h"
 #include <memory>
 #include <vector>
 
@@ -14,12 +16,9 @@ namespace game {
 	class SkillSystem : 
 		public System {
 	public:
-		// apply handler to insert
+		// apply handler to insert, addListener
 		virtual void initialize() = 0;
-		// interact on battle area
-		virtual void handleSkill(const sf::Event * const event) = 0;
-		// interact before entering next level
-		virtual void handleSelect(const sf::Event * const event) = 0;
+		virtual void update() = 0;
 		void setExist(const bool exist);
 		void upgradeSkill(const size_t number);
 		void extendMaxLevel(const size_t number);

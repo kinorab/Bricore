@@ -9,8 +9,6 @@
 #include <memory>
 
 namespace game {
-	class SFMLMouseHandler;
-	class SFMLKeyboardHandler;
 	class Container :
 		public std::enable_shared_from_this<Container>,
 		public InteractiveObject {
@@ -40,9 +38,6 @@ namespace game {
 
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-
-		std::shared_ptr<SFMLMouseHandler> mouseHandler;
-		std::shared_ptr<SFMLKeyboardHandler> keyboardHandler;
 
 	private:
 		std::vector<std::shared_ptr<InteractiveObject>> children;

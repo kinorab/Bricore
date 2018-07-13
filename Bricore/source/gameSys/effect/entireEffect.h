@@ -9,9 +9,11 @@ namespace game {
 		public EffectSystem {
 		friend class SkillSystem;
 	public:
-		explicit EntireEffect(const EffectKind<Effect>::Kind effect, const sf::Time &duration, const bool exist);
-		explicit EntireEffect(const EffectKind<Effect>::Kind effect, const SkillSystem * const skill);
-		const EffectKind<Effect>::Kind getEffect() const;
+		explicit EntireEffect(const EffectKind<Effect>::Kind effect, const sf::Time &duration
+			, const bool isTargetItself, const bool exist);
+		explicit EntireEffect(const EffectKind<Effect>::Kind effect, const SkillSystem * const skill
+			, const bool isTargetItself);
+		std::shared_ptr<Effect> getEffect() const;
 		virtual ~EntireEffect();
 
 	private:

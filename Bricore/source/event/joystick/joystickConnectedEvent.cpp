@@ -3,7 +3,7 @@
 
 namespace game {
 	JoystickConnectedEvent::JoystickConnectedEvent(sf::Event::JoystickConnectEvent eventData) :
-		sf::Event::JoystickConnectEvent(eventData) {
+		connected(eventData) {
 	}
 
 	void JoystickConnectedEvent::accept(EventListenerBase & visitor) {

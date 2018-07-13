@@ -5,11 +5,11 @@
 
 namespace game {
 	class JoystickPressedEvent :
-		public sf::Event::JoystickButtonEvent,
 		public Event {
 	public:
-		JoystickPressedEvent(sf::Event::JoystickButtonEvent eventData);
+		explicit JoystickPressedEvent(sf::Event::JoystickButtonEvent eventData);
 		virtual ~JoystickPressedEvent() = default;
 		virtual void accept(EventListenerBase & visitor) override;
+		sf::Event::JoystickButtonEvent pressed;
 	};
 }

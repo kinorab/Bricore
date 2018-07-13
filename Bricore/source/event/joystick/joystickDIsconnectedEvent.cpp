@@ -3,7 +3,7 @@
 
 namespace game {
 	JoystickDisconnectedEvent::JoystickDisconnectedEvent(sf::Event::JoystickConnectEvent eventData) :
-		sf::Event::JoystickConnectEvent(eventData) {
+		disconnected(eventData) {
 	}
 
 	void JoystickDisconnectedEvent::accept(EventListenerBase & visitor) {
