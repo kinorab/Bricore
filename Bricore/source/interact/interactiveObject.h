@@ -33,7 +33,7 @@ namespace game {
 		virtual void setParent(Container * parent);
 
 	protected:
-		InteractiveObject();
+		InteractiveObject() noexcept;
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 	private:

@@ -4,7 +4,7 @@
 namespace game {
 	class JoystickHandler {
 	public:
-		JoystickHandler();
+		JoystickHandler() noexcept;
 		virtual ~JoystickHandler() = default;
 	};
 }

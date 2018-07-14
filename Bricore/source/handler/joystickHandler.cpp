@@ -1,6 +1,6 @@
 #include "joystickHandler.h"
 
 namespace game {
-	JoystickHandler::JoystickHandler() {
+	JoystickHandler::JoystickHandler() noexcept {
 	}
 }

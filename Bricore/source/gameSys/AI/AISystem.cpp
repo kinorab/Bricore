@@ -2,7 +2,7 @@
 
 using namespace game;
 
-AISystem::AISystem()
+AISystem::AISystem() noexcept
 	: System(true) {
 }
 

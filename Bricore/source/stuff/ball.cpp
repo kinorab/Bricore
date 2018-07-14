@@ -24,10 +24,10 @@ void Ball::update(const float updateRatio) {
 	const float playerSpeed = c_player->getSpeed();
 	mainBall->move(playerDP, playerSpeed, updateRatio);
 	for (size_t i = 0; i < shadowBalls.size(); ++i) {
-		shadowBalls.at(i)->move(playerDP, playerSpeed, updateRatio);
-		if (shadowBalls.at(i)->isBroke()) {
+		shadowBalls[i]->move(playerDP, playerSpeed, updateRatio);
+		if (shadowBalls[i]->isBroke()) {
 			// remove need to be first
-			removeChild({ shadowBalls.at(i) });
+			removeChild({ shadowBalls[i] });
 			shadowBalls.erase(shadowBalls.begin() + i);
 		}
 		if (bMultiple) {
@@ -112,7 +112,8 @@ size_t Ball::getBallsAmount() const {
 }
 
 Ball::~Ball() {
-	removeAllChildren();
+	removeAllChildren(true);
+	removeAllListener();
 }
 
 void Ball::draw(RenderTarget &target, RenderStates states) const {
@@ -125,34 +126,34 @@ void Ball::ballsCollision(const size_t number) {
 		balls.push_back(element);
 	}
 	for (size_t j = number + 1; j < balls.size(); ++j) {
-		const Vector2f APos = balls.at(number)->getPosition();
-		const float AR = balls.at(number)->getRadius();
-		const Vector2f BPos = balls.at(j)->getPosition();
-		const float BR = balls.at(j)->getRadius();
+		const Vector2f APos = balls[number]->getPosition();
+		const float AR = balls[number]->getRadius();
+		const Vector2f BPos = balls[j]->getPosition();
+		const float BR = balls[j]->getRadius();
 		if (bCollision && sys::ballsIntersects(APos, AR, BPos, BR)) {
-			const float avarageSpeedX = (abs(balls.at(number)->getSpeed().x) + abs(balls.at(j)->getSpeed().x)) / 2;
-			const float ASpeedY = balls.at(number)->getSpeed().y;
-			const float BSpeedY = balls.at(j)->getSpeed().y;
-			balls.at(number)->restartClock();
-			balls.at(j)->restartClock();
+			const float avarageSpeedX = (abs(balls[number]->getSpeed().x) + abs(balls[j]->getSpeed().x)) / 2;
+			const float ASpeedY = balls[number]->getSpeed().y;
+			const float BSpeedY = balls[j]->getSpeed().y;
+			balls[number]->restartClock();
+			balls[j]->restartClock();
 			if (APos.x > BPos.x) {
 				if (APos.y > BPos.y) {
-					balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), abs(ASpeedY)));
-					balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(BSpeedY)));
+					balls[number]->setSpeed(Vector2f(abs(avarageSpeedX), abs(ASpeedY)));
+					balls[j]->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(BSpeedY)));
 				}
 				else {
-					balls.at(number)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(ASpeedY)));
-					balls.at(j)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(BSpeedY)));
+					balls[number]->setSpeed(Vector2f(abs(avarageSpeedX), -abs(ASpeedY)));
+					balls[j]->setSpeed(Vector2f(-abs(avarageSpeedX), abs(BSpeedY)));
 				}
 			}
 			else {
 				if (APos.y > BPos.y) {
-					balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), abs(ASpeedY)));
-					balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), -abs(BSpeedY)));
+					balls[number]->setSpeed(Vector2f(-abs(avarageSpeedX), abs(ASpeedY)));
+					balls[j]->setSpeed(Vector2f(abs(avarageSpeedX), -abs(BSpeedY)));
 				}
 				else {
-					balls.at(number)->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(ASpeedY)));
-					balls.at(j)->setSpeed(Vector2f(abs(avarageSpeedX), abs(BSpeedY)));
+					balls[number]->setSpeed(Vector2f(-abs(avarageSpeedX), -abs(ASpeedY)));
+					balls[j]->setSpeed(Vector2f(abs(avarageSpeedX), abs(BSpeedY)));
 				}
 			}
 		}

@@ -8,7 +8,7 @@ namespace game {
 	class InteractiveObject;
 	class MouseHandler {
 	public:
-		MouseHandler();
+		MouseHandler() noexcept;
 		virtual void handle(const sf::Event & event, Container & target);
 		virtual ~MouseHandler() = default;
 

@@ -5,7 +5,7 @@ namespace item {
 	class MainBall :
 		public Globular {
 	public:
-		MainBall();
+		MainBall() noexcept;
 		virtual bool isCollidedObstacle(const Block * block) override;
 		virtual bool isCollidedWall(const Brick * brick) override;
 		void initialize();

@@ -189,7 +189,7 @@ inline size_t sys::Matrix<T>::capacity() const noexcept {
 // swap two rows in same 2D vector
 template<typename T>
 inline void sys::Matrix<T>::swap_row(const size_t indexA, const size_t indexB) {
-	std::swap(matrix.at(indexA), matrix.at(indexB));
+	std::swap(matrix[indexA], matrix[indexB]);
 }
 // swap two elements
 template<typename T>
@@ -199,7 +199,7 @@ inline void sys::Matrix<T>::swap_element(T &a, T &b) {
 // resize same size to specified row
 template<typename T>
 inline void sys::Matrix<T>::resize_row(const size_t index, const size_t size) {
-	matrix.at(index).resize(size);
+	matrix[index].resize(size);
 }
 // resize same size to specified range of rows
 template<typename T>
@@ -223,22 +223,22 @@ inline void sys::Matrix<T>::resize_row_allRange(const size_t size) {
 // push_back to certain row
 template<typename T>
 inline void sys::Matrix<T>::push_back_row(const size_t index, const T & target) {
-	matrix.at(index).push_back(target);
+	matrix[index].push_back(target);
 }
 // pop_back to certain row
 template<typename T>
 inline void sys::Matrix<T>::pop_back_row(const size_t index) {
-	matrix.at(index).pop_back();
+	matrix[index].pop_back();
 }
 // erase certain row's element
 template<typename T>
 inline void sys::Matrix<T>::erase_row(const size_t index, const_iter_row target) {
-	matrix.at(index).erase(target);
+	matrix[index].erase(target);
 }
 // erase range of elements at certain row
 template<typename T>
 inline void sys::Matrix<T>::erase_row(const size_t index, const_iter_row first, const_iter_row last) {
-	matrix.at(index).erase(first, last);
+	matrix[index].erase(first, last);
 }
 // clear a row
 template<typename T>
@@ -248,47 +248,47 @@ inline void sys::Matrix<T>::clear_row(const size_t index) noexcept {
 // assign certain row with element(s)
 template<typename T>
 inline void sys::Matrix<T>::assign_row(const size_t index, const size_t n, const T & val) {
-	matrix.at(index).assign(n, val);
+	matrix[index].assign(n, val);
 }
 // assign certain row with element(s)
 template<typename T>
 inline void sys::Matrix<T>::assign_row(const size_t index, inputIter_row first, inputIter_row last) {
-	matrix.at(index).assign(first, last);
+	matrix[index].assign(first, last);
 }
 // shrink certain row to fit size
 template<typename T>
 inline void sys::Matrix<T>::shrink_to_fit_row(const size_t index) {
-	matrix.at(index).shrink_to_fit();
+	matrix[index].shrink_to_fit();
 }
 // front element of certain row
 template<typename T>
 inline T & sys::Matrix<T>::front_row(const size_t index) {
-	return matrix.at(index).front();
+	return matrix[index].front();
 }
 // front element of certain row
 template<typename T>
 inline const T & sys::Matrix<T>::front_row(const size_t index) const {
-	return matrix.at(index).front();
+	return matrix[index].front();
 }
 // last element of certain row
 template<typename T>
 inline T & sys::Matrix<T>::back_row(const size_t index) {
-	return matrix.at(index).back();
+	return matrix[index].back();
 }
 // last element of certain row
 template<typename T>
 inline const T & sys::Matrix<T>::back_row(const size_t index) const {
-	return matrix.at(index).back();
+	return matrix[index].back();
 }
 // insert element(s) to certain row
 template<typename T>
 inline typename sys::Matrix<T>::iter_row sys::Matrix<T>::insert_index_row(const size_t index, const_iter_row pos, const T & val, const size_t n) {
-	return n == 0 ? matrix.at(index).insert(pos, val) : matrix.at(index).insert(pos, n, val);
+	return n == 0 ? matrix[index].insert(pos, val) : matrix[index].insert(pos, n, val);
 }
 // insert element(s) to certain row
 template<typename T>
 inline typename sys::Matrix<T>::iter_row sys::Matrix<T>::insert_index_row(const size_t index, const_iter_row pos, inputIter_row first_row, inputIter_row last_row) {
-	return matrix.at(index).insert(pos, first_row, last_row);
+	return matrix[index].insert(pos, first_row, last_row);
 }
 // element's iterator of 2D vector
 template<typename T>

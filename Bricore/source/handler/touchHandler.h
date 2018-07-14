@@ -4,7 +4,7 @@
 namespace game {
 	class TouchHandler {
 	public:
-		TouchHandler();
+		TouchHandler() noexcept;
 		virtual ~TouchHandler() = default;
 	};
 }

@@ -57,11 +57,11 @@ namespace game {
 		void partRecover(const std::string &partName);
 		struct Part {
 			std::shared_ptr<sf::Sprite> context;
-			bool bIntensified;
+			bool bIntensified = false;
 		};
 		struct WeakPart {
 			std::shared_ptr<sf::Sprite> context;
-			bool bBroke;
+			bool bBroke = false;
 		};
 		struct BossContent {
 			std::string bossName;

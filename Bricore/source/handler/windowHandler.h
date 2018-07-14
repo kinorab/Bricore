@@ -4,7 +4,7 @@
 namespace game {
 	class WindowHandler {
 	public:
-		WindowHandler();
+		WindowHandler() noexcept;
 		virtual ~WindowHandler() = default;
 	};
 }

@@ -13,7 +13,7 @@ template class SkillHandler<BallSkill>;
 template class SkillHandler<BossSkill>;
 
 template<typename T>
-SkillHandler<T>::SkillHandler() {
+SkillHandler<T>::SkillHandler() noexcept {
 }
 
 template<typename T>

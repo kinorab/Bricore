@@ -14,7 +14,7 @@ public:
 	virtual	void load(const std::string key);
 	virtual void unload(const std::string key);
 protected:
-	ImageManager();
+	ImageManager() noexcept;
 private:
 	std::unordered_map<std::string, std::shared_ptr<sf::Image>> resources;
 };

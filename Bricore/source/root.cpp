@@ -58,12 +58,7 @@ void Root::onMouseMoved(MouseMovedEvent & event) {
 }
 
 void Root::onMousePressed(MousePressedEvent & event) {
-	if (event.pressed.button == sf::Mouse::Left) {
-		hud->changeGraphicsSetting(GFps::Fps30, GDpi::Low, GAI::None);
-	}
-	else if (event.pressed.button == sf::Mouse::Right) {
-		hud->changeGraphicsSetting(GFps::NoLimit, GDpi::Quality, GAI::Much);
-	}
+
 }
 
 void Root::onKeyPressed(KeyPressedEvent & event) {

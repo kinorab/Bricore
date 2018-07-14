@@ -4,7 +4,7 @@
 namespace game {
 	class TextHandler {
 	public:
-		TextHandler();
+		TextHandler() noexcept;
 		virtual ~TextHandler() = default;
 	};
 }

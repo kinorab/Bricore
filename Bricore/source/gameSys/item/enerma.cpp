@@ -3,8 +3,9 @@
 
 using namespace item;
 
-Enerma::Enerma(const Kind enerma, const std::shared_ptr<sf::Texture> & texture) 
+Enerma::Enerma(const Kind enerma, const std::shared_ptr<sf::Texture> & texture)
 	: it(enerma)
+	, bAppear(false)
 	, context(new sf::Sprite(*texture)) {
 }
 

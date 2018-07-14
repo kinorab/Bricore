@@ -22,9 +22,9 @@ HUD::HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> grap
 	, m_graph(std::move(graph)) {
 	// initialize interfaces
 	interfaces.emplace(Main, std::make_shared<sf::RectangleShape>(sf::Vector2f(GAME_WIDTH, GAME_HEIGHT)));
-	interfaces.at(Main)->setFillColor(sf::Color::White);
+	interfaces[Main]->setFillColor(sf::Color::White);
 	interfaces.emplace(BattleArea, std::make_shared<sf::RectangleShape>(sf::Vector2f(LEVEL_WIDTH, LEVEL_HEIGHT)));
-	interfaces.at(BattleArea)->setFillColor(sf::Color(180, 180, 180));
+	interfaces[BattleArea]->setFillColor(sf::Color(180, 180, 180));
 	// set residue Shadow
 	setResidueShadow(m_graph->currentAfterimage);
 	// initialize panels
@@ -34,7 +34,7 @@ HUD::HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> grap
 	scorePanel.context->setPosition({ LEVEL_WIDTH, 200.f });
 	playerPanel.context->setFillColor(sf::Color::Cyan);
 	playerPanel.context->setPosition({ LEVEL_WIDTH, 500.f });
-	addChild({ interfaces.at(Main), interfaces.at(BattleArea), bossPanel.context, scorePanel.context, playerPanel.context });
+	addChild({ interfaces[Main], interfaces[BattleArea], bossPanel.context, scorePanel.context, playerPanel.context });
 	// initialize button
 }
 

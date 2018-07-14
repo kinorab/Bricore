@@ -7,7 +7,7 @@
 using namespace item;
 using namespace sf;
 
-MainBall::MainBall()
+MainBall::MainBall() noexcept
 	: bSettle(false) {
 	setColor(Color::Green);
 }

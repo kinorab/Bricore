@@ -8,7 +8,7 @@
 #include <algorithm>
 
 namespace game {
-	InteractiveObject::InteractiveObject()
+	InteractiveObject::InteractiveObject() noexcept
 		: bEnabled(true)
 		, parent(nullptr) {
 		onEnabled();

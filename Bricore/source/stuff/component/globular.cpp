@@ -61,7 +61,7 @@ bool Globular::isIntersect(const Globular & ball) const {
 	return pow2Delta <= pow2Distance;
 }
 
-Globular::Globular()
+Globular::Globular() noexcept
 	: hitside{ false, false, false, false }
 	, bBroke(false)
 	, bCD(false)

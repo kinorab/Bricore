@@ -5,7 +5,7 @@
 #include <map>
 
 namespace game {
-	Container::Container() {
+	Container::Container() noexcept {
 
 	}
 
@@ -73,12 +73,12 @@ namespace game {
 	}
 
 	std::shared_ptr<sf::Drawable> Container::getChildAt(int index) const {
-		return children.at(index)->getDrawable();
+		return children[index]->getDrawable();
 	}
 
 	size_t Container::getChildIndex(const sf::Drawable * element) const {
 		for (size_t index = 0; index < children.size(); ++index) {
-			if (children.at(index)->getDrawable().get() == element) {
+			if (children[index]->getDrawable().get() == element) {
 				return index;
 			}
 		}
@@ -87,7 +87,7 @@ namespace game {
 	}
 
 	std::shared_ptr<InteractiveObject> Container::getChildNode(const sf::Drawable * element) const {
-		return children.at(getChildIndex(element));
+		return children[getChildIndex(element)];
 	}
 
 	size_t Container::getChildrenCount() const {
@@ -120,10 +120,13 @@ namespace game {
 		return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
 	}
 
-	void Container::removeAllChildren() {
+	void Container::removeAllChildren(const bool isRemoveChlidrenListener) {
 		std::for_each(children.begin(), children.end(),
-			[](const std::shared_ptr<InteractiveObject> & child) {
+			[=](const std::shared_ptr<InteractiveObject> & child) {
 			child->setParent(nullptr);
+			if (isRemoveChlidrenListener) {
+				child->removeAllListener();
+			}
 		});
 		children.clear();
 		children.shrink_to_fit();
@@ -195,11 +198,11 @@ namespace game {
 	}
 
 	void Container::swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB) {
-		std::swap(children.at(getChildIndex(elementA)), children.at(getChildIndex(elementB)));
+		std::swap(children[getChildIndex(elementA)], children[getChildIndex(elementB)]);
 	}
 
 	void Container::swapChildrenAt(const int indexA, const int indexB) {
-		std::swap(children.at(indexA), children.at(indexB));
+		std::swap(children[indexA], children[indexB]);
 	}
 
 	void Container::draw(sf::RenderTarget & target, sf::RenderStates states) const {

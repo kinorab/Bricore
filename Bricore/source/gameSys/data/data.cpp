@@ -2,7 +2,7 @@
 
 using namespace game;
 
-Data::Data() {
+Data::Data() noexcept{
 }
 
 Data::~Data() {

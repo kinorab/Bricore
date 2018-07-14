@@ -4,7 +4,7 @@
 namespace game {
 	class Data {
 	public:
-		Data();
+		Data() noexcept;
 		virtual ~Data();
 	};
 }

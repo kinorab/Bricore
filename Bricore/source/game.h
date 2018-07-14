@@ -18,7 +18,7 @@ class Graphics;
 
 class Game {
 public:
-	Game();
+	Game() noexcept;
 	virtual ~Game();
 	void run();
 

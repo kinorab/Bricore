@@ -46,6 +46,7 @@ BarSystem::~BarSystem() {
 }
 
 
+#pragma warning(suppress: 26434)
 void BarSystem::setEnable(const bool enable) {
 	if (!bExist) throw std::invalid_argument("Bar not exist.");
 	if (isEnable() == enable) return;

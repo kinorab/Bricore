@@ -53,7 +53,7 @@ protected:
 		std::shared_ptr<sf::Sprite> context;
 	};
 	struct SubPlayerContent {
-		Type currentType;
+		Type currentType = Type::Prototype;
 		std::shared_ptr<item::Chip> chip;
 		std::map<std::string, Part> parts;
 	};

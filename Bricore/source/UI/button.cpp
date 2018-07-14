@@ -10,6 +10,7 @@ namespace game {
 		, const std::shared_ptr<sf::Texture> & overTexture
 		, const std::shared_ptr<sf::Texture> & downTexture, const ButtonShape shape)
 		: releaseObject(nullptr)
+		, currentState(ButtonState::Up)
 		, buttonShape(shape)
 		, bReleasing(false) {
 		initializeButton(false);
@@ -22,6 +23,7 @@ namespace game {
 		, const std::shared_ptr<sf::Texture>& releaseTexture, const ButtonShape shape
 		, const sf::Time & specialDuration)
 		: buttonShape(shape)
+		, currentState(ButtonState::Up)
 		, bReleasing(false)
 		, specialDuration(specialDuration) {
 		initializeButton(true);

@@ -9,10 +9,10 @@ void AudioManager::initialize() {
 
 void AudioManager::loadSound(const std::string & directory) {
 	buffers.emplace(directory, new sf::SoundBuffer);
-	if (!buffers.at(directory)->loadFromFile(directory)) {
+	if (!buffers[directory]->loadFromFile(directory)) {
 		std::cout << "Cannot load " << directory << std::endl;
 	}
-	sounds.emplace(directory, new sf::Sound(*buffers.at(directory)));
+	sounds.emplace(directory, new sf::Sound(*buffers[directory]));
 }
 
 void AudioManager::unloadSound(const std::string & directory) {
@@ -23,7 +23,7 @@ void AudioManager::unloadSound(const std::string & directory) {
 
 void AudioManager::loadMusic(const std::string & directory) {
 	musics.emplace(directory, new sf::Music);
-	if (!musics.at(directory)->openFromFile(directory)) {
+	if (!musics[directory]->openFromFile(directory)) {
 		std::cout << "Cannot open " << directory << std::endl;
 	}
 }
@@ -70,7 +70,7 @@ sf::Music * AudioManager::getMusic(const std::string & fileName) {
 	throw std::invalid_argument("Music not found.");
 }
 
-AudioManager::AudioManager() {
+AudioManager::AudioManager() noexcept {
 }
 
 AudioManager::~AudioManager() {

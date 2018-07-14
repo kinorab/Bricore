@@ -28,7 +28,7 @@ public:
 		Much
 	};
 	explicit Graphics(const FrameRate Fps = FrameRate::Fps60, const Resolution Dpi = Resolution::High
-		, const ResidueShadow afterimage = ResidueShadow::None);
+		, const ResidueShadow afterimage = ResidueShadow::None) noexcept;
 
 	// display in milliseconds
 	float getFrameSpan() const;

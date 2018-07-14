@@ -6,7 +6,7 @@ namespace game {
 	class MovieClip
 		: public Container {
 	public:
-		MovieClip();
+		MovieClip() noexcept;
 		virtual ~MovieClip() override;
 		virtual int getCurrentFrame() const;
 		virtual bool isPlaying() const;

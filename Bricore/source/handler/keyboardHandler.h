@@ -7,7 +7,7 @@ namespace game {
 	class Container;
 	class KeyboardHandler {
 	public:
-		KeyboardHandler();
+		KeyboardHandler() noexcept;
 		virtual ~KeyboardHandler() = default;
 		virtual void handle(const sf::Event & event, Container & thing);
 	private:

@@ -1,6 +1,6 @@
 #include "touchHandler.h"
 
 namespace game {
-	TouchHandler::TouchHandler() {
+	TouchHandler::TouchHandler() noexcept {
 	}
 }

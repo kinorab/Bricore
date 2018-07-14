@@ -20,7 +20,7 @@ namespace game {
 		virtual int getIdCount() const;
 
 	protected:
-		EventSubject() = default;
+		EventSubject() noexcept;
 		int iIdCount = 0;
 		std::multimap<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<EventSubject>>> listeners;
 	};

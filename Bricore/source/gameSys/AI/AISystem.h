@@ -11,6 +11,6 @@ namespace game {
 		virtual ~AISystem();
 
 	protected:
-		AISystem();
+		AISystem() noexcept;
 	};
 }

@@ -1,6 +1,10 @@
 #include "graphics.h"
 
-Graphics::Graphics(const FrameRate Fps, const Resolution Dpi, const ResidueShadow afterimage) {
+Graphics::Graphics(const FrameRate Fps, const Resolution Dpi, const ResidueShadow afterimage) noexcept
+	: currentAfterimage(ResidueShadow::None)
+	, fFrameSpan()
+	, currentDpi()
+	, currentFps() {
 	//icon.loadFromFile("");
 	setDpi(Dpi);
 	setFps(Fps);

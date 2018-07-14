@@ -35,14 +35,14 @@ bool Boss::containsPoint(const sf::Vector2f & point) const {
 void Boss::loadCorePreviews(const std::map<item::Core::Kind, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<item::Core::Kind, std::string> &file) {
 		corePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		corePreviews.at(file.first)->setSmooth(isSmooth);
+		corePreviews[file.first]->setSmooth(isSmooth);
 	});
 }
 
 void Boss::loadPartPreviews(const std::vector<std::string>& fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
 		partPreviews.emplace(file, TextureManager::getInstance().get(file));
-		partPreviews.at(file)->setSmooth(isSmooth);
+		partPreviews[file]->setSmooth(isSmooth);
 	});
 }
 
@@ -147,6 +147,7 @@ Boss::Boss(const Boss & copy)
 	, bExist(copy.bExist) {
 }
 
+#pragma warning(suppress: 26434)
 Boss & Boss::operator =(Boss copy) {
 	boss = std::move(copy.boss);
 	partPreviews.swap(copy.partPreviews);
@@ -180,16 +181,16 @@ void Boss::debut(const item::Core::Kind type) {
 		if (element.first.find("weak_") == std::string::npos) {
 			boss.parts.emplace(element.first
 				, Part{ std::make_shared<sf::Sprite>(*element.second), false });
-			auto & part = boss.parts.at(element.first).context;
+			auto & part = boss.parts[element.first].context;
 			part->setOrigin(part->getLocalBounds().width / 2.f, part->getLocalBounds().height / 2.f);
 			return;
 		}
 		boss.weakParts.emplace(element.first
 			, WeakPart{ std::make_shared<sf::Sprite>(*element.second), false });
-		auto & weakPart = boss.weakParts.at(element.first).context;
+		auto & weakPart = boss.weakParts[element.first].context;
 		weakPart->setOrigin(weakPart->getLocalBounds().width / 2.f, weakPart->getLocalBounds().height / 2.f);
 	});
-	boss.core.reset(new item::Core(type, corePreviews.at(type)));
+	boss.core.reset(new item::Core(type, corePreviews[type]));
 	boss.core->setOrigin( boss.core->getLocalBounds().width / 2.f
 		, boss.core->getLocalBounds().height / 2.f );
 	clock.restart();
@@ -198,7 +199,7 @@ void Boss::debut(const item::Core::Kind type) {
 
 void Boss::changeCore(const item::Core::Kind type) {
 	if (!bExist) throw std::invalid_argument("Boss not exist.");
-	boss.core.reset(new item::Core(type, corePreviews.at(type)));
+	boss.core.reset(new item::Core(type, corePreviews[type]));
 	boss.core->setOrigin( boss.core->getLocalBounds().width / 2.f, boss.core->getLocalBounds().height / 2.f );
 }
 
@@ -207,7 +208,7 @@ void Boss::weakPartBreak(const std::string & weak_partName) {
 	if (iter == boss.weakParts.end()) throw std::invalid_argument("Weak part no found.");
 	if (iter->second.bBroke) throw std::exception("Weak part was already broken.");
 	iter->second.bBroke = true;
-	iter->second.context.reset(new sf::Sprite(*partPreviews.at(weak_partName + "_broke")));
+	iter->second.context.reset(new sf::Sprite(*partPreviews[weak_partName + "_broke"]));
 }
 
 void Boss::weakPartRecover(const std::string & weak_partName) {
@@ -215,7 +216,7 @@ void Boss::weakPartRecover(const std::string & weak_partName) {
 	if (iter == boss.weakParts.end()) throw std::invalid_argument("Weak part no found.");
 	if (!iter->second.bBroke) throw std::exception("Weak part was already recovered.");
 	iter->second.bBroke = false;
-	iter->second.context.reset(new sf::Sprite(*partPreviews.at(weak_partName)));
+	iter->second.context.reset(new sf::Sprite(*partPreviews[weak_partName]));
 }
 
 void Boss::partIntensify(const std::string & partName) {
@@ -223,7 +224,7 @@ void Boss::partIntensify(const std::string & partName) {
 	if (iter == boss.parts.end()) throw std::invalid_argument("Part no found.");
 	if (iter->second.bIntensified) throw std::exception("Part was already intensified.");
 	iter->second.bIntensified = true;
-	iter->second.context.reset(new sf::Sprite(*partPreviews.at(partName + "_intense")));
+	iter->second.context.reset(new sf::Sprite(*partPreviews[partName + "_intense"]));
 }
 
 void Boss::partRecover(const std::string & partName) {
@@ -231,5 +232,5 @@ void Boss::partRecover(const std::string & partName) {
 	if (iter == boss.parts.end()) throw std::invalid_argument("Part no found.");
 	if (!iter->second.bIntensified) throw std::exception("Part was already recovered.");
 	iter->second.bIntensified = false;
-	iter->second.context.reset(new sf::Sprite(*partPreviews.at(partName)));
+	iter->second.context.reset(new sf::Sprite(*partPreviews[partName]));
 }

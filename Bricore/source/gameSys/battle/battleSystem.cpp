@@ -2,7 +2,7 @@
 
 using namespace game;
 
-BattleSystem::BattleSystem() 
+BattleSystem::BattleSystem() noexcept
 	: System(false) {
 }
 

@@ -14,6 +14,9 @@ using namespace item;
 
 Wall::Wall(const std::shared_ptr<game::Level> level)
 	: whiteSpace(0.0f, 0.0f)
+	, uRowCount()
+	, uAmount()
+	, fFrameSize()
 	, bChangeEntity(false)
 	, m_level(std::move(level)) {
 	resettle();
@@ -27,11 +30,11 @@ void Wall::update(const float updateRatio) {
 	}
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
 		for (auto element : m_ball->enteredWallArea()) {
-			if (element->isCollidedWall(bricks.at(i).get())) {
+			if (element->isCollidedWall(bricks[i].get())) {
 				if (std::dynamic_pointer_cast<MainBall>(element)) {
 					m_ball->ballDivided(10);
 				}
-				removeChild({ bricks.at(i) });
+				removeChild({ bricks[i] });
 				bricks.erase(bricks.begin() + i);
 				--i;
 				break;
@@ -46,19 +49,19 @@ void Wall::resetCopyTarget(const std::shared_ptr<Ball> ball) {
 
 void Wall::loadTexture(const std::string & fileName) {
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
-		bricks.at(i)->loadTexture(fileName);
+		bricks[i]->loadTexture(fileName);
 	}
 }
 
 void Wall::setBricksColor(const Color &color) {
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
-		bricks.at(i)->setFillColor(color);
+		bricks[i]->setFillColor(color);
 	}
 }
 
 void Wall::setFramesColor(const Color &color) {
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
-		bricks.at(i)->setFrameColor(color);
+		bricks[i]->setFrameColor(color);
 	}
 }
 
@@ -83,13 +86,13 @@ void Wall::setFrameSize(const float frameSize) {
 }
 
 void Wall::resettle() {
-	const size_t rowCount = static_cast<size_t>(m_level->deploy->getBrick().it.at(0));
-	const float wid = m_level->deploy->getBrick().it.at(1);
-	const float hei = m_level->deploy->getBrick().it.at(2);
-	const Vector2f &interval = sf::Vector2f(m_level->deploy->getBrick().it.at(3)
-		, m_level->deploy->getBrick().it.at(4));
-	const float frameSize = m_level->deploy->getBrick().it.at(5);
-	const float whiteSpaceY = m_level->deploy->getBrick().it.at(6);
+	const size_t rowCount = static_cast<size_t>(m_level->deploy->getBrick().it[0]);
+	const float wid = m_level->deploy->getBrick().it[1];
+	const float hei = m_level->deploy->getBrick().it[2];
+	const Vector2f &interval = sf::Vector2f(m_level->deploy->getBrick().it[3]
+		, m_level->deploy->getBrick().it[4]);
+	const float frameSize = m_level->deploy->getBrick().it[5];
+	const float whiteSpaceY = m_level->deploy->getBrick().it[6];
 
 	if (wid <= 0.0f || hei <= 0.0f
 		|| interval.x < 0.0f || interval.y < 0.0f
@@ -111,7 +114,7 @@ void Wall::resettle() {
 	bChangeEntity = true;
 	removeAllChildren();
 	settlePlace();
-	setBricksColor(m_level->deploy->getBrick().color.at(0));
+	setBricksColor(m_level->deploy->getBrick().color[0]);
 }
 
 size_t Wall::getBrickAmount() const {
@@ -119,7 +122,7 @@ size_t Wall::getBrickAmount() const {
 }
 
 const Vector2f & Wall::getBrickSize(const size_t number) const {
-	return bricks.at(number)->getBrickSize();
+	return bricks[number]->getBrickSize();
 }
 
 const Vector2f & Wall::getInterval() const {
@@ -127,19 +130,20 @@ const Vector2f & Wall::getInterval() const {
 }
 
 float Wall::getFrameSize(const size_t number) const {
-	return bricks.at(number)->getFrameSize();
+	return bricks[number]->getFrameSize();
 }
 
 sys::DPointf Wall::getDP(const size_t number) const {
-	return bricks.at(number)->getDP();
+	return bricks[number]->getDP();
 }
 
 const Color & Wall::getBrickColor(const size_t number) const {
-	return bricks.at(number)->getBrickColor();
+	return bricks[number]->getBrickColor();
 }
 
 Wall::~Wall() { 
-	removeAllChildren();
+	removeAllChildren(true);
+	removeAllListener();
 }
 
 void Wall::settlePlace() {

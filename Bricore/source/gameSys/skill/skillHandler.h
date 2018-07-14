@@ -11,7 +11,7 @@ namespace game {
 	class SkillHandler {
 		using State = typename SkillState<T>::State;
 	public:
-		SkillHandler();
+		SkillHandler() noexcept;
 		// insert a skill record
 		void insert(const std::shared_ptr<T> skill);
 		// remove a skill record

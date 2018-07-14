@@ -13,7 +13,7 @@ namespace game {
 		public std::enable_shared_from_this<Container>,
 		public InteractiveObject {
 	public:
-		Container();
+		Container() noexcept;
 		virtual ~Container() override;
 		virtual void addChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
 		virtual void addChildAt(const std::vector<std::shared_ptr<sf::Drawable>> & elements, const size_t index);
@@ -25,7 +25,7 @@ namespace game {
 		virtual size_t getChildrenCount() const;
 		virtual std::shared_ptr<InteractiveObject> getObjectUnderPoint(const sf::Vector2f & point);
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
-		virtual void removeAllChildren();
+		virtual void removeAllChildren(const bool isRemoveChlidrenListener = false);
 		// remove certain children and return their indexes
 		virtual std::vector<int> removeChild(const std::vector<std::shared_ptr<sf::Drawable>> & elements);
 		virtual void removeChildAt(std::vector<int> indexes);

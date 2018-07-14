@@ -12,7 +12,7 @@ namespace game {
 	class TextButton
 		: public UIComponent {
 	public:
-		TextButton();
+		TextButton() noexcept;
 		virtual ~TextButton();
 		void setCaption(std::string caption);
 		std::string getCaption();

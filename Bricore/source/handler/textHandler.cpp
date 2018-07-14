@@ -1,7 +1,7 @@
 #include "textHandler.h"
 
 namespace game {
-	TextHandler::TextHandler() {
+	TextHandler::TextHandler() noexcept{
 
 	}
 }

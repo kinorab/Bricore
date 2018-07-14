@@ -80,7 +80,7 @@ void BallSkill::update() {
 void BallSkill::loadFrame(const std::vector<std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::string &file) {
 		framePreviews.emplace(file, TextureManager::getInstance().get(file));
-		framePreviews.at(file)->setSmooth(isSmooth);
+		framePreviews[file]->setSmooth(isSmooth);
 	});
 }
 
@@ -99,7 +99,7 @@ std::shared_ptr<sf::Drawable> BallSkill::getDrawable() const {
 void BallSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> & file) {
 		statePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		statePreviews.at(file.first)->setSmooth(isSmooth);
+		statePreviews[file.first]->setSmooth(isSmooth);
 	});
 }
 
@@ -118,7 +118,7 @@ void BallSkill::setState(const State nextState) {
 		skill.context = nullptr;
 	}
 	else {
-		skill.context.reset(new sf::Sprite(*statePreviews.at(nextState)));
+		skill.context.reset(new sf::Sprite(*statePreviews[nextState]));
 		skill.context->setOrigin(skill.context->getLocalBounds().width / 2.f
 			, skill.context->getLocalBounds().height / 2.f);
 		skill.context->setPosition(skill.frame->getPosition());
@@ -127,7 +127,7 @@ void BallSkill::setState(const State nextState) {
 	if (nextState == State::OnDropping) {
 		for (auto iter = framePreviews.begin(); iter != framePreviews.end(); ++iter) {
 			if (iter->first.find(std::to_string(uLevel)) != std::string::npos) {
-				skill.frame.reset(new sf::Sprite(*framePreviews.at(iter->first)));
+				skill.frame.reset(new sf::Sprite(*framePreviews[iter->first]));
 				skill.frame->setOrigin(skill.frame->getLocalBounds().width / 2.f
 					, skill.frame->getLocalBounds().height / 2.f);
 				break;

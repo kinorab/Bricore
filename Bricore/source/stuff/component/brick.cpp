@@ -91,6 +91,7 @@ const Vector2f & Brick::getPosition() const {
 
 Brick::~Brick() { }
 
+#pragma warning(suppress: 26434)
 Brick & Brick::operator=(Brick right) {
 	brick.swap(right.brick);
 	return *this;

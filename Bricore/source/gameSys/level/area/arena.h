@@ -24,7 +24,7 @@ namespace game {
 		, public sf::Drawable
 		, public sf::Transformable {
 	public:
-		Arena();
+		Arena() noexcept;
 		void update(const sf::Event * const event);
 		static void loadEnermaPreviews(const std::map<item::Enerma::Kind, std::string> &fileName, const bool isSmooth = false);
 		static void loadLightPreviews(const std::vector<std::string> &fileName, const bool isSmooth = false);

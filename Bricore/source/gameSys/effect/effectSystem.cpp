@@ -26,6 +26,7 @@ EffectSystem::EffectSystem(const sf::Time &duration, const bool belongToSkill, c
 	, bExist(exist) {
 }
 
+#pragma warning(suppress: 26434)
 void EffectSystem::setEnable(const bool enable) {
 	if (!bExist) {
 		throw std::invalid_argument("Effect not exist.");

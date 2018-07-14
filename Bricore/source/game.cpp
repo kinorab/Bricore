@@ -12,7 +12,7 @@
 
 using namespace game;
 
-Game::Game()
+Game::Game() noexcept
 	: graph(new Graphics) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));

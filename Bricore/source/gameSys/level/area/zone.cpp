@@ -99,7 +99,7 @@ const sf::RectangleShape & Zone::getZone(const Label name) const {
 	}
 }
 
-Zone::Zone()
+Zone::Zone() noexcept
 	: playerZone(new sf::RectangleShape(sf::Vector2f(LEVEL_WIDTH, 0.f)))
 	, wallZone(new sf::RectangleShape(sf::Vector2f(LEVEL_WIDTH, 0.f)))
 	, obstacleZone(new sf::RectangleShape(sf::Vector2f(LEVEL_WIDTH, 0.f))) {

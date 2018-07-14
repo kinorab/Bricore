@@ -48,7 +48,7 @@ std::shared_ptr<sf::Drawable> BossSkill::getDrawable() const {
 void BossSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> & file) {
 		statePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		statePreviews.at(file.first)->setSmooth(isSmooth);
+		statePreviews[file.first]->setSmooth(isSmooth);
 	});
 }
 
@@ -78,7 +78,7 @@ void BossSkill::setState(const State nextState) {
 		skill.preview = nullptr;
 	}
 	else {
-		skill.preview.reset(new sf::Sprite(*statePreviews.at(nextState)));
+		skill.preview.reset(new sf::Sprite(*statePreviews[nextState]));
 	}
 	// set skill state
 	skill.currentState = nextState;

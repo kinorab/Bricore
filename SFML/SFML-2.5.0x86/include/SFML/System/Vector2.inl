@@ -25,6 +25,7 @@
 
 ////////////////////////////////////////////////////////////
 template <typename T>
+#pragma warning(suppress: 26439)
 inline Vector2<T>::Vector2() :
 x(0),
 y(0)

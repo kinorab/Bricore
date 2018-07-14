@@ -5,7 +5,7 @@
 
 namespace game {
 
-	MouseHandler::MouseHandler() {
+	MouseHandler::MouseHandler() noexcept {
 	}
 
 	void MouseHandler::handle(const sf::Event & event, Container & target) {

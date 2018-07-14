@@ -21,7 +21,7 @@ namespace game {
 	private:
 		bool bPropagationStopped = false;
 		EventPhase phase = EventPhase::NONE;
-		EventSubject * currentTarget;
-		EventSubject * target;
+		EventSubject * currentTarget = nullptr;
+		EventSubject * target = nullptr;
 	};
 }

@@ -34,7 +34,7 @@ namespace game {
 		virtual ~Zone();
 
 	protected:
-		Zone();
+		Zone() noexcept;
 
 	private:
 		std::unique_ptr<sf::RectangleShape> playerZone;

@@ -75,7 +75,7 @@ protected:
 		std::shared_ptr<sf::Texture> hitLight;
 	};
 	struct PlayerContent {
-		Model currentModel;
+		Model currentModel = Model::Classic;
 		std::shared_ptr<sf::RectangleShape> board;
 		std::shared_ptr<sf::RectangleShape> absorbEngine;
 		std::shared_ptr<sf::RectangleShape> hitLight;

@@ -15,6 +15,7 @@ std::map<item::Chip::Kind, std::shared_ptr<sf::Texture>> SubPlayer::chipPreviews
 SubPlayer::SubPlayer(const std::shared_ptr<Level> level)
 	: energyBar(new EnergyBar(100, false, false, false))
 	, lifeBar(new LifeBar(200, false, false, false))
+	, key()
 	, m_level(level) {
 	// set default type and chip setting
 	changeType(item::Chip::None);
@@ -68,7 +69,7 @@ void SubPlayer::changeType(const item::Chip::Kind chip) {
 		pioneer.chip.reset(new Chip(chip));
 	}
 	else {
-		pioneer.chip.reset(new Chip(chip, chipPreviews.at(chip)));
+		pioneer.chip.reset(new Chip(chip, chipPreviews[chip]));
 	}
 }
 
@@ -79,7 +80,7 @@ void SubPlayer::addSubPlayerSkill(SubPlayerSkill && subPlayerSkill) {
 void SubPlayer::loadChipPreviews(const std::map<item::Chip::Kind, std::string> & fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<item::Chip::Kind, std::string> & file) {
 		chipPreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		chipPreviews.at(file.first)->setSmooth(isSmooth);
+		chipPreviews[file.first]->setSmooth(isSmooth);
 	});
 }
 
@@ -97,7 +98,8 @@ void SubPlayer::resetCopyTarget(const std::shared_ptr<const Player> player, cons
 }
 
 SubPlayer::~SubPlayer() {
-	removeAllChildren();
+	removeAllChildren(true);
+	removeAllListener();
 }
 
 void SubPlayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {

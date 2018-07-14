@@ -88,7 +88,7 @@ std::shared_ptr<sf::Drawable> SubPlayerSkill::getDrawable() const {
 void SubPlayerSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> & file) {
 		statePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		statePreviews.at(file.first)->setSmooth(isSmooth);
+		statePreviews[file.first]->setSmooth(isSmooth);
 	});
 }
 
@@ -124,7 +124,7 @@ void SubPlayerSkill::setState(const State nextState) {
 		skill.context = nullptr;
 	}
 	else {
-		skill.context.reset(new sf::Sprite(*statePreviews.at(nextState)));
+		skill.context.reset(new sf::Sprite(*statePreviews[nextState]));
 	}
 	// set skill state
 	skill.currentState = nextState;

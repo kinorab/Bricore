@@ -1,7 +1,9 @@
 #include "movieClip.h"
 
 namespace game {
-	MovieClip::MovieClip() {
+	MovieClip::MovieClip() noexcept
+		: iCurrentFrame()
+		, bPlay(false) {
 	}
 
 	MovieClip::~MovieClip() {

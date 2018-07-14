@@ -3,8 +3,10 @@
 #include <SFML/Graphics.hpp>
 
 namespace game {
-	TextButton::TextButton() :
-		text(new sf::Text) {
+	TextButton::TextButton() noexcept
+		: text(new sf::Text)
+		, currentSprite(nullptr)
+		, currentState(ButtonState::UP) {
 		font.loadFromFile("arial.ttf");
 		text->setFont(font);
 		/*

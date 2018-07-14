@@ -119,6 +119,7 @@ void SkillSystem::exhausted() {
 	setEnable(false);
 }
 
+#pragma warning(suppress: 26434)
 void SkillSystem::setEnable(const bool enable) {
 	if (!bExist) {
 		throw std::invalid_argument("Skill not exist in setEnable.");

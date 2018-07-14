@@ -5,7 +5,7 @@ namespace game {
 	class BattleSystem :
 		public System {
 	public:
-		BattleSystem();
+		BattleSystem() noexcept;
 		virtual ~BattleSystem();
 	};
 }

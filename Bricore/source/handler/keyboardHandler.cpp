@@ -3,7 +3,7 @@
 #include "../interact/container.h"
 
 namespace game {
-	KeyboardHandler::KeyboardHandler() {
+	KeyboardHandler::KeyboardHandler() noexcept {
 		for (sf::Keyboard::Key i = sf::Keyboard::Unknown;
 			i < sf::Keyboard::Unknown + sf::Keyboard::KeyCount;
 			i = static_cast<sf::Keyboard::Key>(i + 1)) {

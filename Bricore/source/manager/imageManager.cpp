@@ -28,6 +28,6 @@ void ImageManager::unload(const std::string key) {
 	}
 }
 
-ImageManager::ImageManager(){
+ImageManager::ImageManager() noexcept {
 
 }

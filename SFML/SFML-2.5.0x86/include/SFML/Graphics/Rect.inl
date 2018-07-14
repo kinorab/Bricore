@@ -25,6 +25,7 @@
 
 ////////////////////////////////////////////////////////////
 template <typename T>
+#pragma warning(suppress: 26439)
 Rect<T>::Rect() :
 left  (0),
 top   (0),

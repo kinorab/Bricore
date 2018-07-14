@@ -145,6 +145,7 @@ const Vector2f & Block::getSpeed() const {
 	return speed;
 }
 
+#pragma warning(suppress: 26434)
 Block & Block::operator=(Block right) {
 	initPosition = right.initPosition;
 	position = right.position;

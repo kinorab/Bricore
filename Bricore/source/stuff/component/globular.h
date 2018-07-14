@@ -45,7 +45,7 @@ namespace item {
 		sf::Vector2f getPreviousPos() const;
 
 	protected:
-		Globular();
+		Globular() noexcept;
 		virtual void determineHitDirect() = 0;
 		void setActive(const bool active);
 		struct Side {

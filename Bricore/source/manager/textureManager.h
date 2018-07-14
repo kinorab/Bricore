@@ -18,7 +18,7 @@ public:
 	void unload(const std::string & directory);
 	virtual ~TextureManager();
 protected:
-	TextureManager();
+	TextureManager() noexcept;
 private:
 	std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textures;
 };

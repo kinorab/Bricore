@@ -17,7 +17,7 @@ protected:
 private:
 	struct Particle {
 		sf::Vector2f velocity;
-		float fLifeTime;
+		float fLifeTime = 0.0f;
 	};
 	bool bEmit = true;
 	float fMaxLifeTime;

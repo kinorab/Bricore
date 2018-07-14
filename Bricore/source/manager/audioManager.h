@@ -26,7 +26,7 @@ public:
 	sf::Music * getMusic(const std::string & fileName);
 	virtual ~AudioManager();
 protected:
-	AudioManager();
+	AudioManager() noexcept;
 private:
 	std::unordered_map<std::string, std::shared_ptr<sf::Sound>> sounds;
 	std::unordered_map<std::string, std::shared_ptr<sf::SoundBuffer>> buffers;

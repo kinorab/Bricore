@@ -31,7 +31,7 @@ void TextureManager::unload(const std::string & directory) {
 	}
 }
 
-TextureManager::TextureManager() {
+TextureManager::TextureManager() noexcept {
 }
 
 TextureManager::~TextureManager() {

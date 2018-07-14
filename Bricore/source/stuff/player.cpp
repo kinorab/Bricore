@@ -21,6 +21,7 @@ Player::Player(const std::shared_ptr<Level> level)
 	, bFlashCD(false)
 	, fSpeed(4.5f)
 	, energyBar(new EnergyBar(100, false, false, false))
+	, key()
 	, m_level(level) {
 	// set fundamental size setting
 	defender.board.reset(new RectangleShape(Vector2f(240.f, 12.f)));
@@ -129,12 +130,12 @@ void Player::setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Key
 void Player::loadPlayerModelPreview(const std::map<Model, BoardFile> & fileName, const bool isSmooth) {
 	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<Model, BoardFile> & file) {
 		modelPreviews.emplace(file.first, new BoardTexture);
-		modelPreviews.at(file.first)->board.reset(TextureManager::getInstance().get(file.second.board));
-		modelPreviews.at(file.first)->absorbEngine.reset(TextureManager::getInstance().get(file.second.absorbEngine));
-		modelPreviews.at(file.first)->hitLight.reset(TextureManager::getInstance().get(file.second.hitLight));
-		modelPreviews.at(file.first)->board->setSmooth(isSmooth);
-		modelPreviews.at(file.first)->absorbEngine->setSmooth(isSmooth);
-		modelPreviews.at(file.first)->hitLight->setSmooth(isSmooth);
+		modelPreviews[file.first]->board.reset(TextureManager::getInstance().get(file.second.board));
+		modelPreviews[file.first]->absorbEngine.reset(TextureManager::getInstance().get(file.second.absorbEngine));
+		modelPreviews[file.first]->hitLight.reset(TextureManager::getInstance().get(file.second.hitLight));
+		modelPreviews[file.first]->board->setSmooth(isSmooth);
+		modelPreviews[file.first]->absorbEngine->setSmooth(isSmooth);
+		modelPreviews[file.first]->hitLight->setSmooth(isSmooth);
 	});
 }
 
@@ -152,9 +153,9 @@ void Player::changeModel(const Model model) {
 		defender.board->setFillColor(Color::Transparent);
 		defender.absorbEngine->setFillColor(Color::Transparent);
 		defender.hitLight->setFillColor(Color::Transparent);
-		defender.board->setTexture(modelPreviews.at(model)->board.get());
-		defender.absorbEngine->setTexture(modelPreviews.at(model)->absorbEngine.get());
-		defender.hitLight->setTexture(modelPreviews.at(model)->hitLight.get());
+		defender.board->setTexture(modelPreviews[model]->board.get());
+		defender.absorbEngine->setTexture(modelPreviews[model]->absorbEngine.get());
+		defender.hitLight->setTexture(modelPreviews[model]->hitLight.get());
 	}
 	// set defender model
 	defender.currentModel = model;
@@ -218,7 +219,8 @@ Player::Model Player::getModel() const {
 }
 
 Player::~Player() {
-	removeAllChildren();
+	removeAllChildren(true);
+	removeAllListener();
 }
 
 void Player::draw(RenderTarget &target, RenderStates states) const {
