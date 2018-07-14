@@ -2,32 +2,33 @@
 #include "../definition/utility.h"
 #include "../definition/gameState.h"
 #include "../interact/container.h"
+#include <SFML/Graphics/RenderWindow.hpp>
 
 namespace game {
-
-	MouseHandler::MouseHandler() noexcept {
+	MouseHandler::MouseHandler(const std::shared_ptr<const sf::RenderWindow> window) noexcept 
+		: c_window(std::move(window)){
 	}
 
 	void MouseHandler::handle(const sf::Event & event, Container & target) {
+		handleMouse(event, target);
 		if (event.type == sf::Event::MouseMoved) {
 			handleMouseMove(event, target);
 		}
-		else if (event.type == sf::Event::MouseButtonPressed) {
+		if (event.type == sf::Event::MouseButtonPressed) {
 			handleMouseButtonPressed(event, target);
 		}
 		else if (event.type == sf::Event::MouseButtonReleased) {
 			handleMouseButtonReleased(event, target);
 		}
-		else if (event.type == sf::Event::MouseLeft) {
-			handleMouseLeft(event, target);
-		}
+	}
+
+	void MouseHandler::handleMouseMove(const sf::Event & event, Container & target) {
 	}
 
 	void MouseHandler::handleMouseButtonPressed(const sf::Event & event, Container & target) {
 		if (!previousContactNode) {
 			return;
 		}
-
 		previousContactNode->dispatchEvent(MousePressedEvent(event.mouseButton));
 	}
 
@@ -35,19 +36,11 @@ namespace game {
 		if (!previousContactNode) {
 			return;
 		}
-
 		previousContactNode->dispatchEvent(MouseReleasedEvent(event.mouseButton));
 	}
 
-	void MouseHandler::handleMouseLeft(const sf::Event & event, Container & target) {
-		sf::Event newEvent;
-		newEvent.type = sf::Event::MouseMoved;
-		newEvent.mouseMove = { -1, -1 };
-		handleMouseMove(newEvent, target);
-	}
-
-	void MouseHandler::handleMouseMove(const sf::Event & event, Container & target) {
-		const sf::Vector2i & mousePosition{ event.mouseMove.x, event.mouseMove.y };
+	void MouseHandler::handleMouse(const sf::Event & event, Container & target) {
+		const sf::Vector2i & mousePosition(sf::Mouse::getPosition(*c_window));
 		std::shared_ptr<InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
 			|| mousePosition.y < 0 || mousePosition.y > GAME_HEIGHT) {
@@ -56,7 +49,7 @@ namespace game {
 		else {
 			contactNode = target.getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
-				contactNode->dispatchEvent(MouseMovedEvent(event.mouseMove));
+				contactNode->dispatchEvent(MouseMovedEvent(c_window));
 			}
 		}
 

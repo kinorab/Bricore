@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Config.hpp>
+#include <SFML/Window/Cursor.hpp>
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Graphics/Image.hpp>
 
@@ -36,6 +37,7 @@ public:
 	FrameRate getCurrentFps() const;
 	Resolution getCurrnetDpi() const;
 	ResidueShadow getCurrentAfterimage() const;
+	const sf::Cursor & getCursor() const;
 	const sf::Uint8 * getIcon() const;
 	const sf::ContextSettings & getSettings() const;
 
@@ -46,6 +48,7 @@ protected:
 private:
 	float fFrameSpan;
 	sf::Image icon;
+	sf::Cursor cursor;
 	sf::ContextSettings currentSettings;
 	ResidueShadow currentAfterimage;
 	FrameRate currentFps;

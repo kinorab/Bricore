@@ -34,8 +34,8 @@ void Obstacle::resettle() {
 	}
 	using namespace game;
 	auto &instance = Zone::getInstance();
-	instance.settleZone(Zone::Obstacle, Vector2f(0.0f, instance.getZone(Zone::Wall).getSize().y + AREAINTERVAL)
-	, LEVEL_HEIGHT - (instance.getZone(Zone::Player).getSize().y + instance.getZone(Zone::Wall).getSize().y + 2 * AREAINTERVAL));
+	instance.settleZone(Zone::Obstacle, Vector2f(0.0f, instance.getZone(Zone::Wall).getSize().y + AREA_INTERVAL)
+	, LEVEL_HEIGHT - (instance.getZone(Zone::Player).getSize().y + instance.getZone(Zone::Wall).getSize().y + 2 * AREA_INTERVAL));
 	setAllVerticeColor(m_level->deploy->getBlock().color);
 	setAllSpeed(m_level->deploy->getBlock().speed);
 }

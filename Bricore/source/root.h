@@ -6,6 +6,7 @@ class HUD;
 
 namespace sf {
 	class Event;
+	class RenderWindow;
 }
 
 class Graphics;
@@ -19,7 +20,7 @@ namespace game {
 	class Root :
 		public Container {
 	public:
-		explicit Root(const std::shared_ptr<Graphics> graph);
+		explicit Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf::RenderWindow> window);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);

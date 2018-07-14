@@ -9,7 +9,7 @@ namespace game {
 		, public std::enable_shared_from_this<Effect>
 		, public game::InteractiveObject {
 	public:
-		// non context effect
+		// non-context effect
 		explicit Effect(const Kind effect, const bool isTargetItself);
 		// context effect
 		explicit Effect(const Kind effect, const std::shared_ptr<sf::Texture> & texture, const bool isTargetItself);

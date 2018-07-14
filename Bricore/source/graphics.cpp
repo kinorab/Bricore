@@ -1,11 +1,13 @@
 #include "graphics.h"
+#include <SFML/Graphics.hpp>
 
 Graphics::Graphics(const FrameRate Fps, const Resolution Dpi, const ResidueShadow afterimage) noexcept
 	: currentAfterimage(ResidueShadow::None)
 	, fFrameSpan()
 	, currentDpi()
 	, currentFps() {
-	//icon.loadFromFile("");
+	// icon.loadFromFile("");
+	// cursor.loadFromPixels();
 	setDpi(Dpi);
 	setFps(Fps);
 }
@@ -36,6 +38,10 @@ Graphics::Resolution Graphics::getCurrnetDpi() const {
 
 Graphics::ResidueShadow Graphics::getCurrentAfterimage() const {
 	return currentAfterimage;
+}
+
+const sf::Cursor & Graphics::getCursor() const {
+	return cursor;
 }
 
 void Graphics::setFps(const FrameRate Fps) {

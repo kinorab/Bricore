@@ -1,6 +1,7 @@
 #include "definition/gameState.h"
 #include "definition/utility.h"
 #include "particleSystem.h"
+#include <SFML/Graphics.hpp>
 #include <cmath>
 
 using namespace sf;
@@ -8,9 +9,9 @@ using namespace sf;
 constexpr float LIFETIME = 1500.f;
 
 ParticleSystem::ParticleSystem(const unsigned int count)
-	:particles(count),
-	vertices(new VertexArray(Points, count)),
-	fMaxLifeTime(LIFETIME) {
+	: particles(count)
+	, vertices(new VertexArray(Points, count))
+	, fMaxLifeTime(LIFETIME) {
 	addChild({ vertices });
 }
 

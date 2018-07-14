@@ -4,6 +4,7 @@
 #include "graphics.h"
 #include "gameSys/level/level.h"
 #include "manager/audioManager.h"
+#include "definition/userSystem.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
 #include <SFML/Graphics.hpp>
@@ -16,14 +17,14 @@ Game::Game() noexcept
 	: graph(new Graphics) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
-	root.reset(new Root(graph));
+	root.reset(new Root(graph, window));
 	//if (saveData.exist() && root.chooseSave(saveData)) {
 	//	level.reset(saveData);
 	//}
 	//else { 
 	level.reset(new Level(Mode::NoChoose, Diffculty::NoChoose));
 	//}
-	stage.reset(new Stage(level, root));
+	stage.reset(new Stage(level, root, window));
 	level->bDefaultControlKeySettled = true;
 }
 
@@ -43,9 +44,11 @@ void Game::run() {
 void Game::settleWindow() {
 	window->setMouseCursorVisible(false);
 	window->setVerticalSyncEnabled(true);
-	window->setPosition(sf::Vector2i(window->getPosition().x, 20));
+	// subtract 9 because window setPosition() has no-reasonly plus default
+	window->setPosition({ static_cast<int>(sys::getMonitorResolution().x - GAME_WIDTH) / 2 - 9, 20 });
+	//window->setMouseCursor(graph->getCursor());
+	//window->setIcon(graph->getIconSize().x, graph->getIconSize().y, graph->getIcon());
 	ImmAssociateContext(window->getSystemHandle(), 0);
-	//window.setIcon(graph->getIconSize().x, graph->getIconSize().y, graph->getIcon());
 	window->setActive(false);
 }
 

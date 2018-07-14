@@ -2,6 +2,10 @@
 #include "interact/container.h"
 #include <SFML/Window/Keyboard.hpp>
 
+namespace sf {
+	class RenderWindow;
+}
+
 class Ball;
 class Wall;
 class Obstacle;
@@ -21,8 +25,8 @@ namespace game {
 	class Stage :
 		public Container {
 	public:
-		explicit Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const game::Root> root);
-		virtual bool containsPoint(const sf::Vector2f & point) const override;
+		explicit Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Root> root
+			, const std::shared_ptr<const sf::RenderWindow> window);
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);
 		void resetKey(const sf::Keyboard::Key pause, const sf::Keyboard::Key menu);
@@ -52,7 +56,7 @@ namespace game {
 		std::shared_ptr<Ball> ball;
 		std::shared_ptr<Wall> wall;
 		std::shared_ptr<Obstacle> obstacle;
-		std::shared_ptr<game::Level> m_level;
+		std::shared_ptr<Level> m_level;
 		std::shared_ptr<const Root> c_root;
 	};
 }

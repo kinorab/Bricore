@@ -1,5 +1,6 @@
 #include "gameState.h"
 #include "utility.h"
+#include <SFML/Graphics.hpp>
 #include <chrono>
 #include <iomanip>
 

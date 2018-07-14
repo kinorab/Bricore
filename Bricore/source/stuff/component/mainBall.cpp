@@ -3,6 +3,7 @@
 #include "brick.h"
 #include "../../definition/gameState.h"
 #include "../../definition/intersects.h"
+#include <SFML/Graphics.hpp>
 
 using namespace item;
 using namespace sf;

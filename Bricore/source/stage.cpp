@@ -16,14 +16,15 @@ using namespace game;
 
 bool Stage::bInstance(false);
 
-Stage::Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Root> root)
+Stage::Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Root> root
+	, const std::shared_ptr<const sf::RenderWindow> window)
 	: player(new Player(level))
 	, subPlayer(new SubPlayer(level))
 	, ball(new Ball(level))
 	, wall(new Wall(level))
 	, obstacle(new Obstacle(level))
 	, key({ sf::Keyboard::Key::P, sf::Keyboard::Key::Escape })
-	, mouseHandler(new MouseHandler)
+	, mouseHandler(new MouseHandler(window))
 	, keyboardHandler(new KeyboardHandler)
 	, c_root(std::move(root))
 	, m_level(std::move(level)) {
@@ -34,10 +35,6 @@ Stage::Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Roo
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
 	addListener(std::make_shared<EventListener<KeyReleasedEvent>>([this](auto & event) { onKeyReleased(event); }));
 	bInstance = true;
-}
-
-bool Stage::containsPoint(const sf::Vector2f & point) const {
-	return true;
 }
 
 void Stage::resetChildrenCopyTarget() {

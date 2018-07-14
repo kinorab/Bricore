@@ -11,10 +11,10 @@
 using namespace game;
 bool Root::bInstance(false);
 
-Root::Root(const std::shared_ptr<Graphics> graph)
+Root::Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf::RenderWindow> window)
 	: hud(new HUD(HUD::BattleArea, graph))
 	, mouseLight(new ParticleSystem(2000))
-	, mouseHandler(new MouseHandler)
+	, mouseHandler(new MouseHandler(window))
 	, keyboardHandler(new KeyboardHandler)
 	, m_graph(std::move(graph)) {
 	assert(!bInstance);
