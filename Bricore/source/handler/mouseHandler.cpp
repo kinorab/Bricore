@@ -6,7 +6,7 @@
 
 namespace game {
 	MouseHandler::MouseHandler(const std::shared_ptr<const sf::RenderWindow> window) noexcept 
-		: c_window(std::move(window)){
+		: c_window(std::move(window)) {
 	}
 
 	void MouseHandler::handle(const sf::Event & event, Container & target) {
@@ -23,6 +23,10 @@ namespace game {
 	}
 
 	void MouseHandler::handleMouseMove(const sf::Event & event, Container & target) {
+		if (!previousContactNode) {
+			return;
+		}
+		previousContactNode->dispatchEvent(MouseMovedEvent(event.mouseMove));
 	}
 
 	void MouseHandler::handleMouseButtonPressed(const sf::Event & event, Container & target) {
@@ -49,7 +53,7 @@ namespace game {
 		else {
 			contactNode = target.getObjectUnderPoint(sf::Vector2f(mousePosition));
 			if (contactNode) {
-				contactNode->dispatchEvent(MouseMovedEvent(c_window));
+				contactNode->dispatchEvent(MouseInSightEvent(c_window));
 			}
 		}
 
@@ -84,12 +88,12 @@ namespace game {
 					sameNodeCount += 1;
 				}
 			}
-
+			// handle mouse left
 			std::for_each(previousNodes.begin(), previousNodes.end() - sameNodeCount,
 				[&](std::shared_ptr<InteractiveObject> & node) {
 				node->dispatchEvent(MouseLeftEvent());
 			});
-
+			// handle mouse enter
 			std::for_each(currentNodes.begin(), currentNodes.end() - sameNodeCount,
 				[&](std::shared_ptr<InteractiveObject> & node) {
 				node->dispatchEvent(MouseEnteredEvent());

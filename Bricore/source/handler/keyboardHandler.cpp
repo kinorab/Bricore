@@ -24,7 +24,6 @@ namespace game {
 		if (keyDown[event.key.code]) {
 			return;
 		}
-
 		keyDown[event.key.code] = true;
 		thing.dispatchEvent(KeyPressedEvent(event.key));
 	}
@@ -33,7 +32,6 @@ namespace game {
 		if (!keyDown[event.key.code]) {
 			return;
 		}
-
 		keyDown[event.key.code] = false;
 		thing.dispatchEvent(KeyReleasedEvent(event.key));
 	}

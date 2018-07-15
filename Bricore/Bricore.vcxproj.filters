@@ -99,6 +99,7 @@
     <ClCompile Include="source\event\mouse\mouseLeftEvent.cpp" />
     <ClCompile Include="source\graphics.cpp" />
     <ClCompile Include="source\definition\userSystem.cpp" />
+    <ClCompile Include="source\event\mouse\mouseInSightEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -231,6 +232,7 @@
     <ClInclude Include="source\event\sensor\sensorEvent.h" />
     <ClInclude Include="source\graphics.h" />
     <ClInclude Include="source\definition\userSystem.h" />
+    <ClInclude Include="source\event\mouse\mouseInSightEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

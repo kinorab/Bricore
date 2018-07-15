@@ -30,6 +30,7 @@
     <ClCompile Include="source\event\keyboard\keyPressedEvent.cpp" />
     <ClCompile Include="source\event\keyboard\keyReleasedEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseEnteredEvent.cpp" />
+    <ClCompile Include="source\event\mouse\mouseInSightEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseLeftEvent.cpp" />
     <ClCompile Include="source\event\mouse\mouseReleasedEvent.cpp" />
     <ClCompile Include="source\event\touch\touchBeganEvent.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="source\event\keyboard\keyPressedEvent.h" />
     <ClInclude Include="source\event\keyboard\keyReleasedEvent.h" />
     <ClInclude Include="source\event\mouse\mouseEvent.h" />
+    <ClInclude Include="source\event\mouse\mouseInSightEvent.h" />
     <ClInclude Include="source\event\mouse\mouseReleasedEvent.h" />
     <ClInclude Include="source\event\sensor\sensorEvent.h" />
     <ClInclude Include="source\event\text\textEvent.h" />

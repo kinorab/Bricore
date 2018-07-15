@@ -8,13 +8,14 @@ namespace sf {
 }
 
 namespace game {
-	class MouseMovedEvent :
+	class MouseInSightEvent :
 		public UIEvent,
 		public Cancelable {
 	public:
-		explicit MouseMovedEvent(const sf::Event::MouseMoveEvent eventData);
-		virtual ~MouseMovedEvent() = default;
+		// use mouse relate to window position
+		explicit MouseInSightEvent(const std::shared_ptr<const sf::RenderWindow> & window);
+		virtual ~MouseInSightEvent() = default;
 		virtual void accept(EventListenerBase & visitor) override;
-		sf::Event::MouseMoveEvent moved;
+		sf::Vector2i inSight;
 	};
 }

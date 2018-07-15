@@ -4,4 +4,5 @@
 #include "mouseEnteredEvent.h"
 #include "mouseLeftEvent.h"
 #include "mouseMovedEvent.h"
+#include "mouseInSightEvent.h"
 #include "mouseWheelScrolledEvent.h"
