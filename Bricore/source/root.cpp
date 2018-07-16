@@ -4,14 +4,14 @@
 #include "particleSystem.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
-#include "handler/mouseHandler.h"
-#include "handler/keyboardHandler.h"
+#include "handler/handler.h"
 #include "event/eventListener.h"
+#include <SFML/Graphics.hpp>
 
 using namespace game;
 bool Root::bInstance(false);
 
-Root::Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf::RenderWindow> window)
+Root::Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf::RenderWindow> & window)
 	: hud(new HUD(HUD::BattleArea, graph))
 	, mouseLight(new ParticleSystem(2000))
 	, mouseHandler(new MouseHandler(window))
@@ -24,6 +24,7 @@ Root::Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf
 	addListener(std::make_shared<EventListener<MouseMovedEvent>>([this](auto & event) { onMouseMoved(event); }));
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
+	addListener(std::make_shared<EventListener<WindowClosedEvent>>([this]() { onWindowClosed(); }));
 	bInstance = true;
 }
 
@@ -62,5 +63,9 @@ void Root::onMousePressed(MousePressedEvent & event) {
 }
 
 void Root::onKeyPressed(KeyPressedEvent & event) {
+
+}
+
+void Root::onWindowClosed() {
 
 }

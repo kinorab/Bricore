@@ -6,8 +6,7 @@
 #include "gameSys/level/level.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
-#include "handler/mouseHandler.h"
-#include "handler/keyboardHandler.h"
+#include "handler/handler.h"
 #include "event/eventListener.h"
 #include "event/game/gameEvent.h"
 #include <SFML/Graphics.hpp>
@@ -17,13 +16,14 @@ using namespace game;
 bool Stage::bInstance(false);
 
 Stage::Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Root> root
-	, const std::shared_ptr<const sf::RenderWindow> window)
+	, const std::shared_ptr<const sf::RenderWindow> & window)
 	: player(new Player(level))
 	, subPlayer(new SubPlayer(level))
 	, ball(new Ball(level))
 	, wall(new Wall(level))
 	, obstacle(new Obstacle(level))
-	, key({ sf::Keyboard::Key::P, sf::Keyboard::Key::Escape })
+	, gameEvent(new GameEvent)
+	, key({ sf::Keyboard::P, sf::Keyboard::Escape })
 	, mouseHandler(new MouseHandler(window))
 	, keyboardHandler(new KeyboardHandler)
 	, c_root(std::move(root))
@@ -63,7 +63,7 @@ Stage::~Stage() {
 }
 
 void Stage::update(const float updateRatio) {
-	if (!bPaused) {
+	if (!gameEvent->paused.bPaused) {
 		ball->initializeBall();
 		for (size_t i = 0; i < SLICE; ++i) {
 			player->update(updateRatio);
@@ -86,16 +86,16 @@ void Stage::update(const float updateRatio) {
 
 void Stage::onKeyPressed(KeyPressedEvent & event) {
 	if (event.pressed.code == key.pause) {
-		bPaused = !bPaused;
-		if (bPaused) {
-			dispatchEvent(GamePausedEvent());
+		gameEvent->paused.bPaused = !gameEvent->paused.bPaused;
+		if (gameEvent->paused.bPaused) {
+			dispatchEvent(GamePausedEvent(gameEvent->paused));
 		}
 		else {
-			dispatchEvent(GameUnpausedEvent());
+			dispatchEvent(GameUnpausedEvent(gameEvent->paused));
 		}
 	}
 
-	if (bPaused) return;
+	if (gameEvent->paused.bPaused) return;
 	if (event.pressed.code == sf::Keyboard::G) {
 		currentGameState = GameState::STARTED;
 	}
@@ -106,9 +106,11 @@ void Stage::onKeyReleased(KeyReleasedEvent & event) {
 }
 
 void Stage::onMousePressed(MousePressedEvent & event) {
-	if (bPaused) return;
+	if (gameEvent->paused.bPaused) return;
 	if (event.pressed.button == sf::Mouse::Left) {
-		currentGameState = GameState::STARTED;
+		if (ball->containsPoint(sf::Vector2f(sf::Vector2i(event.pressed.x, event.pressed.y)))) {
+			gameEvent->type = GameEvent::GameStarted;
+		}
 	}
 	else if (event.pressed.button == sf::Mouse::Right) {
 		// debugging feature

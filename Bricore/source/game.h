@@ -1,6 +1,5 @@
 #pragma once
-#include "interact/interactiveObject.h"
-#include "handler/eventQueue.h"
+#include "event/eventQueue.h"
 #include <SFML/Window/Export.hpp>
 #include <map>
 
@@ -12,6 +11,7 @@ namespace game {
 	class Root;
 	class Stage;
 	class Level;
+	class WindowHandler;
 }
 
 class Graphics;
@@ -27,6 +27,7 @@ private:
 	void renderFunc();
 	void handleEvents(bool & finishing);
 	game::EventQueue eventQueue;
+	game::WindowHandler * windowHandler;
 	std::shared_ptr<sf::RenderWindow> window;
 	std::shared_ptr<Graphics> graph;
 	std::shared_ptr<game::Stage> stage;

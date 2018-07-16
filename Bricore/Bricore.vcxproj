@@ -39,10 +39,11 @@
     <ClCompile Include="source\event\window\windowClosedEvent.cpp" />
     <ClCompile Include="source\event\window\windowGainedFocusEvent.cpp" />
     <ClCompile Include="source\event\window\windowLostFocusEvent.cpp" />
+    <ClCompile Include="source\handler\gameHandler.cpp" />
     <ClCompile Include="source\handler\joystickHandler.cpp" />
     <ClCompile Include="source\handler\keyboardHandler.cpp" />
     <ClCompile Include="source\handler\mouseHandler.cpp" />
-    <ClCompile Include="source\handler\eventQueue.cpp" />
+    <ClCompile Include="source\event\eventQueue.cpp" />
     <ClCompile Include="source\event\window\windowResizedEvent.cpp" />
     <ClCompile Include="source\gameSys\AI\AISystem.cpp" />
     <ClCompile Include="source\gameSys\AI\boss.cpp" />
@@ -71,6 +72,7 @@
     <ClCompile Include="source\gameSys\level\level.cpp" />
     <ClCompile Include="source\gameSys\skill\bossSkill.cpp" />
     <ClCompile Include="source\gameSys\skill\skillHandler.cpp" />
+    <ClCompile Include="source\handler\sensorHandler.cpp" />
     <ClCompile Include="source\handler\textHandler.cpp" />
     <ClCompile Include="source\handler\touchHandler.cpp" />
     <ClCompile Include="source\handler\windowHandler.cpp" />
@@ -149,10 +151,12 @@
     <ClInclude Include="source\event\window\windowLostFocusEvent.h" />
     <ClInclude Include="source\event\mouse\mouseEnteredEvent.h" />
     <ClInclude Include="source\event\mouse\mouseLeftEvent.h" />
+    <ClInclude Include="source\handler\gameHandler.h" />
+    <ClInclude Include="source\handler\handler.h" />
     <ClInclude Include="source\handler\joystickHandler.h" />
     <ClInclude Include="source\handler\keyboardHandler.h" />
     <ClInclude Include="source\handler\mouseHandler.h" />
-    <ClInclude Include="source\handler\eventQueue.h" />
+    <ClInclude Include="source\event\eventQueue.h" />
     <ClInclude Include="source\common.h" />
     <ClInclude Include="source\event\joystick\joystickConnectedEvent.h" />
     <ClInclude Include="source\event\joystick\joystickMovedEvent.h" />
@@ -181,6 +185,7 @@
     <ClInclude Include="source\event\window\windowEvent.h" />
     <ClInclude Include="source\event\window\windowListener.h" />
     <ClInclude Include="source\gameSys\level\level.h" />
+    <ClInclude Include="source\handler\sensorHandler.h" />
     <ClInclude Include="source\handler\textHandler.h" />
     <ClInclude Include="source\handler\touchHandler.h" />
     <ClInclude Include="source\handler\windowHandler.h" />

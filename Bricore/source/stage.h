@@ -14,6 +14,7 @@ class SubPlayer;
 class HUD;
 
 namespace game {
+	class GameEvent;
 	class KeyPressedEvent;
 	class KeyReleasedEvent;
 	class MousePressedEvent;
@@ -26,7 +27,7 @@ namespace game {
 		public Container {
 	public:
 		explicit Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Root> root
-			, const std::shared_ptr<const sf::RenderWindow> window);
+			, const std::shared_ptr<const sf::RenderWindow> & window);
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);
 		void resetKey(const sf::Keyboard::Key pause, const sf::Keyboard::Key menu);
@@ -47,10 +48,10 @@ namespace game {
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
 		static bool bInstance;
-		bool bPaused = false;
 		StageKey key;
 		KeyboardHandler * keyboardHandler;
 		MouseHandler * mouseHandler;
+		std::shared_ptr<GameEvent> gameEvent;
 		std::shared_ptr<Player> player;
 		std::shared_ptr<SubPlayer> subPlayer;
 		std::shared_ptr<Ball> ball;

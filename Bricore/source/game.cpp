@@ -2,11 +2,13 @@
 #include "stage.h"
 #include "root.h"
 #include "graphics.h"
-#include "gameSys/level/level.h"
+#include "interact/container.h"
 #include "manager/audioManager.h"
-#include "definition/userSystem.h"
-#include "definition/gameState.h"
+#include "handler/windowHandler.h"
 #include "definition/utility.h"
+#include "definition/gameState.h"
+#include "definition/userSystem.h"
+#include "gameSys/level/level.h"
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <future>
@@ -14,7 +16,8 @@
 using namespace game;
 
 Game::Game() noexcept
-	: graph(new Graphics) {
+	: graph(new Graphics)
+	, windowHandler(new WindowHandler) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
 	root.reset(new Root(graph, window));
@@ -86,6 +89,8 @@ void Game::handleEvents(bool & finishing) {
 		sf::Event currentEvent = eventQueue.pop();
 		auto rootFunc = std::async(std::launch::async, &Root::handle, root, currentEvent);
 		auto stageFunc = std::async(std::launch::async, &Stage::handle, stage, currentEvent);
+		windowHandler->handle(currentEvent, *root);
+		windowHandler->handle(currentEvent, *stage);
 		if (currentEvent.type == sf::Event::Closed) {
 			finishing = true;
 		}

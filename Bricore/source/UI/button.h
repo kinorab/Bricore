@@ -22,15 +22,15 @@ namespace game {
 			Rectangle
 		};
 		// no special texture at release button
-		explicit Button(const std::shared_ptr<sf::Texture> & upTexture
-			, const std::shared_ptr<sf::Texture> & overTexture
-			, const std::shared_ptr<sf::Texture> & downTexture
+		explicit Button(const std::string & upTextureFile
+			, const std::string & overTextureFile
+			, const std::string & downTextureFile
 			, const ButtonShape shape);
 		// special texture at release button
-		explicit Button(const std::shared_ptr<sf::Texture> & upTexture
-			, const std::shared_ptr<sf::Texture> & overTexture
-			, const std::shared_ptr<sf::Texture> & downTexture
-			, const std::shared_ptr<sf::Texture> & releaseTexture
+		explicit Button(const std::string & upTextureFile
+			, const std::string & overTextureFile
+			, const std::string & downTextureFile
+			, const std::string & releaseTextureFile
 			, const ButtonShape shape, const sf::Time & specialDuration);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
@@ -52,21 +52,13 @@ namespace game {
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		void initializeButton(const bool isReleaseSpecialize);
-		void settleButtonSize(const std::shared_ptr<sf::Texture> & upTexture
-			, const std::shared_ptr<sf::Texture> & overTexture
-			, const std::shared_ptr<sf::Texture> & downTexture
-			, const std::shared_ptr<sf::Texture> & releaseTexture);
-		void settleButtonSize(const std::shared_ptr<sf::Texture> & upTexture
-			, const std::shared_ptr<sf::Texture> & overTexture
-			, const std::shared_ptr<sf::Texture> & downTexture);
-		const ButtonShape buttonShape;
+		void settleButtonSize();
 		bool bReleasing;
+		const ButtonShape buttonShape;
 		ButtonState currentState;
 		sf::Time specialDuration;
 		sf::Clock clock;
-		std::shared_ptr<sf::Shape> upObject;
-		std::shared_ptr<sf::Shape> overObject;
-		std::shared_ptr<sf::Shape> downObject;
-		std::shared_ptr<sf::Shape> releaseObject;
+		std::map<ButtonState, std::shared_ptr<sf::Texture>> textures;
+		std::map<ButtonState, std::shared_ptr<sf::Shape>> objects;
 	};
 }

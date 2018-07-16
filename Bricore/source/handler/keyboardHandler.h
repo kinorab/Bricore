@@ -1,6 +1,7 @@
 #pragma once
 #include "../event/keyboard/keyEvent.h"
 #include <SFML/Window/Event.hpp>
+#include <memory>
 #include <map>
 
 namespace game {

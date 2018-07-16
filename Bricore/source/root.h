@@ -20,7 +20,7 @@ namespace game {
 	class Root :
 		public Container {
 	public:
-		explicit Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf::RenderWindow> window);
+		explicit Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf::RenderWindow> & window);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);
@@ -32,6 +32,7 @@ namespace game {
 		void onMouseMoved(MouseMovedEvent & event);
 		void onMousePressed(MousePressedEvent & event);
 		void onKeyPressed(KeyPressedEvent & event);
+		void onWindowClosed();
 
 	private:
 		static bool bInstance;

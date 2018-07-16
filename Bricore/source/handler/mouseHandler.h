@@ -13,14 +13,15 @@ namespace game {
 	class MouseHandler {
 	public:
 		explicit MouseHandler(const std::shared_ptr<const sf::RenderWindow> window) noexcept;
-		virtual void handle(const sf::Event & event, Container & target);
+		virtual void handle(const sf::Event & event, Container & thing);
 		virtual ~MouseHandler() = default;
 
 	private:
-		void handleMouse(const sf::Event & event, Container & target);
-		void handleMouseMove(const sf::Event & event, Container & target);
-		void handleMouseButtonPressed(const sf::Event & event, Container & target);
-		void handleMouseButtonReleased(const sf::Event & event, Container & target);
+		void handleMouse(const sf::Event & event, Container & thing);
+		void handleMouseMoved(const sf::Event & event, Container & thing);
+		void handleMouseButtonPressed(const sf::Event & event, Container & thing);
+		void handleMouseButtonReleased(const sf::Event & event, Container & thing);
+		void handleMouseWheelScrolled(const sf::Event & event, Container & thing);
 		std::shared_ptr<InteractiveObject> previousContactNode;
 		std::shared_ptr<const sf::RenderWindow> c_window;
 	};

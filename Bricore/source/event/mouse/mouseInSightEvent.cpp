@@ -1,9 +1,9 @@
 #include "mouseInSightEvent.h"
 #include "../eventListener.h"
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics.hpp>
 
 namespace game {
-	MouseInSightEvent::MouseInSightEvent(const std::shared_ptr<const sf::RenderWindow>& window)
+	MouseInSightEvent::MouseInSightEvent(const std::shared_ptr<const sf::RenderWindow> & window)
 		: inSight(sf::Mouse::getPosition(*window)) {
 	}
 

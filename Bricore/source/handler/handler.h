@@ -1,0 +1,9 @@
+#pragma once
+#include "joystickHandler.h"
+#include "keyboardHandler.h"
+#include "mouseHandler.h"
+#include "textHandler.h"
+#include "touchHandler.h"
+#include "windowHandler.h"
+#include "sensorHandler.h"
+#include "gameHandler.h"

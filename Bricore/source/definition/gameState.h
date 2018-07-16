@@ -20,4 +20,39 @@ enum class GameState {
 
 namespace game {
 	extern GameState currentGameState;
+	class GameEvent {
+	public:		
+		struct ReadyEvent {
+
+		};
+
+		struct PausedEvent {
+			bool bPaused;
+			unsigned int uPausedTimes;
+		};
+
+		struct StartedEvent {
+			bool bStarted;
+		};
+
+		struct FinishedLevelEvent {
+			unsigned int uLevel;
+		};
+
+		enum EventType {
+			GameReady
+			, GameStarted
+			, GamePaused
+			, GameFinishedLevel
+		};
+
+		EventType type;
+
+		union {
+			ReadyEvent ready;
+			PausedEvent paused;
+			StartedEvent started;
+			FinishedLevelEvent finishedLevel;
+		};
+	};
 };

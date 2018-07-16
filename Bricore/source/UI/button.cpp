@@ -6,70 +6,52 @@
 #include <SFML/Graphics.hpp>
 
 namespace game {
-	Button::Button(const std::shared_ptr<sf::Texture> & upTexture
-		, const std::shared_ptr<sf::Texture> & overTexture
-		, const std::shared_ptr<sf::Texture> & downTexture, const ButtonShape shape)
-		: releaseObject(nullptr)
-		, currentState(ButtonState::Up)
+	Button::Button(const std::string & upTextureFile
+		, const std::string & overTextureFile
+		, const std::string & downTextureFile
+		, const ButtonShape shape)
+		: currentState(Up)
 		, buttonShape(shape)
 		, bReleasing(false) {
+		textures.emplace(Up, TextureManager::getInstance().get(upTextureFile));
+		textures.emplace(Over, TextureManager::getInstance().get(overTextureFile));
+		textures.emplace(Down, TextureManager::getInstance().get(downTextureFile));
 		initializeButton(false);
-		settleButtonSize(upTexture, overTexture, downTexture);
 	}
 
-	Button::Button(const std::shared_ptr<sf::Texture>& upTexture
-		, const std::shared_ptr<sf::Texture>& overTexture
-		, const std::shared_ptr<sf::Texture>& downTexture
-		, const std::shared_ptr<sf::Texture>& releaseTexture, const ButtonShape shape
-		, const sf::Time & specialDuration)
-		: buttonShape(shape)
-		, currentState(ButtonState::Up)
+	Button::Button(const std::string & upTextureFile
+		, const std::string & overTextureFile
+		, const std::string & downTextureFile
+		, const std::string & releaseTextureFile
+		, const ButtonShape shape, const sf::Time & specialDuration)
+		: currentState(Up)
+		, buttonShape(shape)
 		, bReleasing(false)
 		, specialDuration(specialDuration) {
+		textures.emplace(Up, TextureManager::getInstance().get(upTextureFile));
+		textures.emplace(Over, TextureManager::getInstance().get(overTextureFile));
+		textures.emplace(Down, TextureManager::getInstance().get(downTextureFile));
+		textures.emplace(Release, TextureManager::getInstance().get(releaseTextureFile));
 		initializeButton(true);
-		settleButtonSize(upTexture, overTexture, downTexture, releaseTexture);
 	}
 
 	Button::~Button() {
 	}
 
 	bool Button::containsPoint(const sf::Vector2f & point) const {
-		auto circleContains = [&](std::shared_ptr<sf::CircleShape> & object) {
+		auto circleContains = [&](const std::shared_ptr<const sf::CircleShape> & object) {
 			const sf::Vector2f displacement = point - object->getPosition();
 			if (pow(displacement.x, 2) + pow(displacement.y, 2) <= pow(object->getRadius(), 2)) {
 				return true;
 			}
 			return false;
 		};
-		switch (currentState) {
-		case ButtonState::Up:
-			if (auto up = std::dynamic_pointer_cast<sf::CircleShape>(upObject)) {
-				return circleContains(up);
-			}
-			return upObject->getGlobalBounds().contains(point);
-			break;
-		case ButtonState::Over:
-			if (auto over = std::dynamic_pointer_cast<sf::CircleShape>(overObject)) { 
-				return circleContains(over); 
-			}
-			return overObject->getGlobalBounds().contains(point);
-			break;
-		case ButtonState::Down:
-			if (auto down = std::dynamic_pointer_cast<sf::CircleShape>(downObject)) {
-				return circleContains(down);
-			}
-			return downObject->getGlobalBounds().contains(point);
-			break;
-			// use over state contain point
-		case ButtonState::Release:
-			if (auto over = std::dynamic_pointer_cast<sf::CircleShape>(overObject)) {
-				return circleContains(over);
-			}
-			return overObject->getGlobalBounds().contains(point);
-			break;
-		default:
-			throw std::exception("Unexcept error");
+		// release state use over state contain point
+		ButtonState state = currentState == Release ? Over : currentState;
+		if (auto circle = std::dynamic_pointer_cast<const sf::CircleShape>(objects.at(state))) {
+			return circleContains(circle);
 		}
+		return objects.at(state)->getGlobalBounds().contains(point);
 	}
 
 	std::shared_ptr<sf::Drawable> Button::getDrawable() const {
@@ -77,137 +59,92 @@ namespace game {
 	}
 
 	void Button::setSpecialEffectObacity(const sf::Uint8 a) {
-		if (!releaseObject) return;
-		releaseObject->setFillColor(sf::Color(sf::Color::Transparent.r, sf::Color::Transparent.b
+		if (objects.count(Release) == 0) return;
+		objects[Release]->setFillColor(sf::Color(sf::Color::Transparent.r, sf::Color::Transparent.b
 			, sf::Color::Transparent.g, a));
 	}
 
 	void Button::onMouseEntered() {
 		if (bReleasing) return;
-		currentState = ButtonState::Over;
+		currentState = Over;
 	}
 
 	void Button::onMouseLeft() {
 		if (bReleasing) return;
-		currentState = ButtonState::Up;
+		currentState = Up;
 	}
 
-	void Button::onMousePressed(MousePressedEvent &) {
-		currentState = ButtonState::Down;
+	void Button::onMousePressed(MousePressedEvent & event) {
+		currentState = Down;
 		// press again will cancel current releasing special effect
 		bReleasing = false;
 	}
 
-	void Button::onMouseReleased(MouseReleasedEvent &) {
-		if (releaseObject) {
+	void Button::onMouseReleased(MouseReleasedEvent & event) {
+		if (objects.count(Release) != 0) {
 			if (!bReleasing) {
 				bReleasing = true;
-				currentState = ButtonState::Release;
+				currentState = Release;
 				clock.restart();
 			}
 			else if (clock.getElapsedTime() > specialDuration) {
 				bReleasing = false;
-				currentState = ButtonState::Over;
+				currentState = Over;
 			}
 		}
 		else {
-			currentState = ButtonState::Over;
+			currentState = Over;
 		}
 	}
 
 	void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-		switch (currentState) {
-		case ButtonState::Up:
-			target.draw(*upObject, states);
-			break;
-		case ButtonState::Over:
-			target.draw(*overObject, states);
-			break;
-		case ButtonState::Down:
-			target.draw(*downObject, states);
-			break;
-		case ButtonState::Release:
-			target.draw(*overObject, states);
-			target.draw(*releaseObject, states);
-			break;
-		default:
-			throw std::exception("Unexcept error");
+		if (currentState == Release) {
+			target.draw(*objects.at(Over), states);
+			target.draw(*objects.at(currentState), states);
+		}
+		else {
+			target.draw(*objects.at(currentState), states);
 		}
 	}
 
 	void Button::initializeButton(const bool isReleaseSpecialize) {
 		switch (buttonShape) {
 		case ButtonShape::Circle:
-			upObject.reset(new sf::CircleShape);
-			overObject.reset(new sf::CircleShape);
-			downObject.reset(new sf::CircleShape);
+			objects.emplace(ButtonState::Up, new sf::CircleShape);
+			objects.emplace(ButtonState::Over, new sf::CircleShape);
+			objects.emplace(ButtonState::Down, new sf::CircleShape);
 			if (isReleaseSpecialize) {
-				releaseObject.reset(new sf::CircleShape);
+				objects.emplace(ButtonState::Release, new sf::CircleShape);
 			}
 			break;
 		case ButtonShape::Rectangle:
-			upObject.reset(new sf::RectangleShape);
-			overObject.reset(new sf::RectangleShape);
-			downObject.reset(new sf::RectangleShape);
+			objects.emplace(ButtonState::Up, new sf::RectangleShape);
+			objects.emplace(ButtonState::Over, new sf::RectangleShape);
+			objects.emplace(ButtonState::Down, new sf::RectangleShape);
 			if (isReleaseSpecialize) {
-				releaseObject.reset(new sf::RectangleShape);
+				objects.emplace(ButtonState::Release, new sf::RectangleShape);
 			}
 			break;
 		default:
 			throw std::exception("Unexcept error.");
 		}
+		settleButtonSize();
 		addListener(std::make_shared<EventListener<MouseEnteredEvent>>([&] { onMouseEntered(); }));
 		addListener(std::make_shared<EventListener<MouseLeftEvent>>([&] { onMouseLeft(); }));
 		addListener(std::make_shared<EventListener<MousePressedEvent>>([&](auto & event) { onMousePressed(event); }));
 		addListener(std::make_shared<EventListener<MouseReleasedEvent>>([&](auto & event) { onMouseReleased(event); }));
 	}
 
-	void Button::settleButtonSize(const std::shared_ptr<sf::Texture>& upTexture
-		, const std::shared_ptr<sf::Texture>& overTexture
-		, const std::shared_ptr<sf::Texture>& downTexture
-		, const std::shared_ptr<sf::Texture>& releaseTexture) {
-		if (auto release = std::dynamic_pointer_cast<sf::CircleShape>(releaseObject)) {
-			release->setRadius(releaseTexture->getSize().x / 2.f);
-			release->setTexture(releaseTexture.get(), true);
-		}
-		else if (auto release = std::dynamic_pointer_cast<sf::RectangleShape>(releaseObject)) {
-			release->setSize(static_cast<sf::Vector2f>(releaseTexture->getSize()));
-			release->setTexture(releaseTexture.get(), true);
-		}
-		settleButtonSize(upTexture, overTexture, releaseTexture);
-	}
-
-	void Button::settleButtonSize(const std::shared_ptr<sf::Texture>& upTexture
-		, const std::shared_ptr<sf::Texture>& overTexture, const std::shared_ptr<sf::Texture>& downTexture) {
-		switch (buttonShape) {
-		case ButtonShape::Circle:
-		{
-			auto up = std::dynamic_pointer_cast<sf::CircleShape>(upObject);
-			auto over = std::dynamic_pointer_cast<sf::CircleShape>(overObject);
-			auto down = std::dynamic_pointer_cast<sf::CircleShape>(downObject);
-			up->setRadius(upTexture->getSize().x / 2.f);
-			up->setTexture(upTexture.get(), true);
-			over->setRadius(overTexture->getSize().x / 2.f);
-			over->setTexture(overTexture.get(), true);
-			down->setRadius(downTexture->getSize().x / 2.f);
-			down->setTexture(downTexture.get(), true);
-		}
-		break;
-		case ButtonShape::Rectangle:
-		{
-			auto up = std::dynamic_pointer_cast<sf::RectangleShape>(upObject);
-			auto over = std::dynamic_pointer_cast<sf::RectangleShape>(overObject);
-			auto down = std::dynamic_pointer_cast<sf::RectangleShape>(downObject);
-			up->setSize(static_cast<sf::Vector2f>(upTexture->getSize()));
-			up->setTexture(upTexture.get(), true);
-			over->setSize(static_cast<sf::Vector2f>(overTexture->getSize()));
-			over->setTexture(overTexture.get(), true);
-			down->setSize(static_cast<sf::Vector2f>(downTexture->getSize()));
-			down->setTexture(downTexture.get(), true);
-		}
-		break;
-		default:
-			throw std::exception("Unexcept error.");
-		}
+	void Button::settleButtonSize() {
+		std::for_each(textures.begin(), textures.end()
+			, [this](const std::pair<ButtonState, std::shared_ptr<sf::Texture>> & texture) {
+			objects[texture.first]->setTexture(texture.second.get(), true);
+			if (auto object = std::dynamic_pointer_cast<sf::CircleShape>(objects[texture.first])) {
+				object->setRadius(texture.second->getSize().x / 2.f);
+			}
+			else if (auto object = std::dynamic_pointer_cast<sf::RectangleShape>(objects[texture.first])) {
+				object->setSize(sf::Vector2f(texture.second->getSize()));
+			}
+		});
 	}
 }

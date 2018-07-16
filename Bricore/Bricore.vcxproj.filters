@@ -83,7 +83,6 @@
     <ClCompile Include="source\gameSys\level\area\zone.cpp" />
     <ClCompile Include="source\handler\mouseHandler.cpp" />
     <ClCompile Include="source\handler\keyboardHandler.cpp" />
-    <ClCompile Include="source\handler\eventQueue.cpp" />
     <ClCompile Include="source\handler\windowHandler.cpp" />
     <ClCompile Include="source\handler\joystickHandler.cpp" />
     <ClCompile Include="source\handler\textHandler.cpp" />
@@ -100,6 +99,9 @@
     <ClCompile Include="source\graphics.cpp" />
     <ClCompile Include="source\definition\userSystem.cpp" />
     <ClCompile Include="source\event\mouse\mouseInSightEvent.cpp" />
+    <ClCompile Include="source\event\eventQueue.cpp" />
+    <ClCompile Include="source\handler\sensorHandler.cpp" />
+    <ClCompile Include="source\handler\gameHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -215,7 +217,6 @@
     <ClInclude Include="source\gameSys\level\area\zone.h" />
     <ClInclude Include="source\handler\mouseHandler.h" />
     <ClInclude Include="source\handler\keyboardHandler.h" />
-    <ClInclude Include="source\handler\eventQueue.h" />
     <ClInclude Include="source\handler\windowHandler.h" />
     <ClInclude Include="source\handler\joystickHandler.h" />
     <ClInclude Include="source\handler\textHandler.h" />
@@ -233,6 +234,10 @@
     <ClInclude Include="source\graphics.h" />
     <ClInclude Include="source\definition\userSystem.h" />
     <ClInclude Include="source\event\mouse\mouseInSightEvent.h" />
+    <ClInclude Include="source\handler\handler.h" />
+    <ClInclude Include="source\event\eventQueue.h" />
+    <ClInclude Include="source\handler\sensorHandler.h" />
+    <ClInclude Include="source\handler\gameHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />
