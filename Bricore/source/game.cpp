@@ -9,6 +9,7 @@
 #include "definition/gameState.h"
 #include "definition/userSystem.h"
 #include "gameSys/level/level.h"
+#include "gameSys/data/data.h"
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <future>
@@ -17,7 +18,10 @@ using namespace game;
 
 Game::Game() noexcept
 	: graph(new Graphics)
-	, windowHandler(new WindowHandler) {
+	, level(new Level)
+	, data(new Data)
+	, windowHandler(new WindowHandler)
+	, bEnterToGame(false) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
 	root.reset(new Root(graph, window));
@@ -25,7 +29,7 @@ Game::Game() noexcept
 	//	level.reset(saveData);
 	//}
 	//else { 
-	level.reset(new Level(Mode::NoChoose, Diffculty::NoChoose));
+	level->changeSetting(Mode::_2Player, Diffculty::Hard);
 	//}
 	stage.reset(new Stage(level, root, window));
 	level->bDefaultControlKeySettled = true;

@@ -3,12 +3,12 @@
 #include "../../definition/gameState.h"
 
 namespace game {
-	class GameUnpausedEvent :
+	class GameResumedEvent :
 		public Event {
 	public:
-		explicit GameUnpausedEvent(const GameEvent::PausedEvent eventType);
+		explicit GameResumedEvent(const GameStateEvent::ResumedEvent eventType);
 		virtual void accept(EventListenerBase & visitor) override;
-		virtual ~GameUnpausedEvent() = default;
-		GameEvent::PausedEvent unPaused;
+		virtual ~GameResumedEvent() = default;
+		GameStateEvent::ResumedEvent resumed;
 	};
 }

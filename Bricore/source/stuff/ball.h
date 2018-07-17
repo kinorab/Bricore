@@ -1,6 +1,7 @@
 #pragma once
 #include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
+#include "../event/game/gameEvent.h"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/System/Clock.hpp>
 #include <memory>
@@ -31,8 +32,8 @@ public:
 	void update(const float updateRatio);
 	void resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<const SubPlayer> subPlayer);
 	void initializeBall();
-	void followPlayer();
 	void ballDivided(const size_t numbers);
+	bool isMainBallBroken() const;
 	// return the balls of entered obstacleArea
 	std::vector<std::shared_ptr<item::Globular>> enteredObstacleArea() const;
 	// return the balls of entered wallArea
@@ -45,6 +46,9 @@ public:
 
 protected:
 	void ballsCollision(const size_t);
+	void onGameReady(game::GameReadyEvent & event);
+	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
+	void followPlayer();
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;

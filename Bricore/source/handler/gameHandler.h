@@ -1,6 +1,7 @@
 #pragma once
 #include "../event/game/gameEvent.h"
-#include <SFML/Window/Event.hpp>
+#include "../definition/gameState.h"
+#include <SFML/System/Clock.hpp>
 #include <memory>
 
 namespace game {
@@ -8,12 +9,16 @@ namespace game {
 	class GameHandler {
 	public:
 		explicit GameHandler() noexcept;
-		void handler(const sf::Event & event, Container & thing);
+		void handler(GameStateEvent & event, Container & thing);
 		virtual ~GameHandler() = default;
 
 	private:
-		void handleGamePaused(const sf::Event & event, Container & thing);
-		void handleGameStarted(const sf::Event & event, Container & thing);
-		void handleGameUnpaused(const sf::Event & event, Container & thing);
+		void handleGameOver(GameStateEvent & event, Container & thing);
+		void handleGameReady(GameStateEvent & event, Container & thing);
+		void handleGamePaused(GameStateEvent & event, Container & thing);
+		void handleGameResumed(GameStateEvent & event, Container & thing);
+		void handleGameStarted(GameStateEvent & event, Container & thing);
+		void handleGameFinishedLevel(GameStateEvent & event, Container & thing);
+		sf::Clock clock;
 	};
 }

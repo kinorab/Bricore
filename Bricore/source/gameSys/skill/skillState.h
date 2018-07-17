@@ -15,7 +15,7 @@ namespace game {
 			OnSecondField,	// on player second skill field
 			OnThirdField,	// on player third skill field
 			OnFourthField,	// on player fourth skill field
-			None = 100,		// no appear on stage
+			Waiting = 100,	// waiting on stage
 			Using,			// when using it
 			Display			// display on store, illustration etc..
 		};
@@ -28,7 +28,7 @@ namespace game {
 			OnFirstField,	// on subplayer first skill field
 			OnSecondField,	// on subplayer second skill field
 			OnThirdField,	// on subplayer third skill field
-			None = 100,		// no appear on stage
+			Waiting = 100,	// waiting on stage
 			Using,			// when using it
 			Display			// display on store, illustration etc..
 		};
@@ -42,7 +42,7 @@ namespace game {
 			OnSecondField,	// on ball second skill field
 			OnThirdField,	// on ball third skill field
 			OnFourthField,	// on ball fourth skill field
-			None = 100,		// no appear on stage
+			Waiting = 100,	// waiting on stage
 			Using,			// when using it
 			Display			// display on store, illustration etc..
 		};
@@ -51,7 +51,7 @@ namespace game {
 	template<> class SkillState<BossSkill> {
 	public:
 		enum State {
-			None,			// no use
+			Waiting,		// waiting for use
 			Using,			// when using it
 			Display			// display on information to let player know, illustration etc..
 		};

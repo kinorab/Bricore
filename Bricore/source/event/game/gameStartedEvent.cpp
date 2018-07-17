@@ -2,7 +2,7 @@
 #include "../eventListener.h"
 
 namespace game {
-	GameStartedEvent::GameStartedEvent(const GameEvent::StartedEvent eventType)
+	GameStartedEvent::GameStartedEvent(const GameStateEvent::StartedEvent eventType)
 		: started(eventType) {
 	}
 	void GameStartedEvent::accept(EventListenerBase & visitor) {

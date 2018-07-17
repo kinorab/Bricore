@@ -1,5 +1,6 @@
 #pragma once
 #include "interact/container.h"
+#include "event/game/gameEvent.h"
 #include <SFML/Window/Keyboard.hpp>
 
 namespace sf {
@@ -14,7 +15,7 @@ class SubPlayer;
 class HUD;
 
 namespace game {
-	class GameEvent;
+	class GameHandler;
 	class KeyPressedEvent;
 	class KeyReleasedEvent;
 	class MousePressedEvent;
@@ -30,6 +31,7 @@ namespace game {
 			, const std::shared_ptr<const sf::RenderWindow> & window);
 		void update(const float updateRatio);
 		void handle(const sf::Event & event);
+		void updateGameStateEvent();
 		void resetKey(const sf::Keyboard::Key pause, const sf::Keyboard::Key menu);
 		void resetChildrenCopyTarget();
 		virtual ~Stage();
@@ -51,7 +53,9 @@ namespace game {
 		StageKey key;
 		KeyboardHandler * keyboardHandler;
 		MouseHandler * mouseHandler;
-		std::shared_ptr<GameEvent> gameEvent;
+		GameHandler * gameHandler;
+		GameStateEvent * gameStateEvent;
+		GameStateEvent::EventType tempType;
 		std::shared_ptr<Player> player;
 		std::shared_ptr<SubPlayer> subPlayer;
 		std::shared_ptr<Ball> ball;

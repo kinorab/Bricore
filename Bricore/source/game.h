@@ -11,6 +11,7 @@ namespace game {
 	class Root;
 	class Stage;
 	class Level;
+	class Data;
 	class WindowHandler;
 }
 
@@ -23,6 +24,7 @@ public:
 	void run();
 
 private:
+	bool bEnterToGame;
 	void settleWindow();
 	void renderFunc();
 	void handleEvents(bool & finishing);
@@ -33,4 +35,5 @@ private:
 	std::shared_ptr<game::Stage> stage;
 	std::shared_ptr<game::Root> root;
 	std::shared_ptr<game::Level> level;
+	std::shared_ptr<game::Data> data;
 };

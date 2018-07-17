@@ -3,6 +3,7 @@
 #include "component/globular.h"
 #include "component/mainBall.h"
 #include "component/brick.h"
+#include "../event/eventListener.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../gameSys/level/level.h"
@@ -11,6 +12,7 @@
 
 using namespace sf;
 using namespace item;
+using namespace game;
 
 Wall::Wall(const std::shared_ptr<game::Level> level)
 	: whiteSpace(0.0f, 0.0f)
@@ -20,14 +22,10 @@ Wall::Wall(const std::shared_ptr<game::Level> level)
 	, bChangeEntity(false)
 	, m_level(std::move(level)) {
 	resettle();
+	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
 }
 
 void Wall::update(const float updateRatio) {
-	if (bricks.empty()) {
-		m_level->finishLevel();
-		resettle();
-		return;
-	}
 	for (size_t i = 0; i < getBrickAmount(); ++i) {
 		for (auto element : m_ball->enteredWallArea()) {
 			if (element->isCollidedWall(bricks[i].get())) {
@@ -117,6 +115,10 @@ void Wall::resettle() {
 	setBricksColor(m_level->deploy->getBrick().color[0]);
 }
 
+bool Wall::empty() const {
+	return bricks.empty();
+}
+
 size_t Wall::getBrickAmount() const {
 	return bricks.size();
 }
@@ -144,6 +146,10 @@ const Color & Wall::getBrickColor(const size_t number) const {
 Wall::~Wall() { 
 	removeAllChildren(true);
 	removeAllListener();
+}
+
+void Wall::onGameFinishedLevel(game::GameFinishedLevelEvent & event) {
+	resettle();
 }
 
 void Wall::settlePlace() {

@@ -65,6 +65,7 @@ namespace game {
 		};
 		void onKeyPressed(KeyPressedEvent & event);
 		void onMousePressed(MousePressedEvent & event);
+		void onGameFinishedLevel(GameFinishedLevelEvent & event);
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;

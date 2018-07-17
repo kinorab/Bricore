@@ -1,4 +1,7 @@
 #pragma once
+#include "../event/game/gameEvent.h"
+#include "../event/keyboard/keyEvent.h"
+#include "../event/mouse/mouseEvent.h"
 #include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -60,6 +63,10 @@ public:
 	virtual ~Player();
 
 protected:
+	void onGameStarted(game::GameStartedEvent & event);
+	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
+	void onkeyPressed(game::KeyPressedEvent & event);
+	void onMousePressed(game::MousePressedEvent & event);
 	void setFlashPosition(const sf::Vector2f & position);
 	void setFlashFillColor(const sf::Color & color);
 	void flashElapsed();

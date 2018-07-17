@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/System/Time.hpp>
 extern void getPlayedTime();
 
 constexpr float RESETTIME = 25.f;
@@ -11,28 +12,27 @@ constexpr float LEVEL_HEIGHT = 900.f;
 constexpr float AREA_INTERVAL = 50.f;
 constexpr size_t SLICE = 5;
 
-enum class GameState {
-	LEVEL_FINISHED,
-	STARTED,
-	READY,
-	NOT_READY,
-};
-
 namespace game {
-	extern GameState currentGameState;
-	class GameEvent {
-	public:		
-		struct ReadyEvent {
+	class GameStateEvent {
+	public:
+		struct OverEvent {
 
+		};
+
+		struct ReadyEvent {
+			float fDurationSeconds;
 		};
 
 		struct PausedEvent {
-			bool bPaused;
 			unsigned int uPausedTimes;
 		};
 
+		struct ResumedEvent {
+			float fCountDown;
+		};
+
 		struct StartedEvent {
-			bool bStarted;
+			float fDurationSeconds;
 		};
 
 		struct FinishedLevelEvent {
@@ -40,17 +40,21 @@ namespace game {
 		};
 
 		enum EventType {
-			GameReady
-			, GameStarted
-			, GamePaused
-			, GameFinishedLevel
+			GameOver			// over the game(stage mode or vs mode)
+			, GameReady			// wait for start(ball still on board)
+			, GameStarted		// start on this stage
+			, GamePaused		// pause game
+			, GameResumed		// from pause back to game(count down), back to ready or start(depend on ball)
+			, GameFinishedLevel	// finished current level
 		};
 
 		EventType type;
 
 		union {
+			OverEvent over;
 			ReadyEvent ready;
 			PausedEvent paused;
+			ResumedEvent resumed;
 			StartedEvent started;
 			FinishedLevelEvent finishedLevel;
 		};

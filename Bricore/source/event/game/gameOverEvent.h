@@ -3,12 +3,12 @@
 #include "../../definition/gameState.h"
 
 namespace game {
-	class GameStartedEvent :
+	class GameOverEvent :
 		public Event {
 	public:
-		explicit GameStartedEvent(const GameStateEvent::StartedEvent eventType);
+		explicit GameOverEvent(const GameStateEvent::OverEvent eventType);
 		virtual void accept(EventListenerBase & visitor) override;
-		virtual ~GameStartedEvent() = default;
-		GameStateEvent::StartedEvent started;
+		virtual ~GameOverEvent() = default;
+		GameStateEvent::OverEvent over;
 	};
 }

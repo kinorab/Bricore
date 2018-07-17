@@ -1,8 +1,10 @@
 #include "mainBall.h"
 #include "block.h"
 #include "brick.h"
+#include "../../event/eventListener.h"
 #include "../../definition/gameState.h"
 #include "../../definition/intersects.h"
+#include "../../event/game/gameEvent.h"
 #include <SFML/Graphics.hpp>
 
 using namespace item;
@@ -11,6 +13,7 @@ using namespace sf;
 MainBall::MainBall() noexcept
 	: bSettle(false) {
 	setColor(Color::Green);
+	addListener(std::make_shared<game::EventListener<game::GameReadyEvent>>([this](auto & event) { onGameReady(event); }));
 }
 
 bool MainBall::isCollidedObstacle(const Block * block) {
@@ -72,11 +75,11 @@ void MainBall::initialize() {
 	setSpeedX((prng(150) % 150 * .01f + 1.5f) * (rng() < 0 ? 1 : -1));
 	setSpeedY(-1.5f);
 	setActive(false);
+	bBroke = false;
 	bSettle = true;
 }
 
 void MainBall::resettle() {
-	if (game::currentGameState != GameState::LEVEL_FINISHED) throw std::invalid_argument("Level not finished.");
 	bSettle = false;
 }
 
@@ -108,9 +111,11 @@ void MainBall::determineHitDirect() {
 		}
 	}
 	if (bBroke) {
-		bBroke = false;
 		bSettle = false;
-		game::currentGameState = GameState::NOT_READY;
 	}
 	hitside.reset();
+}
+
+void MainBall::onGameReady(game::GameReadyEvent & event) {
+	bBroke = false;
 }

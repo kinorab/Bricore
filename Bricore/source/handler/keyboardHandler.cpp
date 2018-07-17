@@ -33,6 +33,6 @@ namespace game {
 			return;
 		}
 		keyDown[event.key.code] = false;
-		thing.dispatchEvent(KeyReleasedEvent(event.key));
+		thing.dispatchEvent(KeyPressedEvent(event.key));
 	}
 }

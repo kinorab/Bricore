@@ -21,9 +21,12 @@
   <ItemGroup>
     <ClCompile Include="source\definition\userSystem.cpp" />
     <ClCompile Include="source\event\cancelable.cpp" />
+    <ClCompile Include="source\event\game\gameOverEvent.cpp" />
     <ClCompile Include="source\event\game\gamePausedEvent.cpp" />
+    <ClCompile Include="source\event\game\gameReadyEvent.cpp" />
+    <ClCompile Include="source\event\game\gameResumedEvent.cpp" />
     <ClCompile Include="source\event\game\gameStartedEvent.cpp" />
-    <ClCompile Include="source\event\game\gameUnpausedEvent.cpp" />
+    <ClCompile Include="source\event\game\gameFinishedLevelEvent.cpp" />
     <ClCompile Include="source\event\joystick\joystickDIsconnectedEvent.cpp" />
     <ClCompile Include="source\event\joystick\joystickPressedEvent.cpp" />
     <ClCompile Include="source\event\joystick\joystickReleasedEvent.cpp" />
@@ -128,9 +131,12 @@
     <ClInclude Include="source\event\eventListenerBase.h" />
     <ClInclude Include="source\event\eventSlot.h" />
     <ClInclude Include="source\event\game\gameEvent.h" />
+    <ClInclude Include="source\event\game\gameOverEvent.h" />
     <ClInclude Include="source\event\game\gamePausedEvent.h" />
+    <ClInclude Include="source\event\game\gameReadyEvent.h" />
+    <ClInclude Include="source\event\game\gameResumedEvent.h" />
     <ClInclude Include="source\event\game\gameStartedEvent.h" />
-    <ClInclude Include="source\event\game\gameUnpausedEvent.h" />
+    <ClInclude Include="source\event\game\gameFinishedLevelEvent.h" />
     <ClInclude Include="source\event\joystick\joystickDIsconnectedEvent.h" />
     <ClInclude Include="source\event\joystick\joystickEvent.h" />
     <ClInclude Include="source\event\joystick\joystickPressedEvent.h" />

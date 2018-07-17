@@ -5,6 +5,7 @@
 #include "component/globular.h"
 #include "../gameSys/level/level.h"
 #include "../gameSys/level/area/zone.h"
+#include "../event/eventListener.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
@@ -12,10 +13,13 @@
 
 using namespace sf;
 using namespace item;
+using namespace game;
 
 Obstacle::Obstacle(const std::shared_ptr<game::Level> level) 
 	: m_level(std::move(level)) {
 	resettle();
+	addListener(std::make_shared<EventListener<GameReadyEvent>>([this](auto & event) { onGameReady(event); }));
+	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
 }
 
 void Obstacle::resettle() {
@@ -48,9 +52,6 @@ void Obstacle::update(const float updateRatio) {
 		for (auto element : m_ball->enteredObstacleArea()) {
 			element->isCollidedObstacle(blocks[i].get());
 		}
-	}
-	if (game::currentGameState == GameState::LEVEL_FINISHED) {
-		resettle();
 	}
 }
 
@@ -118,6 +119,14 @@ sys::DPointf Obstacle::getDP(const size_t number) const {
 
 void Obstacle::draw(RenderTarget &target, RenderStates states) const {
 	Container::draw(target, states);
+}
+
+void Obstacle::onGameReady(GameReadyEvent & event) {
+	resetPosition();
+}
+
+void Obstacle::onGameFinishedLevel(GameFinishedLevelEvent & event) {
+	resettle();
 }
 
 void Obstacle::blocksCollision(const size_t number) {

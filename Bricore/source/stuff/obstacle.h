@@ -1,4 +1,5 @@
 #pragma once
+#include "../event/game/gameEvent.h"
 #include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
 #include <memory>
@@ -40,6 +41,8 @@ public:
 	const sf::Vector2f & getSpeed(const size_t number) const;
 
 protected:
+	void onGameReady(game::GameReadyEvent & event);
+	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
 	void blocksCollision(const size_t);
 	void resettle();
 

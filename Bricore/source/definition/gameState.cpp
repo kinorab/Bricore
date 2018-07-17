@@ -21,7 +21,6 @@ void getPlayedTime() {
 }
 
 namespace game {
-	GameState currentGameState = GameState::NOT_READY;
 	sf::RectangleShape wallArea;
 	sf::RectangleShape obstacleArea;
 	sf::RectangleShape playerArea;

@@ -6,17 +6,21 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
+#include "../event/eventListener.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 
 using namespace sf;
 using namespace item;
+using namespace game;
 
-Ball::Ball(const std::shared_ptr<game::Level> level)
+Ball::Ball(const std::shared_ptr<Level> level)
 	: bMultiple(false)
 	, bCollision(false)
 	, mainBall(new MainBall)
 	, m_level(std::move(level)) {
+	addListener(std::make_shared<EventListener<GameReadyEvent>>([this](auto & event) { onGameReady(event); }));
+	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
 }
 
 void Ball::update(const float updateRatio) {
@@ -49,10 +53,6 @@ void Ball::initializeBall() {
 		addChild({ mainBall });
 		shadowBalls.clear();
 		mainBall->initialize();
-	}
-	else if (game::currentGameState == GameState::LEVEL_FINISHED) {
-		mainBall->resettle();
-		game::currentGameState = GameState::NOT_READY;
 	}
 }
 
@@ -97,6 +97,10 @@ void Ball::ballDivided(const size_t numbers) {
 	}
 	bCollision = false;
 	bMultiple = true;
+}
+
+bool Ball::isMainBallBroken() const {
+	return mainBall->isBroke();
 }
 
 float Ball::getMainBallRadius() const {
@@ -164,4 +168,13 @@ void Ball::ballsCollision(const size_t number) {
 	if (!bCollision) {
 		bCollision = true;
 	}
+}
+
+void Ball::onGameReady(GameReadyEvent & event) {
+	followPlayer();
+	mainBall->dispatchEvent(event);
+}
+
+void Ball::onGameFinishedLevel(GameFinishedLevelEvent & event) {
+	mainBall->resettle();
 }

@@ -19,7 +19,7 @@ PlayerSkill::SkillKey PlayerSkill::key;
 PlayerSkill::PlayerSkill(const Kind skillName, const sf::Time duration
 	, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 	, const bool autoUse, const bool exist, const std::shared_ptr<EnergyBar> energyBar)
-	: skill(SkillContent{ skillName, State::None, nullptr })
+	: skill(SkillContent{ skillName, State::Waiting, nullptr })
 	, SkillSystem(duration, autoUse, exist)
 	, m_energyBar(std::move(energyBar))
 	, bInitialize(false) {
@@ -38,12 +38,13 @@ void PlayerSkill::initialize() {
 	handler.insert(shared_from_this());
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
+	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
 	bInitialize = true;
 }
 
 void PlayerSkill::update() {
 	State currentState = skill.currentState;
-	if (status != Status::Selected || currentGameState == GameState::LEVEL_FINISHED) return;
+	if (status != Status::Selected) return;
 	using namespace std::placeholders;
 	switch (currentState) {
 	case State::OnCharging:
@@ -64,14 +65,14 @@ void PlayerSkill::update() {
 		if (bLocked) break;
 		if (handler.tryForward(currentState, std::bind(&PlayerSkill::setState, this, _1))) {}
 		break;
-	case State::None:
+	case State::Waiting:
 		if (handler.tryAppear(shared_from_this())) {}
 		break;
 	case State::Using:
 		useSkill();
 		if (elapsed()) {
 			exhausted();
-			setState(State::None);
+			setState(State::Waiting);
 		}
 		break;
 	default:
@@ -80,7 +81,7 @@ void PlayerSkill::update() {
 }
 
 bool PlayerSkill::containsPoint(const sf::Vector2f & point) const {
-	if (skill.currentState == State::None) return false;
+	if (skill.currentState == State::Waiting) return false;
 	return skill.context->getGlobalBounds().contains(point);
 }
 
@@ -112,6 +113,8 @@ void PlayerSkill::resetKey(const sf::Keyboard::Key playerSkill, const sf::Keyboa
 }
 
 void PlayerSkill::setState(const State nextState) {
+	// skip if same
+	if (skill.currentState == nextState) return;
 	// set field number
 	if (skill.currentState == State::OnCharging) {
 		if (uCurrentOnField > uMaxOnField) throw std::invalid_argument("Too many skills on field.");
@@ -122,7 +125,7 @@ void PlayerSkill::setState(const State nextState) {
 		--uCurrentOnField;
 	}
 	// set skill context
-	if (nextState == State::None) {
+	if (nextState == State::Waiting) {
 		skill.context = nullptr;
 	}
 	else {
@@ -173,6 +176,7 @@ PlayerSkill::~PlayerSkill() {
 }
 
 void PlayerSkill::onKeyPressed(KeyPressedEvent & event) {
+	if (skill.currentState == State::Display) return;
 	if (skill.currentState == State::OnFirstField) {
 		if (bSilenced) return;
 		if (event.pressed.code == key.playerSkill || bAutoUse) setState(State::Using);
@@ -186,11 +190,9 @@ void PlayerSkill::onKeyPressed(KeyPressedEvent & event) {
 	}
 }
 
-
 void PlayerSkill::onMousePressed(MousePressedEvent & event) {
-	if (currentGameState != GameState::LEVEL_FINISHED
-		|| containsPoint(sf::Vector2f(static_cast<float>(event.pressed.x)
-			, static_cast<float>(event.pressed.y)))) return;
+	if (skill.currentState == State::Display || containsPoint(sf::Vector2f(static_cast<float>(event.pressed.x)
+		, static_cast<float>(event.pressed.y)))) return;
 	// left mouse to choose
 	if (uCurrentCarry < uMaxCarry && SkillSystem::selectOn() && event.pressed.button == sf::Mouse::Left) {
 		++uCurrentCarry;
@@ -204,7 +206,11 @@ void PlayerSkill::onMousePressed(MousePressedEvent & event) {
 	}
 }
 
+void PlayerSkill::onGameFinishedLevel(GameFinishedLevelEvent & event) {
+	setState(State::Display);
+}
+
 void PlayerSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	if (skill.currentState == State::None) return;
+	if (skill.currentState == State::Waiting) return;
 	target.draw(*skill.context, states);
 }

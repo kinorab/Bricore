@@ -5,33 +5,35 @@
 class Game;
 
 namespace game {
+	enum class Mode {
+		_1Player,	// defender
+		_2Player,	// defender and pioneer
+		_VSMode		// defender vs defender or pioneer vs pioneer
+	};
 	enum class Diffculty {
-		NoChoose,
+		Not_StageMode,
 		Easy,
 		Normal,
 		Hard,
 		Extreme
 	};
-	enum class Mode {
-		NoChoose,
-		_1Player,	// defender
-		_2Player,	// defender and pioneer
-		_VSMode		// defender vs defender or pioneer vs pioneer
-	};
+	class Data;
 	class Level {
 		friend class Game;
 	public:
 		enum Kind {
-			NoChoose,
-			Normal,		// others
-			Obstacle,	// x3
-			Bonus,		// x5
-			Iron,		// x8
-			Boss		// x0
+			Not_StageMode,	// Is not a level
+			Normal,			// others
+			Obstacle,		// x3
+			Bonus,			// x5
+			Iron,			// x8
+			Boss			// x0
 		};
-		explicit Level(const Mode mode, const Diffculty difficulty, const size_t level = 1);
-		// explicit Level(const Data saveData);
-		void changeSetting(const Mode mode, const Diffculty difficulty, const size_t level);
+		Level();
+		// new stage game or vs mode
+		void changeSetting(const Mode mode, const Diffculty difficulty);
+		// load stage game
+		void changeSetting(const Data & saveData);
 		void finishLevel();
 
 		bool isDefaultControlKeySettled() const;
@@ -39,6 +41,7 @@ namespace game {
 		size_t getTotalLevel() const;
 		Mode getMode() const;
 		Diffculty getDiffculty() const;
+		Kind getLevelKind() const;
 		virtual ~Level();
 
 		explicit Level(const Level &) = delete;
@@ -52,8 +55,8 @@ namespace game {
 		bool bDefaultControlKeySettled;
 		size_t uCurrentLevel;
 		size_t uTotalLevel;
-		Mode mode;
-		Diffculty diffculty;
 		Kind currentKind;
+		Mode currentMode;
+		Diffculty currentDifficulty;
 	};
 }

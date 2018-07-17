@@ -14,7 +14,7 @@ BossSkill::BossSkill(const Kind skillName, const sf::Time &duration
 	, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 	, const bool exist, const std::shared_ptr<RageBar> rageBar)
 	: SkillSystem(duration, true, exist)
-	, skill(SkillContent{ skillName, State::None, nullptr })
+	, skill(SkillContent{ skillName, State::Waiting, nullptr })
 	, m_rageBar(std::move(rageBar))
 	, bInitialize(false) {
 	// initialize effects
@@ -37,7 +37,7 @@ void BossSkill::update() {
 }
 
 bool BossSkill::containsPoint(const sf::Vector2f & point) const {
-	if (skill.currentState == State::None) return false;
+	if (skill.currentState == State::Waiting) return false;
 	return skill.preview->getGlobalBounds().contains(point);
 }
 
@@ -67,14 +67,19 @@ SkillKind<BossSkill>::Kind BossSkill::getSkillName() const {
 BossSkill::~BossSkill() {
 }
 
+void BossSkill::onGameFinishedLevel(GameFinishedLevelEvent & event) {
+	setState(State::Display);
+}
+
 void BossSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	if (skill.currentState == State::None) return;
+	if (skill.currentState == State::Waiting) return;
 	target.draw(*skill.preview, states);
 }
 
 void BossSkill::setState(const State nextState) {
+	if (skill.currentState == nextState) return;
 	// set skill preview
-	if (nextState == State::None) {
+	if (nextState == State::Waiting) {
 		skill.preview = nullptr;
 	}
 	else {

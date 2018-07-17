@@ -1,5 +1,6 @@
 #include "level.h"
 #include "deploy.h"
+#include "../data/data.h"
 #include "../../definition/gameState.h"
 #include <iostream>
 #include <stdexcept>
@@ -8,31 +9,35 @@ using namespace game;
 
 bool Level::bInstance(false);
 
-Level::Level(const Mode mode, const Diffculty diffculty, const size_t level)
+Level::Level()
 	: uTotalLevel(100)
-	, mode(mode)
-	, diffculty(diffculty)
-	, currentKind(NoChoose)
+	, currentMode()
+	, currentDifficulty()
+	, currentKind()
+	, uCurrentLevel()
 	, bDefaultControlKeySettled(false) {
 	// instance is only one
 	assert(!bInstance);
 	bInstance = true;
 	deploy.reset(new Deploy(this));
-	if (level <= 0 && level > uTotalLevel) throw std::invalid_argument("Invalid level setting.");
-	uCurrentLevel = level;
-	if (mode == Mode::NoChoose || diffculty == Diffculty::NoChoose) return;
-	settleKind(); 
 }
 
-void Level::changeSetting(const Mode mode, const Diffculty difficulty, const size_t level) {
-	if (level <= 0 && level > uTotalLevel) throw std::invalid_argument("Invalid level setting.");
-	uCurrentLevel = level;
-	if (mode == Mode::NoChoose || diffculty == Diffculty::NoChoose) return;
+void Level::changeSetting(const Mode mode, const Diffculty difficulty) {
+	currentMode = mode;
+	currentDifficulty = difficulty;
+	if (mode == Mode::_VSMode && difficulty == Diffculty::Not_StageMode) {
+		uCurrentLevel = 0;
+		currentKind = Kind::Not_StageMode;
+		return;
+	}
+	uCurrentLevel = 1;
 	settleKind();
 }
 
+void Level::changeSetting(const Data & saveData) {
+}
+
 void Level::finishLevel() {
-	currentGameState = GameState::LEVEL_FINISHED;
 	if (uCurrentLevel < uTotalLevel) {
 		std::cout << "Finished level: " << ++uCurrentLevel << "!!!" << std::endl;
 		settleKind();
@@ -55,11 +60,15 @@ size_t Level::getTotalLevel() const {
 }
 
 Mode Level::getMode() const {
-	return mode;
+	return currentMode;
 }
 
 Diffculty Level::getDiffculty() const {
-	return diffculty;
+	return currentDifficulty;
+}
+
+Level::Kind Level::getLevelKind() const {
+	return currentKind;
 }
 
 Level::~Level() {

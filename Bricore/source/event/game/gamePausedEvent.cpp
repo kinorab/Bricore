@@ -2,7 +2,7 @@
 #include "../eventListener.h"
 
 namespace game {
-	GamePausedEvent::GamePausedEvent(const GameEvent::PausedEvent eventType) 
+	GamePausedEvent::GamePausedEvent(const GameStateEvent::PausedEvent eventType)
 		: paused(eventType) {
 	}
 	void GamePausedEvent::accept(EventListenerBase & visitor) {

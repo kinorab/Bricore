@@ -1,6 +1,10 @@
 #pragma once
 #include "globular.h"
 
+namespace game {
+	class GameReadyEvent;
+}
+
 namespace item {
 	class MainBall :
 		public Globular {
@@ -16,6 +20,7 @@ namespace item {
 
 	private:
 		virtual void determineHitDirect() override;
+		void onGameReady(game::GameReadyEvent & event);
 		bool bSettle;
 	};
 }

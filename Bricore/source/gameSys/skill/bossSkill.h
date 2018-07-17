@@ -48,6 +48,7 @@ namespace game {
 			// preview for information showed on screen
 			std::shared_ptr<sf::Sprite> preview;
 		};
+		void onGameFinishedLevel(GameFinishedLevelEvent & event);
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;

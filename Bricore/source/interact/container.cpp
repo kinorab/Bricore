@@ -72,6 +72,17 @@ namespace game {
 		});
 	}
 
+	void Container::dispatchAllChildrenEvent(Event & event) {
+		std::for_each(children.begin(), children.end()
+			, [&](const std::shared_ptr<InteractiveObject> & child) {
+			child->dispatchEvent(event);
+		});
+	}
+
+	void Container::dispatchAllChildrenEvent(Event && event) {
+		dispatchAllChildrenEvent(event);
+	}
+
 	std::shared_ptr<sf::Drawable> Container::getChildAt(int index) const {
 		return children[index]->getDrawable();
 	}

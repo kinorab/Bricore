@@ -35,6 +35,9 @@ namespace game {
 		virtual void setChildIndex(const sf::Drawable * element, const int index);
 		virtual void swapChildren(const sf::Drawable * elementA, const sf::Drawable * elementB);
 		virtual void swapChildrenAt(const int indexA, const int indexB);
+		// dispatch event for all children
+		void dispatchAllChildrenEvent(Event & event);
+		void dispatchAllChildrenEvent(Event && event);
 
 	protected:
 		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;

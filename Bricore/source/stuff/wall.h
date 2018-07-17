@@ -1,4 +1,5 @@
 #pragma once
+#include "../event/game/gameEvent.h"
 #include "../interact/container.h"
 #include "../definition/diagonalPoint.h"
 #include <memory>
@@ -29,6 +30,7 @@ public:
 	void setFrameSize(const float frame);
 	void resettle();
 
+	bool empty() const;
 	size_t getBrickAmount() const;
 	sys::DPointf getDP(const size_t number) const;
 	float getFrameSize(const size_t number) const;
@@ -38,6 +40,7 @@ public:
 	virtual ~Wall();
 
 protected:
+	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
 	void settlePlace();
 
 private:
