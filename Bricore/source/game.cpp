@@ -21,12 +21,12 @@ Game::Game() noexcept
 	, level(new Level)
 	, data(new Data)
 	, windowHandler(new WindowHandler)
-	, bEnterToGame(false) {
+	, bEnterToGame(false)
+	, bExitGame(false) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
 	root.reset(new Root(graph, window));
 	//if (saveData.exist() && root.chooseSave(saveData)) {
-	//	level.reset(saveData);
 	//}
 	//else { 
 	level->changeSetting(Mode::_2Player, Diffculty::Hard);
@@ -63,11 +63,12 @@ void Game::renderFunc() {
 	float elapsed = 0;
 	float renderElapsed = 0;
 	sf::Clock clock;
-	for (bool finishing = false; !finishing;) {
+	bEnterToGame = true;
+	while (!bExitGame) {
 		// display in milliseconds
 		constexpr float updateSpan = 10.f;
 		const float distribute = clock.restart().asSeconds() * 1000.f;
-		handleEvents(finishing);
+		auto handleFunc = std::async(std::launch::async, &Game::handleEvents, this);
 		// maximum elapsed cap
 		elapsed = std::min<float>(elapsed + distribute, updateSpan * 1.5f);
 		while (elapsed > 0.0f) {
@@ -88,15 +89,17 @@ void Game::renderFunc() {
 	window->setActive(false);
 }
 
-void Game::handleEvents(bool & finishing) {
+void Game::handleEvents() {
 	while (!eventQueue.empty()) {
 		sf::Event currentEvent = eventQueue.pop();
 		auto rootFunc = std::async(std::launch::async, &Root::handle, root, currentEvent);
-		auto stageFunc = std::async(std::launch::async, &Stage::handle, stage, currentEvent);
 		windowHandler->handle(currentEvent, *root);
-		windowHandler->handle(currentEvent, *stage);
+		if (bEnterToGame) {
+			auto stageFunc = std::async(std::launch::async, &Stage::handle, stage, currentEvent);
+			windowHandler->handle(currentEvent, *stage);
+		}
 		if (currentEvent.type == sf::Event::Closed) {
-			finishing = true;
+			bExitGame = true;
 		}
 	}
 }

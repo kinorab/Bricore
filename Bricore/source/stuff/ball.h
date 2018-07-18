@@ -33,6 +33,11 @@ public:
 	void resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<const SubPlayer> subPlayer);
 	void initializeBall();
 	void ballDivided(const size_t numbers);
+	bool isAnyIntersect(const sf::FloatRect & rect) const;
+	bool isAnyIntersect(const sys::DPointf & rectDP) const;
+	bool isMainBallIntersect(const sf::FloatRect & rect) const;
+	bool isMainBallIntersect(const sys::DPointf & rectDP) const;
+
 	bool isMainBallBroken() const;
 	// return the balls of entered obstacleArea
 	std::vector<std::shared_ptr<item::Globular>> enteredObstacleArea() const;
@@ -45,9 +50,9 @@ public:
 	virtual ~Ball();
 
 protected:
-	void ballsCollision(const size_t);
 	void onGameReady(game::GameReadyEvent & event);
 	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
+	void ballsCollision(const size_t);
 	void followPlayer();
 
 private:

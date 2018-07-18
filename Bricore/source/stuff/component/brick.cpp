@@ -43,7 +43,6 @@ void Brick::setFillColor(const Color &color) {
 }
 
 void Brick::setFrameColor(const Color &color) {
-	if (getFrameSize() <= 0.0f) throw std::invalid_argument("Brick frames do not exist.");
 	brick->setOutlineColor(color);
 }
 

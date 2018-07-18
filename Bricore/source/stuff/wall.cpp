@@ -32,7 +32,7 @@ void Wall::update(const float updateRatio) {
 				if (std::dynamic_pointer_cast<MainBall>(element)) {
 					m_ball->ballDivided(10);
 				}
-				removeChild({ bricks[i] });
+				removeChild({ std::dynamic_pointer_cast<sf::Drawable>(bricks[i]) });
 				bricks.erase(bricks.begin() + i);
 				--i;
 				break;
@@ -157,13 +157,11 @@ void Wall::settlePlace() {
 	Vector2f tempPos = Vector2f(initialPos.x, initialPos.y + whiteSpace.y);
 	const float height = uRowCount * (sideLength.y + fFrameSize * 2 + interval.y) + interval.y + whiteSpace.y;
 	if (bChangeEntity) {
-		std::for_each(bricks.begin(), bricks.end(), [this](std::shared_ptr<Brick> &element) {
+		for (auto & element : bricks) {
 			element.reset(new Brick(sideLength, fFrameSize));
-			addChild({ element });
-			if (fFrameSize > 0.0f) {
-				element->setFrameColor(Color::Black);
-			}
-		});
+			element->setFrameColor(Color::Black);
+			addChild({ std::dynamic_pointer_cast<sf::Drawable>(element) });
+		}
 		using namespace game;
 		Zone::getInstance().settleZone(Zone::Wall, height);
 		bChangeEntity = false;

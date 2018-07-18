@@ -9,7 +9,7 @@ using namespace game;
 
 bool Level::bInstance(false);
 
-Level::Level()
+Level::Level() noexcept
 	: uTotalLevel(100)
 	, currentMode()
 	, currentDifficulty()

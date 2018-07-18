@@ -3,7 +3,6 @@
 #include "subPlayer.h"
 #include "component/mainBall.h"
 #include "component/shadowBall.h"
-#include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../definition/intersects.h"
 #include "../event/eventListener.h"
@@ -31,7 +30,7 @@ void Ball::update(const float updateRatio) {
 		shadowBalls[i]->move(playerDP, playerSpeed, updateRatio);
 		if (shadowBalls[i]->isBroke()) {
 			// remove need to be first
-			removeChild({ shadowBalls[i] });
+			removeChild({ std::dynamic_pointer_cast<sf::Drawable>(shadowBalls[i]) });
 			shadowBalls.erase(shadowBalls.begin() + i);
 		}
 		if (bMultiple) {
@@ -50,14 +49,14 @@ void Ball::resetCopyTarget(const std::shared_ptr<const Player> player
 void Ball::initializeBall() {
 	if (!mainBall->isSettle()) {
 		removeAllChildren();
-		addChild({ mainBall });
+		addChild({ std::dynamic_pointer_cast<sf::Drawable>(mainBall) });
 		shadowBalls.clear();
 		mainBall->initialize();
 	}
 }
 
 void Ball::followPlayer() {
-	sf::Vector2f pos{ c_player->getTopCenterPos() };
+	Vector2f pos{ c_player->getTopCenterPos() };
 	mainBall->setPosition(pos.x, pos.y - mainBall->getRadius() - 1.f);
 }
 
@@ -75,7 +74,7 @@ std::vector<std::shared_ptr<Globular>> Ball::enteredObstacleArea() const {
 	return temp;
 }
 
-std::vector<std::shared_ptr<item::Globular>> Ball::enteredWallArea() const {
+std::vector<std::shared_ptr<Globular>> Ball::enteredWallArea() const {
 	std::vector<std::shared_ptr<Globular>> temp;
 	if (mainBall->isEnteredWallArea()) {
 		temp.push_back(mainBall);
@@ -92,11 +91,32 @@ std::vector<std::shared_ptr<item::Globular>> Ball::enteredWallArea() const {
 void Ball::ballDivided(const size_t numbers) {
 	for (size_t i = 0; i < numbers; ++i) {
 		auto shadowBall = std::make_shared<ShadowBall>(mainBall.get());
-		addChild({ shadowBall });
+		addChild({ std::dynamic_pointer_cast<sf::Drawable>(shadowBall) });
 		shadowBalls.push_back(shadowBall);
 	}
 	bCollision = false;
 	bMultiple = true;
+}
+
+bool Ball::isAnyIntersect(const FloatRect & rect) const {
+	return isAnyIntersect(sys::DPointf(rect));
+}
+
+bool Ball::isAnyIntersect(const sys::DPointf & rectDP) const {
+	std::vector<std::shared_ptr<Globular>> temp({ mainBall });
+	temp.insert(temp.end(), shadowBalls.begin(), shadowBalls.end());
+	return std::any_of(temp.begin(), temp.end()
+		, [&](const std::shared_ptr<Globular> & element) {
+		return element->isIntersect(rectDP);
+	});
+}
+
+bool Ball::isMainBallIntersect(const FloatRect & rect) const {
+	return mainBall->isIntersect(rect);
+}
+
+bool Ball::isMainBallIntersect(const sys::DPointf & rectDP) const {
+	return mainBall->isIntersect(rectDP);
 }
 
 bool Ball::isMainBallBroken() const {
@@ -126,7 +146,7 @@ void Ball::draw(RenderTarget &target, RenderStates states) const {
 
 void Ball::ballsCollision(const size_t number) {
 	std::vector<std::shared_ptr<Globular>> balls({ mainBall });
-	for (auto element : shadowBalls) {
+	for (auto & element : shadowBalls) {
 		balls.push_back(element);
 	}
 	for (size_t j = number + 1; j < balls.size(); ++j) {
@@ -134,7 +154,7 @@ void Ball::ballsCollision(const size_t number) {
 		const float AR = balls[number]->getRadius();
 		const Vector2f BPos = balls[j]->getPosition();
 		const float BR = balls[j]->getRadius();
-		if (bCollision && sys::ballsIntersects(APos, AR, BPos, BR)) {
+		if (bCollision && balls[number]->isIntersect(*balls[j])) {
 			const float avarageSpeedX = (abs(balls[number]->getSpeed().x) + abs(balls[j]->getSpeed().x)) / 2;
 			const float ASpeedY = balls[number]->getSpeed().y;
 			const float BSpeedY = balls[j]->getSpeed().y;

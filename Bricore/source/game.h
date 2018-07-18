@@ -24,10 +24,11 @@ public:
 	void run();
 
 private:
+	bool bExitGame;
 	bool bEnterToGame;
 	void settleWindow();
 	void renderFunc();
-	void handleEvents(bool & finishing);
+	void handleEvents();
 	game::EventQueue eventQueue;
 	game::WindowHandler * windowHandler;
 	std::shared_ptr<sf::RenderWindow> window;

@@ -29,7 +29,7 @@ namespace game {
 			Iron,			// x8
 			Boss			// x0
 		};
-		Level();
+		Level() noexcept;
 		// new stage game or vs mode
 		void changeSetting(const Mode mode, const Diffculty difficulty);
 		// load stage game

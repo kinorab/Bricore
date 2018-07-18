@@ -18,7 +18,8 @@ Root::Root(const std::shared_ptr<Graphics> graph, const std::shared_ptr<const sf
 	, keyboardHandler(new KeyboardHandler)
 	, m_graph(std::move(graph)) {
 	assert(!bInstance);
-	addChild({ hud, mouseLight });
+	addChild({ std::dynamic_pointer_cast<sf::Drawable>(hud)
+		, std::dynamic_pointer_cast<sf::Drawable>(mouseLight) });
 	addListener(std::make_shared<EventListener<MouseEnteredEvent>>([this]() { onMouseEntered(); }));
 	addListener(std::make_shared<EventListener<MouseLeftEvent>>([this]() { onMouseLeft(); }));
 	addListener(std::make_shared<EventListener<MouseMovedEvent>>([this](auto & event) { onMouseMoved(event); }));

@@ -8,7 +8,6 @@
 #include "../event/eventListener.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
-#include "../definition/intersects.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -33,7 +32,7 @@ void Obstacle::resettle() {
 	blocks.clear();
 	for (size_t i = 0; i < newSize; ++i) {
 		auto block = std::make_shared<Block>(position[i], sideLength[i]);
-		addChild({ block });
+		addChild({ std::dynamic_pointer_cast<sf::Drawable>(block) });
 		blocks.push_back(block);
 	}
 	using namespace game;
@@ -131,7 +130,7 @@ void Obstacle::onGameFinishedLevel(GameFinishedLevelEvent & event) {
 
 void Obstacle::blocksCollision(const size_t number) {
 	for (size_t j = number + 1; j < blocks.size(); ++j) {
-		if (sys::INCIntersects(blocks[number]->getDP(), blocks[j]->getDP())) {
+		if (blocks[number]->getGlobalBounds().intersects(blocks[j]->getGlobalBounds())) {
 			const Vector2f APos(blocks[number]->getPosition());
 			const Vector2f BPos(blocks[j]->getPosition());
 			const Vector2f ASpeed(blocks[number]->getSpeed());

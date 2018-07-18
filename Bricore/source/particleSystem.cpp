@@ -12,7 +12,7 @@ ParticleSystem::ParticleSystem(const unsigned int count)
 	: particles(count)
 	, vertices(new VertexArray(Points, count))
 	, fMaxLifeTime(LIFETIME) {
-	addChild({ vertices });
+	addChild({ std::dynamic_pointer_cast<sf::Drawable>(vertices) });
 }
 
 void ParticleSystem::setEmitPosition(const Vector2f & position) {

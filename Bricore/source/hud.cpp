@@ -34,7 +34,11 @@ HUD::HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> grap
 	scorePanel.context->setPosition({ LEVEL_WIDTH, 200.f });
 	playerPanel.context->setFillColor(sf::Color::Cyan);
 	playerPanel.context->setPosition({ LEVEL_WIDTH, 500.f });
-	addChild({ interfaces[Main], interfaces[BattleArea], bossPanel.context, scorePanel.context, playerPanel.context });
+	addChild({ std::dynamic_pointer_cast<sf::Drawable>(interfaces[Main])
+		, std::dynamic_pointer_cast<sf::Drawable>(interfaces[BattleArea])
+		, std::dynamic_pointer_cast<sf::Drawable>(bossPanel.context)
+		, std::dynamic_pointer_cast<sf::Drawable>(scorePanel.context)
+		, std::dynamic_pointer_cast<sf::Drawable>(playerPanel.context) });
 	// initialize button
 }
 

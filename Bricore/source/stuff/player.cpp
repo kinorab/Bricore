@@ -4,7 +4,6 @@
 #include "../event/eventListener.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
-#include "../definition/intersects.h"
 #include "../gameSys/level/level.h"
 #include "../gameSys/level/area/zone.h"
 #include "../gameSys/bar/energyBar.h"
@@ -67,7 +66,9 @@ Player::Player(const std::shared_ptr<Level> level)
 	};
 	// set player zone
 	Zone::getInstance().settleZone(Zone::Player, sf::Vector2f(0.0f, LEVEL_HEIGHT - 100.f), 100.f);
-	addChild({ defender.board, defender.absorbEngine, defender.hitLight });
+	addChild({ std::dynamic_pointer_cast<sf::Drawable>(defender.board)
+		, std::dynamic_pointer_cast<sf::Drawable>(defender.absorbEngine)
+		, std::dynamic_pointer_cast<sf::Drawable>(defender.hitLight) });
 	// add child
 	/*std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
 		, [&](const std::shared_ptr<BallSkill> & skill) {
@@ -81,6 +82,7 @@ Player::Player(const std::shared_ptr<Level> level)
 	});*/
 	// add listener
 	addListener(std::make_shared<EventListener<GameStartedEvent>>([this](auto & event) { onGameStarted(event); }));
+	addListener(std::make_shared<EventListener<GameReadyEvent>>([this](auto & event) { onGameReady(event); }));
 	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onkeyPressed(event); }));
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
@@ -91,19 +93,14 @@ void Player::update(const float updateRatio) {
 	const float mainBallRadius = m_ball->getMainBallRadius();
 	const FloatRect playerBoardBound = defender.board->getGlobalBounds();
 	if (playerBoardBound.left >= 0
-		&& (Keyboard::isKeyPressed(key.leftMove))
-		) {
+		&& (Keyboard::isKeyPressed(key.leftMove))) {
 		defender.board->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
 		defender.hitLight->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
 	}
 	if (playerBoardBound.left + playerBoardBound.width <= LEVEL_WIDTH
-		&& (Keyboard::isKeyPressed(key.rightMove))
-		) {
+		&& (Keyboard::isKeyPressed(key.rightMove))) {
 		defender.board->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
 		defender.hitLight->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
-	}
-	if (bFlash) {
-		flashElapsed();
 	}
 	defender.absorbEngine->setPosition(defender.board->getPosition());
 }
@@ -237,6 +234,9 @@ void Player::onGameStarted(GameStartedEvent & event) {
 	const Vector2f &mainBallPos(m_ball->getMainBallPosition());
 	const float mainBallRadius = m_ball->getMainBallRadius();
 	flashRange(mainBallPos, mainBallRadius);
+	if (bFlash) {
+		flashElapsed();
+	}
 	// update skills
 	/*std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
 		, [&](const std::shared_ptr<PlayerSkill> & skill) {
@@ -249,6 +249,10 @@ void Player::onGameStarted(GameStartedEvent & event) {
 		skill->update();
 	});*/
 	dispatchAllChildrenEvent(event);
+}
+
+void Player::onGameReady(GameReadyEvent & event) {
+	resetFlash();
 }
 
 void Player::onGameFinishedLevel(GameFinishedLevelEvent & event) {
@@ -285,13 +289,22 @@ void Player::flashElapsed() {
 	}
 }
 
+void Player::resetFlash() {
+	bFlash = false;
+	bFlashCD = false;
+	setFlashFillColor(Color(defender.hitLight->getFillColor().r
+		, defender.hitLight->getFillColor().b
+		, defender.hitLight->getFillColor().g
+		, Color::Transparent.a));
+}
+
 void Player::flashRange(const Vector2f ballPos, const float radius) {
 	const FloatRect playerBounds = getGlobalBounds();
 	const FloatRect hitLightBounds = defender.hitLight->getGlobalBounds();
 	const Vector2f pos1P = getPosition();
 
 	if (!bFlashCD) {
-		if (sys::ballRectINCIntersects(ballPos, radius, playerBounds)) {
+		if (m_ball->isMainBallIntersect(playerBounds)) {
 			elapsed.restart();
 			AudioManager::getInstance().getSound("hitBoard")->play();
 			if (ballPos.x - radius <= playerBounds.left) {

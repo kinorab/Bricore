@@ -49,7 +49,7 @@ namespace game {
 			}
 
 			if (node->getParent() != nullptr) {
-				node->getParent()->removeChild({ node });
+				node->getParent()->removeChild({ std::dynamic_pointer_cast<sf::Drawable>(node) });
 			}
 
 			node->setParent(this);

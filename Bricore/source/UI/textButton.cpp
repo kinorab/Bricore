@@ -22,7 +22,7 @@ namespace game {
 		text.setPosition(location.x + 3, location.y + 3);
 		text.setCharacterSize(14);
 		*/
-		addChild({ text });
+		addChild({ std::dynamic_pointer_cast<sf::Drawable>(text) });
 	}
 
 	TextButton::~TextButton() {

@@ -64,12 +64,14 @@ public:
 
 protected:
 	void onGameStarted(game::GameStartedEvent & event);
+	void onGameReady(game::GameReadyEvent & event);
 	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
 	void onkeyPressed(game::KeyPressedEvent & event);
 	void onMousePressed(game::MousePressedEvent & event);
 	void setFlashPosition(const sf::Vector2f & position);
 	void setFlashFillColor(const sf::Color & color);
 	void flashElapsed();
+	void resetFlash();
 	void flashRange(const sf::Vector2f ballPos, const float radius);
 	struct ControlKey {
 		sf::Keyboard::Key leftMove;

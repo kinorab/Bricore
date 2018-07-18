@@ -30,14 +30,7 @@ bool Globular::isEnteredWallArea() const {
 }
 
 bool Globular::isIntersect(const sf::FloatRect & rect) const {
-	const sf::Vector2f LT(rect.left, rect.top);
-	const sf::Vector2f RB(rect.left + rect.width, rect.top + rect.height);
-	const sf::Vector2f nearPos(std::max(LT.x, std::min(getPosition().x, RB.x))
-		, std::max(LT.y, std::min(getPosition().y, RB.y)));
-	const float pow2Delta = (nearPos.x - getPosition().x) * (nearPos.x - getPosition().x)
-		+ (nearPos.y - getPosition().y) * (nearPos.y - getPosition().y);
-	const float pow2Distance = getRadius() * getRadius();
-	return pow2Delta <= pow2Distance;
+	return isIntersect(sys::DPointf(rect));
 }
 
 bool Globular::isIntersect(const sys::DPointf & rectDP) const {
@@ -95,7 +88,7 @@ std::shared_ptr<sf::Drawable> Globular::getDrawable() const {
 }
 
 void Globular::move(const sys::DPointf &DP, const float playerSpeed, const float updateRatio) {
-	const Vector2f ballPos(getPosition());
+	const Vector2f & ballPos(getPosition());
 	const float radius = getRadius();
 	if (!bActive) {
 		oriSpeed = ballSpeed;
