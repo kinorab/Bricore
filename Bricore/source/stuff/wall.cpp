@@ -32,7 +32,8 @@ void Wall::update(const float updateRatio) {
 				if (std::dynamic_pointer_cast<MainBall>(element)) {
 					m_ball->ballDivided(10);
 				}
-				removeChild({ bricks[i] });
+
+				removeChild({ std::static_pointer_cast<Drawable>(bricks[i]) });
 				bricks.erase(bricks.begin() + i);
 				--i;
 				break;
@@ -159,7 +160,7 @@ void Wall::settlePlace() {
 	if (bChangeEntity) {
 		std::for_each(bricks.begin(), bricks.end(), [this](std::shared_ptr<Brick> &element) {
 			element.reset(new Brick(sideLength, fFrameSize));
-			addChild({ element });
+			addChild({ std::static_pointer_cast<Drawable>(element) });
 			if (fFrameSize > 0.0f) {
 				element->setFrameColor(Color::Black);
 			}
