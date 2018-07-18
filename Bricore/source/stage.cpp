@@ -66,10 +66,9 @@ Stage::~Stage() {
 }
 
 void Stage::update(const float updateRatio) {
-	updateGameStateEvent();
-	if (gameStateEvent->type != GameStateEvent::GamePaused && gameStateEvent->type != GameStateEvent::GameResumed) {
-		ball->initializeBall();
-		for (size_t i = 0; i < SLICE; ++i) {
+	for (size_t i = 0; i < SLICE; ++i) {
+		if (gameStateEvent->type != GameStateEvent::GamePaused && gameStateEvent->type != GameStateEvent::GameResumed) {
+			ball->initializeBall();
 			player->update(updateRatio);
 			subPlayer->update(updateRatio);
 			if (gameStateEvent->type == GameStateEvent::GameStarted) {
@@ -78,6 +77,7 @@ void Stage::update(const float updateRatio) {
 				ball->update(updateRatio);
 			}
 		}
+		updateGameStateEvent();
 	}
 	// temp setting
 	if (gameStateEvent->type == GameStateEvent::GameFinishedLevel) {
@@ -113,7 +113,7 @@ void Stage::onKeyPressed(KeyPressedEvent & event) {
 			gameStateEvent->type = GameStateEvent::GameResumed;
 			gameStateEvent->resumed.fCountDown = 3.f;
 		}
-		else {
+		else if(gameStateEvent->type != GameStateEvent::GameResumed){
 			tempType = gameStateEvent->type;
 			gameStateEvent->type = GameStateEvent::GamePaused;
 			++gameStateEvent->paused.uPausedTimes;
