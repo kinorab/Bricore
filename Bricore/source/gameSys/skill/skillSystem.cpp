@@ -1,14 +1,13 @@
 #include "skillSystem.h"
-#include "../effect/entireEffect.h"
-#include "../effect/attribute.h"
+#include "../effect/effect.h"
+#include "../attribute/attribute.h"
 #include <stdexcept>
 #include <algorithm>
 
 using namespace game;
 
-SkillSystem::SkillSystem(const sf::Time &duration, const bool autoUse, const bool exist)
+SkillSystem::SkillSystem(const sf::Time &duration, const bool exist)
 	: System(false)
-	, bAutoUse(autoUse && exist)
 	, bSilenced(false)
 	, bLocked(false)
 	, bExist(exist)
@@ -57,16 +56,8 @@ void SkillSystem::setOwnToPlayer(const bool giveOwn) {
 	}
 }
 
-void SkillSystem::setAutoUse(const bool autoUse) {
-	bAutoUse = autoUse;
-}
-
 bool SkillSystem::isExist() const {
 	return bExist;
-}
-
-bool SkillSystem::isAutoUse() const {
-	return bAutoUse;
 }
 
 bool SkillSystem::isLocked() const {
@@ -102,15 +93,7 @@ void SkillSystem::useSkill() {
 bool SkillSystem::elapsed() {
 	if (!isEnable()) throw std::invalid_argument("Skill was disabled in elapsed.");
 	if (elapsedTime >= duration) return true;
-	sf::Time distribute = clock.restart();
-	elapsedTime += distribute;
-	std::for_each(skillEffects.begin(), skillEffects.end(), [&](const std::shared_ptr<EntireEffect> effect) {
-		if (effect->elapsedTime >= effect->duration) {
-			effect->setEnable(false);
-			return;
-		};
-		effect->elapsedTime += distribute;
-	});
+	clock.restart();
 	return false;
 }
 
@@ -121,11 +104,6 @@ void SkillSystem::exhausted() {
 
 #pragma warning(suppress: 26434)
 void SkillSystem::setEnable(const bool enable) {
-	if (!bExist) {
-		throw std::invalid_argument("Skill not exist in setEnable.");
-	}
+	if (!bExist) throw std::invalid_argument("Skill not exist in setEnable.");
 	System::setEnable(enable);
-	std::for_each(skillEffects.begin(), skillEffects.end(), [=](const std::shared_ptr<EntireEffect> &effect) {
-		effect->setEnable(enable);
-	});
 }

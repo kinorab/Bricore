@@ -15,7 +15,9 @@ sf::Texture * TextureManager::get(const std::string & fileName) {
 			return texture.second.get();
 		}
 	}
-	throw std::invalid_argument("File not be loaded or no such file");
+	std::cout << "Cannot find file: " << fileName << std::endl;
+	// throw std::invalid_argument("File not be loaded or no such file");
+	return nullptr;
 }
 
 void TextureManager::load(const std::string & directory) {

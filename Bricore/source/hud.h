@@ -25,6 +25,7 @@ public:
 	explicit HUD(const InterfaceCategory interface, const std::shared_ptr<Graphics> graph);
 	virtual bool containsPoint(const sf::Vector2f & point) const override;
 	virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
+	void setSmooth(const bool isSmooth);
 	void changeGraphicsSetting(const Graphics::FrameRate fps, const Graphics::Resolution dpi
 		, const Graphics::ResidueShadow afterimage);
 	void changeInterface(const InterfaceCategory nextInterface);

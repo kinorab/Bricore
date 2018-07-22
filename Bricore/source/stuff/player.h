@@ -31,14 +31,20 @@ public:
 	enum Model {
 		Classic,
 	};
-	enum SkillChoose {
-		_Ball, 
+	enum class SkillSelect {
+		_Ball,
 		_Player
 	};
-	struct BoardFile {
-		std::string board;
-		std::string absorbEngine;
-		std::string hitLight;
+	struct ControlKey {
+		sf::Keyboard::Key leftMove;						// control defender left move
+		sf::Keyboard::Key rightMove;					// control defender right move
+		sf::Keyboard::Key shot;							// control defender choose ball shot direct
+		sf::Keyboard::Key ballSkill;					// control defender use ball skill
+		sf::Keyboard::Key ballSkillSwap;				// control defender swap ball skill(first and second field)
+		sf::Keyboard::Key playerSkill;					// control defender use player skill
+		sf::Keyboard::Key playerSkillSwap;				// control defender swap player skill(first and second field)
+		sf::Keyboard::Key switchToPrevChargingSkill;	// control defender switch to previous order skill
+		sf::Keyboard::Key switchToNextChargingSkill;	// control defender switch to next order skill 
 	};
 	explicit Player(const std::shared_ptr<game::Level> level);
 	void update(const float updateRatio);
@@ -48,63 +54,60 @@ public:
 		, const sf::Keyboard::Key playerSkillSwap, const sf::Keyboard::Key ballSkill
 		, const sf::Keyboard::Key ballSkillSwap, const sf::Keyboard::Key switchToPrevChargingSkill
 		, const sf::Keyboard::Key switchToNextChargingSkill);
-	void loadPlayerModelPreview(const std::map<Model, BoardFile> & fileName, const bool isSmooth = false);
 	void changeModel(const Model model);
 	void addPlayerSkill(game::PlayerSkill && playerSkill);
 	void addBallSkill(game::BallSkill && ballSkill);
-	void setAutoUse(const SkillChoose skill, const bool autoUse);
 
+	bool isAutoUse(const SkillSelect select) const;
 	float getSpeed() const;
-	const sf::Vector2f & getPosition() const;
+	Model getModel() const;
+	sys::DPointf getDP() const;
 	sf::Vector2f getTopCenterPos() const;
 	sf::FloatRect getGlobalBounds() const;
-	sys::DPointf getDP() const;
-	Model getModel() const;
+	const ControlKey & getKey() const;
+	const sf::Vector2f & getPosition() const;
 	virtual ~Player();
 
 protected:
+	struct BoardFile {
+		std::string board;
+		std::string absorbEngine;
+		std::string hitLight;
+	};
+	struct PlayerContent {
+		Model currentModel = Model::Classic;
+		std::shared_ptr<sf::RectangleShape> board;						// defender's core
+		std::shared_ptr<sf::RectangleShape> absorbEngine;				// absort ball's energy to defender
+		std::shared_ptr<sf::RectangleShape> hitLight;					// hit to ball will reflect light on board
+		std::vector<std::shared_ptr<game::PlayerSkill>> playerSkills;
+		std::vector<std::shared_ptr<game::BallSkill>> ballSkills;
+	};
 	void onGameStarted(game::GameStartedEvent & event);
 	void onGameReady(game::GameReadyEvent & event);
 	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
 	void onkeyPressed(game::KeyPressedEvent & event);
 	void onMousePressed(game::MousePressedEvent & event);
+	void setAutoUse(const SkillSelect skill, const bool isAutoUse);
 	void setFlashPosition(const sf::Vector2f & position);
 	void setFlashFillColor(const sf::Color & color);
 	void flashElapsed();
 	void resetFlash();
 	void flashRange(const sf::Vector2f ballPos, const float radius);
-	struct ControlKey {
-		sf::Keyboard::Key leftMove;
-		sf::Keyboard::Key rightMove;
-		sf::Keyboard::Key shot;
-	};
-	struct BoardTexture {
-		std::shared_ptr<sf::Texture> board;
-		std::shared_ptr<sf::Texture> absorbEngine;
-		std::shared_ptr<sf::Texture> hitLight;
-	};
-	struct PlayerContent {
-		Model currentModel = Model::Classic;
-		std::shared_ptr<sf::RectangleShape> board;
-		std::shared_ptr<sf::RectangleShape> absorbEngine;
-		std::shared_ptr<sf::RectangleShape> hitLight;
-		std::vector<std::shared_ptr<game::PlayerSkill>> playerSkills;
-		std::vector<std::shared_ptr<game::BallSkill>> ballSkills;
-	};
 
 private:
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 	void defaultKeySettle();
 
+	static std::map<Model, BoardFile> modelFileNames;
 	bool bFlash;
 	bool bFlashCD;
 	float fSpeed;
-	ControlKey key;
 	sf::Clock CDTime;
 	sf::Clock elapsed;
 	PlayerContent defender;
-	std::map<Model, std::shared_ptr<BoardTexture>> modelPreviews;
 	std::shared_ptr<game::EnergyBar> energyBar;
+	const std::shared_ptr<ControlKey> key;
+	std::map<SkillSelect, bool> autoUse;
 	std::shared_ptr<game::Level> m_level;
 	std::shared_ptr<Ball> m_ball;
 	std::shared_ptr<const SubPlayer> c_subPlayer;

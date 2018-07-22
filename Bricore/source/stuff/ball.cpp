@@ -56,7 +56,7 @@ void Ball::initializeBall() {
 }
 
 void Ball::followPlayer() {
-	Vector2f pos{ c_player->getTopCenterPos() };
+	const Vector2f pos{ c_player->getTopCenterPos() };
 	mainBall->setPosition(pos.x, pos.y - mainBall->getRadius() - 1.f);
 }
 

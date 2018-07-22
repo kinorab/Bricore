@@ -1,6 +1,6 @@
 #include "bossSkill.h"
 #include "skillHandler.h"
-#include "../effect/entireEffect.h"
+#include "../AI/boss.h"
 #include "../bar/rageBar.h"
 #include "../../manager/textureManager.h"
 #include "../../definition/gameState.h"
@@ -9,17 +9,25 @@
 using namespace game;
 
 SkillHandler<BossSkill> BossSkill::handler;
+std::map<BossSkill::Kind, std::map<BossSkill::State, std::string>> BossSkill::fileNames({
+	std::pair(MultipleShoot
+	, std::map<BossSkill::State, std::string>{
+		std::pair(State::Using, "multipleShoot_using")
+		, std::pair(State::Display, "multipleShoot_display")
+		})
+	});
 
 BossSkill::BossSkill(const Kind skillName, const sf::Time &duration
 	, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
-	, const bool exist, const std::shared_ptr<RageBar> rageBar)
-	: SkillSystem(duration, true, exist)
+	, const bool exist, const std::shared_ptr<RageBar> rageBar, const Boss * boss)
+	: SkillSystem(duration, exist)
 	, skill(SkillContent{ skillName, State::Waiting, nullptr })
+	, bInitialize(false)
 	, m_rageBar(std::move(rageBar))
-	, bInitialize(false) {
+	, c_boss(boss) {
 	// initialize effects
 	std::for_each(effects.begin(), effects.end(), [&](const std::pair<Effect::Kind, bool> & effect) {
-		skillEffects.push_back(std::make_shared<EntireEffect>(effect.first, this, effect.second));
+		skillEffects.push_back(std::make_shared<Effect>(effect.first, effect.second));
 	});
 	// initialize attributes
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
@@ -43,13 +51,6 @@ bool BossSkill::containsPoint(const sf::Vector2f & point) const {
 
 std::shared_ptr<sf::Drawable> BossSkill::getDrawable() const {
 	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
-}
-
-void BossSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
-	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> & file) {
-		statePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		statePreviews[file.first]->setSmooth(isSmooth);
-	});
 }
 
 bool BossSkill::isInitialize() const {
@@ -83,7 +84,8 @@ void BossSkill::setState(const State nextState) {
 		skill.preview = nullptr;
 	}
 	else {
-		skill.preview.reset(new sf::Sprite(*statePreviews[nextState]));
+		auto stateTexture = TextureManager::getInstance().get(fileNames[skill.name][skill.currentState]);
+		skill.preview.reset(new sf::Sprite(*stateTexture));
 	}
 	// set skill state
 	skill.currentState = nextState;

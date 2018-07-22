@@ -1,6 +1,6 @@
 #pragma once
-#include "../../system.h"
-#include "../../item/enerma.h"
+#include "../system.h"
+#include "../item/enerma.h"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <memory>
@@ -16,7 +16,7 @@ namespace sf {
 }
 
 namespace game {
-	class EntireEffect;
+	class Effect;
 	class Attribute;
 
 	class Arena : 
@@ -34,13 +34,12 @@ namespace game {
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		struct Content {
-			std::vector<std::shared_ptr<EntireEffect>> effects;
+			std::vector<std::shared_ptr<Effect>> effects;
 			std::shared_ptr<sf::Sprite> lightPower;
 			std::shared_ptr<sf::Sprite> context;
 			std::shared_ptr<item::Enerma> content;
 		};
 		std::map<item::Enerma::Kind, Content> enermas;
-		std::map<std::string, std::vector<std::shared_ptr<Attribute>>> AOEs;
 		static std::map<item::Enerma::Kind, std::shared_ptr<sf::Texture>> enermaPreviews;
 		static std::map<std::string, std::shared_ptr<sf::Texture>> lightPreviews;
 	};

@@ -9,10 +9,7 @@ namespace game {
 		, public std::enable_shared_from_this<Effect>
 		, public game::InteractiveObject {
 	public:
-		// non-context effect
 		explicit Effect(const Kind effect, const bool isTargetItself);
-		// context effect
-		explicit Effect(const Kind effect, const std::shared_ptr<sf::Texture> & texture, const bool isTargetItself);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void setPosition(const sf::Vector2f & position);
@@ -30,9 +27,9 @@ namespace game {
 		const Kind it;
 
 	private:
-		virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
+		static std::map<Kind, std::string> fileNames;
 
-		const std::shared_ptr<sf::Sprite> context;
 		const bool bTargetItself;
+		std::unique_ptr<sf::Sprite> context;
 	};
 }

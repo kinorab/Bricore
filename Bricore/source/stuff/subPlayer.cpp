@@ -10,12 +10,22 @@
 
 using namespace game;
 
-std::map<item::Chip::Kind, std::shared_ptr<sf::Texture>> SubPlayer::chipPreviews;
+std::multimap<SubPlayer::Type, std::string> SubPlayer::partFileNames({
+		std::pair(Prototype, "leftArmor")
+		, std::pair(Prototype, "leftPinEngine")
+		, std::pair(Prototype, "rightArmor")
+		, std::pair(Prototype, "rightPinEngine")
+		, std::pair(Prototype, "backArmor")
+		, std::pair(Prototype, "frontArmor")
+		, std::pair(Prototype, "frontCannon")
+		, std::pair(Prototype, "centerChipConnector")
+	});
 
 SubPlayer::SubPlayer(const std::shared_ptr<Level> level)
 	: energyBar(new EnergyBar(100, false, false, false))
 	, lifeBar(new LifeBar(200, false, false, false))
-	, key()
+	, key(new ControlKey)
+	, bAutoUse(false)
 	, m_level(level) {
 	// set default type and chip setting
 	changeType(item::Chip::None);
@@ -38,9 +48,16 @@ void SubPlayer::setSubPlayerControlKey(const sf::Keyboard::Key upMove, const sf:
 	, const sf::Keyboard::Key attack, const sf::Keyboard::Key subSkill
 	, const sf::Keyboard::Key subSkillSwap, const sf::Keyboard::Key turnSkillToTypeSkill
 	, const sf::Keyboard::Key switchToPrevChargingSkill, const sf::Keyboard::Key switchToNextChargingSkill) {
-	key = ControlKey{ upMove, downMove, leftMove, rightMove, attack };
-	SubPlayerSkill::resetKey(subSkill, subSkillSwap, turnSkillToTypeSkill
-		, switchToPrevChargingSkill, switchToNextChargingSkill);
+	key->upMove = upMove;
+	key->downMove = downMove;
+	key->leftMove = leftMove;
+	key->rightMove = rightMove;
+	key->attack = attack;
+	key->subSkill = subSkill;
+	key->subSkillSwap = subSkillSwap;
+	key->turnSkillToTypeSkill = turnSkillToTypeSkill;
+	key->switchToPrevChargingSkill = switchToPrevChargingSkill;
+	key->switchToNextChargingSkill = switchToNextChargingSkill;
 }
 
 void SubPlayer::changeType(const item::Chip::Kind chip) {
@@ -49,7 +66,6 @@ void SubPlayer::changeType(const item::Chip::Kind chip) {
 	switch (chip) {
 	case Chip::None:
 		pioneer.currentType = Prototype;
-		return;
 		break;
 	case Chip::BurstChip:
 		break;
@@ -65,31 +81,32 @@ void SubPlayer::changeType(const item::Chip::Kind chip) {
 		throw std::invalid_argument("Wrong kind of chip");
 	}
 	// set pioneer chip
-	if (chip == Chip::None) { 
-		pioneer.chip.reset(new Chip(chip));
-	}
-	else {
-		pioneer.chip.reset(new Chip(chip, chipPreviews[chip]));
-	}
+	pioneer.chip.reset(new Chip(chip));
 }
 
 void SubPlayer::addSubPlayerSkill(SubPlayerSkill && subPlayerSkill) {
 	subPlayerSkills.push_back(std::make_shared<SubPlayerSkill>(subPlayerSkill));
 }
 
-void SubPlayer::loadChipPreviews(const std::map<item::Chip::Kind, std::string> & fileName, const bool isSmooth) {
-	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<item::Chip::Kind, std::string> & file) {
-		chipPreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		chipPreviews[file.first]->setSmooth(isSmooth);
-	});
+bool SubPlayer::isAutoUse() const {
+	return bAutoUse;
 }
 
-SubPlayer::Type SubPlayer::getType() const {
-	return pioneer.currentType;
+std::string SubPlayer::getType() const {
+	switch (pioneer.currentType) {
+	case Prototype:
+		return "prototype_";
+	default:
+		throw std::out_of_range("Pioneer type no exist");
+	}
 }
 
 item::Chip::Kind SubPlayer::getChip() const {
 	return pioneer.chip->it;
+}
+
+const SubPlayer::ControlKey & SubPlayer::getKey() const {
+	return *key;
 }
 
 void SubPlayer::resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<Ball> ball) {
@@ -102,6 +119,10 @@ SubPlayer::~SubPlayer() {
 	removeAllListener();
 }
 
+void SubPlayer::setAutoUse(const bool isAutoUse) {
+	bAutoUse = isAutoUse;
+}
+
 void SubPlayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	Container::draw(target, states);
 }
@@ -110,10 +131,22 @@ void SubPlayer::defaultKeySettle() {
 	using Key = sf::Keyboard::Key;
 	if (m_level->isDefaultControlKeySettled()) return;
 	if (m_level->getMode() == Mode::_2Player) {
-		key = ControlKey{ Key::W, Key::S, Key::A, Key::D, Key::Unknown };
+		key->upMove = Key::W;
+		key->downMove = Key::S;
+		key->leftMove = Key::A;
+		key->rightMove = Key::D;
+		key->attack = Key::Unknown;
 	}
 	else {
-		key = ControlKey{ Key::Unknown, Key::Unknown, Key::Unknown, Key::Unknown, Key::Unknown };
+		key->upMove = Key::Unknown;
+		key->downMove = Key::Unknown;
+		key->leftMove = Key::Unknown;
+		key->rightMove = Key::Unknown;
+		key->attack = Key::Unknown;
 	}
-	SubPlayerSkill::resetKey(Key::Unknown, Key::Unknown, Key::Unknown, Key::Unknown, Key::Unknown);
+	key->subSkill = Key::Unknown;
+	key->subSkillSwap = Key::Unknown;
+	key->turnSkillToTypeSkill = Key::Unknown;
+	key->switchToPrevChargingSkill = Key::Unknown;
+	key->switchToNextChargingSkill = Key::Unknown;
 }

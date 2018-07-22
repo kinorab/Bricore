@@ -30,7 +30,7 @@ public:
 	void setFrameSize(const float frame);
 	void resettle();
 
-	bool empty() const;
+	bool isEmpty() const;
 	size_t getBrickAmount() const;
 	sys::DPointf getDP(const size_t number) const;
 	float getFrameSize(const size_t number) const;

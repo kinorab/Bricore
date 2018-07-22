@@ -32,7 +32,6 @@
     <ClCompile Include="source\UI\textField.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
-    <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
     <ClCompile Include="source\definition\gameState.cpp" />
     <ClCompile Include="source\event\UIEvent.cpp" />
     <ClCompile Include="source\event\joystick\joystickMovedEvent.cpp" />
@@ -58,8 +57,6 @@
     <ClCompile Include="source\gameSys\bar\lifeBar.cpp" />
     <ClCompile Include="source\gameSys\AI\AISystem.cpp" />
     <ClCompile Include="source\gameSys\AI\boss.cpp" />
-    <ClCompile Include="source\gameSys\effect\attribute.cpp" />
-    <ClCompile Include="source\gameSys\effect\entireEffect.cpp" />
     <ClCompile Include="source\gameSys\skill\bossSkill.cpp" />
     <ClCompile Include="source\gameSys\effect\effect.cpp" />
     <ClCompile Include="source\gameSys\item\core.cpp" />
@@ -79,8 +76,6 @@
     <ClCompile Include="source\stage.cpp" />
     <ClCompile Include="source\root.cpp" />
     <ClCompile Include="source\gameSys\data\data.cpp" />
-    <ClCompile Include="source\gameSys\level\area\arena.cpp" />
-    <ClCompile Include="source\gameSys\level\area\zone.cpp" />
     <ClCompile Include="source\handler\mouseHandler.cpp" />
     <ClCompile Include="source\handler\keyboardHandler.cpp" />
     <ClCompile Include="source\handler\windowHandler.cpp" />
@@ -105,6 +100,9 @@
     <ClCompile Include="source\event\game\gameFinishedLevelEvent.cpp" />
     <ClCompile Include="source\event\game\gameResumedEvent.cpp" />
     <ClCompile Include="source\event\game\gameOverEvent.cpp" />
+    <ClCompile Include="source\gameSys\attribute\attribute.cpp" />
+    <ClCompile Include="source\gameSys\level\zone.cpp" />
+    <ClCompile Include="source\gameSys\battle\arena.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -143,7 +141,6 @@
     <ClInclude Include="source\event\eventPhase.h" />
     <ClInclude Include="source\event\eventSubject.h" />
     <ClInclude Include="source\common.h" />
-    <ClInclude Include="source\gameSys\effect\effectSystem.h" />
     <ClInclude Include="source\definition\gameState.h" />
     <ClInclude Include="source\event\UIEvent.h" />
     <ClInclude Include="source\event\event.h" />
@@ -185,8 +182,6 @@
     <ClInclude Include="source\gameSys\bar\lifeBar.h" />
     <ClInclude Include="source\gameSys\AI\AISystem.h" />
     <ClInclude Include="source\gameSys\AI\boss.h" />
-    <ClInclude Include="source\gameSys\effect\attribute.h" />
-    <ClInclude Include="source\gameSys\effect\entireEffect.h" />
     <ClInclude Include="source\gameSys\skill\bossSkill.h" />
     <ClInclude Include="source\gameSys\effect\effect.h" />
     <ClInclude Include="source\gameSys\item\itemKind.h" />
@@ -216,8 +211,6 @@
     <ClInclude Include="source\root.h" />
     <ClInclude Include="source\gameSys\data\data.h" />
     <ClInclude Include="source\stuff\stuff.h" />
-    <ClInclude Include="source\gameSys\level\area\arena.h" />
-    <ClInclude Include="source\gameSys\level\area\zone.h" />
     <ClInclude Include="source\handler\mouseHandler.h" />
     <ClInclude Include="source\handler\keyboardHandler.h" />
     <ClInclude Include="source\handler\windowHandler.h" />
@@ -244,6 +237,9 @@
     <ClInclude Include="source\event\game\gameFinishedLevelEvent.h" />
     <ClInclude Include="source\event\game\gameResumedEvent.h" />
     <ClInclude Include="source\event\game\gameOverEvent.h" />
+    <ClInclude Include="source\gameSys\attribute\attribute.h" />
+    <ClInclude Include="source\gameSys\level\zone.h" />
+    <ClInclude Include="source\gameSys\battle\arena.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

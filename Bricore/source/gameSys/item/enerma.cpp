@@ -1,12 +1,22 @@
 #include "enerma.h"
-
+#include "../../manager/textureManager.h"
 
 using namespace item;
 
-Enerma::Enerma(const Kind enerma, const std::shared_ptr<sf::Texture> & texture)
+std::map<Enerma::Kind, std::string> Enerma::fileNames({
+		std::pair(AttackEnerma, "attack_enerma")
+		, std::pair(CoolDownEnerma, "coolDown_enerma")
+		, std::pair(DefendEnerma, "defend_enerma")
+		, std::pair(HealEnerma, "heal_enerma")
+		, std::pair(lifeEnerma, "life_enerma")
+		, std::pair(ReviveEnerma, "revive_enerma")
+	});
+
+Enerma::Enerma(const Kind enerma)
 	: it(enerma)
-	, bAppear(false)
-	, context(new sf::Sprite(*texture)) {
+	, bAppear(false) {
+	auto EnermaTexture = TextureManager::getInstance().get(fileNames[enerma]);
+	context.reset(new sf::Sprite(*EnermaTexture));
 }
 
 bool Enerma::containsPoint(const sf::Vector2f & point) const {

@@ -1,6 +1,7 @@
 #include "hud.h"
 #include "graphics.h"
 #include "UI/button.h"
+#include "manager/textureManager.h"
 #include "definition/gameState.h"
 #include "definition/utility.h"
 #include "event/eventListener.h"
@@ -48,6 +49,16 @@ bool HUD::containsPoint(const sf::Vector2f & point) const {
 
 std::shared_ptr<sf::Drawable> HUD::getDrawable() const {
 	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
+}
+
+void HUD::setSmooth(const bool isSmooth) {
+	if (m_graph->bSmooth == isSmooth) return;
+	auto & textures = TextureManager::getInstance().textures;
+	std::for_each(textures.begin(), textures.end()
+		, [=](const std::pair<std::string, std::shared_ptr<sf::Texture>> & texture) {
+		texture.second->setSmooth(isSmooth);
+	});
+	m_graph->bSmooth = isSmooth;
 }
 
 void HUD::changeGraphicsSetting(const Graphics::FrameRate fps, const Graphics::Resolution dpi

@@ -28,11 +28,12 @@ namespace game {
 			OnFirstField,	// on subplayer first skill field
 			OnSecondField,	// on subplayer second skill field
 			OnThirdField,	// on subplayer third skill field
+			OnFourthField,	// on subplayer fourth skill field
 			Waiting = 100,	// waiting on stage
 			Using,			// when using it
 			Display			// display on store, illustration etc..
 		};
-		static const State maxField = OnThirdField;
+		static const State maxField = OnFourthField;
 	};
 	template<> class SkillState<BallSkill> {
 	public:

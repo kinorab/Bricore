@@ -5,7 +5,7 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../gameSys/level/level.h"
-#include "../gameSys/level/area/zone.h"
+#include "../gameSys/level/zone.h"
 #include "../gameSys/bar/energyBar.h"
 #include "../gameSys/skill/playerSkill.h"
 #include "../gameSys/skill/ballSkill.h"
@@ -16,12 +16,18 @@
 using namespace sf;
 using namespace game;
 
+// player model file
+std::map<Player::Model, Player::BoardFile> Player::modelFileNames({
+		
+	});
+
 Player::Player(const std::shared_ptr<Level> level)
 	: bFlash(false)
 	, bFlashCD(false)
 	, fSpeed(4.5f)
 	, energyBar(new EnergyBar(100, false, false, false))
-	, key()
+	, key(new ControlKey)
+	, autoUse({ std::pair(SkillSelect::_Ball, false), std::pair(SkillSelect::_Player, false) })
 	, m_level(level) {
 	// set fundamental size setting
 	defender.board.reset(new RectangleShape(Vector2f(240.f, 12.f)));
@@ -48,18 +54,17 @@ Player::Player(const std::shared_ptr<Level> level)
 		std::make_shared<PlayerSkill>(
 		PlayerSkill::AmbitGuard, sf::seconds(8)
 		, std::vector<std::pair<Effect::Kind, bool>>({ 
-				std::pair(Effect::Invincible, false)
-				, std::pair(Effect::Sturdy, false) 
+				std::pair(Effect::Sturdy, false) 
 			})
 		, std::vector<Attribute::Kind>({ Attribute::None })
-		, false, true, energyBar)
+		, true, energyBar, this)
 		, std::make_shared<PlayerSkill>(
 		PlayerSkill::DropRateUp, sf::seconds(30)
 		, std::vector<std::pair<Effect::Kind, bool>>({ 
-				std::pair(Effect::None, true)
+				std::pair(Effect::Fragile, true)
 			})
 		, std::vector<Attribute::Kind>({ Attribute::None })
-		, false, true, energyBar)
+		, true, energyBar, this)
 	};
 	// set ball skill
 	defender.ballSkills = {
@@ -93,12 +98,12 @@ void Player::update(const float updateRatio) {
 	const float mainBallRadius = m_ball->getMainBallRadius();
 	const FloatRect playerBoardBound = defender.board->getGlobalBounds();
 	if (playerBoardBound.left >= 0
-		&& (Keyboard::isKeyPressed(key.leftMove))) {
+		&& (Keyboard::isKeyPressed(key->leftMove))) {
 		defender.board->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
 		defender.hitLight->move(Vector2f(-fSpeed / SLICE * updateRatio, 0));
 	}
 	if (playerBoardBound.left + playerBoardBound.width <= LEVEL_WIDTH
-		&& (Keyboard::isKeyPressed(key.rightMove))) {
+		&& (Keyboard::isKeyPressed(key->rightMove))) {
 		defender.board->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
 		defender.hitLight->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
 	}
@@ -110,21 +115,15 @@ void Player::setPlayerControlKey(const sf::Keyboard::Key leftMove, const sf::Key
 	, const sf::Keyboard::Key playerSkillSwap, const sf::Keyboard::Key ballSkill
 	, const sf::Keyboard::Key ballSkillSwap, const sf::Keyboard::Key switchToPrevChargingSkill
 	, const sf::Keyboard::Key switchToNextChargingSkill) {
-	key = ControlKey{ leftMove, rightMove, shot };
-	PlayerSkill::resetKey(playerSkill, playerSkillSwap, switchToPrevChargingSkill, switchToNextChargingSkill);
-	BallSkill::resetKey(ballSkill, ballSkillSwap);
-}
-
-void Player::loadPlayerModelPreview(const std::map<Model, BoardFile> & fileName, const bool isSmooth) {
-	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<Model, BoardFile> & file) {
-		modelPreviews.emplace(file.first, new BoardTexture);
-		modelPreviews[file.first]->board.reset(TextureManager::getInstance().get(file.second.board));
-		modelPreviews[file.first]->absorbEngine.reset(TextureManager::getInstance().get(file.second.absorbEngine));
-		modelPreviews[file.first]->hitLight.reset(TextureManager::getInstance().get(file.second.hitLight));
-		modelPreviews[file.first]->board->setSmooth(isSmooth);
-		modelPreviews[file.first]->absorbEngine->setSmooth(isSmooth);
-		modelPreviews[file.first]->hitLight->setSmooth(isSmooth);
-	});
+	key->leftMove = leftMove;
+	key->rightMove = rightMove;
+	key->shot = shot;
+	key->ballSkill = ballSkill;
+	key->ballSkillSwap = ballSkillSwap;
+	key->playerSkill = playerSkill;
+	key->playerSkillSwap = playerSkillSwap;
+	key->switchToPrevChargingSkill = switchToPrevChargingSkill;
+	key->switchToNextChargingSkill = switchToNextChargingSkill;
 }
 
 void Player::changeModel(const Model model) {
@@ -138,12 +137,15 @@ void Player::changeModel(const Model model) {
 		defender.hitLight->setFillColor(Color(Color::Red.r, Color::Red.b, Color::Red.g, Color::Transparent.a));
 	}
 	else {
-		defender.board->setFillColor(Color::Transparent);
-		defender.absorbEngine->setFillColor(Color::Transparent);
+		defender.board->setFillColor(Color::White);
+		defender.absorbEngine->setFillColor(Color::White);
 		defender.hitLight->setFillColor(Color::Transparent);
-		defender.board->setTexture(modelPreviews[model]->board.get());
-		defender.absorbEngine->setTexture(modelPreviews[model]->absorbEngine.get());
-		defender.hitLight->setTexture(modelPreviews[model]->hitLight.get());
+		auto boardTexture = TextureManager::getInstance().get(modelFileNames[model].board);
+		auto absorbEngineTexture = TextureManager::getInstance().get(modelFileNames[model].absorbEngine);
+		auto hitLightTexture = TextureManager::getInstance().get(modelFileNames[model].hitLight);
+		defender.board->setTexture(boardTexture);
+		defender.absorbEngine->setTexture(absorbEngineTexture);
+		defender.hitLight->setTexture(hitLightTexture);
 	}
 	// set defender model
 	defender.currentModel = model;
@@ -157,23 +159,8 @@ void Player::addBallSkill(BallSkill && ballSkill) {
 	defender.ballSkills.push_back(std::make_shared<BallSkill>(ballSkill));
 }
 
-void Player::setAutoUse(const SkillChoose skill, const bool autoUse) {
-	switch (skill) {
-	case SkillChoose::_Ball:
-		std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
-			, [=](const std::shared_ptr<BallSkill> & skill) {
-			skill->setAutoUse(autoUse);
-		});
-		break;
-	case SkillChoose::_Player:
-		std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
-			, [=](const std::shared_ptr<PlayerSkill> & skill) {
-			skill->setAutoUse(autoUse);
-		});
-		break;
-	default:
-		throw std::invalid_argument("Invalid skill kind.");
-	}
+void Player::setAutoUse(const SkillSelect skill, const bool isAutoUse) {
+	autoUse[skill] = isAutoUse;
 }
 
 void Player::resetCopyTarget(const std::shared_ptr<const SubPlayer> subPlayer
@@ -186,8 +173,16 @@ float Player::getSpeed() const {
 	return fSpeed;
 }
 
+bool Player::isAutoUse(const SkillSelect select) const {
+	return autoUse.at(select);
+}
+
 const Vector2f & Player::getPosition() const {
 	return defender.board->getPosition();
+}
+
+const Player::ControlKey & Player::getKey() const {
+	return *key;
 }
 
 Vector2f Player::getTopCenterPos() const {
@@ -219,14 +214,26 @@ void Player::defaultKeySettle() {
 	using Key = sf::Keyboard::Key;
 	if (m_level->isDefaultControlKeySettled()) return;
 	if (m_level->getMode() == Mode::_1Player) {
-		key = ControlKey{ Key::Left, Key::Right, Key::G };
-		PlayerSkill::resetKey(Key::F, Key::R, Key::Up, Key::Down);
-		BallSkill::resetKey(Key::D, Key::E);
+		key->leftMove = Key::Left;
+		key->rightMove = Key::Right;
+		key->shot = Key::G;
+		key->ballSkill = Key::D;
+		key->ballSkillSwap = Key::E;
+		key->playerSkill = Key::F;
+		key->playerSkillSwap = Key::R;
+		key->switchToPrevChargingSkill = Key::Up;
+		key->switchToNextChargingSkill = Key::Down;
 	}
 	else {
-		key = ControlKey{ Key::Left, Key::Right, Key::Unknown };
-		PlayerSkill::resetKey(Key::Unknown, Key::Unknown, Key::Up, Key::Down);
-		BallSkill::resetKey(Key::Unknown, Key::Unknown);
+		key->leftMove = Key::Left;
+		key->rightMove = Key::Right;
+		key->shot = Key::Unknown;
+		key->ballSkill = Key::Unknown;
+		key->ballSkillSwap = Key::Unknown;
+		key->playerSkill = Key::Unknown;
+		key->playerSkillSwap = Key::Unknown;
+		key->switchToPrevChargingSkill = Key::Up;
+		key->switchToNextChargingSkill = Key::Down;
 	}
 }
 
@@ -264,7 +271,6 @@ void Player::onkeyPressed(KeyPressedEvent & event) {
 }
 
 void Player::onMousePressed(MousePressedEvent & event) {
-	dispatchAllChildrenEvent(event);
 }
 
 void Player::setFlashPosition(const Vector2f & position) {

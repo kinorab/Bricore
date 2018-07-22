@@ -1,10 +1,24 @@
 #include "core.h"
+#include "../../manager/textureManager.h"
 
 using namespace item;
 
-Core::Core(const Kind core, const std::shared_ptr<sf::Texture> & texture)
-	: it(core)
-	, context(new sf::Sprite(*texture)) {
+std::map<Core::Kind, std::string> Core::fileNames({
+		std::pair(alphaCore, "alpha_core")
+		, std::pair(betaCore, "beta_core")
+		, std::pair(GammaCore, "gamma_core")
+		, std::pair(DeltaCore, "delta_core")
+		, std::pair(EpsilonCore, "epsilon_core")
+		, std::pair(ZetaCore, "zeta_core")
+		, std::pair(EtaCore, "eta_core")
+		, std::pair(LotaCore, "lota_core")
+		, std::pair(KappaCore, "kappa_core")
+	});
+
+Core::Core(const Kind core)
+	: it(core) {
+	auto coreTexture = TextureManager::getInstance().get(fileNames[core]);
+	context.reset(new sf::Sprite(*coreTexture));
 }
 
 bool Core::containsPoint(const sf::Vector2f & point) const {

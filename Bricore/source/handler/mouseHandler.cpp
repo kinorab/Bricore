@@ -50,7 +50,7 @@ namespace game {
 		previousContactNode->dispatchEvent(MouseWheelScrolledEvent(event.mouseWheelScroll));
 	}
 
-	void MouseHandler::handleMouse(const sf::Event & event, Container & target) {
+	void MouseHandler::handleMouse(const sf::Event & event, Container & thing) {
 		const sf::Vector2f & mousePosition(sf::Vector2f(sf::Mouse::getPosition(*c_window)));
 		std::shared_ptr<InteractiveObject> contactNode;
 		if (mousePosition.x < 0 || mousePosition.x > GAME_WIDTH
@@ -58,7 +58,7 @@ namespace game {
 			contactNode = nullptr;
 		}
 		else {
-			contactNode = target.getObjectUnderPoint(mousePosition);
+			contactNode = thing.getObjectUnderPoint(mousePosition);
 			if (contactNode) {
 				contactNode->dispatchEvent(MouseInSightEvent(c_window));
 			}

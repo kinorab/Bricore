@@ -1,10 +1,10 @@
 #include "subPlayerSkill.h"
 #include "skillHandler.h"
-#include "../effect/entireEffect.h"
 #include "../bar/energyBar.h"
 #include "../../manager/textureManager.h"
 #include "../../definition/gameState.h"
 #include "../../event/eventListener.h"
+#include "../../stuff/subPlayer.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
@@ -14,19 +14,31 @@ size_t SubPlayerSkill::uCurrentCarry(0);
 size_t SubPlayerSkill::uMaxOnField(2);
 size_t SubPlayerSkill::uCurrentOnField(0);
 SkillHandler<SubPlayerSkill> SubPlayerSkill::handler;
-SubPlayerSkill::SkillKey SubPlayerSkill::key;
+std::map<SubPlayerSkill::Kind, std::map<SubPlayerSkill::State, std::string>> SubPlayerSkill::fileNames({
+	std::pair(ForceField
+		, std::map<SubPlayerSkill::State, std::string>{
+			std::pair(State::OnCharging, "forcefield_onCharging")
+			, std::pair(State::OnFirstField, "forcefield_onFirstField")
+			, std::pair(State::OnSecondField, "forcefield_onSecondField")
+			, std::pair(State::OnThirdField, "forcefield_onThirdField")
+			, std::pair(State::OnFourthField, "forcefield_onFourthField")
+			, std::pair(State::Using, "forcefield_using")
+			, std::pair(State::Display, "forcefield_display")
+		})
+	});
 
 SubPlayerSkill::SubPlayerSkill(const Kind skillName, const sf::Time duration
 	, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
-	, const bool autoUse, const bool exist, const std::shared_ptr<EnergyBar> energyBar)
+	, const bool exist, const std::shared_ptr<EnergyBar> energyBar, const SubPlayer * subPlayer)
 	: skill(SkillContent{ skillName, State::Waiting, nullptr })
-	, SkillSystem(duration, autoUse, exist)
-	, m_energyBar(std::move(energyBar))
+	, SkillSystem(duration, exist)
 	, bInitialize(false)
-	, bTypeSkill(false) {
+	, bTypeSkill(false)
+	, m_energyBar(std::move(energyBar))
+	, c_subPlayer(subPlayer) {
 	// initialize effects
 	std::for_each(effects.begin(), effects.end(), [&](const std::pair<Effect::Kind, bool> & effect) {
-		skillEffects.push_back(std::make_shared<EntireEffect>(effect.first, this, effect.second));
+		skillEffects.push_back(std::make_shared<Effect>(effect.first, effect.second));
 	});
 	// initialize attributes
 	std::for_each(attributes.begin(), attributes.end(), [&](const Attribute::Kind element) {
@@ -86,13 +98,6 @@ std::shared_ptr<sf::Drawable> SubPlayerSkill::getDrawable() const {
 	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
 }
 
-void SubPlayerSkill::loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth) {
-	std::for_each(fileName.begin(), fileName.end(), [&](const std::pair<State, std::string> & file) {
-		statePreviews.emplace(file.first, TextureManager::getInstance().get(file.second));
-		statePreviews[file.first]->setSmooth(isSmooth);
-	});
-}
-
 void SubPlayerSkill::extendCarry(const size_t number) {
 	uMaxCarry += number;
 }
@@ -102,12 +107,6 @@ void SubPlayerSkill::extendField(const size_t number) {
 		throw std::out_of_range("Excess max field number");
 	}
 	uMaxOnField += number;
-}
-
-void SubPlayerSkill::resetKey(const sf::Keyboard::Key subSkill, const sf::Keyboard::Key subSkillSwap
-	, const sf::Keyboard::Key turnSkillToTypeSkill, const sf::Keyboard::Key switchToPrevChargingSkill
-	, const sf::Keyboard::Key switchToNextChargingSkill) {
-	key = { subSkill, subSkillSwap, turnSkillToTypeSkill, switchToPrevChargingSkill, switchToNextChargingSkill };
 }
 
 void SubPlayerSkill::setState(const State nextState) {
@@ -127,7 +126,8 @@ void SubPlayerSkill::setState(const State nextState) {
 		skill.context = nullptr;
 	}
 	else {
-		skill.context.reset(new sf::Sprite(*statePreviews[nextState]));
+		auto stateTexture = TextureManager::getInstance().get(fileNames[skill.name][skill.currentState]);
+		skill.context.reset(new sf::Sprite(*stateTexture));
 	}
 	// set skill state
 	skill.currentState = nextState;
@@ -136,7 +136,6 @@ void SubPlayerSkill::setState(const State nextState) {
 void SubPlayerSkill::swapSkill(const std::shared_ptr<SubPlayerSkill> & other) {
 	State state = skill.currentState;
 	State inputState = other->skill.currentState;
-	statePreviews.swap(other->statePreviews);
 	std::swap(skill, other->skill);
 	setState(inputState);
 	other->setState(state);
@@ -177,12 +176,12 @@ void SubPlayerSkill::onKeyPressed(KeyPressedEvent & event) {
 	if (skill.currentState == State::Display) return;
 	if (skill.currentState == State::OnFirstField) {
 		if (bSilenced) return;
-		if (event.pressed.code == key.turnSkillToTypeSkill) {
+		if (event.pressed.code == c_subPlayer->getKey().turnSkillToTypeSkill) {
 			bTypeSkill = true;
 		}
-		if (event.pressed.code == key.subSkill || bAutoUse) setState(State::Using);
+		if (event.pressed.code == c_subPlayer->getKey().subSkill || c_subPlayer->isAutoUse()) setState(State::Using);
 	}
-	if (event.pressed.code != key.subSkillSwap) return;
+	if (event.pressed.code != c_subPlayer->getKey().subSkillSwap) return;
 	if (handler.trySwap()) {
 
 	}
@@ -192,8 +191,7 @@ void SubPlayerSkill::onKeyPressed(KeyPressedEvent & event) {
 }
 
 void SubPlayerSkill::onMousePressed(MousePressedEvent & event) {
-	if (skill.currentState == State::Display || containsPoint(sf::Vector2f(static_cast<float>(event.pressed.x)
-		, static_cast<float>(event.pressed.y)))) return;
+	if (skill.currentState == State::Display) return;
 	// left mouse to choose
 	if (uCurrentCarry < uMaxCarry && SkillSystem::selectOn() && event.pressed.button == sf::Mouse::Left) {
 		++uCurrentCarry;

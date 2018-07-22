@@ -50,7 +50,7 @@
     <ClCompile Include="source\event\window\windowResizedEvent.cpp" />
     <ClCompile Include="source\gameSys\AI\AISystem.cpp" />
     <ClCompile Include="source\gameSys\AI\boss.cpp" />
-    <ClCompile Include="source\gameSys\level\area\zone.cpp" />
+    <ClCompile Include="source\gameSys\level\zone.cpp" />
     <ClCompile Include="source\gameSys\bar\energyBar.cpp" />
     <ClCompile Include="source\gameSys\bar\barSystem.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
@@ -66,9 +66,8 @@
     <ClCompile Include="source\gameSys\bar\rageBar.cpp" />
     <ClCompile Include="source\gameSys\battle\battleSystem.cpp" />
     <ClCompile Include="source\gameSys\data\data.cpp" />
-    <ClCompile Include="source\gameSys\effect\attribute.cpp" />
+    <ClCompile Include="source\gameSys\attribute\attribute.cpp" />
     <ClCompile Include="source\gameSys\effect\effect.cpp" />
-    <ClCompile Include="source\gameSys\effect\effectSystem.cpp" />
     <ClCompile Include="source\gameSys\item\chip.cpp" />
     <ClCompile Include="source\gameSys\item\core.cpp" />
     <ClCompile Include="source\gameSys\item\enerma.cpp" />
@@ -92,8 +91,7 @@
     <ClCompile Include="source\stuff\component\globular.cpp" />
     <ClCompile Include="source\event\UIEvent.cpp" />
     <ClCompile Include="source\game.cpp" />
-    <ClCompile Include="source\gameSys\level\area\arena.cpp" />
-    <ClCompile Include="source\gameSys\effect\entireEffect.cpp" />
+    <ClCompile Include="source\gameSys\battle\arena.cpp" />
     <ClCompile Include="source\gameSys\level\deploy.cpp" />
     <ClCompile Include="source\particleSystem.cpp" />
     <ClCompile Include="source\gameSys\skill\skillSystem.cpp" />
@@ -174,14 +172,14 @@
     <ClInclude Include="source\event\window\windowResizedEvent.h" />
     <ClInclude Include="source\gameSys\AI\AISystem.h" />
     <ClInclude Include="source\gameSys\AI\boss.h" />
-    <ClInclude Include="source\gameSys\level\area\zone.h" />
+    <ClInclude Include="source\gameSys\level\zone.h" />
     <ClInclude Include="source\gameSys\battle\battleSystem.h" />
     <ClInclude Include="source\gameSys\data\data.h" />
     <ClInclude Include="source\gameSys\item\chip.h" />
     <ClInclude Include="source\gameSys\item\core.h" />
     <ClInclude Include="source\gameSys\item\enerma.h" />
     <ClInclude Include="source\gameSys\item\itemKind.h" />
-    <ClInclude Include="source\gameSys\effect\attribute.h" />
+    <ClInclude Include="source\gameSys\attribute\attribute.h" />
     <ClInclude Include="source\gameSys\bar\energyBar.h" />
     <ClInclude Include="source\gameSys\bar\barSystem.h" />
     <ClInclude Include="source\event\eventSubject.h" />
@@ -209,7 +207,6 @@
     <ClInclude Include="source\gameSys\bar\rageBar.h" />
     <ClInclude Include="source\gameSys\effect\effect.h" />
     <ClInclude Include="source\gameSys\effect\effectKind.h" />
-    <ClInclude Include="source\gameSys\effect\effectSystem.h" />
     <ClInclude Include="source\gameSys\skill\bossSkill.h" />
     <ClInclude Include="source\gameSys\skill\skillKind.h" />
     <ClInclude Include="source\gameSys\skill\skillState.h" />
@@ -227,8 +224,7 @@
     <ClInclude Include="source\definition\utility.h" />
     <ClInclude Include="source\event\UIEvent.h" />
     <ClInclude Include="source\game.h" />
-    <ClInclude Include="source\gameSys\level\area\arena.h" />
-    <ClInclude Include="source\gameSys\effect\entireEffect.h" />
+    <ClInclude Include="source\gameSys\battle\arena.h" />
     <ClInclude Include="source\gameSys\level\deploy.h" />
     <ClInclude Include="source\particleSystem.h" />
     <ClInclude Include="source\gameSys\skill\skillSystem.h" />

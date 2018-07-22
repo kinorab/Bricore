@@ -13,7 +13,6 @@ Block::Block(const Vector2f & position, const Vector2f &size)
 	, initPosition(position)
 	, size(size)
 	, texture(nullptr) {
-	setOrigin(getSize() / 2.f);
 	settleBlockVertice();
 }
 

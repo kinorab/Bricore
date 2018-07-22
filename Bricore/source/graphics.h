@@ -33,6 +33,7 @@ public:
 
 	// display in milliseconds
 	float getFrameSpan() const;
+	bool isSmooth() const;
 	sf::Vector2u getIconSize() const;
 	FrameRate getCurrentFps() const;
 	Resolution getCurrnetDpi() const;
@@ -46,6 +47,7 @@ protected:
 	void setDpi(const Resolution Dpi);
 
 private:
+	bool bSmooth;
 	float fFrameSpan;
 	sf::Image icon;
 	sf::Cursor cursor;

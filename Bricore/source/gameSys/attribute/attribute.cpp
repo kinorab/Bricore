@@ -1,18 +1,22 @@
 #include "attribute.h"
+#include "../../manager/textureManager.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
 
-Attribute::Attribute(const Kind element)
-	: withEffect(static_cast<AttributeEffect>(element))
-	, it(element)
-	, context(nullptr) {
-}
+std::map<Attribute::Kind, std::string> Attribute::fileNames({
+		std::pair(None, "none_attribute")
+		, std::pair(Flame, "flame_attribute")
+		, std::pair(Ice, "ice_attribute")
+		, std::pair(Thunder, "thunder_attribute")
+		, std::pair(Darkness, "darkness_attribute")
+		, std::pair(Light, "light_attribute")
+	});
 
-Attribute::Attribute(const Kind element, const std::shared_ptr<sf::Texture> & texture)
-	: withEffect(static_cast<AttributeEffect>(element))
-	, it(element)
-	, context(new sf::Sprite(*texture)) {
+Attribute::Attribute(const Kind element)
+	: it(element) {
+	auto attributeTexture = TextureManager::getInstance().get(fileNames[element]);
+	//context.reset(new sf::Sprite(*attributeTexture));
 }
 
 bool Attribute::containsPoint(const sf::Vector2f & point) const {
@@ -53,9 +57,4 @@ sf::FloatRect Attribute::getLocalBounds() const {
 }
 
 Attribute::~Attribute() {
-}
-
-void Attribute::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-	if (!context) return;
-	target.draw(*context, states);
 }

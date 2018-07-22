@@ -1,18 +1,26 @@
 #include "effect.h"
+#include "../../manager/textureManager.h"
 #include <SFML/Graphics.hpp>
 
 using namespace game;
 
+std::map<Effect::Kind, std::string> Effect::fileNames({
+		std::pair(Kind::Fragile, "fragile_effect")
+		, std::pair(Kind::Hugify, "hugify_effect")
+		, std::pair(Kind::Invisible, "invisible_effect")
+		, std::pair(Kind::Invulnerable, "invulnerable_effect")
+		, std::pair(Kind::Poison, "poison_effect")
+		, std::pair(Kind::Shrink, "shrink_effect")
+		, std::pair(Kind::SlowDown, "slowDown_effect")
+		, std::pair(Kind::SpeedUp, "speedUp_effect")
+		, std::pair(Kind::Sturdy, "sturdy_effect")
+	});
+
 Effect::Effect(const Kind effect, const bool isTargetItself)
 	: it(effect)
-	, context(nullptr)
 	, bTargetItself(isTargetItself) {
-}
-
-Effect::Effect(const Kind effect, const std::shared_ptr<sf::Texture>& texture, const bool isTargetItself)
-	: it(effect)
-	, context(new sf::Sprite(*texture))
-	, bTargetItself(isTargetItself) {
+	auto effectTexture = TextureManager::getInstance().get(fileNames[effect]);
+	//context.reset(new sf::Sprite(*effectTexture));
 }
 
 bool Effect::containsPoint(const sf::Vector2f & point) const {
@@ -53,9 +61,4 @@ sf::FloatRect Effect::getLocalBounds() const {
 }
 
 Effect::~Effect() {
-}
-
-void Effect::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-	if (!context) return;
-	target.draw(*context, states);
 }

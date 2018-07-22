@@ -2,38 +2,40 @@
 
 namespace game {
 	class Effect;
+	class Arena;
 	class Attribute;
 	template<typename T> class EffectKind;
 
 	template<> class EffectKind<Effect> {
 	public:
 		enum Kind {
-			None,
-			Gravitational,		// let target be gravitational(some already have gravity things can be turn to target's gravity)
 			Invisible,			// let target be invisible
 			Invulnerable,		// let target be invulnerable
-			Magnetic,			// let target be magnetic
+			Sturdy,
 			Fragile,
+			SpeedUp,
 			SlowDown,
 			Hugify,
-			Invincible,
-			NoCoolDown,
-			Penetrability,
-			SpeedUp,
-			Sturdy,
+			Shrink,
+			Poison
+		};
+	};
+	template<> class EffectKind<Arena> {
+	public:
+		enum class ArenaEffect {
+			Poison
 		};
 	};
 	template<> class EffectKind<Attribute> {
 	protected:
 		// for stable version release
-		enum AttributeEffect {
+		enum class AttributeEffect {
 			None,
 			Combustion,			// flame
 			Frozen,				// ice
 			Paralysis,			// thunder
 			Blind,				// darkness
 			Dazzling,			// light
-			Poisoning,			// poison
 		};
 	};
 }

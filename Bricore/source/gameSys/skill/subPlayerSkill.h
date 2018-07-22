@@ -1,10 +1,8 @@
 #pragma once
-#include "../../interact/interactiveObject.h"
-#include "skillSystem.h"
-#include "skillState.h"
 #include "skillKind.h"
-#include "../effect/effect.h"
-#include "../effect/attribute.h"
+#include "skillState.h"
+#include "skillSystem.h"
+#include "../../interact/interactiveObject.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <map>
 
@@ -14,7 +12,7 @@ namespace sf {
 	class Texture;
 	class Sprite;
 }
-
+class SubPlayer;
 namespace game {
 	template<typename T> class SkillHandler;
 	class EnergyBar;
@@ -29,17 +27,13 @@ namespace game {
 	public:
 		explicit SubPlayerSkill(const Kind skillName, const sf::Time duration
 			, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
-			, const bool autoUse, const bool exist, const std::shared_ptr<EnergyBar> energyBar);
+			, const bool exist, const std::shared_ptr<EnergyBar> energyBar, const SubPlayer * subPlayer);
 		virtual void initialize() override;
 		virtual void update() override;
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
-		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
 		static void extendCarry(const size_t number);
 		static void extendField(const size_t number);
-		static void resetKey(const sf::Keyboard::Key subSkill, const sf::Keyboard::Key subSkillSwap
-			, const sf::Keyboard::Key turnSkillToTypeSkill, const sf::Keyboard::Key switchToPrevChargingSkill
-			, const sf::Keyboard::Key switchToNextChargingSkill);
 
 		static size_t getMaxCarry();
 		static size_t getCurrentCarry();
@@ -56,13 +50,6 @@ namespace game {
 			State currentState;
 			std::shared_ptr<sf::Sprite> context;
 		};
-		struct SkillKey {
-			sf::Keyboard::Key subSkill;
-			sf::Keyboard::Key subSkillSwap;
-			sf::Keyboard::Key turnSkillToTypeSkill;
-			sf::Keyboard::Key switchToPrevChargingSkill;
-			sf::Keyboard::Key switchToNextChargingSkill;
-		};
 		void onKeyPressed(KeyPressedEvent & event);
 		void onMousePressed(MousePressedEvent & event);
 		void onGameFinishedLevel(GameFinishedLevelEvent & event);
@@ -76,12 +63,12 @@ namespace game {
 		static size_t uCurrentCarry;
 		static size_t uMaxOnField;
 		static size_t uCurrentOnField;
-		static SkillKey key;
 		static SkillHandler<SubPlayerSkill> handler;
+		static std::map<Kind, std::map<State, std::string>> fileNames;
 		bool bInitialize;
 		bool bTypeSkill;
-		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
 		SkillContent skill;
 		std::shared_ptr<EnergyBar> m_energyBar;
+		const SubPlayer * c_subPlayer;
 	};
 }

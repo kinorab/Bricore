@@ -1,5 +1,7 @@
 #pragma once
 #include "../system.h"
+#include "../effect/effect.h"
+#include "../attribute/attribute.h"
 #include "../../event/mouse/mouseEvent.h"
 #include "../../event/keyboard/keyEvent.h"
 #include "../../event/game/gameEvent.h"
@@ -11,7 +13,7 @@ namespace sf {
 }
 
 namespace game {
-	class EntireEffect;
+	class Effect;
 	class Attribute;
 
 	class SkillSystem : 
@@ -24,10 +26,8 @@ namespace game {
 		void upgradeSkill(const size_t number);
 		void extendMaxLevel(const size_t number);
 		void setOwnToPlayer(const bool giveOwn);
-		void setAutoUse(const bool autoUse);
 
 		bool isExist() const;
-		bool isAutoUse() const;
 		bool isLocked() const;
 		bool isSilenced() const;
 		const sf::Time & getDuration() const;
@@ -44,7 +44,7 @@ namespace game {
 			Selected,		// selected skill in current level
 			UnSelected		// unselected skill in current level
 		};
-		explicit SkillSystem(const sf::Time &duration, const bool autoUse, const bool exist);
+		explicit SkillSystem(const sf::Time &duration, const bool exist);
 		bool selectOn();
 		bool selectOff();
 		void useSkill();
@@ -53,7 +53,6 @@ namespace game {
 		
 		size_t uLevel;
 		size_t uMaxLevel;
-		bool bAutoUse;
 		// cannot swap, move to another field
 		bool bLocked;
 		// cannot use
@@ -61,7 +60,7 @@ namespace game {
 		sf::Time duration;
 		sf::Time elapsedTime;
 		Status status;
-		std::vector<std::shared_ptr<EntireEffect>> skillEffects;
+		std::vector<std::shared_ptr<Effect>> skillEffects;
 		std::vector<std::shared_ptr<Attribute>> skillAttributes;
 
 	private:

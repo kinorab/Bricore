@@ -9,7 +9,7 @@ namespace item {
 		, public std::enable_shared_from_this<Core>
 		, public game::InteractiveObject {
 	public:
-		explicit Core(const Kind core, const std::shared_ptr<sf::Texture> & texture);
+		explicit Core(const Kind core);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void setOrigin(const sf::Vector2f & origin);
@@ -27,6 +27,8 @@ namespace item {
 		const Kind it;
 
 	private:
-		const std::shared_ptr<sf::Sprite> context;
+		static std::map<Kind, std::string> fileNames;
+
+		std::unique_ptr<sf::Sprite> context;
 	};
 }

@@ -20,6 +20,10 @@ float Graphics::getFrameSpan() const {
 	return fFrameSpan;
 }
 
+bool Graphics::isSmooth() const {
+	return bSmooth;
+}
+
 const sf::Uint8 * Graphics::getIcon() const {
 	return icon.getPixelsPtr();
 }

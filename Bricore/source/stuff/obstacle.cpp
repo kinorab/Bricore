@@ -4,7 +4,7 @@
 #include "component/block.h"
 #include "component/globular.h"
 #include "../gameSys/level/level.h"
-#include "../gameSys/level/area/zone.h"
+#include "../gameSys/level/zone.h"
 #include "../event/eventListener.h"
 #include "../definition/gameState.h"
 #include "../definition/utility.h"

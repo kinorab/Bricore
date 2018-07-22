@@ -7,7 +7,7 @@
 #include "../definition/gameState.h"
 #include "../definition/utility.h"
 #include "../gameSys/level/level.h"
-#include "../gameSys/level/area/zone.h"
+#include "../gameSys/level/zone.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -115,7 +115,7 @@ void Wall::resettle() {
 	setBricksColor(m_level->deploy->getBrick().color[0]);
 }
 
-bool Wall::empty() const {
+bool Wall::isEmpty() const {
 	return bricks.empty();
 }
 

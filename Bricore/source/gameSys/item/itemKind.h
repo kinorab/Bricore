@@ -4,7 +4,6 @@ namespace item {
 	class Enerma;
 	class Chip;
 	class Core;
-
 	template<typename T> class ItemKind;
 
 	// area item

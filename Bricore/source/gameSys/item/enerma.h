@@ -9,7 +9,7 @@ namespace item {
 		, public std::enable_shared_from_this<Enerma>
 		, public game::InteractiveObject {
 	public:
-		explicit Enerma(const Kind enerma, const std::shared_ptr<sf::Texture> & texture);
+		explicit Enerma(const Kind enerma);
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 		void setAppear(const bool isAppear);
@@ -28,7 +28,9 @@ namespace item {
 		const Kind it;
 
 	private:
-		const std::shared_ptr<sf::Sprite> context;
+		static std::map<Kind, std::string> fileNames;
+
 		bool bAppear;
+		std::unique_ptr<sf::Sprite> context;
 	};
 }

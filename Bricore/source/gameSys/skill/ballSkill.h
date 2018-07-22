@@ -1,10 +1,8 @@
 #pragma once
-#include "../../interact/interactiveObject.h"
-#include "skillSystem.h"
-#include "skillState.h"
 #include "skillKind.h"
-#include "../effect/effect.h"
-#include "../effect/attribute.h"
+#include "skillState.h"
+#include "skillSystem.h"
+#include "../../interact/interactiveObject.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <map>
 
@@ -14,6 +12,7 @@ namespace sf {
 	class Texture;
 	class Sprite;
 }
+class Player;
 
 namespace game {
 	template<typename T> class SkillHandler;
@@ -28,16 +27,13 @@ namespace game {
 	public:
 		explicit BallSkill(const Kind skillName, const sf::Time duration
 			, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
-			, const bool autoUse, const bool exist);
+			, const bool exist, const Player * player);
 		virtual void initialize() override;
 		virtual void update() override;
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
-		void loadStatePreview(const std::map<State, std::string> &fileName, const bool isSmooth = false);
-		static void loadFrame(const std::vector<std::string> &fileName, const bool isSmooth = false);
 		static void extendField(size_t number);
 		static void extendDropping(size_t number);
-		static void resetKey(const sf::Keyboard::Key ballSkill, const sf::Keyboard::Key ballSkillSwap);
 
 		static size_t getMaxDropping();
 		static size_t getCurrentCarry();
@@ -55,10 +51,6 @@ namespace game {
 			std::shared_ptr<sf::Sprite> frame;
 			std::shared_ptr<sf::Sprite> context;
 		};
-		struct SkillKey {
-			sf::Keyboard::Key ballSkill;
-			sf::Keyboard::Key ballSkillSwap;
-		};
 		void onKeyPressed(KeyPressedEvent & event);
 		void onMousePressed(MousePressedEvent & event);
 		void onGameFinishedLevel(GameFinishedLevelEvent & event);
@@ -72,11 +64,11 @@ namespace game {
 		static size_t uCurrentCarry;
 		static size_t uMaxOnField;
 		static size_t uCurrentOnField;
-		static std::map<std::string, std::shared_ptr<sf::Texture>> framePreviews;
-		static SkillKey key;
+		static std::map<int, std::string> frameFileNames;
+		static std::map<Kind, std::map<State, std::string>> fileNames;
 		static SkillHandler<BallSkill> handler;
 		bool bInitialize;
-		std::map<State, std::shared_ptr<sf::Texture>> statePreviews;
 		SkillContent skill;
+		const Player * c_player;
 	};
 }

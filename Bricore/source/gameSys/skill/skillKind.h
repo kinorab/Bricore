@@ -10,17 +10,16 @@ namespace game {
 	template<> class SkillKind<PlayerSkill> {
 	public:
 		enum Kind {
-			None,
 			AmbitGuard,
 			DropRateUp,
 			EnergyRush,
 		};
 	};
+
 	template<> class SkillKind<SubPlayerSkill> {
 	public:
 		// skill difference with subPlayer's type
 		enum Kind {
-			None,
 			EnergyRush,
 			ForceField,
 			ForceShield,
@@ -29,10 +28,10 @@ namespace game {
 			MagicalShield,
 		};
 	};
+
 	template<> class SkillKind<BallSkill> {
 	public:
 		enum Kind {
-			None,
 			HugeBody,
 			IronBody,
 			MultipleAttack,
@@ -40,10 +39,10 @@ namespace game {
 			ShuttleSpace,
 		};
 	};
+
 	template<> class SkillKind<BossSkill> {
 	public:
 		enum Kind {
-			None,
 			MultipleShoot,
 		};
 	};

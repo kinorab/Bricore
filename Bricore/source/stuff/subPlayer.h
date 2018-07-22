@@ -24,6 +24,18 @@ public:
 	enum Type {
 		Prototype,
 	};
+	struct ControlKey {
+		sf::Keyboard::Key upMove;
+		sf::Keyboard::Key downMove;
+		sf::Keyboard::Key leftMove;
+		sf::Keyboard::Key rightMove;
+		sf::Keyboard::Key attack;
+		sf::Keyboard::Key subSkill;
+		sf::Keyboard::Key subSkillSwap;
+		sf::Keyboard::Key turnSkillToTypeSkill;
+		sf::Keyboard::Key switchToPrevChargingSkill;
+		sf::Keyboard::Key switchToNextChargingSkill;
+	};
 	explicit SubPlayer(const std::shared_ptr<game::Level> level);
 	void update(const float updateRatio);
 	void resetCopyTarget(const std::shared_ptr<const Player> player, const std::shared_ptr<Ball> ball);
@@ -34,21 +46,14 @@ public:
 		, const sf::Keyboard::Key switchToPrevChargingSkill, const sf::Keyboard::Key switchToNextChargingSkill);
 	void changeType(const item::Chip::Kind chip);
 	void addSubPlayerSkill(game::SubPlayerSkill && subPlayerSkill);
-	static void loadChipPreviews(const std::map<item::Chip::Kind, std::string> & fileName
-		, const bool isSmooth = false);
 
-	Type getType() const;
+	bool isAutoUse() const;
+	std::string getType() const;
 	item::Chip::Kind getChip() const;
+	const ControlKey & getKey() const;
 	virtual ~SubPlayer();
 
 protected:
-	struct ControlKey {
-		sf::Keyboard::Key upMove;
-		sf::Keyboard::Key downMove;
-		sf::Keyboard::Key leftMove;
-		sf::Keyboard::Key rightMove;
-		sf::Keyboard::Key attack;
-	};
 	struct Part {
 		std::shared_ptr<sf::Sprite> context;
 	};
@@ -57,16 +62,18 @@ protected:
 		std::shared_ptr<item::Chip> chip;
 		std::map<std::string, Part> parts;
 	};
+	void setAutoUse(const bool isAutoUse);
 
 private:
 	void draw(sf::RenderTarget &, sf::RenderStates) const override;
 	void defaultKeySettle();
-	static std::map<item::Chip::Kind, std::shared_ptr<sf::Texture>> chipPreviews;
+	static std::multimap<Type, std::string> partFileNames;
 
-	ControlKey key;
+	bool bAutoUse;
 	SubPlayerContent pioneer;
 	std::shared_ptr<game::EnergyBar> energyBar;
 	std::shared_ptr<game::LifeBar> lifeBar;
+	const std::shared_ptr<ControlKey> key;
 	std::vector<std::shared_ptr<game::SubPlayerSkill>> subPlayerSkills;
 	std::shared_ptr<game::Level> m_level;
 	std::shared_ptr<Ball> m_ball;

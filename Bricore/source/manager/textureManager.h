@@ -1,13 +1,14 @@
 #pragma once
-
 #include "../template/singleton.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <unordered_map>
 #include <memory>
 
+class HUD;
 class TextureManager :
 	public Singleton<TextureManager> {
 	friend class Singleton<TextureManager>;
+	friend class HUD;
 public:
 	void initialize();
 	// get fileName(.png)

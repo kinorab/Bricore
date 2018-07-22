@@ -1,16 +1,22 @@
 #include "chip.h"
+#include "../../manager/textureManager.h"
 #include <SFML/Graphics.hpp>
 
 using namespace item;
 
-Chip::Chip(const Kind chip)
-	: it(chip) 
-	, context(nullptr) {
-}
+std::map<Chip::Kind, std::string> Chip::fileNames({
+		std::pair(None, "none_chip")
+		, std::pair(BurstChip, "burst_chip")
+		, std::pair(FirearmChip, "firearm_chip")
+		, std::pair(GuardChip, "guard_chip")
+		, std::pair(HeraldChip, "herald_chip")
+		, std::pair(LaserChip, "laser_chip")
+	});
 
-Chip::Chip(const Kind chip, const std::shared_ptr<sf::Texture> & texture)
-	: it(chip) 
-	, context(new sf::Sprite(*texture)) {
+Chip::Chip(const Kind chip)
+	: it(chip) {
+	auto chipTexture = TextureManager::getInstance().get(fileNames[chip]);
+	//context.reset(new sf::Sprite(*chipTexture));
 }
 
 bool Chip::containsPoint(const sf::Vector2f & point) const {
@@ -51,9 +57,4 @@ sf::FloatRect Chip::getGlobalBounds() const {
 }
 
 Chip::~Chip(){
-}
-
-void Chip::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-	if (!context) return;
-	target.draw(*context, states);
 }

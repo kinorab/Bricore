@@ -95,7 +95,7 @@ void Stage::updateGameStateEvent() {
 		gameStateEvent->type = GameStateEvent::GameReady;
 	}
 	// to finish state
-	if (wall->empty()) {
+	if (wall->isEmpty()) {
 		m_level->finishLevel();
 		gameStateEvent->type = GameStateEvent::GameFinishedLevel;
 		gameStateEvent->finishedLevel.uLevel = m_level->getcurrentLevel();
