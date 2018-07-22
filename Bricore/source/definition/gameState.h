@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/System/Time.hpp>
+
 extern void getPlayedTime();
 
 constexpr float RESETTIME = 25.f;
@@ -39,6 +40,10 @@ namespace game {
 			unsigned int uLevel;
 		};
 
+		struct PreparedEvent {
+			float fTimeLimit;
+		};
+
 		enum EventType {
 			GameOver			// over the game(stage mode or vs mode)
 			, GameReady			// wait for start(ball still on board)
@@ -46,6 +51,7 @@ namespace game {
 			, GamePaused		// pause game
 			, GameResumed		// from pause back to game(count down), back to ready or start(depend on ball)
 			, GameFinishedLevel	// finished current level
+			, GamePrepared		// before entering to next level
 		};
 
 		EventType type;
@@ -57,6 +63,7 @@ namespace game {
 			ResumedEvent resumed;
 			StartedEvent started;
 			FinishedLevelEvent finishedLevel;
+			PreparedEvent prepared;
 		};
 	};
 };

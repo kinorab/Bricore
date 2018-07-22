@@ -12,8 +12,8 @@ SkillHandler<BossSkill> BossSkill::handler;
 std::map<BossSkill::Kind, std::map<BossSkill::State, std::string>> BossSkill::fileNames({
 	std::pair(MultipleShoot
 	, std::map<BossSkill::State, std::string>{
-		std::pair(State::Using, "multipleShoot_using")
-		, std::pair(State::Display, "multipleShoot_display")
+		std::pair(State::Using, "bossSkill/multipleShoot_using")
+		, std::pair(State::Display, "bossSkill/multipleShoot_display")
 		})
 	});
 
@@ -46,7 +46,7 @@ void BossSkill::update() {
 
 bool BossSkill::containsPoint(const sf::Vector2f & point) const {
 	if (skill.currentState == State::Waiting) return false;
-	return skill.preview->getGlobalBounds().contains(point);
+	return getGlobalBounds().contains(point);
 }
 
 std::shared_ptr<sf::Drawable> BossSkill::getDrawable() const {
@@ -63,6 +63,20 @@ SkillState<BossSkill>::State BossSkill::getState() const {
 
 SkillKind<BossSkill>::Kind BossSkill::getSkillName() const {
 	return skill.name;
+}
+
+sf::FloatRect BossSkill::getLocalBounds() const {
+	if (State::Display) {
+		return skill.preview->getLocalBounds();
+	}
+	return sf::FloatRect();
+}
+
+sf::FloatRect BossSkill::getGlobalBounds() const {
+	if (State::Display) {
+		return skill.preview->getGlobalBounds();
+	}
+	return sf::FloatRect();
 }
 
 BossSkill::~BossSkill() {

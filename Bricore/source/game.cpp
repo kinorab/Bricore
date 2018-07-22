@@ -3,7 +3,7 @@
 #include "root.h"
 #include "graphics.h"
 #include "interact/container.h"
-#include "manager/audioManager.h"
+#include "manager/manager.h"
 #include "handler/windowHandler.h"
 #include "definition/utility.h"
 #include "definition/gameState.h"
@@ -25,6 +25,7 @@ Game::Game() noexcept
 	, bExitGame(false) {
 	window.reset(new sf::RenderWindow(sf::VideoMode(static_cast<size_t>(GAME_WIDTH), static_cast<size_t>(GAME_HEIGHT)),
 		"Bricore", sf::Style::Close, graph->getSettings()));
+	TextureManager::getInstance().initialize();
 	root.reset(new Root(graph, window));
 	//if (saveData.exist() && root.chooseSave(saveData)) {
 	//}

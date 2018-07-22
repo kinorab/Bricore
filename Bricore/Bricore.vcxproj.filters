@@ -103,6 +103,7 @@
     <ClCompile Include="source\gameSys\attribute\attribute.cpp" />
     <ClCompile Include="source\gameSys\level\zone.cpp" />
     <ClCompile Include="source\gameSys\battle\arena.cpp" />
+    <ClCompile Include="source\event\game\gamePreparedEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -240,6 +241,8 @@
     <ClInclude Include="source\gameSys\attribute\attribute.h" />
     <ClInclude Include="source\gameSys\level\zone.h" />
     <ClInclude Include="source\gameSys\battle\arena.h" />
+    <ClInclude Include="source\manager\manager.h" />
+    <ClInclude Include="source\event\game\gamePreparedEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

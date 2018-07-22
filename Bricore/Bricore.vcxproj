@@ -23,6 +23,7 @@
     <ClCompile Include="source\event\cancelable.cpp" />
     <ClCompile Include="source\event\game\gameOverEvent.cpp" />
     <ClCompile Include="source\event\game\gamePausedEvent.cpp" />
+    <ClCompile Include="source\event\game\gamePreparedEvent.cpp" />
     <ClCompile Include="source\event\game\gameReadyEvent.cpp" />
     <ClCompile Include="source\event\game\gameResumedEvent.cpp" />
     <ClCompile Include="source\event\game\gameStartedEvent.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="source\event\game\gameEvent.h" />
     <ClInclude Include="source\event\game\gameOverEvent.h" />
     <ClInclude Include="source\event\game\gamePausedEvent.h" />
+    <ClInclude Include="source\event\game\gamePreparedEvent.h" />
     <ClInclude Include="source\event\game\gameReadyEvent.h" />
     <ClInclude Include="source\event\game\gameResumedEvent.h" />
     <ClInclude Include="source\event\game\gameStartedEvent.h" />
@@ -193,6 +195,7 @@
     <ClInclude Include="source\handler\textHandler.h" />
     <ClInclude Include="source\handler\touchHandler.h" />
     <ClInclude Include="source\handler\windowHandler.h" />
+    <ClInclude Include="source\manager\manager.h" />
     <ClInclude Include="source\root.h" />
     <ClInclude Include="source\stuff\component\mainBall.h" />
     <ClInclude Include="source\stuff\component\shadowBall.h" />

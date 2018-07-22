@@ -33,11 +33,11 @@ Stage::Stage(const std::shared_ptr<Level> level, const std::shared_ptr<const Roo
 	assert(!bInstance);
 	gameStateEvent->type = GameStateEvent::GameReady;
 	resetChildrenCopyTarget();
-	addChild({ std::dynamic_pointer_cast<sf::Drawable>(player)
-		, std::dynamic_pointer_cast<sf::Drawable>(subPlayer)
-		, std::dynamic_pointer_cast<sf::Drawable>(ball)
+	addChild({ std::dynamic_pointer_cast<sf::Drawable>(obstacle)
 		, std::dynamic_pointer_cast<sf::Drawable>(wall)
-		, std::dynamic_pointer_cast<sf::Drawable>(obstacle) });
+		, std::dynamic_pointer_cast<sf::Drawable>(player)
+		, std::dynamic_pointer_cast<sf::Drawable>(subPlayer)
+		, std::dynamic_pointer_cast<sf::Drawable>(ball) });
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
 	addListener(std::make_shared<EventListener<KeyReleasedEvent>>([this](auto & event) { onKeyReleased(event); }));
@@ -111,11 +111,15 @@ void Stage::updateGameStateEvent() {
 
 void Stage::onKeyPressed(KeyPressedEvent & event) {
 	dispatchAllChildrenEvent(event);
-	if (gameStateEvent->type == GameStateEvent::GameFinishedLevel) return;
+	if (gameStateEvent->type == GameStateEvent::GameFinishedLevel
+		|| gameStateEvent->type == GameStateEvent::GameOver) return;
 	if (event.pressed.code == key.pause) {
 		if (gameStateEvent->type == GameStateEvent::GamePaused) {
 			gameStateEvent->type = GameStateEvent::GameResumed;
-			gameStateEvent->resumed.fCountDown = 3.f;
+			// resume from prepare area no countDown
+			if (tempType != GameStateEvent::GamePrepared) {
+				gameStateEvent->resumed.fCountDown = 3.f;
+			}
 		}
 		else if (gameStateEvent->type != GameStateEvent::GameResumed) {
 			tempType = gameStateEvent->type;

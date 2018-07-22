@@ -3,7 +3,17 @@
 #include <string>
 
 void TextureManager::initialize() {
-	// load fundamental texture
+	// load frame
+	load("res/graphic/module/skill/ballSkill/frame/frame_1.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_2.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_3.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_4.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_5.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_6.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_7.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_8.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_9.png");
+	load("res/graphic/module/skill/ballSkill/frame/frame_10.png");
 }
 
 sf::Texture * TextureManager::get(const std::string & fileName) {
@@ -15,6 +25,7 @@ sf::Texture * TextureManager::get(const std::string & fileName) {
 			return texture.second.get();
 		}
 	}
+	// debug feature
 	std::cout << "Cannot find file: " << fileName << std::endl;
 	// throw std::invalid_argument("File not be loaded or no such file");
 	return nullptr;

@@ -14,19 +14,19 @@ bool Boss::bDisplay(false);
 // weak_partName
 // weak_partName_broke
 std::multimap<Boss::Name, std::string> Boss::partFileNames({
-		std::pair(Punece, "leftSmashGlove")
-		, std::pair(Punece, "leftArm")
-		, std::pair(Punece, "leftArmConnector")
-		, std::pair(Punece, "leftArmor")
-		, std::pair(Punece, "rightSmashGlove")
-		, std::pair(Punece, "rightArm")
-		, std::pair(Punece, "rightArmor")
-		, std::pair(Punece, "rightArmConnector")
-		, std::pair(Punece, "centerArmor")
-		, std::pair(Punece, "weak_backArmor")
-		, std::pair(Punece, "weak_backArmor_broke")
-		, std::pair(Punece, "weak_frontArmor")
-		, std::pair(Punece, "weak_frontArmor_broke")
+		std::pair(Punece, "punece/leftSmashGlove")
+		, std::pair(Punece, "punece/leftArm")
+		, std::pair(Punece, "punece/leftArmConnector")
+		, std::pair(Punece, "punece/leftArmor")
+		, std::pair(Punece, "punece/rightSmashGlove")
+		, std::pair(Punece, "punece/rightArm")
+		, std::pair(Punece, "punece/rightArmor")
+		, std::pair(Punece, "punece/rightArmConnector")
+		, std::pair(Punece, "punece/centerArmor")
+		, std::pair(Punece, "punece/weak_backArmor")
+		, std::pair(Punece, "punece/weak_backArmor_broke")
+		, std::pair(Punece, "punece/weak_frontArmor")
+		, std::pair(Punece, "punece/weak_frontArmor_broke")
 	});
 
 Boss::Boss(const Name name, const Core::Kind core, const Attribute::Kind attribute
@@ -126,11 +126,11 @@ bool Boss::isDisplay() {
 std::string Boss::getName() const {
 	switch (boss.bossName) {
 	case Punece:
-		return "punece_";
+		return "Punece";
 	case Felifice:
-		return "felifice_";
+		return "Felifice";
 	case Apache:
-		return "apache_";
+		return "Apache";
 	default:
 		throw std::out_of_range("Boss name no exist.");
 	}
@@ -237,7 +237,7 @@ void Boss::weakPartBreak(const std::string & weak_partName) {
 	if (iter == boss.weakParts.end()) throw std::invalid_argument("Weak part no found.");
 	if (iter->second.bBroke) throw std::exception("Weak part was already broken.");
 	iter->second.bBroke = true;
-	auto weakPartTexture = TextureManager::getInstance().get(getName() + weak_partName + "_broke");
+	auto weakPartTexture = TextureManager::getInstance().get(weak_partName + "_broke");
 	iter->second.context.reset(new sf::Sprite(*weakPartTexture));
 }
 
@@ -246,7 +246,7 @@ void Boss::weakPartRecover(const std::string & weak_partName) {
 	if (iter == boss.weakParts.end()) throw std::invalid_argument("Weak part no found.");
 	if (!iter->second.bBroke) throw std::exception("Weak part was already recovered.");
 	iter->second.bBroke = false;
-	auto weakPartTexture = TextureManager::getInstance().get(getName() + weak_partName);
+	auto weakPartTexture = TextureManager::getInstance().get(weak_partName);
 	iter->second.context.reset(new sf::Sprite(*weakPartTexture));
 }
 
@@ -255,7 +255,7 @@ void Boss::partIntensify(const std::string & intense_partName) {
 	if (iter == boss.intenseParts.end()) throw std::invalid_argument("Part no found.");
 	if (iter->second.bIntensified) throw std::exception("Part was already intensified.");
 	iter->second.bIntensified = true;
-	auto intenseTexture = TextureManager::getInstance().get(getName() + intense_partName + "_intensified");
+	auto intenseTexture = TextureManager::getInstance().get(intense_partName + "_intensified");
 	iter->second.context.reset(new sf::Sprite(*intenseTexture));
 }
 
@@ -264,7 +264,7 @@ void Boss::partRecover(const std::string & intense_partName) {
 	if (iter == boss.intenseParts.end()) throw std::invalid_argument("Part no found.");
 	if (!iter->second.bIntensified) throw std::exception("Part was already recovered.");
 	iter->second.bIntensified = false;
-	auto intenseTexture = TextureManager::getInstance().get(getName() + intense_partName);
+	auto intenseTexture = TextureManager::getInstance().get(intense_partName);
 	iter->second.context.reset(new sf::Sprite(*intenseTexture));
 }
 
@@ -280,19 +280,19 @@ void Boss::resettleParts() {
 		// set weak part
 		if (part.second.find("weak_") != std::string::npos) {
 			// (boss name + part name) ensure directory correct
-			auto weakPartTexture = TextureManager::getInstance().get(getName() + part.second);
+			auto weakPartTexture = TextureManager::getInstance().get(part.second);
 			boss.weakParts.emplace(part.second, WeakPart{ std::make_shared<sf::Sprite>(*weakPartTexture), false });
 		}
 		// set intense part
 		else if (part.second.find("intense_") != std::string::npos) {
 			// (boss name + part name) ensure directory correct
-			auto intensePartTexture = TextureManager::getInstance().get(getName() + part.second);
+			auto intensePartTexture = TextureManager::getInstance().get(part.second);
 			boss.intenseParts.emplace(part.second, IntensePart{ std::make_shared<sf::Sprite>(*intensePartTexture), false });
 		}
 		// set normal part
 		else {
 			// (boss name + part name) ensure directory correct
-			auto partTexture = TextureManager::getInstance().get(getName() + part.second);
+			auto partTexture = TextureManager::getInstance().get(part.second);
 			boss.parts.emplace(part.second, Part{ std::make_shared<sf::Sprite>(*partTexture) });
 		}
 	});

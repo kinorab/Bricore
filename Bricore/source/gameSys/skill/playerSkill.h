@@ -30,9 +30,13 @@ namespace game {
 			, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 			, const bool exist, const std::shared_ptr<EnergyBar> energyBar, const Player * player);
 		virtual void initialize() override;
-		virtual void update() override;
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
+		void setPosition(const sf::Vector2f & position);
+		void setPosition(const float x, const float y);
+		void setOrigin(const sf::Vector2f & origin);
+		void setOrigin(const float x, const float y);
+		void setOwnToPlayer(const bool giveOwn);
 		static void extendCarry(const size_t number);
 		static void extendField(const size_t number);
 
@@ -40,9 +44,12 @@ namespace game {
 		static size_t getCurrentCarry();
 		static size_t getMaxOnField();
 		static size_t getCurrentOnField();
+		bool isOwnToPlayer() const;
 		bool isInitialize() const;
 		State getState() const;
 		Kind getSkillName() const;
+		sf::FloatRect getLocalBounds() const;
+		sf::FloatRect getGlobalBounds() const;
 		virtual ~PlayerSkill();
 
 	protected:
@@ -53,10 +60,14 @@ namespace game {
 		};
 		void onKeyPressed(KeyPressedEvent & event);
 		void onMousePressed(MousePressedEvent & event);
+		void onGameStarted(GameStartedEvent & event);
+		void onGameReady(GameReadyEvent & event);
 		void onGameFinishedLevel(GameFinishedLevelEvent & event);
+		void onGamePrepared(GamePreparedEvent & event);
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		virtual void update() override;
 		void setState(const State nextState);
 		void swapSkill(const std::shared_ptr<PlayerSkill> & other);
 
@@ -67,6 +78,7 @@ namespace game {
 		static SkillHandler<PlayerSkill> handler;
 		static std::map<Kind, std::map<State, std::string>> fileNames;
 		bool bInitialize;
+		sf::Vector2f origin;
 		SkillContent skill;
 		std::shared_ptr<EnergyBar> m_energyBar;
 		const Player * c_player;

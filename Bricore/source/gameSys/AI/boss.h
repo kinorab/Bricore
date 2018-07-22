@@ -88,11 +88,11 @@ namespace game {
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 		// clear and resettle all parts
 		void resettleParts();
-		// partName
-		// intense_partName
-		// intense_partName_intensified
-		// weak_partName
-		// weak_partName_broke
+		// bossName_partName
+		// bossName_intense_partName
+		// bossName_intense_partName_intensified
+		// bossName_weak_partName
+		// bossName_weak_partName_broke
 		static std::multimap<Name, std::string> partFileNames;
 		static bool bDisplay;
 
