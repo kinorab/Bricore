@@ -52,6 +52,7 @@ namespace game {
 	int EventSubject::getIdCount() const {
 		return iIdCount;
 	}
+
 	EventSubject::EventSubject() noexcept {
 	}
 }
