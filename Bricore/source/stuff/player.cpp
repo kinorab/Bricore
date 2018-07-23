@@ -296,6 +296,7 @@ void Player::flashElapsed() {
 }
 
 void Player::resetFlash() {
+	if (!bFlash) return;
 	bFlash = false;
 	bFlashCD = false;
 	setFlashFillColor(Color(defender.hitLight->getFillColor().r

@@ -90,20 +90,26 @@ void Stage::update(const float updateRatio) {
 }
 
 void Stage::updateGameStateEvent() {
-	// to ready state
+	// ball broke to ready state
 	if (ball->isMainBallBroken()) {
 		gameStateEvent->type = GameStateEvent::GameReady;
 	}
-	// to finish state
+	// wall empty to finish state
 	if (wall->isEmpty()) {
 		m_level->finishLevel();
 		gameStateEvent->type = GameStateEvent::GameFinishedLevel;
 		gameStateEvent->finishedLevel.uLevel = m_level->getcurrentLevel();
 	}
-	// back to start / ready state
+	// pause back to start / ready state
 	if (gameStateEvent->type == GameStateEvent::GameResumed) {
 		if (gameStateEvent->resumed.fCountDown <= 0.0f) {
 			gameStateEvent->type = tempType;
+		}
+	}
+	// prepare to ready state
+	if (gameStateEvent->type == GameStateEvent::GamePrepared) {
+		if (gameStateEvent->prepared.fTimeLimit <= 0.0f) {
+			gameStateEvent->type = GameStateEvent::GameReady;
 		}
 	}
 	gameHandler->handler(*gameStateEvent, *this);
@@ -144,8 +150,10 @@ void Stage::onMousePressed(MousePressedEvent & event) {
 		|| gameStateEvent->type == GameStateEvent::GameResumed
 		|| gameStateEvent->type == GameStateEvent::GameFinishedLevel) return;
 	if (event.pressed.button == sf::Mouse::Left) {
-		if (ball->containsPoint(sf::Vector2f(sf::Vector2i(event.pressed.x, event.pressed.y)))) {
-			gameStateEvent->type = GameStateEvent::GameStarted;
+		if (gameStateEvent->type == GameStateEvent::GameReady) {
+			if (ball->containsPoint(sf::Vector2f(sf::Vector2i(event.pressed.x, event.pressed.y)))) {
+				gameStateEvent->type = GameStateEvent::GameStarted;
+			}
 		}
 	}
 	else if (event.pressed.button == sf::Mouse::Right) {

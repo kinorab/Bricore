@@ -110,6 +110,8 @@
     <ClCompile Include="source\manager\imageManager.cpp" />
     <ClCompile Include="source\manager\resourceManager.cpp" />
     <ClCompile Include="source\manager\textureManager.cpp" />
+    <ClCompile Include="source\UI\button\circleButton.cpp" />
+    <ClCompile Include="source\UI\button\rectButton.cpp" />
     <ClCompile Include="source\UI\movieClip.cpp" />
     <ClCompile Include="source\interact\circleShapeNode.cpp" />
     <ClCompile Include="source\interact\drawableNode.cpp" />
@@ -119,8 +121,8 @@
     <ClCompile Include="source\stuff\obstacle.cpp" />
     <ClCompile Include="source\stuff\player.cpp" />
     <ClCompile Include="source\UI\UIComponent.cpp" />
-    <ClCompile Include="source\UI\button.cpp" />
-    <ClCompile Include="source\UI\textButton.cpp" />
+    <ClCompile Include="source\UI\button\button.cpp" />
+    <ClCompile Include="source\UI\button\textButton.cpp" />
     <ClCompile Include="source\UI\textField.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +244,8 @@
     <ClInclude Include="source\manager\imageManager.h" />
     <ClInclude Include="source\manager\resourceManager.h" />
     <ClInclude Include="source\manager\textureManager.h" />
+    <ClInclude Include="source\UI\button\circleButton.h" />
+    <ClInclude Include="source\UI\button\rectButton.h" />
     <ClInclude Include="source\UI\movieClip.h" />
     <ClInclude Include="source\interact\circleShapeNode.h" />
     <ClInclude Include="source\interact\drawableNode.h" />
@@ -253,8 +257,8 @@
     <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\stage.h" />
     <ClInclude Include="source\UI\UIComponent.h" />
-    <ClInclude Include="source\UI\button.h" />
-    <ClInclude Include="source\UI\textButton.h" />
+    <ClInclude Include="source\UI\button\button.h" />
+    <ClInclude Include="source\UI\button\textButton.h" />
     <ClInclude Include="source\UI\textField.h" />
     <ClInclude Include="source\event\text\textEnteredEvent.h" />
     <ClInclude Include="source\template\visitable.h" />

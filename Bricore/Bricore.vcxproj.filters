@@ -27,8 +27,6 @@
     <ClCompile Include="source\stuff\obstacle.cpp" />
     <ClCompile Include="source\stuff\player.cpp" />
     <ClCompile Include="source\UI\UIComponent.cpp" />
-    <ClCompile Include="source\UI\button.cpp" />
-    <ClCompile Include="source\UI\textButton.cpp" />
     <ClCompile Include="source\UI\textField.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
     <ClCompile Include="source\event\eventSubject.cpp" />
@@ -104,6 +102,10 @@
     <ClCompile Include="source\gameSys\level\zone.cpp" />
     <ClCompile Include="source\gameSys\battle\arena.cpp" />
     <ClCompile Include="source\event\game\gamePreparedEvent.cpp" />
+    <ClCompile Include="source\UI\button\textButton.cpp" />
+    <ClCompile Include="source\UI\button\circleButton.cpp" />
+    <ClCompile Include="source\UI\button\rectButton.cpp" />
+    <ClCompile Include="source\UI\button\button.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -134,8 +136,6 @@
     <ClInclude Include="source\stuff\obstacle.h" />
     <ClInclude Include="source\stuff\player.h" />
     <ClInclude Include="source\UI\UIComponent.h" />
-    <ClInclude Include="source\UI\button.h" />
-    <ClInclude Include="source\UI\textButton.h" />
     <ClInclude Include="source\UI\textField.h" />
     <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
@@ -243,6 +243,10 @@
     <ClInclude Include="source\gameSys\battle\arena.h" />
     <ClInclude Include="source\manager\manager.h" />
     <ClInclude Include="source\event\game\gamePreparedEvent.h" />
+    <ClInclude Include="source\UI\button\textButton.h" />
+    <ClInclude Include="source\UI\button\rectButton.h" />
+    <ClInclude Include="source\UI\button\circleButton.h" />
+    <ClInclude Include="source\UI\button\button.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />
