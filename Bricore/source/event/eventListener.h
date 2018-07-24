@@ -2,6 +2,7 @@
 #include "eventListenerBase.h"
 #include "event.h"
 #include <functional>
+#include <variant>
 
 namespace game {
 	template<typename Type>
@@ -10,23 +11,18 @@ namespace game {
 		static_assert(std::is_base_of<Event, Type>::value, "Type must derive from Event");
 	public:
 		explicit EventListener(std::function<void(Type &)> callback) :
-			typeCallback{ true, callback }
-			, voidCallback{ false, std::function<void(void)>() } {
+			callback{ callback } {
 		}
 		explicit EventListener(std::function<void(void)> callback) :
-			voidCallback{ true , callback }
-			, typeCallback{ false, std::function<void(Type &)>() } {
+			callback{ callback } {
 		}
 		void visit(Type & visitable) {
-			if (typeCallback.first) {
-				typeCallback.second(visitable);
-				return;
+			if (std::holds_alternative<std::function<void(Type &)>>(callback)) {
+				std::get<std::function<void(Type &)>>(callback)(visitable);
 			}
-			else if (voidCallback.first) {
-				voidCallback.second();
-				return;
+			else {
+				std::get<std::function<void(void)>>(callback)();
 			}
-			throw std::exception("Unexcept error.");
 		}
 		virtual std::type_index getEventType() const override {
 			return typeid(Type);
@@ -34,7 +30,9 @@ namespace game {
 		virtual ~EventListener() = default;
 
 	private:
-		std::pair<bool, std::function<void(Type &)>> typeCallback;
-		std::pair<bool, std::function<void(void)>> voidCallback;
+		std::variant <
+			std::function<void(Type &)>,
+			std::function<void(void)>
+		> callback;
 	};
 }
