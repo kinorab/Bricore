@@ -12,7 +12,7 @@ namespace game {
 	public:
 		virtual ~EventSubject() = default;
 		virtual int addListener(std::shared_ptr<EventListenerBase> listener);
-		virtual int addListener(std::shared_ptr<EventListenerBase> listener, std::weak_ptr<EventSubject> trackedSubject);
+		virtual int addListener(std::shared_ptr<EventListenerBase> listener, std::weak_ptr<void> trackedObject);
 		virtual void dispatchEvent(Event & event);
 		virtual void dispatchEvent(Event && event);
 		virtual void removeListener(std::type_index eventType, int id);
@@ -22,7 +22,7 @@ namespace game {
 	protected:
 		EventSubject() noexcept;
 		int iIdCount = 0;
-		std::multimap<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<EventSubject>>> listeners;
+		std::multimap<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<void>>> listeners;
 	};
 }
 
