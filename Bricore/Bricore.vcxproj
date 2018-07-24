@@ -130,7 +130,6 @@
     <ClInclude Include="source\event\cancelable.h" />
     <ClInclude Include="source\event\eventListener.h" />
     <ClInclude Include="source\event\eventListenerBase.h" />
-    <ClInclude Include="source\event\eventSlot.h" />
     <ClInclude Include="source\event\game\gameEvent.h" />
     <ClInclude Include="source\event\game\gameOverEvent.h" />
     <ClInclude Include="source\event\game\gamePausedEvent.h" />
