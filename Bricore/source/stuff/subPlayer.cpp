@@ -1,6 +1,7 @@
 #include "subPlayer.h"
 #include "player.h"
 #include "ball.h"
+#include "../event/eventListener.h"
 #include "../gameSys/level/level.h"
 #include "../gameSys/bar/energyBar.h"
 #include "../gameSys/bar/lifeBar.h"
@@ -11,14 +12,14 @@
 using namespace game;
 
 std::multimap<SubPlayer::Type, std::string> SubPlayer::partFileNames({
-		std::pair(Prototype, "leftArmor")
-		, std::pair(Prototype, "leftPinEngine")
-		, std::pair(Prototype, "rightArmor")
-		, std::pair(Prototype, "rightPinEngine")
-		, std::pair(Prototype, "backArmor")
-		, std::pair(Prototype, "frontArmor")
-		, std::pair(Prototype, "frontCannon")
-		, std::pair(Prototype, "centerChipConnector")
+		std::pair(Prototype, "prototype/leftArmor")
+		, std::pair(Prototype, "prototype/leftPinEngine")
+		, std::pair(Prototype, "prototype/rightArmor")
+		, std::pair(Prototype, "prototype/rightPinEngine")
+		, std::pair(Prototype, "prototype/backArmor")
+		, std::pair(Prototype, "prototype/frontArmor")
+		, std::pair(Prototype, "prototype/frontCannon")
+		, std::pair(Prototype, "prototype/centerChipConnector")
 	});
 
 SubPlayer::SubPlayer(const std::shared_ptr<Level> level)
@@ -32,15 +33,24 @@ SubPlayer::SubPlayer(const std::shared_ptr<Level> level)
 	// set default key setting
 	defaultKeySettle();
 	// set subPlayer skill
-	subPlayerSkills = {
+	pioneer.subPlayerSkills = {
 	};
+	// add child
+	/*std::for_each(pioneer.subPlayerSkills.begin(), pioneer.subPlayerSkills.end()
+		, [this](const std::shared_ptr<SubPlayerSkill> & skill) {
+		skill->initialize();
+		addChild({ std::dynamic_pointer_cast<sf::Drawable>(skill) });
+	});*/
+	// add listener
+	addListener(std::make_shared<EventListener<GameStartedEvent>>([this](auto & event) { onGameStarted(event); }));
+	addListener(std::make_shared<EventListener<GameReadyEvent>>([this](auto & event) { onGameReady(event); }));
+	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
+	addListener(std::make_shared<EventListener<GamePreparedEvent>>([this](auto & event) { onGamePrepared(event); }));
+	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
+	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
 }
 
 void SubPlayer::update(const float updateRatio) {
-	std::for_each(subPlayerSkills.begin(), subPlayerSkills.end()
-		, [&](const std::shared_ptr<SubPlayerSkill> skill) {
-		skill->update();
-	});
 }
 
 void SubPlayer::setSubPlayerControlKey(const sf::Keyboard::Key upMove, const sf::Keyboard::Key downMove
@@ -85,7 +95,7 @@ void SubPlayer::changeType(const item::Chip::Kind chip) {
 }
 
 void SubPlayer::addSubPlayerSkill(SubPlayerSkill && subPlayerSkill) {
-	subPlayerSkills.push_back(std::make_shared<SubPlayerSkill>(subPlayerSkill));
+	pioneer.subPlayerSkills.push_back(std::make_shared<SubPlayerSkill>(subPlayerSkill));
 }
 
 bool SubPlayer::isAutoUse() const {
@@ -121,6 +131,29 @@ SubPlayer::~SubPlayer() {
 
 void SubPlayer::setAutoUse(const bool isAutoUse) {
 	bAutoUse = isAutoUse;
+}
+
+void SubPlayer::onMousePressed(MousePressedEvent & event) {
+}
+
+void SubPlayer::onKeyPressed(KeyPressedEvent & event) {
+	dispatchAllChildrenEvent(event);
+}
+
+void SubPlayer::onGameStarted(GameStartedEvent & event) {
+	dispatchAllChildrenEvent(event);
+}
+
+void SubPlayer::onGameReady(GameReadyEvent & event) {
+	dispatchAllChildrenEvent(event);
+}
+
+void SubPlayer::onGameFinishedLevel(GameFinishedLevelEvent & event) {
+	dispatchAllChildrenEvent(event);
+}
+
+void SubPlayer::onGamePrepared(GamePreparedEvent & event) {
+	dispatchAllChildrenEvent(event);
 }
 
 void SubPlayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {

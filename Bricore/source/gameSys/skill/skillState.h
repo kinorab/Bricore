@@ -17,7 +17,8 @@ namespace game {
 			OnFourthField,	// on player fourth skill field
 			Waiting = 100,	// waiting on stage
 			Using,			// when using it
-			Display			// display on store, illustration etc..
+			Display,		// display on store, illustration etc..
+			Prepare			// on prepare area to be select
 		};
 		static const State maxField = OnFourthField;
 	};
@@ -31,7 +32,8 @@ namespace game {
 			OnFourthField,	// on subplayer fourth skill field
 			Waiting = 100,	// waiting on stage
 			Using,			// when using it
-			Display			// display on store, illustration etc..
+			Display,		// display on store, illustration etc..
+			Prepare			// on prepare area to be select
 		};
 		static const State maxField = OnFourthField;
 	};
@@ -45,7 +47,8 @@ namespace game {
 			OnFourthField,	// on ball fourth skill field
 			Waiting = 100,	// waiting on stage
 			Using,			// when using it
-			Display			// display on store, illustration etc..
+			Display,		// display on store, illustration etc..
+			Prepare			// on prepare area to be select
 		};
 		static const State maxField = OnFourthField;
 	};

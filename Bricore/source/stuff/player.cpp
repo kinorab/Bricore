@@ -68,6 +68,13 @@ Player::Player(const std::shared_ptr<Level> level)
 	};
 	// set ball skill
 	defender.ballSkills = {
+		std::make_shared<BallSkill>(
+			BallSkill::MultipleAttack, sf::seconds(8)
+			, std::vector<std::pair<Effect::Kind, bool>>({
+				std::pair(Effect::Sturdy, false)
+				})
+			, std::vector<Attribute::Kind>({ Attribute::None })
+			, true, this)
 	};
 	// set player zone
 	Zone::getInstance().settleZone(Zone::Player, sf::Vector2f(0.0f, LEVEL_HEIGHT - 100.f), 100.f);
@@ -76,26 +83,25 @@ Player::Player(const std::shared_ptr<Level> level)
 		, std::dynamic_pointer_cast<sf::Drawable>(defender.hitLight) });
 	// add child
 	/*std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
-		, [&](const std::shared_ptr<BallSkill> & skill) {
+		, [this](const std::shared_ptr<BallSkill> & skill) {
 		skill->initialize();
-		addChild({ skill });
+		addChild({ std::dynamic_pointer_cast<sf::Drawable>(skill) });
 	});
 	std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
-		, [&](const std::shared_ptr<PlayerSkill> & skill) {
+		, [this](const std::shared_ptr<PlayerSkill> & skill) {
 		skill->initialize();
-		addChild({ skill });
+		addChild({ std::dynamic_pointer_cast<sf::Drawable>(skill) });
 	});*/
 	// add listener
 	addListener(std::make_shared<EventListener<GameStartedEvent>>([this](auto & event) { onGameStarted(event); }));
 	addListener(std::make_shared<EventListener<GameReadyEvent>>([this](auto & event) { onGameReady(event); }));
 	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
-	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onkeyPressed(event); }));
+	addListener(std::make_shared<EventListener<GamePreparedEvent>>([this](auto & event) { onGamePrepared(event); }));
+	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
 }
 
 void Player::update(const float updateRatio) {
-	const Vector2f &mainBallPos(m_ball->getMainBallPosition());
-	const float mainBallRadius = m_ball->getMainBallRadius();
 	const FloatRect playerBoardBound = defender.board->getGlobalBounds();
 	if (playerBoardBound.left >= 0
 		&& (Keyboard::isKeyPressed(key->leftMove))) {
@@ -106,6 +112,12 @@ void Player::update(const float updateRatio) {
 		&& (Keyboard::isKeyPressed(key->rightMove))) {
 		defender.board->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
 		defender.hitLight->move(Vector2f(fSpeed / SLICE * updateRatio, 0));
+	}
+	const Vector2f &mainBallPos(m_ball->getMainBallPosition());
+	const float mainBallRadius = m_ball->getMainBallRadius();
+	flashRange(mainBallPos, mainBallRadius);
+	if (bFlash) {
+		flashElapsed();
 	}
 	defender.absorbEngine->setPosition(defender.board->getPosition());
 }
@@ -238,35 +250,23 @@ void Player::defaultKeySettle() {
 }
 
 void Player::onGameStarted(GameStartedEvent & event) {
-	const Vector2f &mainBallPos(m_ball->getMainBallPosition());
-	const float mainBallRadius = m_ball->getMainBallRadius();
-	flashRange(mainBallPos, mainBallRadius);
-	if (bFlash) {
-		flashElapsed();
-	}
-	// update skills
-	/*std::for_each(defender.playerSkills.begin(), defender.playerSkills.end()
-		, [&](const std::shared_ptr<PlayerSkill> & skill) {
-		assert(skill->isInitialize());
-		skill->update();
-	});
-	std::for_each(defender.ballSkills.begin(), defender.ballSkills.end()
-		, [&](const std::shared_ptr<BallSkill> & skill) {
-		assert(skill->isInitialize());
-		skill->update();
-	});*/
 	dispatchAllChildrenEvent(event);
 }
 
 void Player::onGameReady(GameReadyEvent & event) {
 	resetFlash();
+	dispatchAllChildrenEvent(event);
 }
 
 void Player::onGameFinishedLevel(GameFinishedLevelEvent & event) {
 	dispatchAllChildrenEvent(event);
 }
 
-void Player::onkeyPressed(KeyPressedEvent & event) {
+void Player::onGamePrepared(game::GamePreparedEvent & event) {
+	dispatchAllChildrenEvent(event);
+}
+
+void Player::onKeyPressed(KeyPressedEvent & event) {
 	dispatchAllChildrenEvent(event);
 }
 
@@ -296,6 +296,7 @@ void Player::flashElapsed() {
 }
 
 void Player::resetFlash() {
+	if (!bFlash) return;
 	bFlash = false;
 	bFlashCD = false;
 	setFlashFillColor(Color(defender.hitLight->getFillColor().r

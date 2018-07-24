@@ -5,3 +5,4 @@
 #include "gameStartedEvent.h"
 #include "gameFinishedLevelEvent.h"
 #include "gameResumedEvent.h"
+#include "gamePreparedEvent.h"

@@ -1,4 +1,7 @@
 #pragma once
+#include "../event/game/gameEvent.h"
+#include "../event/keyboard/keyEvent.h"
+#include "../event/mouse/mouseEvent.h"
 #include "../interact/container.h"
 #include "../gameSys/item/chip.h"
 #include <SFML/Window/Keyboard.hpp>
@@ -59,10 +62,17 @@ protected:
 	};
 	struct SubPlayerContent {
 		Type currentType = Type::Prototype;
-		std::shared_ptr<item::Chip> chip;
+		std::shared_ptr<item::Chip> chip;	// pioneer's core
 		std::map<std::string, Part> parts;
+		std::vector<std::shared_ptr<game::SubPlayerSkill>> subPlayerSkills;
 	};
 	void setAutoUse(const bool isAutoUse);
+	void onMousePressed(game::MousePressedEvent & event);
+	void onKeyPressed(game::KeyPressedEvent & event);
+	void onGameStarted(game::GameStartedEvent & event);
+	void onGameReady(game::GameReadyEvent & event);
+	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
+	void onGamePrepared(game::GamePreparedEvent & event);
 
 private:
 	void draw(sf::RenderTarget &, sf::RenderStates) const override;
@@ -74,7 +84,6 @@ private:
 	std::shared_ptr<game::EnergyBar> energyBar;
 	std::shared_ptr<game::LifeBar> lifeBar;
 	const std::shared_ptr<ControlKey> key;
-	std::vector<std::shared_ptr<game::SubPlayerSkill>> subPlayerSkills;
 	std::shared_ptr<game::Level> m_level;
 	std::shared_ptr<Ball> m_ball;
 	std::shared_ptr<const Player> c_player;

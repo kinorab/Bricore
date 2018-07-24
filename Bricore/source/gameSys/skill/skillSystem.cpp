@@ -11,7 +11,7 @@ SkillSystem::SkillSystem(const sf::Time &duration, const bool exist)
 	, bSilenced(false)
 	, bLocked(false)
 	, bExist(exist)
-	, uLevel(0)
+	, uLevel(1)
 	, uMaxLevel(10)
 	, duration(duration)
 	, status(None)
@@ -43,17 +43,6 @@ void SkillSystem::upgradeSkill(const size_t number) {
 
 void SkillSystem::extendMaxLevel(const size_t number) {
 	uMaxLevel += number;
-}
-
-void SkillSystem::setOwnToPlayer(const bool giveOwn) {
-	if (!bExist) throw std::invalid_argument("Skill not exist in setOwn.");
-
-	if (giveOwn) {
-		status = UnSelected;
-	}
-	else {
-		status = None;
-	}
 }
 
 bool SkillSystem::isExist() const {

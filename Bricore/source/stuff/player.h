@@ -76,16 +76,17 @@ protected:
 	};
 	struct PlayerContent {
 		Model currentModel = Model::Classic;
-		std::shared_ptr<sf::RectangleShape> board;						// defender's core
-		std::shared_ptr<sf::RectangleShape> absorbEngine;				// absort ball's energy to defender
-		std::shared_ptr<sf::RectangleShape> hitLight;					// hit to ball will reflect light on board
+		std::shared_ptr<sf::RectangleShape> board;			// defender's core
+		std::shared_ptr<sf::RectangleShape> absorbEngine;	// absort ball's energy to defender
+		std::shared_ptr<sf::RectangleShape> hitLight;		// hit to ball will reflect light on board
 		std::vector<std::shared_ptr<game::PlayerSkill>> playerSkills;
 		std::vector<std::shared_ptr<game::BallSkill>> ballSkills;
 	};
 	void onGameStarted(game::GameStartedEvent & event);
 	void onGameReady(game::GameReadyEvent & event);
 	void onGameFinishedLevel(game::GameFinishedLevelEvent & event);
-	void onkeyPressed(game::KeyPressedEvent & event);
+	void onGamePrepared(game::GamePreparedEvent & event);
+	void onKeyPressed(game::KeyPressedEvent & event);
 	void onMousePressed(game::MousePressedEvent & event);
 	void setAutoUse(const SkillSelect skill, const bool isAutoUse);
 	void setFlashPosition(const sf::Vector2f & position);

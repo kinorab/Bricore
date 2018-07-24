@@ -1,7 +1,7 @@
 #include "globular.h"
 #include "../../definition/gameState.h"
 #include "../../gameSys/level/level.h"
-#include "../../gameSys/level/area/zone.h"
+#include "../../gameSys/level/zone.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;

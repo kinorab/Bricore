@@ -4,15 +4,15 @@
 using namespace item;
 
 std::map<Core::Kind, std::string> Core::fileNames({
-		std::pair(alphaCore, "alpha_core")
-		, std::pair(betaCore, "beta_core")
-		, std::pair(GammaCore, "gamma_core")
-		, std::pair(DeltaCore, "delta_core")
-		, std::pair(EpsilonCore, "epsilon_core")
-		, std::pair(ZetaCore, "zeta_core")
-		, std::pair(EtaCore, "eta_core")
-		, std::pair(LotaCore, "lota_core")
-		, std::pair(KappaCore, "kappa_core")
+		std::pair(alphaCore, "core/alpha")
+		, std::pair(betaCore, "core/beta")
+		, std::pair(GammaCore, "core/gamma")
+		, std::pair(DeltaCore, "core/delta")
+		, std::pair(EpsilonCore, "core/epsilon")
+		, std::pair(ZetaCore, "core/zeta")
+		, std::pair(EtaCore, "core/eta")
+		, std::pair(LotaCore, "core/lota")
+		, std::pair(KappaCore, "core/kappa")
 	});
 
 Core::Core(const Kind core)

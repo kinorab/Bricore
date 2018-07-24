@@ -24,6 +24,9 @@ namespace game {
 		else if (event.type == GameStateEvent::GameOver) {
 			handleGameOver(event, thing);
 		}
+		else if (event.type == GameStateEvent::GamePrepared) {
+			handleGamePrepared(event, thing);
+		}
 	}
 
 	void GameHandler::handleGameOver(GameStateEvent & event, Container & thing) {
@@ -54,5 +57,10 @@ namespace game {
 	void GameHandler::handleGameFinishedLevel(GameStateEvent & event, Container & thing) {
 		clock.restart();
 		thing.dispatchAllChildrenEvent(GameFinishedLevelEvent(event.finishedLevel));
+	}
+
+	void GameHandler::handleGamePrepared(GameStateEvent & event, Container & thing) {
+		event.prepared.fTimeLimit -= clock.restart().asSeconds();
+		thing.dispatchAllChildrenEvent(GamePreparedEvent(event.prepared));
 	}
 }

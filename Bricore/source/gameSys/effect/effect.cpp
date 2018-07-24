@@ -5,15 +5,15 @@
 using namespace game;
 
 std::map<Effect::Kind, std::string> Effect::fileNames({
-		std::pair(Kind::Fragile, "fragile_effect")
-		, std::pair(Kind::Hugify, "hugify_effect")
-		, std::pair(Kind::Invisible, "invisible_effect")
-		, std::pair(Kind::Invulnerable, "invulnerable_effect")
-		, std::pair(Kind::Poison, "poison_effect")
-		, std::pair(Kind::Shrink, "shrink_effect")
-		, std::pair(Kind::SlowDown, "slowDown_effect")
-		, std::pair(Kind::SpeedUp, "speedUp_effect")
-		, std::pair(Kind::Sturdy, "sturdy_effect")
+		std::pair(Kind::Fragile, "effect/fragile")
+		, std::pair(Kind::Hugify, "effect/hugify")
+		, std::pair(Kind::Invisible, "effect/invisible")
+		, std::pair(Kind::Invulnerable, "effect/invulnerable")
+		, std::pair(Kind::Poison, "effect/poison")
+		, std::pair(Kind::Shrink, "effect/shrink")
+		, std::pair(Kind::SlowDown, "effect/slowDown")
+		, std::pair(Kind::SpeedUp, "effect/speedUp")
+		, std::pair(Kind::Sturdy, "effect/sturdy")
 	});
 
 Effect::Effect(const Kind effect, const bool isTargetItself)

@@ -5,12 +5,12 @@
 using namespace item;
 
 std::map<Chip::Kind, std::string> Chip::fileNames({
-		std::pair(None, "none_chip")
-		, std::pair(BurstChip, "burst_chip")
-		, std::pair(FirearmChip, "firearm_chip")
-		, std::pair(GuardChip, "guard_chip")
-		, std::pair(HeraldChip, "herald_chip")
-		, std::pair(LaserChip, "laser_chip")
+		std::pair(None, "chip/none")
+		, std::pair(BurstChip, "chip/burst")
+		, std::pair(FirearmChip, "chip/firearm")
+		, std::pair(GuardChip, "chip/guard")
+		, std::pair(HeraldChip, "chip/herald")
+		, std::pair(LaserChip, "chip/laser")
 	});
 
 Chip::Chip(const Kind chip)

@@ -28,13 +28,14 @@ namespace game {
 			, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 			, const bool exist, const std::shared_ptr<RageBar> rageBar, const Boss * boss);
 		virtual void initialize() override;
-		virtual void update() override;
 		virtual bool containsPoint(const sf::Vector2f & point) const override;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const override;
 
 		bool isInitialize() const;
 		State getState() const;
 		Kind getSkillName() const;
+		sf::FloatRect getLocalBounds() const;
+		sf::FloatRect getGlobalBounds() const;
 		virtual ~BossSkill();
 
 	protected:
@@ -48,6 +49,7 @@ namespace game {
 
 	private:
 		virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
+		virtual void update() override;
 		void setState(const State nextState);
 
 		static SkillHandler<BossSkill> handler;

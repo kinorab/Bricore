@@ -5,12 +5,12 @@
 using namespace game;
 
 std::map<Attribute::Kind, std::string> Attribute::fileNames({
-		std::pair(None, "none_attribute")
-		, std::pair(Flame, "flame_attribute")
-		, std::pair(Ice, "ice_attribute")
-		, std::pair(Thunder, "thunder_attribute")
-		, std::pair(Darkness, "darkness_attribute")
-		, std::pair(Light, "light_attribute")
+		std::pair(None, "attribute/none")
+		, std::pair(Flame, "attribute/flame")
+		, std::pair(Ice, "attribute/ice")
+		, std::pair(Thunder, "attribute/thunder")
+		, std::pair(Darkness, "attribute/darkness")
+		, std::pair(Light, "attribute/light")
 	});
 
 Attribute::Attribute(const Kind element)

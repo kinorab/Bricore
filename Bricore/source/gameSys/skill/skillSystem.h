@@ -21,11 +21,9 @@ namespace game {
 	public:
 		// apply handler to insert, addListener
 		virtual void initialize() = 0;
-		virtual void update() = 0;
 		void setExist(const bool exist);
 		void upgradeSkill(const size_t number);
 		void extendMaxLevel(const size_t number);
-		void setOwnToPlayer(const bool giveOwn);
 
 		bool isExist() const;
 		bool isLocked() const;
@@ -45,6 +43,7 @@ namespace game {
 			UnSelected		// unselected skill in current level
 		};
 		explicit SkillSystem(const sf::Time &duration, const bool exist);
+		virtual void update() = 0;
 		bool selectOn();
 		bool selectOff();
 		void useSkill();

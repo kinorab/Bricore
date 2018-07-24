@@ -11,7 +11,7 @@ class TextureManager :
 	friend class HUD;
 public:
 	void initialize();
-	// get fileName(.png)
+	// get /fileName/kindName(.png)
 	sf::Texture * get(const std::string & fileName);
 	// load /directory
 	void load(const std::string & directory);

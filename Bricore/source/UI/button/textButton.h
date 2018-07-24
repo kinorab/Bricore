@@ -1,6 +1,5 @@
 #pragma once
-
-#include "UIComponent.h"
+#include "../UIComponent.h"
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 

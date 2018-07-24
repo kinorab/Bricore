@@ -13,37 +13,39 @@ size_t BallSkill::uCurrentCarry(0);
 size_t BallSkill::uMaxOnField(2);
 size_t BallSkill::uCurrentOnField(0);
 std::map<int, std::string> BallSkill::frameFileNames({
-	std::pair(1, "frame_1")
-	, std::pair(2, "frame_2")
-	, std::pair(3, "frame_3")
-	, std::pair(4, "frame_4")
-	, std::pair(5, "frame_5")
-	, std::pair(6, "frame_6")
-	, std::pair(7, "frame_7")
-	, std::pair(8, "frame_8")
-	, std::pair(9, "frame_9")
-	, std::pair(10, "frame_10")
+	std::pair(1, "frame/frame_1")
+	, std::pair(2, "frame/frame_2")
+	, std::pair(3, "frame/frame_3")
+	, std::pair(4, "frame/frame_4")
+	, std::pair(5, "frame/frame_5")
+	, std::pair(6, "frame/frame_6")
+	, std::pair(7, "frame/frame_7")
+	, std::pair(8, "frame/frame_8")
+	, std::pair(9, "frame/frame_9")
+	, std::pair(10, "frame/frame_10")
 	});
 std::map<BallSkill::Kind, std::map<BallSkill::State, std::string>> BallSkill::fileNames({
 	std::pair(HugeBody,
 		std::map<BallSkill::State, std::string>{
-		std::pair(State::OnDropping, "hugeBody_onDropping")
-		, std::pair(State::OnFirstField, "hugeBody_onFirstField") 
-		, std::pair(State::OnSecondField, "hugeBody_onSecondField")
-		, std::pair(State::OnThirdField, "hugeBody_onThirdField")
-		, std::pair(State::OnFourthField, "hugeBody_onFourthField")
-		, std::pair(State::Using, "hugeBody_using")
-		, std::pair(State::Display, "hugeBody_display")
+		std::pair(State::OnDropping, "ballSkill/hugeBody_onDropping")
+		, std::pair(State::OnFirstField, "ballSkill/hugeBody_onFirstField")
+		, std::pair(State::OnSecondField, "ballSkill/hugeBody_onSecondField")
+		, std::pair(State::OnThirdField, "ballSkill/hugeBody_onThirdField")
+		, std::pair(State::OnFourthField, "ballSkill/hugeBody_onFourthField")
+		, std::pair(State::Using, "ballSkill/hugeBody_using")
+		, std::pair(State::Display, "ballSkill/hugeBody_display")
+		, std::pair(State::Prepare, "ballSkill/hugeBody_prepare")
 		})
 	, std::pair(MultipleAttack,
 		std::map<BallSkill::State, std::string>{
-			std::pair(State::OnDropping, "multipleAttack_onDropping")
-			, std::pair(State::OnFirstField, "multipleAttack_onFirstField")
-			, std::pair(State::OnSecondField, "multipleAttack_onSecondField")
-			, std::pair(State::OnThirdField, "multipleAttack_onThirdField")
-			, std::pair(State::OnFourthField, "multipleAttack_onFourthField")
-			, std::pair(State::Using, "multipleAttack_using")
-			, std::pair(State::Display, "multipleAttack_display")
+			std::pair(State::OnDropping, "ballSkill/multipleAttack_onDropping")
+			, std::pair(State::OnFirstField, "ballSkill/multipleAttack_onFirstField")
+			, std::pair(State::OnSecondField, "ballSkill/multipleAttack_onSecondField")
+			, std::pair(State::OnThirdField, "ballSkill/multipleAttack_onThirdField")
+			, std::pair(State::OnFourthField, "ballSkill/multipleAttack_onFourthField")
+			, std::pair(State::Using, "ballSkill/multipleAttack_using")
+			, std::pair(State::Display, "ballSkill/multipleAttack_display")
+			, std::pair(State::Prepare, "ballSkill/multipleAttack_prepare")
 		})
 	});
 SkillHandler<BallSkill> BallSkill::handler;
@@ -52,8 +54,9 @@ BallSkill::BallSkill(const Kind skillName, const sf::Time duration
 	, std::vector<std::pair<Effect::Kind, bool>> && effects, std::vector<Attribute::Kind> && attributes
 	, const bool exist, const Player * player)
 	: SkillSystem(duration, exist)
-	, skill(SkillContent{ skillName, State::Waiting, nullptr, nullptr })
 	, bInitialize(false)
+	, origin()
+	, skill(SkillContent{ skillName, State::Waiting, nullptr, nullptr })
 	, c_player(player) {
 	// initialize effects
 	std::for_each(effects.begin(), effects.end(), [&](const std::pair<Effect::Kind, bool> & effect) {
@@ -70,6 +73,8 @@ void BallSkill::initialize() {
 	handler.insert(shared_from_this());
 	addListener(std::make_shared<EventListener<KeyPressedEvent>>([this](auto & event) { onKeyPressed(event); }));
 	addListener(std::make_shared<EventListener<MousePressedEvent>>([this](auto & event) { onMousePressed(event); }));
+	addListener(std::make_shared<EventListener<GameStartedEvent>>([this](auto & event) { onGameStarted(event); }));
+	addListener(std::make_shared<EventListener<GameReadyEvent>>([this](auto & event) { onGameReady(event); }));
 	addListener(std::make_shared<EventListener<GameFinishedLevelEvent>>([this](auto & event) { onGameFinishedLevel(event); }));
 	bInitialize = true;
 }
@@ -104,8 +109,6 @@ void BallSkill::update() {
 			setState(State::Waiting);
 		}
 		break;
-	case State::Display:
-		break;
 	default:
 		break;
 	}
@@ -113,14 +116,51 @@ void BallSkill::update() {
 
 bool BallSkill::containsPoint(const sf::Vector2f & point) const {
 	if (skill.currentState == State::Waiting) return false;
-	if (skill.frame) {
-		return skill.frame->getGlobalBounds().contains(point);
-	}
-	return skill.context->getGlobalBounds().contains(point);
+	return getGlobalBounds().contains(point);
 }
 
 std::shared_ptr<sf::Drawable> BallSkill::getDrawable() const {
 	return std::const_pointer_cast<sf::Drawable>(std::static_pointer_cast<const sf::Drawable>(shared_from_this()));
+}
+
+void BallSkill::setPosition(const sf::Vector2f & position) {
+	if (skill.frame) {
+		skill.frame->setPosition(position);
+		// offset 10 right and bottom(frame size 10)
+		skill.context->setPosition(position.x + 10.f, position.y + 10.f);
+	}
+	else {
+		skill.context->setPosition(position);
+	}
+}
+
+void BallSkill::setPosition(const float x, const float y) {
+	if (skill.frame) {
+		skill.frame->setPosition(x, y);
+		// offset 10 right and bottom(frame size 10)
+		skill.context->setPosition(x + 10.f, y + 10.f);
+	}
+	else {
+		skill.context->setPosition(x, y);
+	}
+}
+
+void BallSkill::setOrigin(const sf::Vector2f & origin) {
+	this->origin = origin;
+}
+
+void BallSkill::setOrigin(const float x, const float y) {
+	origin = { x, y };
+}
+
+void BallSkill::setOwnToPlayer(const bool giveOwn) {
+	if (!isExist()) throw std::invalid_argument("Skill not exist in setOwn.");
+	if (giveOwn) {
+		status = UnSelected;
+	}
+	else {
+		status = None;
+	}
 }
 
 void BallSkill::setState(const State nextState) {
@@ -142,14 +182,22 @@ void BallSkill::setState(const State nextState) {
 	else {
 		auto stateTexture = TextureManager::getInstance().get(fileNames[skill.name][skill.currentState]);
 		skill.context.reset(new sf::Sprite(*stateTexture));
-		skill.context->setOrigin(skill.context->getLocalBounds().width / 2.f
-			, skill.context->getLocalBounds().height / 2.f);
-		skill.context->setPosition(skill.frame->getPosition());
+		skill.context->setOrigin(origin);
+		// align to frame white space
+		skill.context->setPosition(skill.frame->getPosition().x + 10.f, skill.frame->getPosition().y + 10.f);
+		// show gray filter if player no own this skill
+		if (nextState == State::Display && status == Status::None) {
+			skill.context->setColor(sf::Color(150, 150, 150, 180));
+		}
+		else {
+			skill.context->setColor(sf::Color::White);
+		}
 	}
 	// set frame context
 	if (nextState == State::OnDropping) {
 		auto frameTexture = TextureManager::getInstance().get(frameFileNames[uLevel]);
 		skill.frame.reset(new sf::Sprite(*frameTexture));
+		skill.frame->setOrigin(origin);
 	}
 	else if (skill.frame) {
 		skill.frame = nullptr;
@@ -193,6 +241,11 @@ size_t BallSkill::getCurrentOnField() {
 	return uCurrentOnField;
 }
 
+bool BallSkill::isOwnToPlayer() const {
+	if (status == Status::None) return false;
+	return true;
+}
+
 bool BallSkill::isInitialize() const {
 	return bInitialize;
 }
@@ -205,11 +258,32 @@ SkillKind<BallSkill>::Kind BallSkill::getSkillName() const {
 	return skill.name;
 }
 
+const sf::Vector2f & BallSkill::getPosition() const {
+	if (skill.frame) {
+		return skill.frame->getPosition();
+	}
+	return skill.context->getPosition();
+}
+
+sf::FloatRect BallSkill::getLocalBounds() const {
+	if (skill.frame) {
+		return skill.frame->getLocalBounds();
+	}
+	return skill.context->getLocalBounds();
+}
+
+sf::FloatRect BallSkill::getGlobalBounds() const {
+	if (skill.frame) {
+		return skill.frame->getGlobalBounds();
+	}
+	return skill.context->getGlobalBounds();
+}
+
 BallSkill::~BallSkill() {
 }
 
 void BallSkill::onKeyPressed(KeyPressedEvent & event) {
-	if (skill.currentState == State::Display) return;
+	if (skill.currentState == State::Display || skill.currentState == State::Prepare) return;
 	if (skill.currentState == State::OnFirstField) {
 		if (bSilenced) return;
 		if (event.pressed.code == c_player->getKey().ballSkill || c_player->isAutoUse(Player::SkillSelect::_Ball)) {
@@ -226,28 +300,43 @@ void BallSkill::onKeyPressed(KeyPressedEvent & event) {
 }
 
 void BallSkill::onMousePressed(MousePressedEvent & event) {
-	if (skill.currentState == State::Display) return;
+	if (skill.currentState != State::Prepare) return;
 	// left mouse to choose
 	if (SkillSystem::selectOn() && event.pressed.button == sf::Mouse::Left) {
+		skill.context->setColor(sf::Color::White);
 		++uCurrentCarry;
 		return;
 	}
 	// left or right mouse to cancel choose
 	if (SkillSystem::selectOff() &&
 		(event.pressed.button == sf::Mouse::Left || event.pressed.button == sf::Mouse::Right)) {
+		// show gray filter if skill no choose
+		skill.context->setColor(sf::Color(180, 180, 180));
 		--uCurrentCarry;
 		return;
 	}
+}
+
+void BallSkill::onGameStarted(GameStartedEvent & event) {
+	update();
+}
+
+void BallSkill::onGameReady(GameReadyEvent & event) {
+	setState(State::Waiting);
 }
 
 void BallSkill::onGameFinishedLevel(GameFinishedLevelEvent & event) {
 	setState(State::Display);
 }
 
+void BallSkill::onGamePrepared(GamePreparedEvent & event) {
+	setState(State::Prepare);
+}
+
 void BallSkill::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	if (skill.currentState == State::Waiting) return;
-	target.draw(*skill.context, states);
 	if (skill.frame) {
 		target.draw(*skill.frame, states);
 	}
+	target.draw(*skill.context, states);
 }
