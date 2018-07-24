@@ -15,7 +15,8 @@ namespace game {
 		virtual int addListener(std::shared_ptr<EventListenerBase> listener, std::weak_ptr<void> trackedObject);
 		virtual void dispatchEvent(Event & event);
 		virtual void dispatchEvent(Event && event);
-		virtual void removeListener(std::type_index eventType, int id);
+		virtual void removeListener(int id);
+		virtual void removeListener(int id, std::type_index eventType);
 		virtual void removeAllListener();
 		virtual int getIdCount() const;
 

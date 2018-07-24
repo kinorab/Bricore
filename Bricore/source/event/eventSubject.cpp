@@ -25,7 +25,7 @@ namespace game {
 			if ((lockedSubject.owner_before(std::weak_ptr<void>{})
 				|| std::weak_ptr<void>{}.owner_before(lockedSubject))
 				&& lockedSubject.expired()) {
-				removeListener(listener.first, std::get<0>(listener.second));
+				removeListener(std::get<0>(listener.second), listener.first);
 				return;
 			}
 
@@ -37,7 +37,14 @@ namespace game {
 		dispatchEvent(event);
 	}
 
-	void EventSubject::removeListener(std::type_index eventType, int id) {
+	void EventSubject::removeListener(int id) {
+		listeners.erase(std::find_if(listeners.begin(), listeners.end(),
+			[&](std::pair<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<void>>> & listener) {
+			return std::get<0>(listener.second) == id;
+		}));
+	}
+
+	void EventSubject::removeListener(int id, std::type_index eventType) {
 		auto listenerRange = listeners.equal_range(eventType);
 		listeners.erase(std::find_if(listenerRange.first, listenerRange.second,
 			[&](std::pair<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<void>>> & listener) {
