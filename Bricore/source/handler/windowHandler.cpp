@@ -21,18 +21,18 @@ namespace game {
 	}
 
 	void WindowHandler::handleWindowClosed(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(WindowClosedEvent());
+		thing.emit(WindowClosedEvent());
 	}
 
 	void WindowHandler::handleWindowResized(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(WindowResizedEvent(event.size));
+		thing.emit(WindowResizedEvent(event.size));
 	}
 
 	void WindowHandler::handleWindowGainedFocus(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(WindowGainedFocusEvent());
+		thing.emit(WindowGainedFocusEvent());
 	}
 
 	void WindowHandler::handleWindowlostFocus(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(WindowLostFocusEvent());
+		thing.emit(WindowLostFocusEvent());
 	}
 }

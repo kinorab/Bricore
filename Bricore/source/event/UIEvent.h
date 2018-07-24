@@ -5,23 +5,23 @@
 #include <SFML\Window\Event.hpp>
 
 namespace game {
-	class EventSubject;
+	class EventEmitter;
 
 	class UIEvent :
 		public Event {
 		friend class DispatchHelper;
 	public:
 		virtual ~UIEvent() = default;
-		virtual EventSubject * getCurrentTarget() const;
+		virtual EventEmitter * getCurrentTarget() const;
 		virtual EventPhase getPhase() const;
-		virtual EventSubject * getTarget() const;
+		virtual EventEmitter * getTarget() const;
 		virtual void stopPropagation();
 	protected:
 		UIEvent() = default;
 	private:
 		bool bPropagationStopped = false;
 		EventPhase phase = EventPhase::NONE;
-		EventSubject * currentTarget = nullptr;
-		EventSubject * target = nullptr;
+		EventEmitter * currentTarget = nullptr;
+		EventEmitter * target = nullptr;
 	};
 }

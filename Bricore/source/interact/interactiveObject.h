@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../event/eventSubject.h"
+#include "../event/eventEmitter.h"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
@@ -15,16 +15,16 @@ namespace game {
 	class UIEvent;
 
 	class InteractiveObject :
-		public EventSubject,
+		public EventEmitter,
 		public sf::Drawable {
 	public:
 		virtual ~InteractiveObject();
-		using EventSubject::addListener;
+		using EventEmitter::addListener;
 		virtual bool containsPoint(const sf::Vector2f & point) const = 0;
 		virtual std::shared_ptr<sf::Drawable> getDrawable() const = 0;
-		using EventSubject::dispatchEvent;
-		virtual void dispatchEvent(UIEvent & event);
-		virtual void dispatchEvent(UIEvent && event);
+		using EventEmitter::emit;
+		virtual void emit(UIEvent & event);
+		virtual void emit(UIEvent && event);
 		virtual bool getEnabled() const;
 		virtual Container * getParent();
 		virtual void onDisabled();

@@ -25,7 +25,7 @@ namespace game {
 			return;
 		}
 		keyDown[event.key.code] = true;
-		thing.dispatchEvent(KeyPressedEvent(event.key));
+		thing.emit(KeyPressedEvent(event.key));
 	}
 
 	void KeyboardHandler::handleKeyReleased(const sf::Event & event, Container & thing) {
@@ -33,6 +33,6 @@ namespace game {
 			return;
 		}
 		keyDown[event.key.code] = false;
-		thing.dispatchEvent(KeyReleasedEvent(event.key));
+		thing.emit(KeyReleasedEvent(event.key));
 	}
 }

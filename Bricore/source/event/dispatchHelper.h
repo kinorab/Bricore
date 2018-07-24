@@ -4,16 +4,16 @@
 
 namespace game {
 	class UIEvent;
-	class EventSubject;
+	class EventEmitter;
 
 	class DispatchHelper {
 	public:
 		explicit DispatchHelper(UIEvent & event);
 		virtual ~DispatchHelper() = default;
 		virtual bool isPropagationStopped();
-		virtual void setCurrentTarget(EventSubject * target);
+		virtual void setCurrentTarget(EventEmitter * target);
 		virtual void setPhase(EventPhase phase);
-		virtual void setTarget(EventSubject * target);
+		virtual void setTarget(EventEmitter * target);
 	private:
 		UIEvent & event;
 	};

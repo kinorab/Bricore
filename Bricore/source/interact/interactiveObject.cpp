@@ -17,7 +17,7 @@ namespace game {
 	InteractiveObject::~InteractiveObject() {
 	}
 
-	void InteractiveObject::dispatchEvent(UIEvent & event) {
+	void InteractiveObject::emit(UIEvent & event) {
 		DispatchHelper helper(event);
 		helper.setCurrentTarget(this);
 
@@ -26,7 +26,7 @@ namespace game {
 			helper.setPhase(EventPhase::AT_TARGET);
 		}
 
-		EventSubject::dispatchEvent(static_cast<Event &>(event));
+		EventEmitter::emit(static_cast<Event &>(event));
 		if (event.getPhase() == EventPhase::AT_TARGET) {
 			helper.setPhase(EventPhase::BUBBLING_PHASE);
 		}
@@ -34,7 +34,7 @@ namespace game {
 		if (event.getPhase() == EventPhase::BUBBLING_PHASE
 			&& parent != nullptr
 			&& !helper.isPropagationStopped()) {
-			parent->dispatchEvent(event);
+			parent->emit(event);
 		}
 
 		if (event.getTarget() == this) {
@@ -43,8 +43,8 @@ namespace game {
 		}
 	}
 
-	void InteractiveObject::dispatchEvent(UIEvent && event) {
-		dispatchEvent(event);
+	void InteractiveObject::emit(UIEvent && event) {
+		emit(event);
 	}
 
 	bool InteractiveObject::getEnabled() const {

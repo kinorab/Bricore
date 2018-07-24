@@ -1,7 +1,7 @@
 #include "UIEvent.h"
 
 namespace game {
-	EventSubject * UIEvent::getCurrentTarget() const {
+	EventEmitter * UIEvent::getCurrentTarget() const {
 		return currentTarget;
 	}
 
@@ -9,7 +9,7 @@ namespace game {
 		return phase;
 	}
 
-	EventSubject * UIEvent::getTarget() const {
+	EventEmitter * UIEvent::getTarget() const {
 		return target;
 	}
 

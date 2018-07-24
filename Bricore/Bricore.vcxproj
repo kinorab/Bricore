@@ -54,7 +54,7 @@
     <ClCompile Include="source\gameSys\level\zone.cpp" />
     <ClCompile Include="source\gameSys\bar\energyBar.cpp" />
     <ClCompile Include="source\gameSys\bar\barSystem.cpp" />
-    <ClCompile Include="source\event\eventSubject.cpp" />
+    <ClCompile Include="source\event\eventEmitter.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
     <ClCompile Include="source\event\joystick\joystickConnectedEvent.cpp" />
     <ClCompile Include="source\event\joystick\joystickMovedEvent.cpp" />
@@ -185,7 +185,7 @@
     <ClInclude Include="source\gameSys\attribute\attribute.h" />
     <ClInclude Include="source\gameSys\bar\energyBar.h" />
     <ClInclude Include="source\gameSys\bar\barSystem.h" />
-    <ClInclude Include="source\event\eventSubject.h" />
+    <ClInclude Include="source\event\eventEmitter.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
     <ClInclude Include="source\event\touch\touchEvent.h" />

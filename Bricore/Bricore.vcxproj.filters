@@ -29,7 +29,6 @@
     <ClCompile Include="source\UI\UIComponent.cpp" />
     <ClCompile Include="source\UI\textField.cpp" />
     <ClCompile Include="source\event\dispatchHelper.cpp" />
-    <ClCompile Include="source\event\eventSubject.cpp" />
     <ClCompile Include="source\definition\gameState.cpp" />
     <ClCompile Include="source\event\UIEvent.cpp" />
     <ClCompile Include="source\event\joystick\joystickMovedEvent.cpp" />
@@ -106,6 +105,7 @@
     <ClCompile Include="source\UI\button\circleButton.cpp" />
     <ClCompile Include="source\UI\button\rectButton.cpp" />
     <ClCompile Include="source\UI\button\button.cpp" />
+    <ClCompile Include="source\event\eventEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\stuff\ball.h" />
@@ -140,7 +140,6 @@
     <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\event\dispatchHelper.h" />
     <ClInclude Include="source\event\eventPhase.h" />
-    <ClInclude Include="source\event\eventSubject.h" />
     <ClInclude Include="source\common.h" />
     <ClInclude Include="source\definition\gameState.h" />
     <ClInclude Include="source\event\UIEvent.h" />
@@ -246,6 +245,7 @@
     <ClInclude Include="source\UI\button\rectButton.h" />
     <ClInclude Include="source\UI\button\circleButton.h" />
     <ClInclude Include="source\UI\button\button.h" />
+    <ClInclude Include="source\event\eventEmitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\definition\matrix.inl" />

@@ -12,6 +12,6 @@ namespace game {
 	}
 
 	void SensorHandler::handleSensorChangedEvent(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(SensorChangedEvent(event.sensor));
+		thing.emit(SensorChangedEvent(event.sensor));
 	}
 }

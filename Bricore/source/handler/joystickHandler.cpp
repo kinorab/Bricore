@@ -24,22 +24,22 @@ namespace game {
 	}
 
 	void JoystickHandler::handleJoystickConnected(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(JoystickConnectedEvent(event.joystickConnect));
+		thing.emit(JoystickConnectedEvent(event.joystickConnect));
 	}
 
 	void JoystickHandler::handleJoystickDisconnected(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(JoystickDisconnectedEvent(event.joystickConnect));
+		thing.emit(JoystickDisconnectedEvent(event.joystickConnect));
 	}
 
 	void JoystickHandler::handleJoystickMoved(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(JoystickMovedEvent(event.joystickMove));
+		thing.emit(JoystickMovedEvent(event.joystickMove));
 	}
 
 	void JoystickHandler::handleJoystickPressed(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(JoystickPressedEvent(event.joystickButton));
+		thing.emit(JoystickPressedEvent(event.joystickButton));
 	}
 
 	void JoystickHandler::handleJoystickReleased(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(JoystickReleasedEvent(event.joystickButton));
+		thing.emit(JoystickReleasedEvent(event.joystickButton));
 	}
 }

@@ -1,21 +1,21 @@
-#include "eventSubject.h"
+#include "eventEmitter.h"
 #include "eventListener.h"
 #include "event.h"
 #include <algorithm>
 
 namespace game {
-	int EventSubject::addListener(std::shared_ptr<EventListenerBase> listener) {
+	int EventEmitter::addListener(std::shared_ptr<EventListenerBase> listener) {
 		return addListener(listener, std::weak_ptr<void>());
 	}
 
-	int EventSubject::addListener(std::shared_ptr<EventListenerBase> listener, std::weak_ptr<void> trackedObject) {
+	int EventEmitter::addListener(std::shared_ptr<EventListenerBase> listener, std::weak_ptr<void> trackedObject) {
 		listeners.emplace(listener->getEventType(), std::make_tuple(iIdCount, std::move(listener), std::move(trackedObject)));
 		int returnId = iIdCount;
 		iIdCount += 1;
 		return iIdCount;
 	}
 
-	void EventSubject::dispatchEvent(Event & event) {
+	void EventEmitter::emit(Event & event) {
 		auto listenerRange = listeners.equal_range(typeid(event));
 		std::vector<std::pair<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<void>>>> tempListeners;
 		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
@@ -33,18 +33,18 @@ namespace game {
 		});
 	}
 
-	void EventSubject::dispatchEvent(Event && event) {
-		dispatchEvent(event);
+	void EventEmitter::emit(Event && event) {
+		emit(event);
 	}
 
-	void EventSubject::removeListener(int id) {
+	void EventEmitter::removeListener(int id) {
 		listeners.erase(std::find_if(listeners.begin(), listeners.end(),
 			[&](std::pair<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<void>>> & listener) {
 			return std::get<0>(listener.second) == id;
 		}));
 	}
 
-	void EventSubject::removeListener(int id, std::type_index eventType) {
+	void EventEmitter::removeListener(int id, std::type_index eventType) {
 		auto listenerRange = listeners.equal_range(eventType);
 		listeners.erase(std::find_if(listenerRange.first, listenerRange.second,
 			[&](std::pair<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<void>>> & listener) {
@@ -52,15 +52,15 @@ namespace game {
 		}));
 	}
 
-	void EventSubject::removeAllListener() {
+	void EventEmitter::removeAllListener() {
 		listeners.clear();
 	}
 
-	int EventSubject::getIdCount() const {
+	int EventEmitter::getIdCount() const {
 		return iIdCount;
 	}
 
-	EventSubject::EventSubject() noexcept {
+	EventEmitter::EventEmitter() noexcept {
 	}
 }
 

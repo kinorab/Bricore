@@ -13,6 +13,6 @@ namespace game {
 	}
 
 	void TextHandler::handleTextEntered(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(TextEnteredEvent(event.text));
+		thing.emit(TextEnteredEvent(event.text));
 	}
 }

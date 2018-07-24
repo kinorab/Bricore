@@ -18,14 +18,14 @@ namespace game {
 	}
 
 	void TouchHandler::handleTouchBegan(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(TouchBeganEvent(event.touch));
+		thing.emit(TouchBeganEvent(event.touch));
 	}
 
 	void TouchHandler::handleTouchMoved(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(TouchMovedEvent(event.touch));
+		thing.emit(TouchMovedEvent(event.touch));
 	}
 
 	void TouchHandler::handleTouchEnded(const sf::Event & event, Container & thing) {
-		thing.dispatchEvent(TouchEndedEvent(event.touch));
+		thing.emit(TouchEndedEvent(event.touch));
 	}
 }

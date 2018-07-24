@@ -10,7 +10,7 @@ namespace game {
 		return event.bPropagationStopped;
 	}
 
-	void DispatchHelper::setCurrentTarget(EventSubject * target) {
+	void DispatchHelper::setCurrentTarget(EventEmitter * target) {
 		event.currentTarget = target;
 	}
 
@@ -18,7 +18,7 @@ namespace game {
 		event.phase = phase;
 	}
 
-	void DispatchHelper::setTarget(EventSubject * target) {
+	void DispatchHelper::setTarget(EventEmitter * target) {
 		event.target = target;
 	}
 }

@@ -192,7 +192,7 @@ void Ball::ballsCollision(const size_t number) {
 
 void Ball::onGameReady(GameReadyEvent & event) {
 	followPlayer();
-	mainBall->dispatchEvent(event);
+	mainBall->emit(event);
 }
 
 void Ball::onGameFinishedLevel(GameFinishedLevelEvent & event) {
