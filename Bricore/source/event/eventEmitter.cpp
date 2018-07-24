@@ -21,10 +21,10 @@ namespace game {
 		std::copy(listenerRange.first, listenerRange.second, std::back_inserter(tempListeners));
 		std::for_each(tempListeners.begin(), tempListeners.end(),
 			[&](std::pair<const std::type_index, std::tuple<const int, std::shared_ptr<EventListenerBase>, std::weak_ptr<void>>> & listener) {
-			auto & lockedSubject = std::get<2>(listener.second);
-			if ((lockedSubject.owner_before(std::weak_ptr<void>{})
-				|| std::weak_ptr<void>{}.owner_before(lockedSubject))
-				&& lockedSubject.expired()) {
+			auto & trackedObject = std::get<2>(listener.second);
+			if ((trackedObject.owner_before(std::weak_ptr<void>{})
+				|| std::weak_ptr<void>{}.owner_before(trackedObject))
+				&& trackedObject.expired()) {
 				removeListener(std::get<0>(listener.second), listener.first);
 				return;
 			}
